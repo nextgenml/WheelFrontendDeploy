@@ -4,15 +4,16 @@ import Wheel from './components/wheel';
 import CountDown from './components/countdown';
 import Calendar from 'react-calendar';
 import { DateToString, stringToDate } from './utils';
+import { BrowserRouter } from 'react-router-dom';
 import 'react-calendar/dist/Calendar.css';
 
 
 
 function App() {
-  var api_url = '/'
-  if (process.env['NODE_ENV'] === 'development') {
-    api_url = 'http://0.0.0.0:8000/'
-  }
+  var api_url = 'https://nextgenmlwheel.vercel.app/'
+  //if (process.env['NODE_ENV'] === 'development') {
+  //  api_url = 'http://0.0.0.0:8000/'
+  //}
 
   const [loading, setLoading] = useState(true);
   const [wheel_items, setWheelItems] = useState<any[] | undefined>(undefined);

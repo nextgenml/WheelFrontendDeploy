@@ -1,14 +1,20 @@
 require("dotenv").config({path: './config.env'})
-import express from 'express'
-import path from 'path';
-import fs from 'fs';
-import cors from 'cors';
-import utils from './utils/index.js';
-import { spin_hours, spin_minute } from '../config.js'
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const cors = require('cors');
+const utils = require('./utils/index.js');
+const {spin_hours, spin_minute} = require('./config.js')
+//import express from 'express'
+//import path from 'path';
+//import fs from 'fs';
+//import cors from 'cors';
+//import utils from './utils/index.js';
+//import { spin_hours, spin_minute } from '../config.js'
 
 
 const app = express();
-const __dirname = path.resolve(path.dirname(''));
+//const __dirname = path.resolve(path.dirname(''));
 const initial_spinner_data_file_path = path.join(__dirname, 'items.json')
 const spinner_data_file_path = path.join(__dirname, 'spinner_data.json');
 utils.randomItemSetter()

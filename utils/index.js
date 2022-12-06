@@ -1,7 +1,10 @@
-import path from 'path'
-import { spin_hours, spin_minute, next_spin_delay } from '../../config.js'
-import fs from 'fs'
-const __dirname = path.resolve(path.dirname(''));
+const path = require('path');
+const {spin_hours, spin_minute, next_spin_delay} = require('../config.js')
+const fs = require('fs');
+//import path from 'path'
+//import { spin_hours, spin_minute, next_spin_delay } from '../../config.js'
+//import fs from 'fs'
+//const __dirname = path.resolve(path.dirname(''));
 
 const winner_data_file_path = path.join(__dirname, 'winners_data.json');
 const spinner_data_file_path = path.join(__dirname, 'spinner_data.json');
@@ -123,7 +126,7 @@ function updateWinners() {
     }
 }
 
-export function stringToDate(date_str) {
+function stringToDate(date_str) {
     let date = new Date();
     let date_str_arr= date_str.split('/');
     date.setDate(parseInt(date_str_arr[0]));
@@ -132,7 +135,7 @@ export function stringToDate(date_str) {
 
     return date;
 }
-export function DateToString(date) {
+function DateToString(date) {
     let d = date.getDate();
     let d_str = d.toString();
     if (d < 9) {
@@ -141,6 +144,13 @@ export function DateToString(date) {
     return `${d_str}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-export default {
+//export default {
+//    randomItemSetter
+//}
+
+module.exports = {
+    DateToString,
+    stringToDate,
+    updateWinners,
     randomItemSetter
 }
