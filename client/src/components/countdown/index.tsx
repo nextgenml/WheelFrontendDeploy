@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import './index.css'
 
 interface Props {
@@ -30,13 +30,11 @@ export default function CountDown({ end_date, start_date, on_Complete }: Props) 
         }
         if (window && window.document) {
             let document: any = window.document
-            document.getElementById('year').innerText = today.getFullYear()
             document.getElementById('day').innerText = day
             document.getElementById('hour').innerText = hour
             document.getElementById('min').innerText = minute
             document.getElementById('sec').innerText = sec
         }
-
     }
     useEffect(() => {
         _id = setInterval(countDown, 1000)
@@ -46,7 +44,7 @@ export default function CountDown({ end_date, start_date, on_Complete }: Props) 
     return (
         <div className="container">
             <h1>
-                Next Spin Is In <span id="year" />
+                Next Spin Is In 
             </h1>
             <div className="timers">
                 <div className="timer">

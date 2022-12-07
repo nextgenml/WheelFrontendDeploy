@@ -6,9 +6,10 @@ const fs = require('fs');
 //import fs from 'fs'
 //const __dirname = path.resolve(path.dirname(''));
 
-const winner_data_file_path = path.join(__dirname, 'winners_data.json');
-const spinner_data_file_path = path.join(__dirname, 'spinner_data.json');
-const initial_spinner_data_file_path = path.join(__dirname, 'items.json')
+const winner_data_file_path = path.join(__dirname, '../winners_data.json');
+const spinner_data_file_path = path.join(__dirname, '../spinner_data.json');
+const initial_spinner_data_file_path = path.join(__dirname, '../items.json')
+
 function randomItemSetter() {
     var no_of_winners_generated = 0
     let time_out = 1000 * 1 // 10 sec
@@ -48,7 +49,6 @@ function randomItemSetter() {
                         today_spinner_data['items'] = spinner_items;
                         today_spinner_data['updated_at'] = new Date().toUTCString();
                         new_spinner_data[today_date_str] = today_spinner_data
-                        console.log(JSON.stringify(new_spinner_data).length, ' 49');
                         fs.writeFileSync(spinner_data_file_path, JSON.stringify(new_spinner_data))
                         updateWinners()
                     }
@@ -65,7 +65,6 @@ function randomItemSetter() {
                     today_spinner_data['items'] = spinner_items;
                     today_spinner_data['updated_at'] = new Date().toUTCString();
                     new_spinner_data[today_date_str] = today_spinner_data
-                    console.log(JSON.stringify(new_spinner_data).length, '65');
                     fs.writeFileSync(spinner_data_file_path, JSON.stringify(new_spinner_data))
                     updateWinners()
                 }
@@ -118,7 +117,6 @@ function updateWinners() {
             today_spinner_data['items'] = spinner_items;
             today_spinner_data['updated_at'] = new Date().toUTCString();
             new_spinner_data[today_date_str] = today_spinner_data
-            console.log(JSON.stringify(new_spinner_data).length, 'updateWiiners');
             fs.writeFileSync(spinner_data_file_path, JSON.stringify(new_spinner_data))
             fs.writeFileSync(winner_data_file_path, JSON.stringify(new_winners_data))
             break;
@@ -144,9 +142,6 @@ function DateToString(date) {
     return `${d_str}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
-//export default {
-//    randomItemSetter
-//}
 
 module.exports = {
     DateToString,

@@ -1,9 +1,9 @@
 :root {
   --wheel-font: 'Lato', 'Quicksand', sans-serif;
   --wheel-size: 600px;
-  --wheel-slice-spacing: 10px;
+  --wheel-slice-spacing: 25px;
   --wheel-border-size: 5px;
-  --wheel-color: #3caeee;
+  /* --wheel-color: #3caeee; */
   --neutral-color: white;
   --PI: 3.14159265358979;
   --nb-item: 0;
@@ -112,7 +112,7 @@
   transform: translateY(-50%) rotate(calc(var(--item-nb) * (360deg / var(--nb-item, 1))));
 
   /* text */
-  color: var(--neutral-color);
+  color: black;
   text-align: right;
   padding: 0 25px 0 50px;
   font-family: var(--wheel-font);

@@ -2,11 +2,21 @@
 import { useEffect, useState } from 'react';
 import Wheel from './components/wheel';
 import CountDown from './components/countdown';
+import WinnersTable from './components/WinnersTable';
 import Calendar from 'react-calendar';
+import { next_spin_delay } from './config';
 import { DateToString, stringToDate } from './utils';
 import 'react-calendar/dist/Calendar.css';
 
 
+const spinner_colors = [
+  '#CBE4F9',
+  '#CDF5F6',
+  "#EFF9DA",
+  "#F9EBDF",
+  "#F9D8D6",
+  "#D6CDEA"
+]
 
 function App() {
   var api_url = '/'
@@ -21,10 +31,11 @@ function App() {
   const [timer_start_date, setTimerStartDate] = useState<Date>(new Date());
   const [selected_date, setSelectedDate] = useState<Date>(new Date());
   const [winner, setWinner] = useState<number | null>(null);
-  const [page_no, setPageNo] = useState(1)
-  const [show_spin_button, stShowSpinButton] = useState(false);
-  const [no_of_spins_remaining, setNoOfSpinsRemaining] = useState(2);
+
+  const [no_of_spins_remaining, setNoOfSpinsRemaining] = useState(3);
   const [show_calender, setShowCalender] = useState(false);
+  const [no_of_winner_display, setNoOfWinnersDisplay] = useState(0);
+  const [spinner_color, setSpinnerColor] = useState(spinner_colors[Math.floor(Math.random() * spinner_colors.length)])
 
   const setSpinnerData = (_selected_date: Date) => {
     const spinner_data = JSON.parse(localStorage.getItem("spinner_data")!);
@@ -56,20 +67,26 @@ function App() {
       let winners;
       if (winners_data[DateToString(_selected_date)]) {
         winners = winners_data[DateToString(_selected_date)][last_hour]['winners']
-        winners = winners ? winners.map((winner: string) => {
-          if (winner != null) {
-            spins_remaining--;
-            return winner
-          }
-        }) : []
-        console.log('spings remaning ', spins_remaining);
+        if (winners) {
+          winners.map((winner: string) => {
+            if (winner != null) {
+              spins_remaining--;
+              return winner
+            }
+          })
+          setNoOfWinnersDisplay(winners.length - spins_remaining);
+        } else {
+          setNoOfWinnersDisplay(0);
+          winners = []
+        }
+        console.log('spins remaining ', spins_remaining);
 
       }
       if (!winners) {
         winners = winners_data[winners_data_dates[winners_data_dates.length - 1]][last_hour]['winners'] as string[]
         winners = winners.filter((winner) => winner != null)
       }
-      // setNoOfSpinsRemaining(spins_remaining)
+      setNoOfSpinsRemaining(spins_remaining)
       setWinner(wheel_items.indexOf(winners[winners.length - 1]))
       setWheelItems(wheel_items)
     } else {
@@ -117,15 +134,17 @@ function App() {
     if (no_of_spins_remaining > 0) {
       fetchSpinnerData();
       let end_time = new Date();
-      end_time?.setSeconds(end_time.getSeconds() + 10)
-      setTimeout(() => {
-        console.log("On count down complete");
-
-      }, 5000)
+      end_time?.setSeconds(end_time.getSeconds() + next_spin_delay)
       setTimerEndDate(end_time);
       setTimerStartDate(new Date())
+      if (no_of_spins_remaining === 1) {
+      console.log("Fetching new data 2");
+
+        fetchSpinnerData()
+      }
       setNoOfSpinsRemaining(no_of_spins_remaining - 1)
     }
+
   }
 
   useEffect(() => {
@@ -133,8 +152,15 @@ function App() {
       setTimerEndDate(end_time)
       setTimerStartDate(start_time)
     });
-  }, [])
 
+  }, [])
+  useEffect(() => {
+    if(no_of_winner_display ===3){
+      console.log("Fetching new data 1");
+      
+      fetchSpinnerData()
+    }
+  }, [no_of_spins_remaining, no_of_winner_display])
 
   return (
     <div className='main'>
@@ -147,22 +173,51 @@ function App() {
         <>
           <div style={{ gap: "4rem", minHeight: "90vh", padding: "1rem 0" }} className='flex w-fit lg:gap-20 flex-row flex-wrap justify-center items-center mx-auto py-9'>
             <Wheel
+              spinner_wheel_color={spinner_color}
               onFinish={() => {
-                console.log('finished');
-
+                console.log('wheel on finish ', no_of_winner_display);
+                setNoOfWinnersDisplay(no_of_winner_display + 1);
               }}
-              selected_item={winner} items={wheel_items}></Wheel>
-            <CountDown on_Complete={onCountDownComplete} start_date={timer_start_date} end_date={timer_end_date ? timer_end_date : new Date()} />
+              selected_item={winner}
+              items={wheel_items} />
+
+            <CountDown
+              on_Complete={onCountDownComplete}
+              start_date={timer_start_date}
+              end_date={timer_end_date ? timer_end_date : new Date()} />
           </div>
+
           <div style={{ padding: "0 5rem" }} className='flex flex-col  '>
 
             <h2 className='text-white font-medium mx-auto  text-center text-4xl'>Today Winners</h2>
-            <div style={{marginTop:"3rem"}} className='flex flex-row  items-center justify-center mt-8 lg:justify-end w-full'>
+            <div style={{ marginTop: "3rem", gap: "0.2rem" }} className='flex flex-row  items-center justify-center mt-8 lg:justify-end w-full'>
 
               {!show_calender &&
-                <p
-                  onClick={() => setShowCalender(true)}
-                  className='cursor-pointer font-medium text-white'>{DateToString(selected_date)}</p>
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-calendar"
+                  >
+                    <rect x={3} y={4} width={18} height={18} rx={2} ry={2} />
+                    <line x1={16} y1={2} x2={16} y2={6} />
+                    <line x1={8} y1={2} x2={8} y2={6} />
+                    <line x1={3} y1={10} x2={21} y2={10} />
+                  </svg>
+
+                  <p
+                    onClick={() => setShowCalender(true)}
+                    className='cursor-pointer font-medium text-white'>{DateToString(selected_date)}</p>
+
+                </>
+
               }
               {show_calender &&
                 <Calendar
@@ -180,79 +235,11 @@ function App() {
               }
             </div>
           </div>
-          {/* Table */}
-          <div className="w-[100%] flex flex-col">
-            <div className="sm:mx-6 lg:mx-8 ">
-              <div className="py-4 inline-block min-w-full sm:px-6 lg:px-8">
-                <div className="overflow-hidden ">
-                  <table className="min-w-full text-center ">
-                    <thead className="border-b bg-gray-800">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="text-sm font-medium text-white px-6 py-4"
-                        >
-                          {DateToString(selected_date).replaceAll("/", '-')}
-                        </th>
-                        <th
-                          scope="col"
-                          className="text-sm font-medium text-white px-6 py-4"
-                        >
-                          First Winner
-                        </th>
-                        <th
-                          scope="col"
-                          className="text-sm font-medium text-white px-6 py-4"
-                        >
-                          Second Winner
-                        </th>
-                        <th
-                          scope="col"
-                          className="text-sm font-medium text-white px-6 py-4"
-                        >
-                          Third Winner
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(winners_data[(DateToString(selected_date) as any)]) &&
-                        Object.keys((winners_data[(DateToString(selected_date) as any)]))
-                          .map((hour: any) => {
-                            let current_time = hour;
-                            let current_winner_data = winners_data[(DateToString(selected_date) as any)][hour]
-                            if (hour > 12) {
-                              current_time = hour + " : " + 15 + "PM"
-                            } else {
-                              current_time = hour + " : " + 15 + "AM"
-                            }
-                            return (
-                              <tr className="bg-gray-500 border-b border-gray-500">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
-                                  {current_time}
-                                </td>
-                                {
-                                  (current_winner_data['winners'] as string[]).map((winner_item: any) => {
-                                    return <td className="text-sm text-gray-100 font-light px-6 py-4 whitespace-nowrap">
-                                      {winner_item}
-                                    </td>
-                                  })
-                                }
-                              </tr>)
-                          })
-                      }
-                    </tbody>
-                  </table>
-                  {!(
-                    winners_data[(DateToString(selected_date) as any)]
-                  ) &&
-                    <>
-                      <p style={{ padding: '4rem', fontSize: "1.4rem", margin: "auto", textAlign: 'center' }} className='text-white '>No winner yet today</p>
-                    </>
-                  }
-                </div>
-              </div>
-            </div>
-          </div>
+
+          <WinnersTable
+            no_of_winners_to_display={no_of_winner_display}
+            selected_date={selected_date}
+            winners_data={winners_data} />
         </>
       }
 
