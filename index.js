@@ -5,6 +5,7 @@ const fs = require('fs');
 const cors = require('cors');
 const utils = require('./utils/index.js');
 const {spin_hours, spin_minute} = require('./config.js')
+// const fetchAddress = require('./script/tracking')
 //import express from 'express'
 //import path from 'path';
 //import fs from 'fs';
@@ -17,7 +18,13 @@ const app = express();
 
 const initial_spinner_data_file_path = path.join(__dirname, 'items.json')
 const spinner_data_file_path = path.join(__dirname, 'spinner_data.json');
+
+
 utils.randomItemSetter()
+
+// let res =  fetchAddress().then(res=>{
+//     console.log(res);
+// })
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors())
 

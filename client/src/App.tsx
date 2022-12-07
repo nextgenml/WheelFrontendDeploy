@@ -79,8 +79,6 @@ function App() {
           setNoOfWinnersDisplay(0);
           winners = []
         }
-        console.log('spins remaining ', spins_remaining);
-
       }
       if (!winners) {
         winners = winners_data[winners_data_dates[winners_data_dates.length - 1]][last_hour]['winners'] as string[]
@@ -138,8 +136,6 @@ function App() {
       setTimerEndDate(end_time);
       setTimerStartDate(new Date())
       if (no_of_spins_remaining === 1) {
-      console.log("Fetching new data 2");
-
         fetchSpinnerData()
       }
       setNoOfSpinsRemaining(no_of_spins_remaining - 1)
@@ -156,8 +152,6 @@ function App() {
   }, [])
   useEffect(() => {
     if(no_of_winner_display ===3){
-      console.log("Fetching new data 1");
-      
       fetchSpinnerData()
     }
   }, [no_of_spins_remaining, no_of_winner_display])
@@ -175,7 +169,6 @@ function App() {
             <Wheel
               spinner_wheel_color={spinner_color}
               onFinish={() => {
-                console.log('wheel on finish ', no_of_winner_display);
                 setNoOfWinnersDisplay(no_of_winner_display + 1);
               }}
               selected_item={winner}

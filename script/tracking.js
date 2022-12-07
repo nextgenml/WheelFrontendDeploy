@@ -1,6 +1,6 @@
 const fs = require('fs').promises
 const Web3 = require('web3');
-
+const path = require('path')
 //RESET INSTRUCTIONS:
 //Put 0 to last_block_number.json and then run to filter the blocks from begining of the contract
 
@@ -22,7 +22,8 @@ async function run_me(CONTRACT) {
     // Initializing web3
     w3 = new Web3(new Web3.providers.HttpProvider(TESTURL))
     // Initializing Contract
-    return readFiles('./assets/abi.json').then((data) => {
+    let _path = path.join(__dirname,'assets','abi.json')
+    return readFiles(_path).then((data) => {
         CONTRACT = new w3.eth.Contract(JSON.parse(data), CONTRACT_ADDRESS)
         return CONTRACT
     })
@@ -51,9 +52,9 @@ async function finalWorks(dic, lst) {
             break
         }
     }
-
+    let _path = path.join(__dirname,'assets','last_block_number.json')
     // Updating the LAST BLOCK NUMBER to the JSON file
-    await fs.writeFile("./assets/last_block_number.json", (lst).toString(), (err) => {
+    await fs.writeFile(_path, (lst).toString(), (err) => {
         if (err)
             console.log("ERR")
     });
@@ -69,7 +70,7 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 
     try {
         await CONTRACT.getPastEvents('Transfer', {
-            fromBlock: LAST_BLOCK + 1,
+            fromBlock: LAST_BLOCK,
             toBlock: 'latest'
         }, function (errors, events) {
             ev = events;
@@ -82,7 +83,7 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
     if (error == null) {
 
         // Checking event if its not 0 then update the LAST BLOCK NUMBER
-        for (var i = 0; i < ev.length; i++) {
+        for (var i = 1; i < ev.length; i++) {
 
             // Filling up the dict with wallet address and nos of tokens  
             fill_Dict(ev[i], DICT)
@@ -105,7 +106,8 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 // Run THIS
 async function fetchAddress() {
     return await run_me(CONTRACT).then(async (CONTRACT) => {
-        return await readFiles('./assets/last_block_number.json').then(async (LAST_BLOCK) => {
+        let _path = path.join(__dirname,'assets','last_block_number.json')
+        return await readFiles(_path).then(async (LAST_BLOCK) => {
             return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(async (final) => {
                 return final
             })
@@ -125,7 +127,6 @@ async function fetchAddress() {
 //   });
 
 
-module.exports = fetchAddress
 
 Number.prototype.toFixedSpecial = function (n) {
     var str = this.toFixed(n);
@@ -142,3 +143,4 @@ Number.prototype.toFixedSpecial = function (n) {
 
     return str;
 };
+module.exports = fetchAddress
