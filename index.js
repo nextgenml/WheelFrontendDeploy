@@ -90,7 +90,9 @@ app.get('/winners-data', (req, res) => {
     res.json(winner_data);
 })
 
-
+app.get('/time-now',(req,res)=>{
+    res.send(new Date())
+})
 app.use('/', express.static(path.join(__dirname, 'build')))
 if (process.env.NODE_ENV == 'production') {
 
