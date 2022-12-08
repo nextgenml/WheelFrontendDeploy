@@ -11,23 +11,25 @@ const winner_data_file_path = path.join(__dirname, '../winners_data.json');
 const spinner_data_file_path = path.join(__dirname, '../spinner_data.json');
 
 function randomItemSetter() {
-    var no_of_winners_generated = 0
     let time_out = 1000 * 1 // 10 sec
     setInterval(async () => {
         try {
             let date = new Date();
             let hours = date.getHours();
             let minutes = date.getMinutes();
+            // date.setSeconds(date.getSeconds() + 3) // Setting 3s offset, to generate the data 3s prior
             let seconds = date.getSeconds()
             if (spin_hours.indexOf(hours) >= 0) {
                 if (minutes === spin_minute) {
                     console.log('hit');
-                    const spinner_data_file = JSON.parse(fs.readFileSync(spinner_data_file_path));
+                    let spinner_data_file = JSON.parse(fs.readFileSync(spinner_data_file_path));
                     //* If no spinner data for today copy from yesterday's data.
                     let today_spinner_data;
 
-                    const today_date_str = DateToString(new Date())
-
+                    const today_date_str = dateToString(new Date())
+                    if (!spinner_data_file || Object.keys(spinner_data_file).length == 0) {
+                        spinner_data_file = {}
+                    }
                     if (spinner_data_file[today_date_str]) {
                         today_spinner_data = JSON.parse(JSON.stringify(spinner_data_file[today_date_str]))
                     }
@@ -39,10 +41,11 @@ function randomItemSetter() {
                         if (Object.keys(new_addresses).length === 0) {
                             throw ("No transactions for the period!");
                         }
-                        console.log(new_addresses);
+                        console.log(new_addresses, 'fresh day');
 
                         today_spinner_data = {
                             'items': new_addresses,
+                            'created_at': new Date().toUTCString()
                         };
                     }
 
@@ -103,7 +106,7 @@ function updateWinners() {
     let date = new Date();
     let hours = date.getHours();
 
-    const today_date_str = DateToString(new Date());
+    const today_date_str = dateToString(new Date());
 
     //*selecting by date
     let today_winners_data = winners_data_file[today_date_str];
@@ -157,7 +160,7 @@ function stringToDate(date_str) {
 
     return date;
 }
-function DateToString(date) {
+function dateToString(date) {
     let d = date.getDate();
     let d_str = d.toString();
     if (d < 9) {
@@ -166,10 +169,14 @@ function DateToString(date) {
     return `${d_str}/${date.getMonth() + 1}/${date.getFullYear()}`;
 }
 
+function getFormattedHash(hash) {
+    return  hash.splice(0,5) + "..."+hash.substr(hash.length - 5)
+}
 
 module.exports = {
-    DateToString,
+    dateToString,
     stringToDate,
     updateWinners,
+    getFormattedHash,
     randomItemSetter
 }

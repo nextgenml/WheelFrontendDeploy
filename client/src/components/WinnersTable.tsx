@@ -1,5 +1,5 @@
 import React from 'react'
-import { DateToString } from '../utils';
+import { DateToString, getFormattedHash } from '../utils';
 
 interface Props {
     selected_date: Date;
@@ -56,7 +56,7 @@ export default function WinnersTable(props: Props) {
                                             }
                                             let dates = Object.keys(props.winners_data)
                                             let latest_date = dates[dates.length - 1];
-                                            
+
                                             if (latest_date === DateToString(props.selected_date)) {
                                                 if (Object.keys(today_winners).length - 1 === index) {
                                                     return (
@@ -66,10 +66,10 @@ export default function WinnersTable(props: Props) {
                                                             </td>
                                                             {
                                                                 (current_hour_data['winners'] as string[]).map((winner_item: any, i) => {
-                                                                    console.log(i, props.no_of_winners_to_display -1); 
+                                                                    console.log(i, props.no_of_winners_to_display - 1);
                                                                     if (i < props.no_of_winners_to_display - 1) {
                                                                         return <td key={i} className="text-sm text-gray-100 font-light px-6 py-4 whitespace-nowrap">
-                                                                            {winner_item}
+                                                                            {getFormattedHash(winner_item)}
                                                                         </td>
                                                                     }
                                                                 })
@@ -86,7 +86,7 @@ export default function WinnersTable(props: Props) {
                                                         (current_hour_data['winners'] as string[]).map((winner_item: any, i) => {
                                                             // console.log(winner_item);
                                                             return <td key={i} className="text-sm text-gray-100 font-light px-6 py-4 whitespace-nowrap">
-                                                                {winner_item}
+                                                                {getFormattedHash(winner_item)}
                                                             </td>
                                                         })
                                                     }

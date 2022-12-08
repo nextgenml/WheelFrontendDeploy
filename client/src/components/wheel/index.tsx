@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { getFormattedHash } from '../../utils';
 
 import './index.css';
 
@@ -53,7 +54,7 @@ export default function Wheel({ items, selected_item, onFinish, spinner_wheel_co
                     }
                     return (
                         <div className="wheel-item" key={index} style={item_num}>
-                            {item}
+                            {getFormattedHash(item)}
                         </div>
                     )
                 })}

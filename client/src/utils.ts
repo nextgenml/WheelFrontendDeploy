@@ -8,6 +8,13 @@ export function stringToDate(date_str: string) {
 
     return date;
 }
+
+
+export function getFormattedHash(hash:string) {
+    return  hash.slice(0,5) + "..."+hash.substring(hash.length - 5)
+}
+
+
 export function DateToString(date: Date) {
     let d = date.getDate();
     let d_str = d.toString();

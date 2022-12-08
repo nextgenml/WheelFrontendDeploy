@@ -37,6 +37,8 @@ function App() {
   const [no_of_winner_display, setNoOfWinnersDisplay] = useState(0);
   const [spinner_color, setSpinnerColor] = useState(spinner_colors[Math.floor(Math.random() * spinner_colors.length)])
 
+  const [is_no_spinner_data, setIsNoSpinnerData] = useState(false);
+
   const setSpinnerData = (_selected_date: Date) => {
     const spinner_data = JSON.parse(localStorage.getItem("spinner_data")!);
     const winners_data = JSON.parse(localStorage.getItem("winners_data")!);
@@ -47,14 +49,17 @@ function App() {
     let wheel_items = spinner_data[DateToString(_selected_date)] ?
       spinner_data[DateToString(_selected_date)]['items'] : undefined;
 
-    if (!curr_winners) {
+    if (!curr_winners && winners_data_dates.length > 0) {
       //* getting recent date winners
       curr_winners = winners_data[winners_data_dates[winners_data_dates.length - 1]]
       setSelectedDate(stringToDate(winners_data_dates[winners_data_dates.length - 1]))
     }
 
     if (!wheel_items) {
-      wheel_items = spinner_data[spinner_data_dates[spinner_data_dates.length - 4]]['items'] as string[]
+      wheel_items = []
+      if (spinner_data_dates.length > 3) {
+        wheel_items = spinner_data[spinner_data_dates[spinner_data_dates.length - 4]]['items'] as string[]
+      }
     }
     //* Adding all winners into the wheel
     if (curr_winners) {
@@ -102,6 +107,11 @@ function App() {
     })
 
     let spinner_data = await spinner_data_res.json();
+    if (Object.keys(spinner_data).length <= 3) {
+      setIsNoSpinnerData(true)
+    } else {
+      setIsNoSpinnerData(false)
+    }
 
     let winners_data_res = await fetch(api_url + "winners-data", {
       method: "GET",
@@ -114,12 +124,12 @@ function App() {
 
     let end_time = new Date(spinner_data['end_time']);
     let start_time = new Date(spinner_data['start_time']);
-
+    console.log('fetching again',end_time,start_time)
     localStorage.setItem('spinner_data', JSON.stringify(spinner_data));
     localStorage.setItem("winners_data", JSON.stringify(winners_data));
+    setWinnersData(winners_data)
 
     setSpinnerData(start_time);
-    setWinnersData(winners_data);
     setSelectedDate(start_time);
     setLoading(false);
     return {
@@ -129,18 +139,21 @@ function App() {
   }
 
   const onCountDownComplete = () => {
-    if (no_of_spins_remaining > 0) {
+    console.log({ no_of_spins_remaining });
+
+    if (no_of_spins_remaining >  0) {
       fetchSpinnerData();
       let end_time = new Date();
       end_time?.setSeconds(end_time.getSeconds() + next_spin_delay)
       setTimerEndDate(end_time);
       setTimerStartDate(new Date())
-      if (no_of_spins_remaining === 1) {
-        fetchSpinnerData()
-      }
       setNoOfSpinsRemaining(no_of_spins_remaining - 1)
     }
-
+    if(no_of_winner_display<4){
+      console.log('fetching new .......');
+      
+      fetchSpinnerData()
+    }
   }
 
   useEffect(() => {
@@ -150,11 +163,6 @@ function App() {
     });
 
   }, [])
-  useEffect(() => {
-    if(no_of_winner_display ===3){
-      fetchSpinnerData()
-    }
-  }, [no_of_spins_remaining, no_of_winner_display])
 
   return (
     <div className='main'>
@@ -163,17 +171,18 @@ function App() {
         <img src='logo.png' className='w-60 h-60' />
         <a className='text-white font-medium first-letter:' href='#'> About Us </a>
       </nav>
-      {wheel_items && !loading && winners_data &&
+      {!loading &&
         <>
           <div style={{ gap: "4rem", minHeight: "90vh", padding: "1rem 0" }} className='flex w-fit lg:gap-20 flex-row flex-wrap justify-center items-center mx-auto py-9'>
-            <Wheel
-              spinner_wheel_color={spinner_color}
-              onFinish={() => {
-                setNoOfWinnersDisplay(no_of_winner_display + 1);
-              }}
-              selected_item={winner}
-              items={wheel_items} />
-
+            {!is_no_spinner_data && wheel_items &&
+              <Wheel
+                spinner_wheel_color={spinner_color}
+                onFinish={() => {
+                  setNoOfWinnersDisplay(no_of_winner_display + 1);
+                }}
+                selected_item={winner}
+                items={wheel_items} />
+            }
             <CountDown
               on_Complete={onCountDownComplete}
               start_date={timer_start_date}
@@ -181,11 +190,12 @@ function App() {
           </div>
 
           <div style={{ padding: "0 5rem" }} className='flex flex-col  '>
-
-            <h2 className='text-white font-medium mx-auto  text-center text-4xl'>Today Winners</h2>
+            {winners_data &&
+              <h2 className='text-white font-medium mx-auto  text-center text-4xl'>Today Winners</h2>
+            }
             <div style={{ marginTop: "3rem", gap: "0.2rem" }} className='flex flex-row  items-center justify-center mt-8 lg:justify-end w-full'>
 
-              {!show_calender &&
+              {!show_calender && winners_data &&
                 <>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +222,7 @@ function App() {
                 </>
 
               }
-              {show_calender &&
+              {show_calender && winners_data &&
                 <Calendar
                   className={'date-calender'}
                   onChange={(new_date: Date) => {
@@ -228,14 +238,15 @@ function App() {
               }
             </div>
           </div>
-
-          <WinnersTable
-            no_of_winners_to_display={no_of_winner_display}
-            selected_date={selected_date}
-            winners_data={winners_data} />
+          {winners_data &&
+            <WinnersTable
+              no_of_winners_to_display={no_of_winner_display}
+              selected_date={selected_date}
+              winners_data={winners_data} />
+          }
         </>
       }
-
+      
       {loading &&
         <div style={{ backgroundColor: "#3caeee", position: 'absolute', top: '50%', left: '50%' }} className="spinner-grow inline-block w-12 h-12  rounded-full opacity-0" role="status">
           <span className="visually-hidden">Loading...</span>
