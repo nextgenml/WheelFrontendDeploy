@@ -16,15 +16,9 @@ const { spin_hours, spin_minute } = require('./config.js')
 
 const app = express();
 
-const initial_spinner_data_file_path = path.join(__dirname, 'items.json')
-const spinner_data_file_path = path.join(__dirname, 'spinner_data.json');
-
-
 utils.randomItemSetter()
 
-// let res =  fetchAddress().then(res=>{
-//     console.log(res);
-// })
+
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors())
 
@@ -38,19 +32,19 @@ app.get("/spinner-data", (req, res) => {
     if (current_time.getHours() > 21) {
         end_hour = (24 - current_time.getHours()) + spin_hours[0]
     } else {
-        for (let i = 0; i < spin_hours.length; i++) {
-            let diff = spin_hours[i] - current_time.getHours();
-            if (diff >= 0) {
-                if (diff === 0) {
-                    if (current_time.getMinutes() <= spin_minute) {
-                        end_hour = Math.min(end_hour, diff)
-                    }
-                } else {
+    };
+    for (let i = 0; i < spin_hours.length; i++) {
+        let diff = spin_hours[i] - current_time.getHours();
+        if (diff >= 0) {
+            if (diff === 0) {
+                if (current_time.getMinutes() <= spin_minute) {
                     end_hour = Math.min(end_hour, diff)
                 }
+            } else {
+                end_hour = Math.min(end_hour, diff)
             }
         }
-    };
+    }
 
     end_date.setHours(current_time.getHours() + end_hour);
     end_date.setMinutes(spin_minute);

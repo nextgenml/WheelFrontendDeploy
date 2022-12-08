@@ -39,6 +39,7 @@ function randomItemSetter() {
                         //? Fetch data here .... for fresh day
                         const new_addresses = await fetchAddress();
                         if (Object.keys(new_addresses).length === 0) {
+                            
                             throw ("No transactions for the period!");
                         }
                         console.log(new_addresses, 'fresh day');

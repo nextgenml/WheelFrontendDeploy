@@ -66,7 +66,6 @@ export default function WinnersTable(props: Props) {
                                                             </td>
                                                             {
                                                                 (current_hour_data['winners'] as string[]).map((winner_item: any, i) => {
-                                                                    console.log(i, props.no_of_winners_to_display - 1);
                                                                     if (i < props.no_of_winners_to_display - 1) {
                                                                         return <td key={i} className="text-sm text-gray-100 font-light px-6 py-4 whitespace-nowrap">
                                                                             {getFormattedHash(winner_item)}
@@ -84,7 +83,6 @@ export default function WinnersTable(props: Props) {
                                                     </td>
                                                     {
                                                         (current_hour_data['winners'] as string[]).map((winner_item: any, i) => {
-                                                            // console.log(winner_item);
                                                             return <td key={i} className="text-sm text-gray-100 font-light px-6 py-4 whitespace-nowrap">
                                                                 {getFormattedHash(winner_item)}
                                                             </td>

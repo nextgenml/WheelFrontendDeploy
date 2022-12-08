@@ -72,6 +72,8 @@ function App() {
       let winners;
       if (winners_data[DateToString(_selected_date)]) {
         winners = winners_data[DateToString(_selected_date)][last_hour]['winners']
+        console.log({ winners });
+
         if (winners) {
           winners.map((winner: string) => {
             if (winner != null) {
@@ -85,16 +87,23 @@ function App() {
           winners = []
         }
       }
+
+      console.log({ spins_remaining });
+      console.log({ last_hour });
+      console.log({ winners });
+      console.log({ no_of_winner_display: winners.length - spins_remaining });
+      setNoOfSpinsRemaining(spins_remaining)
+
       if (!winners) {
         winners = winners_data[winners_data_dates[winners_data_dates.length - 1]][last_hour]['winners'] as string[]
         winners = winners.filter((winner) => winner != null)
       }
-      setNoOfSpinsRemaining(spins_remaining)
       setWinner(wheel_items.indexOf(winners[winners.length - 1]))
       setWheelItems(wheel_items)
     } else {
       setWheelItems(wheel_items);
     }
+    return { spins_remaining }
   }
 
   const fetchSpinnerData = async () => {
@@ -124,35 +133,49 @@ function App() {
 
     let end_time = new Date(spinner_data['end_time']);
     let start_time = new Date(spinner_data['start_time']);
-    console.log('fetching again',end_time,start_time)
+    console.log('fetching again', end_time, start_time)
     localStorage.setItem('spinner_data', JSON.stringify(spinner_data));
     localStorage.setItem("winners_data", JSON.stringify(winners_data));
-    setWinnersData(winners_data)
 
-    setSpinnerData(start_time);
+    let { spins_remaining } = setSpinnerData(start_time);
     setSelectedDate(start_time);
+    setWinnersData(winners_data)
     setLoading(false);
     return {
       start_time,
-      end_time
+      end_time,
+      spins_remaining
     }
   }
 
-  const onCountDownComplete = () => {
-    console.log({ no_of_spins_remaining });
+  const onCountDownComplete = async () => {
+    let { spins_remaining } = await fetchSpinnerData();
+    console.log('on onCountDownComplete');
+    console.log({ spins_remaining, no_of_winner_display });
 
-    if (no_of_spins_remaining >  0) {
-      fetchSpinnerData();
+    if (spins_remaining === 0) {
+      let end_date = new Date();
+      end_date?.setHours(end_date.getHours() + 6)
+      end_date?.setMinutes(end_date.getMinutes() + 15)
+      end_date?.setSeconds(0)
+      setTimerEndDate(end_date);
+      setTimerStartDate(new Date())
+      console.log('updating ...');
+      console.log(end_date);
+      
+    }
+
+    if (spins_remaining > 0) {
+      console.log('fetching new ....... 1');
       let end_time = new Date();
       end_time?.setSeconds(end_time.getSeconds() + next_spin_delay)
       setTimerEndDate(end_time);
       setTimerStartDate(new Date())
-      setNoOfSpinsRemaining(no_of_spins_remaining - 1)
+      setNoOfSpinsRemaining(spins_remaining - 1)
     }
-    if(no_of_winner_display<4){
-      console.log('fetching new .......');
-      
-      fetchSpinnerData()
+    if (no_of_winner_display < 4) {
+      console.log('fetching new ....... 2');
+      await fetchSpinnerData()
     }
   }
 
@@ -246,7 +269,7 @@ function App() {
           }
         </>
       }
-      
+
       {loading &&
         <div style={{ backgroundColor: "#3caeee", position: 'absolute', top: '50%', left: '50%' }} className="spinner-grow inline-block w-12 h-12  rounded-full opacity-0" role="status">
           <span className="visually-hidden">Loading...</span>
