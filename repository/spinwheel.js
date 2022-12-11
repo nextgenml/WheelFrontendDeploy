@@ -28,6 +28,9 @@ const getParticipants = async (start, end, type) => {
       spin: user.spin_no,
       transaction_id: formatTransactionId(user.transaction_id),
       rank: user.winning_rank,
+      win_at: user.is_winner
+        ? moment(user.win_at).format("YYYY-MM-DD HH:mm:ss")
+        : undefined,
     };
   });
 };
