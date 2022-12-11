@@ -101,7 +101,8 @@ app.get("/winners-data", (req, res) => {
 });
 
 app.get("/winners-data-1", async (req, res) => {
-  const winner_data = await getWinners();
+  console.log("req.params.date", req.query);
+  const winner_data = await getWinners(req.query.date, req.query.date);
   res.json(winner_data);
 });
 

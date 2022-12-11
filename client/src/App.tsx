@@ -6,7 +6,7 @@ import Calendar from "react-calendar";
 import { next_spin_delay } from "./config";
 import { DateToString, stringToDate } from "./utils";
 import "react-calendar/dist/Calendar.css";
-
+import moment from "moment";
 const spinner_colors = [
   "#CBE4F9",
   "#CDF5F6",
@@ -152,12 +152,16 @@ function App() {
     setSelectedDate(start_time);
     setWinnersData(winners_data);
 
-    let winners_data_res_1 = await fetch(api_url + "winners-data-1", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const formatted_date = moment(selected_date).format("YYYY-MM-DD");
+    let winners_data_res_1 = await fetch(
+      api_url + `winners-data-1?date=${formatted_date}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     let winners_data_1 = await winners_data_res_1.json();
     setWinnersData_1(winners_data_1);
