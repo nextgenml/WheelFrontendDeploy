@@ -6,6 +6,31 @@ const getTransactionIds = async () => {
   console.log("new_addresses", new_addresses);
 };
 
+const getParticipants = async (start, end, type) => {
+  start = moment(start).startOf("day").format();
+  end = moment(end).endOf("day").format();
+  const query = `select * from participants where ${
+    type === "winners" ? "is_winner = 1 and " : ""
+  } spin_day >= '${start}' and spin_day <= '${end}';`;
+
+  let users = await new Promise((resolve, reject) => {
+    dbConnection.query(query, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+
+  return users.map((user) => {
+    return {
+      day: moment(user.spin_day).format("YYYY-MM-DD"),
+      spin: user.spin_no,
+      transaction_id: formatTransactionId(user.transaction_id),
+      rank: user.winning_rank,
+    };
+  });
+};
 const getWinners = async (start, end) => {
   start = moment(start).startOf("day").format();
   end = moment(end).endOf("day").format();
@@ -36,12 +61,15 @@ const getWinners = async (start, end) => {
       result.push({
         day,
         spin,
-        first: temp_users2.filter((x) => x["winning_rank"] == 1)[0]
-          ?.transaction_id,
-        second: temp_users2.filter((x) => x["winning_rank"] == 2)[0]
-          ?.transaction_id,
-        third: temp_users2.filter((x) => x["winning_rank"] == 3)[0]
-          ?.transaction_id,
+        first: formatTransactionId(
+          temp_users2.filter((x) => x["winning_rank"] == 1)[0]?.transaction_id
+        ),
+        second: formatTransactionId(
+          temp_users2.filter((x) => x["winning_rank"] == 2)[0]?.transaction_id
+        ),
+        third: formatTransactionId(
+          temp_users2.filter((x) => x["winning_rank"] == 3)[0]?.transaction_id
+        ),
       });
     });
   });
@@ -65,9 +93,14 @@ var groupBy = function (xs, key) {
   }, {});
 };
 
+var formatTransactionId = (transaction_id) =>
+  transaction_id.substring(0, 4) +
+  "...." +
+  transaction_id.substring(transaction_id.length - 4);
 module.exports = {
   getTransactionIds,
   getWinners,
+  getParticipants,
 };
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('97ASDFADSfa11', 1, 'daily', 3, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());
 //insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('asdfsdfasf', 1, 'daily', 2, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());
@@ -78,6 +111,9 @@ module.exports = {
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('asdkfjalskjf', 2, 'daily', 1, SUBDATE(now(),0), SUBDATE(now(),1), 1, SUBDATE(now(),1));
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('q,kq,jknrqwner', 2, 'daily', 2, SUBDATE(now(),0), SUBDATE(now(),1), 1, SUBDATE(now(),1));
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('987a9x70', 3, 'daily', 3, SUBDATE(now(),0), SUBDATE(now(),1), 1, SUBDATE(now(),1));
+
+// insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('q,kq,jknrqwner', 2, 'daily', 2, SUBDATE(now(),0), SUBDATE(now(),1), 0, now());
+// insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('987a9x70', 3, 'daily', 3, SUBDATE(now(),0), SUBDATE(now(),1), 0, now());
 
 // update nextgenml.participants set win_at = SUBDATE(now(),1) where id > 3;
 // update nextgenml.participants set win_at = SUBDATE(now(),0) where id <= 3;

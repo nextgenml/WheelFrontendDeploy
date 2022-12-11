@@ -12,7 +12,7 @@ const { spin_hours, spin_minute } = require("./config.js");
 //import cors from 'cors';
 //import utils from './utils/index.js';
 //import { spin_hours, spin_minute } from '../config.js'
-const { getWinners } = require("./repository/spinwheel");
+const { getParticipants, getWinners } = require("./repository/spinwheel");
 
 const app = express();
 
@@ -29,7 +29,6 @@ app.get("/spinner-data", async (req, res) => {
   let end_date = new Date();
   let end_hour = 12;
 
-  await getWinners();
   if (current_time.getHours() > 21) {
     end_hour = 24 - current_time.getHours() + spin_hours[0];
   } else {
@@ -103,6 +102,16 @@ app.get("/winners-data", (req, res) => {
 app.get("/winners-data-1", async (req, res) => {
   console.log("req.params.date", req.query);
   const winner_data = await getWinners(req.query.date, req.query.date);
+  res.json(winner_data);
+});
+
+app.get("/participants-data", async (req, res) => {
+  const type = req.query.winners === "yes" ? "winners" : "participants";
+  const winner_data = await getParticipants(
+    req.query.date,
+    req.query.date,
+    type
+  );
   res.json(winner_data);
 });
 
