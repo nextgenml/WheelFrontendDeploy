@@ -6,6 +6,125 @@ const getTransactionIds = async () => {
   console.log("new_addresses", new_addresses);
 };
 
+const markAsWinner = async (id) => {
+  const update = `update spins set win_at = now() and is_winner = 1 where id = ${id}`;
+  await new Promise((resolve, reject) => {
+    dbConnection.query(update, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+};
+const currentSpinData = async (spin_no) => {
+  spin_day = moment().format("YYYY-MM-DD");
+  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+
+  let users = await new Promise((resolve, reject) => {
+    dbConnection.query(query, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+
+  const addresses = users.map((user) => user.transaction_id);
+
+  const spinQuery = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+
+  let spins = await new Promise((resolve, reject) => {
+    dbConnection.query(spinQuery, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+  const spin = spins[0];
+  return {
+    items: addresses,
+    created_at: spin.created_at,
+    updated_at: spin.updated_at,
+  };
+};
+const updateSpin = async (id) => {
+  const update = `update spins set updated_at = now() where id = ${id}`;
+  await new Promise((resolve, reject) => {
+    dbConnection.query(update, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+};
+const getSpin = async (spin_no) => {
+  spin_day = moment().format("YYYY-MM-DD");
+  const spin = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+
+  let users = await new Promise((resolve, reject) => {
+    dbConnection.query(spin, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+  return users[0];
+};
+const createSpin = async (spin_no) => {
+  spin_day = moment().format("YYYY-MM-DD");
+  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at) values('${spin_no}', 'daily', '${spin_day}', now(), now();`;
+
+  await new Promise((resolve, reject) => {
+    dbConnection.query(query, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+  const spin = `select * from spins where id = LAST_INSERT_ID()`;
+
+  let users = await new Promise((resolve, reject) => {
+    dbConnection.query(spin, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+  return users[0];
+};
+const dataExistsForCurrentSpin = async (spin_no) => {
+  spin_day = moment().format("YYYY-MM-DD");
+  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+
+  let users = await new Promise((resolve, reject) => {
+    dbConnection.query(query, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+
+  return !!users.length;
+};
+const createParticipant = async (transaction_id, spin_no) => {
+  spin_day = moment().format("YYYY-MM-DD");
+  const query = `insert into participants (transaction_id, spin_no, type, spin_at, spin_day) values('${transaction_id}', ${spin_no}, 'daily', now(), '${spin_day}';`;
+  return await new Promise((resolve, reject) => {
+    dbConnection.query(query, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+};
 const getParticipants = async (start, end, type) => {
   start = moment(start).startOf("day").format();
   end = moment(end).endOf("day").format();
@@ -104,6 +223,13 @@ module.exports = {
   getTransactionIds,
   getWinners,
   getParticipants,
+  dataExistsForCurrentSpin,
+  createParticipant,
+  createSpin,
+  currentSpinData,
+  getSpin,
+  updateSpin,
+  markAsWinner,
 };
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('97ASDFADSfa11', 1, 'daily', 3, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());
 //insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('asdfsdfasf', 1, 'daily', 2, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());

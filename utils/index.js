@@ -1,14 +1,15 @@
-const path = require("path");
 const { spin_hours, spin_minute, next_spin_delay } = require("../config.js");
-const fs = require("fs");
 const fetchAddress = require("../script/tracking");
-//import path from 'path'
-//import { spin_hours, spin_minute, next_spin_delay } from '../../config.js'
-//import fs from 'fs'
-//const __dirname = path.resolve(path.dirname(''));
-
-const winner_data_file_path = path.join(__dirname, "../winners_data.json");
-const spinner_data_file_path = path.join(__dirname, "../spinner_data.json");
+const {
+  dataExistsForCurrentSpin,
+  createParticipant,
+  currentSpinData,
+  getSpin,
+  updateSpin,
+  getWinners,
+  getParticipants,
+  markAsWinner,
+} = require("../repository/spinwheel.js");
 
 function randomItemSetter() {
   let time_out = 1000 * 1; // 10 sec
@@ -22,89 +23,55 @@ function randomItemSetter() {
       if (spin_hours.indexOf(hours) >= 0) {
         if (minutes === spin_minute) {
           console.log("hit");
-          let spinner_data_file = JSON.parse(
-            fs.readFileSync(spinner_data_file_path)
-          );
-          //* If no spinner data for today copy from yesterday's data.
-          let today_spinner_data;
 
-          const today_date_str = dateToString(new Date());
-          if (
-            !spinner_data_file ||
-            Object.keys(spinner_data_file).length == 0
-          ) {
-            spinner_data_file = {};
-          }
-          if (spinner_data_file[today_date_str]) {
-            today_spinner_data = JSON.parse(
-              JSON.stringify(spinner_data_file[today_date_str])
-            );
-          }
-          //* Runs for every fresh day
-          else {
-            //? Fetch data here .... for fresh day
+          const spin_no = spin_hours.indexOf(hours) + 1;
+          spin_data_exists = dataExistsForCurrentSpin(spin_no);
+          let currentSpin, today_spinner_data;
+          if (!spin_data_exists) {
             const new_addresses = await fetchAddress();
             if (Object.keys(new_addresses).length === 0) {
               throw "No transactions for the period!";
             }
             console.log(new_addresses, "fresh day");
-
+            currentSpin = await createSpin(spin_no);
+            for (const item of new_addresses) {
+              await createParticipant(item, spin_no);
+            }
             today_spinner_data = {
               items: new_addresses,
-              created_at: new Date().toUTCString(),
+              created_at: currentSpin.created_at,
+              updated_at: currentSpin.updated_at,
             };
+          } else {
+            currentSpin = await getSpin(spin_no);
+            today_spinner_data = await currentSpinData(spin_no);
           }
-
-          if (today_spinner_data["items"].length < 3) {
-            console.warn("Insufficient spinner items, length < 3");
+          if (today_spinner_data["items"].length < 6) {
+            console.warn("Insufficient spinner items, length < 6");
             return;
           }
 
           let update_time = new Date(today_spinner_data["updated_at"]);
-          let spinner_items = today_spinner_data["items"];
-          let new_spinner_data = spinner_data_file;
 
           if (!isNaN(update_time.getSeconds())) {
             if (
               update_time.getHours() === hours &&
               Math.abs(seconds - update_time.getSeconds()) >= next_spin_delay
             ) {
-              today_spinner_data["items"] = spinner_items;
-              today_spinner_data["updated_at"] = new Date().toUTCString();
-              new_spinner_data[today_date_str] = today_spinner_data;
-              fs.writeFileSync(
-                spinner_data_file_path,
-                JSON.stringify(new_spinner_data)
-              );
-              updateWinners();
+              await updateSpin(currentSpin.id);
+              await updateWinners();
             } else if (update_time.getHours() !== hours) {
               //? Fetch data here for every 6 hours
               const new_addresses = await fetchAddress();
               if (Object.keys(new_addresses).length === 0) {
                 throw "No transactions for the period!";
               }
-              console.log(new_addresses, " For every 6 hours ");
-              today_spinner_data["items"] = new_addresses;
-              today_spinner_data["updated_at"] = new Date().toUTCString();
-              new_spinner_data[today_date_str] = today_spinner_data;
-              fs.writeFileSync(
-                spinner_data_file_path,
-                JSON.stringify(new_spinner_data)
-              );
-              updateWinners();
+              currentSpin = await createSpin(spin_no);
+              for (const item of new_addresses) {
+                await createParticipant(item, spin_no);
+              }
+              await updateWinners();
             }
-          }
-          //* if no update_at field in spinner data add it
-          else {
-            console.log("if no update_at field in spinner data add it");
-            today_spinner_data["items"] = spinner_items;
-            today_spinner_data["updated_at"] = new Date().toUTCString();
-            new_spinner_data[today_date_str] = today_spinner_data;
-            fs.writeFileSync(
-              spinner_data_file_path,
-              JSON.stringify(new_spinner_data)
-            );
-            updateWinners();
           }
         }
       }
@@ -113,65 +80,40 @@ function randomItemSetter() {
     }
   }, time_out);
 }
-
-function updateWinners() {
-  const winners_data_file = JSON.parse(fs.readFileSync(winner_data_file_path));
+updateWinners = async () => {
   let date = new Date();
   let hours = date.getHours();
 
-  const today_date_str = dateToString(new Date());
+  if (spin_hours.indexOf(hours) > -1) {
+    const spin_no = spin_hours.indexOf(hours);
+    const winners = await getWinners(date, date);
+    const currentSpinRow = winners.filter((w) => w.spin === spin_no)[0];
+    const currentSpin = await createSpin(spin_no);
+    const participants = await getParticipants(date, date, "winners");
+    if (!participants.length || !currentSpin) return;
 
-  //*selecting by date
-  let today_winners_data = winners_data_file[today_date_str];
-  //* new day for winners
-  if (!today_winners_data) {
-    today_winners_data = {};
-  }
-
-  //* Check if present hour winner is already generated
-  let current_winners_data;
-  if (!today_winners_data[hours]) {
-    current_winners_data = {};
-    current_winners_data["winners"] = [null, null, null];
-  } else {
-    current_winners_data = JSON.parse(
-      JSON.stringify(today_winners_data[hours])
-    );
-  }
-
-  for (let i = 0; i < current_winners_data["winners"].length; i++) {
-    const winner = current_winners_data["winners"][i];
-    if (winner == null) {
-      const spinner_data_file = JSON.parse(
-        fs.readFileSync(spinner_data_file_path)
-      );
-      let today_spinner_data = JSON.parse(
-        JSON.stringify(spinner_data_file[today_date_str])
-      );
-
-      let spinner_items = today_spinner_data["items"];
-      let rand = Math.floor(Math.random() * spinner_items.length);
-      current_winners_data["winners"][i] = spinner_items[rand];
-      current_winners_data["updated_at"] = new Date().toUTCString();
-      spinner_items.splice(rand, 1);
-
-      today_winners_data[hours] = current_winners_data;
-      let new_winners_data = winners_data_file;
-      new_winners_data[today_date_str] = today_winners_data;
-
-      let new_spinner_data = spinner_data_file;
-      today_spinner_data["items"] = spinner_items;
-      today_spinner_data["updated_at"] = new Date().toUTCString();
-      new_spinner_data[today_date_str] = today_spinner_data;
-      fs.writeFileSync(
-        spinner_data_file_path,
-        JSON.stringify(new_spinner_data)
-      );
-      fs.writeFileSync(winner_data_file_path, JSON.stringify(new_winners_data));
-      break;
+    if (!currentSpinRow || !currentSpinRow.first) {
+      const winner = pickWinner(participants);
+      await markAsWinner(winner.id);
+      await updateSpin(currentSpin.id);
+    } else if (!currentSpinRow.second) {
+      participants = participants.filter((p) => !p.first);
+      const winner = pickWinner(participants);
+      await markAsWinner(winner.id);
+      await updateSpin(currentSpin.id);
+    } else if (!currentSpinRow.third) {
+      participants = participants.filter((p) => !p.first && !p.second);
+      const winner = pickWinner(participants);
+      await markAsWinner(winner.id);
+      await updateSpin(currentSpin.id);
     }
   }
-}
+};
+pickWinner = (participants) => {
+  const size = participants.size;
+  const index = Math.floor(Math.random() * size);
+  return participants[index];
+};
 
 function stringToDate(date_str) {
   let date = new Date();
@@ -198,7 +140,6 @@ function getFormattedHash(hash) {
 module.exports = {
   dateToString,
   stringToDate,
-  updateWinners,
   getFormattedHash,
   randomItemSetter,
 };
