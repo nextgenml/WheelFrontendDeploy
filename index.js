@@ -25,9 +25,6 @@ utils.randomItemSetter();
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
 app.get("/spinner-data", async (req, res) => {
-  let spinner_data_file = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "spinner_data.json"))
-  );
   const today_date_str = utils.dateToString(new Date());
   let current_time = new Date();
   let end_date = new Date();

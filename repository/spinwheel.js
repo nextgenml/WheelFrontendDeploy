@@ -6,8 +6,9 @@ const getTransactionIds = async () => {
   console.log("new_addresses", new_addresses);
 };
 
-const markAsWinner = async (id) => {
-  const update = `update spins set win_at = now() and is_winner = 1 where id = ${id}`;
+const markAsWinner = async (id, rank) => {
+  const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ${rank} where id = ${id};`;
+  console.log("update", update);
   await new Promise((resolve, reject) => {
     dbConnection.query(update, (error, elements) => {
       if (error) {
@@ -19,7 +20,7 @@ const markAsWinner = async (id) => {
 };
 const currentSpinData = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
@@ -32,7 +33,7 @@ const currentSpinData = async (spin_no) => {
 
   const addresses = users.map((user) => user.transaction_id);
 
-  const spinQuery = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+  const spinQuery = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
   let spins = await new Promise((resolve, reject) => {
     dbConnection.query(spinQuery, (error, elements) => {
@@ -51,7 +52,7 @@ const currentSpinData = async (spin_no) => {
   };
 };
 const updateSpin = async (id) => {
-  const update = `update spins set updated_at = now() where id = ${id}`;
+  const update = `update spins set updated_at = now() where id = ${id};`;
   await new Promise((resolve, reject) => {
     dbConnection.query(update, (error, elements) => {
       if (error) {
@@ -63,7 +64,7 @@ const updateSpin = async (id) => {
 };
 const getSpin = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const spin = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+  const spin = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(spin, (error, elements) => {
@@ -87,7 +88,7 @@ const createSpin = async (spin_no) => {
       return resolve(elements);
     });
   });
-  const spin = `select * from spins where id = LAST_INSERT_ID()`;
+  const spin = `select * from spins where id = LAST_INSERT_ID();`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(spin, (error, elements) => {
@@ -101,7 +102,7 @@ const createSpin = async (spin_no) => {
 };
 const dataExistsForCurrentSpin = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}'`;
+  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
@@ -144,6 +145,7 @@ const getParticipants = async (start, end, type) => {
 
   return users.map((user) => {
     return {
+      id: user.id,
       day: moment(user.spin_day).format("YYYY-MM-DD"),
       spin: user.spin_no,
       transaction_id: formatTransactionId(user.transaction_id),
@@ -217,9 +219,11 @@ var groupBy = function (xs, key) {
 };
 
 var formatTransactionId = (transaction_id) =>
-  transaction_id.substring(0, 4) +
-  "...." +
-  transaction_id.substring(transaction_id.length - 4);
+  transaction_id
+    ? transaction_id.substring(0, 4) +
+      "...." +
+      transaction_id.substring(transaction_id.length - 4)
+    : null;
 module.exports = {
   getTransactionIds,
   getWinners,

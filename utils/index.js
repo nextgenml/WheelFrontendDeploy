@@ -12,10 +12,13 @@ const {
   markAsWinner,
 } = require("../repository/spinwheel.js");
 
+EXECUTING = false;
 function randomItemSetter() {
-  let time_out = 1000 * 1; // 10 sec
+  let time_out = 1000 * 4; // 10 sec
   setInterval(async () => {
     try {
+      if (EXECUTING) return;
+      EXECUTING = true;
       let date = new Date();
       let hours = date.getHours();
       let minutes = date.getMinutes();
@@ -51,31 +54,10 @@ function randomItemSetter() {
             console.warn("Insufficient spinner items, length < 6");
             return;
           }
-
-          let update_time = new Date(today_spinner_data["updated_at"]);
-
-          if (!isNaN(update_time.getSeconds())) {
-            if (
-              update_time.getHours() === hours &&
-              Math.abs(seconds - update_time.getSeconds()) >= next_spin_delay
-            ) {
-              await updateSpin(currentSpin.id);
-              await updateWinners();
-            } else if (update_time.getHours() !== hours) {
-              //? Fetch data here for every 6 hours
-              const new_addresses = await fetchAddress();
-              if (Object.keys(new_addresses).length === 0) {
-                throw "No transactions for the period!";
-              }
-              currentSpin = await createSpin(spin_no);
-              for (const item of new_addresses) {
-                await createParticipant(item, spin_no);
-              }
-              await updateWinners();
-            }
-          }
         }
       }
+      await updateWinners();
+      EXECUTING = false;
     } catch (err) {
       console.log(err);
     }
@@ -87,32 +69,40 @@ updateWinners = async () => {
 
   if (spin_hours.indexOf(hours) > -1) {
     const spin_no = spin_hours.indexOf(hours) + 1;
-    const winners = await getWinners(date, date);
-    const currentSpinRow = winners.filter((w) => w.spin === spin_no)[0];
-    const currentSpin = await createSpin(spin_no);
-    const participants = await getParticipants(date, date, "winners");
+    const currentSpin = await getSpin(spin_no);
+
+    let participants = await getParticipants(date, date, "participants");
     if (!participants.length || !currentSpin) return;
+
+    const winners = await getWinners(date, date);
+    console.log("winners", winners);
+    const currentSpinRow = winners.filter(
+      (w) => w.spin.toString() === spin_no.toString()
+    )[0];
+    console.log("currentSpinRow", currentSpinRow);
 
     if (!currentSpinRow || !currentSpinRow.first) {
       const winner = pickWinner(participants);
-      await markAsWinner(winner.id);
+      const x = await markAsWinner(winner.id, 1);
+      console.log("updating", x);
       await updateSpin(currentSpin.id);
     } else if (!currentSpinRow.second) {
-      participants = participants.filter((p) => !p.first);
+      participants = participants.filter((p) => !p.rank);
       const winner = pickWinner(participants);
-      await markAsWinner(winner.id);
+      await markAsWinner(winner.id, 2);
       await updateSpin(currentSpin.id);
     } else if (!currentSpinRow.third) {
-      participants = participants.filter((p) => !p.first && !p.second);
+      participants = participants.filter((p) => !p.rank);
       const winner = pickWinner(participants);
-      await markAsWinner(winner.id);
+      await markAsWinner(winner.id, 3);
       await updateSpin(currentSpin.id);
     }
   }
 };
 pickWinner = (participants) => {
-  const size = participants.size;
+  const size = participants.length;
   const index = Math.floor(Math.random() * size);
+  console.log("index", index);
   return participants[index];
 };
 
