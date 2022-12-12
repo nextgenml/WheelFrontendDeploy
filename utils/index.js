@@ -8,6 +8,7 @@ const {
   updateSpin,
   getWinners,
   getParticipants,
+  createSpin,
   markAsWinner,
 } = require("../repository/spinwheel.js");
 
@@ -25,7 +26,7 @@ function randomItemSetter() {
           console.log("hit");
 
           const spin_no = spin_hours.indexOf(hours) + 1;
-          spin_data_exists = dataExistsForCurrentSpin(spin_no);
+          spin_data_exists = await dataExistsForCurrentSpin(spin_no);
           let currentSpin, today_spinner_data;
           if (!spin_data_exists) {
             const new_addresses = await fetchAddress();
@@ -85,7 +86,7 @@ updateWinners = async () => {
   let hours = date.getHours();
 
   if (spin_hours.indexOf(hours) > -1) {
-    const spin_no = spin_hours.indexOf(hours);
+    const spin_no = spin_hours.indexOf(hours) + 1;
     const winners = await getWinners(date, date);
     const currentSpinRow = winners.filter((w) => w.spin === spin_no)[0];
     const currentSpin = await createSpin(spin_no);

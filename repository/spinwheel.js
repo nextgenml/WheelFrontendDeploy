@@ -43,6 +43,7 @@ const currentSpinData = async (spin_no) => {
     });
   });
   const spin = spins[0];
+  if (!spin) return;
   return {
     items: addresses,
     created_at: spin.created_at,
@@ -76,7 +77,7 @@ const getSpin = async (spin_no) => {
 };
 const createSpin = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at) values('${spin_no}', 'daily', '${spin_day}', now(), now();`;
+  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at) values(${spin_no}, 'daily', '${spin_day}', now(), now());`;
 
   await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
@@ -111,11 +112,11 @@ const dataExistsForCurrentSpin = async (spin_no) => {
     });
   });
 
-  return !!users.length;
+  return users.length > 0;
 };
 const createParticipant = async (transaction_id, spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `insert into participants (transaction_id, spin_no, type, spin_at, spin_day) values('${transaction_id}', ${spin_no}, 'daily', now(), '${spin_day}';`;
+  const query = `insert into participants (transaction_id, spin_no, type, spin_at, spin_day) values('${transaction_id}', ${spin_no}, 'daily', now(), '${spin_day}');`;
   return await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
       if (error) {

@@ -66,9 +66,9 @@ app.get("/spinner-data", async (req, res) => {
   let hours = date.getHours();
   let spinner_data;
   if (spin_hours.indexOf(hours) > -1) {
-    const spin_no = spin_hours.indexOf(hours);
+    const spin_no = spin_hours.indexOf(hours) + 1;
     const today_spinner_data = await currentSpinData(spin_no);
-    if (today_spinner_data.items.length) {
+    if (today_spinner_data && today_spinner_data.items.length) {
       spinner_data = {
         [today_date_str]: today_spinner_data,
       };
