@@ -14,7 +14,7 @@ const {
 
 EXECUTING = false;
 function randomItemSetter() {
-  let time_out = 1000 * 4; // 10 sec
+  let time_out = 1000 * 1; // 10 sec
   setInterval(async () => {
     try {
       if (EXECUTING) return;
@@ -22,10 +22,12 @@ function randomItemSetter() {
       let date = new Date();
       let hours = date.getHours();
       let minutes = date.getMinutes();
+      let secs = date.getSeconds();
       if (spin_hours.indexOf(hours) >= 0) {
-        if (minutes === spin_minute - 1) {
-          console.log("hit");
-
+        if (
+          minutes === spin_minute ||
+          (minutes === spin_minute - 1 && secs > 40)
+        ) {
           const spin_no = spin_hours.indexOf(hours) + 1;
           spin_data_exists = await dataExistsForCurrentSpin(spin_no);
           let currentSpin, today_spinner_data;
@@ -49,12 +51,14 @@ function randomItemSetter() {
             today_spinner_data = await currentSpinData(spin_no);
           }
           if (today_spinner_data["items"].length < 6) {
-            console.warn("Insufficient spinner items, length < 6");
-            return;
+            // console.warn("Insufficient spinner items, length < 6");
+            // return;
           }
+          let update_time = new Date(today_spinner_data["updated_at"]);
+          if (Math.abs(secs - update_time.getSeconds()) >= next_spin_delay - 5)
+            await updateWinners();
         }
       }
-      await updateWinners();
       EXECUTING = false;
     } catch (err) {
       console.log(err);
@@ -64,7 +68,7 @@ function randomItemSetter() {
 updateWinners = async () => {
   let date = new Date();
   let hours = date.getHours();
-
+  console.log("running updateWinners");
   if (spin_hours.indexOf(hours) > -1) {
     const spin_no = spin_hours.indexOf(hours) + 1;
     const currentSpin = await getSpin(spin_no);
@@ -84,8 +88,7 @@ updateWinners = async () => {
 
     if (!currentSpinRow || !currentSpinRow.first) {
       const winner = pickWinner(participants);
-      const x = await markAsWinner(winner.id, 1);
-      console.log("updating", x);
+      await markAsWinner(winner.id, 1);
       await updateSpin(currentSpin.id);
     } else if (!currentSpinRow.second) {
       participants = participants.filter((p) => !p.rank);
