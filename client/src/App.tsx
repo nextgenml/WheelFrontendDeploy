@@ -85,7 +85,7 @@ function App() {
         console.log({ winners });
 
         if (winners) {
-          winners.map((winner: string) => {
+          winners.forEach((winner: string) => {
             if (winner != null) {
               spins_remaining--;
               return winner;
@@ -96,6 +96,9 @@ function App() {
           setNoOfWinnersDisplay(0);
           winners = [];
         }
+      } else {
+        setNoOfWinnersDisplay(0);
+        winners = [];
       }
 
       console.log({ spins_remaining });

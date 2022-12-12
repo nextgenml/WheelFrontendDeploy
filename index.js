@@ -5,6 +5,7 @@ const fs = require("fs");
 const cors = require("cors");
 const utils = require("./utils/index.js");
 const { spin_hours, spin_minute } = require("./config.js");
+const moment = require("moment");
 // const fetchAddress = require('./script/tracking')
 //import express from 'express'
 //import path from 'path';
@@ -95,11 +96,33 @@ app.get("/spinner-data", async (req, res) => {
   }
 });
 
-app.get("/winners-data", (req, res) => {
-  const winner_data = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "winners_data.json"))
-  );
-  res.json(winner_data);
+app.get("/winners-data", async (req, res) => {
+  let date = new Date();
+  let hours = date.getHours();
+  if (spin_hours.indexOf(hours) > -1) {
+    const formattedDate = moment(date).format("DD/MM/YYY");
+
+    const spin_no = spin_hours.indexOf(hours) + 1;
+    const winners = await getWinners(date, date);
+    const currentSpin = await getSpin(spin_no);
+    const currentSpinRow = winners.filter(
+      (w) => w.spin.toString() === spin_no.toString()
+    )[0];
+    res.json({
+      [formattedDate]: {
+        [hours]: {
+          updated_at: currentSpin.updated_at,
+          winners: [
+            currentSpinRow.first,
+            currentSpinRow.second,
+            currentSpinRow.third,
+          ],
+        },
+      },
+    });
+  } else {
+    res.json({});
+  }
 });
 
 app.get("/winners-data-1", async (req, res) => {
