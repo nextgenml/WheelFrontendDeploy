@@ -12,7 +12,11 @@ const { spin_hours, spin_minute } = require("./config.js");
 //import cors from 'cors';
 //import utils from './utils/index.js';
 //import { spin_hours, spin_minute } from '../config.js'
-const { getParticipants, getWinners } = require("./repository/spinwheel");
+const {
+  getParticipants,
+  getWinners,
+  currentSpinData,
+} = require("./repository/spinwheel");
 
 const app = express();
 
@@ -58,16 +62,30 @@ app.get("/spinner-data", async (req, res) => {
 
   let minute_diff = (time_diff / 60) % 3600;
 
-  if (
-    Object.keys(spinner_data_file).length === 0 ||
-    !spinner_data_file[today_date_str]
-  ) {
-    // const initial_items = JSON.parse(fs.readFileSync(initial_spinner_data_file_path))
-    // if (!spinner_data_file) {
-    //     spinner_data_file = {}
-    // }
-    // spinner_data_file[today_date_str] = initial_items;
-    // fs.writeFileSync(spinner_data_file_path, JSON.stringify(spinner_data_file))
+  let date = new Date();
+  let hours = date.getHours();
+  let spinner_data;
+  if (spin_hours.indexOf(hours) > -1) {
+    const spin_no = spin_hours.indexOf(hours);
+    const today_spinner_data = await currentSpinData(spin_no);
+    if (today_spinner_data.items.length) {
+      spinner_data = {
+        [today_date_str]: today_spinner_data,
+      };
+    }
+  }
+  if (spinner_data) {
+    res.json({
+      ...spinner_data,
+      current_time: {
+        hours: hours_diff,
+        minutes: minute_diff,
+        seconds: current_time.getSeconds(),
+      },
+      start_time: current_time.toUTCString(),
+      end_time: end_date.toUTCString(),
+    });
+  } else {
     res.json({
       current_time: {
         hours: hours_diff,
@@ -77,19 +95,7 @@ app.get("/spinner-data", async (req, res) => {
       start_time: current_time.toUTCString(),
       end_time: end_date.toUTCString(),
     });
-    return;
   }
-
-  res.json({
-    ...spinner_data_file,
-    current_time: {
-      hours: hours_diff,
-      minutes: minute_diff,
-      seconds: current_time.getSeconds(),
-    },
-    start_time: current_time.toUTCString(),
-    end_time: end_date.toUTCString(),
-  });
 });
 
 app.get("/winners-data", (req, res) => {
