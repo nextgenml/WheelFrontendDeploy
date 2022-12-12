@@ -16,6 +16,7 @@ const moment = require("moment");
 const {
   getParticipants,
   getWinners,
+  getSpin,
   currentSpinData,
 } = require("./repository/spinwheel");
 
@@ -108,18 +109,22 @@ app.get("/winners-data", async (req, res) => {
     const currentSpinRow = winners.filter(
       (w) => w.spin.toString() === spin_no.toString()
     )[0];
-    res.json({
-      [formattedDate]: {
-        [hours]: {
-          updated_at: currentSpin.updated_at,
-          winners: [
-            currentSpinRow.first,
-            currentSpinRow.second,
-            currentSpinRow.third,
-          ],
+    if (currentSpin && currentSpinRow) {
+      res.json({
+        [formattedDate]: {
+          [hours]: {
+            updated_at: currentSpin.updated_at,
+            winners: [
+              currentSpinRow.first,
+              currentSpinRow.second,
+              currentSpinRow.third,
+            ],
+          },
         },
-      },
-    });
+      });
+    } else {
+      res.json({});
+    }
   } else {
     res.json({});
   }

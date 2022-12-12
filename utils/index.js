@@ -22,10 +22,8 @@ function randomItemSetter() {
       let date = new Date();
       let hours = date.getHours();
       let minutes = date.getMinutes();
-      // date.setSeconds(date.getSeconds() + 3) // Setting 3s offset, to generate the data 3s prior
-      let seconds = date.getSeconds();
       if (spin_hours.indexOf(hours) >= 0) {
-        if (minutes === spin_minute) {
+        if (minutes === spin_minute - 1) {
           console.log("hit");
 
           const spin_no = spin_hours.indexOf(hours) + 1;
@@ -72,6 +70,9 @@ updateWinners = async () => {
     const currentSpin = await getSpin(spin_no);
 
     let participants = await getParticipants(date, date, "participants");
+    participants = participants.filter(
+      (w) => w.spin.toString() === spin_no.toString()
+    );
     if (!participants.length || !currentSpin) return;
 
     const winners = await getWinners(date, date);
