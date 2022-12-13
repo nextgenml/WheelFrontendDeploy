@@ -14,7 +14,6 @@ const {
 
 EXECUTING = false;
 function randomItemSetter() {
-  let time_out = 1000 * 1; // 10 sec
   setInterval(async () => {
     try {
       if (EXECUTING) return;
@@ -24,10 +23,7 @@ function randomItemSetter() {
       let minutes = date.getMinutes();
       let secs = date.getSeconds();
       if (spin_hours.indexOf(hours) >= 0) {
-        if (
-          minutes === spin_minute ||
-          (minutes === spin_minute - 1 && secs > 40)
-        ) {
+        if (minutes === spin_minute) {
           const spin_no = spin_hours.indexOf(hours) + 1;
           spin_data_exists = await dataExistsForCurrentSpin(spin_no);
           let currentSpin, today_spinner_data;
@@ -46,6 +42,7 @@ function randomItemSetter() {
               created_at: currentSpin.created_at,
               updated_at: currentSpin.updated_at,
             };
+            await updateWinners();
           } else {
             currentSpin = await getSpin(spin_no);
             today_spinner_data = await currentSpinData(spin_no);
@@ -55,7 +52,7 @@ function randomItemSetter() {
             // return;
           }
           let update_time = new Date(today_spinner_data["updated_at"]);
-          if (Math.abs(secs - update_time.getSeconds()) >= next_spin_delay - 5)
+          if (Math.abs(secs - update_time.getSeconds()) >= next_spin_delay)
             await updateWinners();
         }
       }
@@ -63,7 +60,7 @@ function randomItemSetter() {
     } catch (err) {
       console.log(err);
     }
-  }, time_out);
+  }, 1000);
 }
 updateWinners = async () => {
   let date = new Date();
