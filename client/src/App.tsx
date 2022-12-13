@@ -39,7 +39,7 @@ function App() {
   );
 
   const [is_no_spinner_data, setIsNoSpinnerData] = useState(false);
-
+  const [prev_winner_count, set_prev_winner_count] = useState(0);
   const setSpinnerData = (_selected_date: Date) => {
     const spinner_data = JSON.parse(localStorage.getItem("spinner_data")!);
     const winners_data = JSON.parse(localStorage.getItem("winners_data")!);
@@ -121,6 +121,17 @@ function App() {
     return { spins_remaining };
   };
 
+  const getWinnersFromObject = (data: any) => {
+    const x: any = Object.values(data);
+    if (x && x.length) {
+      const y: any = Object.values(x[0]);
+      if (y && y.length) {
+        const z: any = y[0];
+        if (z) return z.winners || [];
+      }
+    }
+    return [];
+  };
   const fetchSpinnerData = async () => {
     let spinner_data_res = await fetch(api_url + "spinner-data", {
       method: "GET",
@@ -143,17 +154,33 @@ function App() {
       },
     });
 
-    let winners_data = await winners_data_res.json();
+    let winners_data_temp = await winners_data_res.json();
 
     let end_time = new Date(spinner_data["end_time"]);
     let start_time = new Date(spinner_data["start_time"]);
     console.log("fetching again", end_time, start_time);
     localStorage.setItem("spinner_data", JSON.stringify(spinner_data));
-    localStorage.setItem("winners_data", JSON.stringify(winners_data));
+    localStorage.setItem("winners_data", JSON.stringify(winners_data_temp));
 
     let { spins_remaining } = setSpinnerData(start_time);
+
+    let wCount = 0;
+    if (winners_data) {
+      let currentWinnerSet = getWinnersFromObject(winners_data_temp);
+      wCount = currentWinnerSet.filter((x: any) => !!x).length;
+
+      const x = 1;
+      if (prev_winner_count === 2 && wCount === 3) {
+        // window.location.reload();
+        console.log("reloading");
+      } else {
+        console.log("updateing count", wCount);
+        set_prev_winner_count(wCount);
+      }
+    }
+
     setSelectedDate(start_time);
-    setWinnersData(winners_data);
+    setWinnersData(winners_data_temp);
 
     const formatted_date = moment(selected_date).format("YYYY-MM-DD");
     let winners_data_res_1 = await fetch(
@@ -172,7 +199,7 @@ function App() {
     return {
       start_time,
       end_time,
-      spins_remaining,
+      spins_remaining: 3 - wCount,
     };
   };
 
