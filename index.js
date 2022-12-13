@@ -26,6 +26,12 @@ utils.randomItemSetter();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
+const relativeSpinIndex = (hour) => {
+  for (i = 0; i < spin_hours.length - 1; i += 1) {
+    if (spin_hours[i] < hour && hour < spin_hours[i + 1]) return i + 1;
+  }
+  return hour > spin_hours[spin_hours.length - 1] ? spin_hours.length : -1;
+};
 app.get("/spinner-data", async (req, res) => {
   const today_date_str = utils.dateToString(new Date());
   let current_time = new Date();
@@ -64,8 +70,10 @@ app.get("/spinner-data", async (req, res) => {
   let date = new Date();
   let hours = date.getHours();
   let spinner_data;
-  if (spin_hours.indexOf(hours) > -1) {
-    const spin_no = spin_hours.indexOf(hours) + 1;
+
+  const spinIndex = spin_hours.indexOf(hours);
+  const spin_no = spinIndex > -1 ? spinIndex + 1 : relativeSpinIndex(hours);
+  if (spin_no > 0) {
     const today_spinner_data = await currentSpinData(spin_no);
     if (today_spinner_data && today_spinner_data.items.length) {
       spinner_data = {
@@ -73,6 +81,7 @@ app.get("/spinner-data", async (req, res) => {
       };
     }
   }
+
   if (spinner_data) {
     res.json({
       ...spinner_data,
@@ -100,10 +109,11 @@ app.get("/spinner-data", async (req, res) => {
 app.get("/winners-data", async (req, res) => {
   let date = new Date();
   let hours = date.getHours();
-  if (spin_hours.indexOf(hours) > -1) {
-    const formattedDate = moment(date).format("DD/MM/YYY");
+  const spinIndex = spin_hours.indexOf(hours);
+  const spin_no = spinIndex > -1 ? spinIndex + 1 : relativeSpinIndex(hours);
+  const formattedDate = moment(date).format("DD/MM/YYY");
 
-    const spin_no = spin_hours.indexOf(hours) + 1;
+  if (spin_no > 0) {
     const winners = await getWinners(date, date);
     const currentSpin = await getSpin(spin_no);
     const currentSpinRow = winners.filter(

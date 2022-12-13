@@ -42,14 +42,18 @@ function randomItemSetter() {
               created_at: currentSpin.created_at,
               updated_at: currentSpin.updated_at,
             };
+            if (today_spinner_data["items"].length < 6) {
+              console.warn("Insufficient spinner items, length < 6");
+              return;
+            }
             await updateWinners();
           } else {
             currentSpin = await getSpin(spin_no);
             today_spinner_data = await currentSpinData(spin_no);
           }
           if (today_spinner_data["items"].length < 6) {
-            // console.warn("Insufficient spinner items, length < 6");
-            // return;
+            console.warn("Insufficient spinner items, length < 6");
+            return;
           }
           let update_time = new Date(today_spinner_data["updated_at"]);
           if (Math.abs(secs - update_time.getSeconds()) >= next_spin_delay)
