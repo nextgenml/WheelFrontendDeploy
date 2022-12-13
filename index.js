@@ -159,7 +159,7 @@ app.get("/winners-data", async (req, res) => {
 
 app.get("/winners-data-1", async (req, res) => {
   console.log("req.params.date", req.query);
-  const winner_data = await getWinners(req.query.date, req.query.date);
+  const winner_data = await getWinners(req.query.from, req.query.to);
   res.json(winner_data);
 });
 

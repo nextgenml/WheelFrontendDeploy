@@ -38,6 +38,10 @@ function App() {
     spinner_colors[Math.floor(Math.random() * spinner_colors.length)]
   );
 
+  const [showStart, setShowStart] = useState(false);
+  const [showEnd, setShowEnd] = useState(false);
+  const [startDate, setStartDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<Date>(new Date());
   const [is_no_spinner_data, setIsNoSpinnerData] = useState(false);
   const [prev_winner_count, set_prev_winner_count] = useState(0);
   const setSpinnerData = (_selected_date: Date) => {
@@ -182,9 +186,10 @@ function App() {
     setSelectedDate(start_time);
     setWinnersData(winners_data_temp);
 
-    const formatted_date = moment(selected_date).format("YYYY-MM-DD");
+    const f_start = moment(startDate).format("YYYY-MM-DD");
+    const f_end = moment(endDate).format("YYYY-MM-DD");
     let winners_data_res_1 = await fetch(
-      api_url + `winners-data-1?date=${formatted_date}`,
+      api_url + `winners-data-1?from=${f_start}&to=${f_end}`,
       {
         method: "GET",
         headers: {
@@ -289,7 +294,7 @@ function App() {
               style={{ marginTop: "3rem", gap: "0.2rem" }}
               className="flex flex-row  items-center justify-center mt-8 lg:justify-end w-full"
             >
-              {!show_calender && winners_data && (
+              {!showStart && (
                 <>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -310,27 +315,84 @@ function App() {
                   </svg>
 
                   <p
-                    onClick={() => setShowCalender(true)}
+                    onClick={() => setShowStart(true)}
                     className="cursor-pointer font-medium text-white"
                   >
-                    {DateToString(selected_date)}
+                    {DateToString(startDate)}
                   </p>
                 </>
               )}
-              {show_calender && winners_data && (
+              <span
+                style={{
+                  marginLeft: "16px",
+                  marginRight: "16px",
+                  color: "white",
+                }}
+              >
+                to
+              </span>
+              {showStart && (
                 <Calendar
                   className={"date-calender"}
                   onChange={(new_date: Date) => {
-                    setShowCalender(false);
-                    setSelectedDate(new_date);
+                    setShowStart(false);
+                    setStartDate(new_date);
                   }}
-                  value={selected_date}
                   calendarType="US"
                   defaultActiveStartDate={selected_date}
-                  minDate={stringToDate(Object.keys(winners_data)[0])}
-                  maxDate={new Date()}
                 />
               )}
+              {!showEnd && (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width={24}
+                    height={24}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-calendar"
+                  >
+                    <rect x={3} y={4} width={18} height={18} rx={2} ry={2} />
+                    <line x1={16} y1={2} x2={16} y2={6} />
+                    <line x1={8} y1={2} x2={8} y2={6} />
+                    <line x1={3} y1={10} x2={21} y2={10} />
+                  </svg>
+
+                  <p
+                    onClick={() => setShowEnd(true)}
+                    className="cursor-pointer font-medium text-white"
+                  >
+                    {DateToString(endDate)}
+                  </p>
+                </>
+              )}
+              {showEnd && (
+                <Calendar
+                  className={"date-calender"}
+                  onChange={(new_date: Date) => {
+                    setShowEnd(false);
+                    setEndDate(new_date);
+                  }}
+                  calendarType="US"
+                  defaultActiveStartDate={selected_date}
+                />
+              )}
+              <button
+                onClick={fetchSpinnerData}
+                style={{
+                  color: "white",
+                  border: "1px solid orange",
+                  marginLeft: "16px",
+                  padding: "8px",
+                  borderRadius: "8px",
+                }}
+              >
+                Get Winners
+              </button>
             </div>
           </div>
           {winners_data_1 && <WinnersTable winners_data={winners_data_1} />}
