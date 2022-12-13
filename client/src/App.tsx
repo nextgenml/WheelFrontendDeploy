@@ -267,7 +267,7 @@ function App() {
             style={{ gap: "4rem", minHeight: "90vh", padding: "1rem 0" }}
             className="flex w-fit lg:gap-20 flex-row flex-wrap justify-center items-center mx-auto py-9"
           >
-            {!is_no_spinner_data && wheel_items && (
+            {!is_no_spinner_data && wheel_items ? (
               <Wheel
                 spinner_wheel_color={spinner_color}
                 onFinish={() => {
@@ -276,6 +276,10 @@ function App() {
                 selected_item={winner}
                 items={wheel_items}
               />
+            ) : (
+              <p style={{ color: "white", fontSize: "20px" }}>
+                No Spin Last Time As Minimum Wallet Requirement Is Not Met
+              </p>
             )}
             <CountDown
               on_Complete={onCountDownComplete}
@@ -287,7 +291,7 @@ function App() {
           <div style={{ padding: "0 5rem" }} className="flex flex-col  ">
             {winners_data && (
               <h2 className="text-white font-medium mx-auto  text-center text-4xl">
-                Today Winners
+                Winners on the selected date range
               </h2>
             )}
             <div

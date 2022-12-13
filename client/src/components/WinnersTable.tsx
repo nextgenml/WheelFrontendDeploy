@@ -83,7 +83,7 @@ export default function WinnersTable(props: Props) {
                   }}
                   className="text-white "
                 >
-                  No winner yet today
+                  No winners
                 </p>
               </>
             )}
