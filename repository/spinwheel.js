@@ -220,9 +220,9 @@ var groupBy = function (xs, key) {
 
 var formatTransactionId = (transaction_id) =>
   transaction_id
-    ? transaction_id.substring(0, 4) +
-      "...." +
-      transaction_id.substring(transaction_id.length - 4)
+    ? transaction_id.substring(0, 5) +
+      "..." +
+      transaction_id.substring(transaction_id.length - 5)
     : null;
 module.exports = {
   getTransactionIds,

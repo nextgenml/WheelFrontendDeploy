@@ -26,6 +26,45 @@ utils.randomItemSetter();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
+const relativeSpinIndex = (hour) => {
+  for (i = 0; i < spin_hours.length - 1; i += 1) {
+    if (spin_hours[i] < hour && hour < spin_hours[i + 1]) return i + 1;
+  }
+  return hour > spin_hours[spin_hours.length - 1] ? spin_hours.length : -1;
+};
+const getSpinData = async (spin) => {
+  const today_date_str = utils.dateToString(new Date());
+  let today_spinner_data = await currentSpinData(spin);
+  if (today_spinner_data && today_spinner_data.items.length) {
+    return {
+      [today_date_str]: today_spinner_data,
+    };
+  }
+};
+const getWinnersForSpin = async (spin_no) => {
+  let date = new Date();
+  const formattedDate = moment(date).format("DD/MM/YYY");
+
+  const winners = await getWinners(date, date);
+  const currentSpin = await getSpin(spin_no);
+  const currentSpinRow = winners.filter(
+    (w) => w.spin.toString() === spin_no.toString()
+  )[0];
+  if (currentSpin && currentSpinRow) {
+    return {
+      [formattedDate]: {
+        [spin_hours[spin_no - 1]]: {
+          updated_at: currentSpin.updated_at,
+          winners: [
+            currentSpinRow.first,
+            currentSpinRow.second,
+            currentSpinRow.third,
+          ],
+        },
+      },
+    };
+  }
+};
 app.get("/spinner-data", async (req, res) => {
   const today_date_str = utils.dateToString(new Date());
   let current_time = new Date();
@@ -65,14 +104,16 @@ app.get("/spinner-data", async (req, res) => {
   let hours = date.getHours();
   let spinner_data;
   if (spin_hours.indexOf(hours) > -1) {
-    const spin_no = spin_hours.indexOf(hours) + 1;
-    const today_spinner_data = await currentSpinData(spin_no);
-    if (today_spinner_data && today_spinner_data.items.length) {
-      spinner_data = {
-        [today_date_str]: today_spinner_data,
-      };
+    let spin_no = spin_hours.indexOf(hours) + 1;
+    spinner_data = await getSpinData(spin_no);
+    if (!spinner_data && spin_no - 1 > 0) {
+      spinner_data = await getSpinData(spin_no - 1);
     }
+  } else {
+    let spinIndex = relativeSpinIndex(hours);
+    spinner_data = await getSpinData(spinIndex);
   }
+
   if (spinner_data) {
     res.json({
       ...spinner_data,
@@ -100,34 +141,20 @@ app.get("/spinner-data", async (req, res) => {
 app.get("/winners-data", async (req, res) => {
   let date = new Date();
   let hours = date.getHours();
+  let winners_data;
   if (spin_hours.indexOf(hours) > -1) {
-    const formattedDate = moment(date).format("DD/MM/YYY");
-
-    const spin_no = spin_hours.indexOf(hours) + 1;
-    const winners = await getWinners(date, date);
-    const currentSpin = await getSpin(spin_no);
-    const currentSpinRow = winners.filter(
-      (w) => w.spin.toString() === spin_no.toString()
-    )[0];
-    if (currentSpin && currentSpinRow) {
-      res.json({
-        [formattedDate]: {
-          [hours]: {
-            updated_at: currentSpin.updated_at,
-            winners: [
-              currentSpinRow.first,
-              currentSpinRow.second,
-              currentSpinRow.third,
-            ],
-          },
-        },
-      });
-    } else {
-      res.json({});
+    let spin_no = spin_hours.indexOf(hours) + 1;
+    winners_data = await getWinnersForSpin(spin_no);
+    if (!winners_data && spin_no - 1 > 0) {
+      winners_data = await getWinnersForSpin(spin_no - 1);
     }
   } else {
-    res.json({});
+    let spinIndex = relativeSpinIndex(hours);
+    winners_data = await getWinnersForSpin(spinIndex);
   }
+
+  if (winners_data) res.json(winners_data);
+  else res.json({});
 });
 
 app.get("/winners-data-1", async (req, res) => {
@@ -138,11 +165,7 @@ app.get("/winners-data-1", async (req, res) => {
 
 app.get("/participants-data", async (req, res) => {
   const type = req.query.winners === "yes" ? "winners" : "participants";
-  const winner_data = await getParticipants(
-    req.query.date,
-    req.query.date,
-    type
-  );
+  const winner_data = await getParticipants(req.query.from, req.query.to, type);
   res.json(winner_data);
 });
 
