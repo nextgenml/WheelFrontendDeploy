@@ -7,6 +7,7 @@ import { next_spin_delay } from "./config";
 import { DateToString, stringToDate } from "./utils";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
+import AboutSection from "./components/About";
 const spinner_colors = [
   "#CBE4F9",
   "#CDF5F6",
@@ -417,6 +418,7 @@ function App() {
           <span className="visually-hidden">Loading...</span>
         </div>
       )}
+      <AboutSection />
     </div>
   );
 }
