@@ -25,6 +25,7 @@ function randomItemSetter() {
       if (spin_hours.indexOf(hours) >= 0) {
         if (minutes === spin_minute) {
           const spin_no = spin_hours.indexOf(hours) + 1;
+          console.log("running new spin", spin_no, hours, spin_minute);
           spin_data_exists = await dataExistsForCurrentSpin(spin_no);
           let currentSpin, today_spinner_data;
           if (!spin_data_exists) {
@@ -32,7 +33,7 @@ function randomItemSetter() {
             if (Object.keys(new_addresses).length === 0) {
               throw "No transactions for the period!";
             }
-            console.log(new_addresses, "fresh day");
+            console.log(new_addresses, "fresh spin");
             currentSpin = await createSpin(spin_no);
             for (const item of new_addresses) {
               await createParticipant(item, spin_no);
@@ -42,14 +43,18 @@ function randomItemSetter() {
               created_at: currentSpin.created_at,
               updated_at: currentSpin.updated_at,
             };
+            if (today_spinner_data["items"].length < 6) {
+              console.warn("Insufficient spinner items, length < 6");
+              return;
+            }
             await updateWinners();
           } else {
             currentSpin = await getSpin(spin_no);
             today_spinner_data = await currentSpinData(spin_no);
           }
           if (today_spinner_data["items"].length < 6) {
-            // console.warn("Insufficient spinner items, length < 6");
-            // return;
+            console.warn("Insufficient spinner items, length < 6");
+            return;
           }
           let update_time = new Date(today_spinner_data["updated_at"]);
           if (Math.abs(secs - update_time.getSeconds()) >= next_spin_delay)
@@ -77,7 +82,6 @@ updateWinners = async () => {
     if (!participants.length || !currentSpin) return;
 
     const winners = await getWinners(date, date);
-    console.log("winners", winners);
     const currentSpinRow = winners.filter(
       (w) => w.spin.toString() === spin_no.toString()
     )[0];
@@ -103,7 +107,6 @@ updateWinners = async () => {
 pickWinner = (participants) => {
   const size = participants.length;
   const index = Math.floor(Math.random() * size);
-  console.log("index", index);
   return participants[index];
 };
 

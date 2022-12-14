@@ -113,7 +113,12 @@ app.get("/spinner-data", async (req, res) => {
     let spinIndex = relativeSpinIndex(hours);
     spinner_data = await getSpinData(spinIndex);
   }
-
+  if (
+    spinner_data &&
+    spinner_data[today_date_str] &&
+    spinner_data[today_date_str].items.length < 6
+  )
+    spinner_data = null;
   if (spinner_data) {
     res.json({
       ...spinner_data,
