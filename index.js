@@ -170,7 +170,13 @@ app.get("/winners-data-1", async (req, res) => {
 
 app.get("/participants-data", async (req, res) => {
   const type = req.query.winners === "yes" ? "winners" : "participants";
-  const winner_data = await getParticipants(req.query.from, req.query.to, type);
+  const spin_no = parseInt(req.query.spin);
+  const winner_data = await getParticipants(
+    req.query.from,
+    req.query.to,
+    type,
+    spin_no
+  );
   res.json(winner_data);
 });
 

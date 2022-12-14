@@ -127,12 +127,14 @@ const createParticipant = async (transaction_id, spin_no) => {
     });
   });
 };
-const getParticipants = async (start, end, type) => {
+const getParticipants = async (start, end, type, spin) => {
   start = moment(start).startOf("day").format();
   end = moment(end).endOf("day").format();
   const query = `select * from participants where ${
     type === "winners" ? "is_winner = 1 and " : ""
-  } spin_day >= '${start}' and spin_day <= '${end}';`;
+  } spin_day >= '${start}' and spin_day <= '${end}' ${
+    spin > 0 ? `and spin_no = ${spin}` : ""
+  };`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
