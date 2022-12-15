@@ -163,7 +163,6 @@ app.get("/winners-data", async (req, res) => {
 });
 
 app.get("/winners-data-1", async (req, res) => {
-  console.log("req.params.date", req.query);
   const winner_data = await getWinners(req.query.from, req.query.to);
   res.json(winner_data);
 });
@@ -197,5 +196,5 @@ if (process.env.NODE_ENV == "production") {
 }
 const port = process.env["PORT"] || 8000;
 app.listen(port, function () {
-  console.log("app listening at ", "http://localhost:" + port);
+  //console.log("app listening at ", "http://localhost:" + port);
 });

@@ -52,7 +52,7 @@ function sortObj(obj) {
 
 async function finalWorks(dic, lst) {
   let finalLST = [];
-  console.log("dic", dic);
+  //console.log("dic", dic);
   // Filling the sorted wallet address to a final list
   for (var i = 0; i < dic.length; i++) {
     if (dic[i]) {
@@ -64,7 +64,7 @@ async function finalWorks(dic, lst) {
   let _path = path.join(__dirname, "assets", "last_block_number.json");
   // Updating the LAST BLOCK NUMBER to the JSON file
   await fs.writeFile(_path, lst.toString(), (err) => {
-    if (err) console.log("ERR");
+    if (err) //console.log("ERR");
   });
 
   return finalLST;
@@ -88,10 +88,10 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
     );
   } catch (e) {
     error = e;
-    console.log("Something went wrong");
+    //console.log("Something went wrong");
   }
 
-  console.log("ev", ev[0]);
+  //console.log("ev", ev[0]);
   if (error == null) {
     // Checking event if its not 0 then update the LAST BLOCK NUMBER
     for (var i = 1; i < ev.length; i++) {
@@ -105,7 +105,7 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 
     return await finalWorks(DICT, LAST);
   } else {
-    console.log("Something went wrong");
+    //console.log("Something went wrong");
     return {};
   }
 }
@@ -115,7 +115,7 @@ async function fetchAddress() {
   return await run_me(CONTRACT).then(async (CONTRACT) => {
     let _path = path.join(__dirname, "assets", "last_block_number.json");
     return await readFiles(_path).then(async (LAST_BLOCK) => {
-      console.log("LAST_BLOCK", LAST_BLOCK);
+      //console.log("LAST_BLOCK", LAST_BLOCK);
       return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(
         async (final) => {
           return final;
@@ -127,13 +127,13 @@ async function fetchAddress() {
 
 // run it directly
 // setTimeout(async () => {
-//     await fetchAddress().then(console.log)
+//     await fetchAddress().then(//console.log)
 // }, 1000)
 
 // fs.writeFile(fileName, JSON.stringify(file), function writeJSON(err) {
-//     if (err) return console.log(err);
-//     console.log(JSON.stringify(file));
-//     console.log('writing to ' + fileName);
+//     if (err) return //console.log(err);
+//     //console.log(JSON.stringify(file));
+//     //console.log('writing to ' + fileName);
 //   });
 
 Number.prototype.toFixedSpecial = function (n) {
