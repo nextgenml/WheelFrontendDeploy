@@ -3,7 +3,7 @@ const moment = require("moment");
 const { dbConnection } = require("../dbconnect");
 const getTransactionIds = async () => {
   const new_addresses = await fetchAddress();
-  //console.log("new_addresses", new_addresses);
+  console.log("new_addresses", new_addresses);
 };
 
 const markWinnerAsPaid = async (transaction_id) => {
@@ -20,7 +20,7 @@ const markWinnerAsPaid = async (transaction_id) => {
 
 const markAsWinner = async (id, rank) => {
   const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ${rank} where id = ${id};`;
-  //console.log("update", update);
+  console.log("update", update);
   await new Promise((resolve, reject) => {
     dbConnection.query(update, (error, elements) => {
       if (error) {
@@ -186,17 +186,17 @@ const getWinners = async (start, end) => {
 
   users = groupByDate(users, "spin_day");
 
-  // //console.log("users", users);
+  // console.log("users", users);
   const result = [];
   Object.keys(users).forEach((day) => {
     temp_users = users[day];
 
     users_by_spin = groupBy(temp_users, "spin_no");
 
-    // //console.log("users_by_spin", users_by_spin);
+    // console.log("users_by_spin", users_by_spin);
     Object.keys(users_by_spin).forEach((spin) => {
       temp_users2 = users_by_spin[spin];
-      // //console.log("temp_users2", temp_users2[0].transaction_id);
+      // console.log("temp_users2", temp_users2[0].transaction_id);
       result.push({
         day,
         spin,
@@ -212,7 +212,7 @@ const getWinners = async (start, end) => {
       });
     });
   });
-  // //console.log("result", result);
+  // console.log("result", result);
   return result;
 };
 

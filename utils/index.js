@@ -25,7 +25,7 @@ function randomItemSetter() {
       if (spin_hours.indexOf(hours) >= 0) {
         if (minutes === spin_minute) {
           const spin_no = spin_hours.indexOf(hours) + 1;
-          //console.log("running new spin", spin_no, hours, spin_minute);
+          console.log("running new spin", spin_no, hours, spin_minute);
           spin_data_exists = await dataExistsForCurrentSpin(spin_no);
           let currentSpin, today_spinner_data;
           if (!spin_data_exists) {
@@ -33,7 +33,7 @@ function randomItemSetter() {
             if (Object.keys(new_addresses).length === 0) {
               throw "No transactions for the period!";
             }
-            //console.log(new_addresses, "fresh spin");
+            console.log(new_addresses, "fresh spin");
             currentSpin = await createSpin(spin_no);
             for (const item of new_addresses) {
               const value = item[1]
@@ -66,14 +66,14 @@ function randomItemSetter() {
       }
       EXECUTING = false;
     } catch (err) {
-      //console.log(err);
+      console.log(err);
     }
   }, 1000);
 }
 updateWinners = async () => {
   let date = new Date();
   let hours = date.getHours();
-  //console.log("running updateWinners");
+  console.log("running updateWinners");
   if (spin_hours.indexOf(hours) > -1) {
     const spin_no = spin_hours.indexOf(hours) + 1;
     const currentSpin = await getSpin(spin_no);
@@ -88,7 +88,7 @@ updateWinners = async () => {
     const currentSpinRow = winners.filter(
       (w) => w.spin.toString() === spin_no.toString()
     )[0];
-    //console.log("currentSpinRow", currentSpinRow);
+    console.log("currentSpinRow", currentSpinRow);
 
     if (!currentSpinRow || !currentSpinRow.first) {
       const winner = pickWinner(participants);
