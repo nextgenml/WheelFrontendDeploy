@@ -6,6 +6,18 @@ const getTransactionIds = async () => {
   console.log("new_addresses", new_addresses);
 };
 
+const markWinnerAsPaid = async (transaction_id) => {
+  const update = `update participants set paid_flag = 1 where transaction_id = ${transaction_id};`;
+  await new Promise((resolve, reject) => {
+    dbConnection.query(update, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+};
+
 const markAsWinner = async (id, rank) => {
   const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ${rank} where id = ${id};`;
   console.log("update", update);
@@ -237,6 +249,7 @@ module.exports = {
   getSpin,
   updateSpin,
   markAsWinner,
+  markWinnerAsPaid,
 };
 // insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('97ASDFADSfa11', 1, 'daily', 3, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());
 //insert into nextgenml.participants (transaction_id, spin_no, type, winning_rank, win_at, spin_at, is_winner, spin_day) values('asdfsdfasf', 1, 'daily', 2, SUBDATE(now(),1), SUBDATE(now(),1), 1, now());
