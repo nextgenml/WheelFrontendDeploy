@@ -36,7 +36,10 @@ function randomItemSetter() {
             console.log(new_addresses, "fresh spin");
             currentSpin = await createSpin(spin_no);
             for (const item of new_addresses) {
-              await createParticipant(item, spin_no);
+              const value = item[1]
+                .toString()
+                .substring(0, item[1].length - 18);
+              await createParticipant(item[0], value, spin_no);
             }
             today_spinner_data = {
               items: new_addresses,

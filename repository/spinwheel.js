@@ -32,7 +32,7 @@ const markAsWinner = async (id, rank) => {
 };
 const currentSpinData = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
+  const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}' order by value desc limit 25;`;
 
   let users = await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
@@ -127,9 +127,9 @@ const dataExistsForCurrentSpin = async (spin_no) => {
 
   return users.length > 0;
 };
-const createParticipant = async (transaction_id, spin_no) => {
+const createParticipant = async (transaction_id, value, spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
-  const query = `insert into participants (transaction_id, spin_no, type, spin_at, spin_day) values('${transaction_id}', ${spin_no}, 'daily', now(), '${spin_day}');`;
+  const query = `insert into participants (transaction_id, value, spin_no, type, spin_at, spin_day) values('${transaction_id}', '${value}', ${spin_no}, 'daily', now(), '${spin_day}');`;
   return await new Promise((resolve, reject) => {
     dbConnection.query(query, (error, elements) => {
       if (error) {

@@ -52,10 +52,11 @@ function sortObj(obj) {
 
 async function finalWorks(dic, lst) {
   let finalLST = [];
+  console.log("dic", dic);
   // Filling the sorted wallet address to a final list
-  for (var i = 0; i < 25; i++) {
+  for (var i = 0; i < dic.length; i++) {
     if (dic[i]) {
-      finalLST.push(dic[i][0]);
+      finalLST.push(dic[i]);
     } else {
       break;
     }
@@ -90,6 +91,7 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
     console.log("Something went wrong");
   }
 
+  console.log("ev", ev[0]);
   if (error == null) {
     // Checking event if its not 0 then update the LAST BLOCK NUMBER
     for (var i = 1; i < ev.length; i++) {

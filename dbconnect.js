@@ -41,6 +41,7 @@ dbConnection.connect(function (err) {
   //   spin_day DATE,
   //   spin_no SMALLINT,
   //   paid_flag TINYINT,
+  //   value INT,
   //   winning_rank SMALLINT
   // )`;
   // dbConnection.query(participants, function (err, results, fields) {
