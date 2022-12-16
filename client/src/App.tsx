@@ -48,12 +48,6 @@ function App() {
     let curr_winners = (spinner_data.winners || []).filter((w: string) => !!w);
 
     if (spinner_data.items && curr_winners.length > 0) {
-      console.log(
-        "calculated index",
-        spinner_data.items,
-        curr_winners,
-        spinner_data.items.indexOf(curr_winners[curr_winners.length - 1])
-      );
       setWinner(
         spinner_data.items.indexOf(curr_winners[curr_winners.length - 1])
       );
