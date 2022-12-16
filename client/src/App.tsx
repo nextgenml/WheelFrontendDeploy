@@ -32,8 +32,6 @@ function App() {
   const [selected_date, setSelectedDate] = useState<Date>(new Date());
   const [winner, setWinner] = useState<number | null>(null);
 
-  const [no_of_spins_remaining, setNoOfSpinsRemaining] = useState(3);
-  const [show_calender, setShowCalender] = useState(false);
   const [no_of_winner_display, setNoOfWinnersDisplay] = useState(0);
   const [spinner_color, setSpinnerColor] = useState(
     spinner_colors[Math.floor(Math.random() * spinner_colors.length)]
@@ -44,7 +42,6 @@ function App() {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [is_no_spinner_data, setIsNoSpinnerData] = useState(false);
-  const [prev_winner_count, set_prev_winner_count] = useState(0);
   const setSpinnerData = (_selected_date: Date) => {
     const spinner_data = JSON.parse(localStorage.getItem("spinner_data")!);
     const winners_data = JSON.parse(localStorage.getItem("winners_data")!);
@@ -106,12 +103,6 @@ function App() {
         winners = [];
       }
 
-      console.log({ spins_remaining });
-      console.log({ last_hour });
-      console.log({ winners });
-      console.log({ no_of_winner_display: winners.length - spins_remaining });
-      setNoOfSpinsRemaining(spins_remaining);
-
       if (!winners) {
         winners = winners_data[
           winners_data_dates[winners_data_dates.length - 1]
@@ -167,21 +158,12 @@ function App() {
     localStorage.setItem("spinner_data", JSON.stringify(spinner_data));
     localStorage.setItem("winners_data", JSON.stringify(winners_data_temp));
 
-    let { spins_remaining } = setSpinnerData(start_time);
+    setSpinnerData(start_time);
 
     let wCount = 0;
     if (winners_data) {
       let currentWinnerSet = getWinnersFromObject(winners_data_temp);
       wCount = currentWinnerSet.filter((x: any) => !!x).length;
-
-      const x = 1;
-      if (prev_winner_count === 2 && wCount === 3) {
-        // window.location.reload();
-        console.log("reloading");
-      } else {
-        console.log("updateing count", wCount);
-        set_prev_winner_count(wCount);
-      }
     }
 
     setSelectedDate(start_time);
@@ -211,8 +193,6 @@ function App() {
 
   const onCountDownComplete = async () => {
     let { spins_remaining } = await fetchSpinnerData();
-    console.log("on onCountDownComplete");
-    console.log({ spins_remaining, no_of_winner_display });
 
     if (spins_remaining === 0) {
       let end_date = new Date();
@@ -231,7 +211,6 @@ function App() {
       end_time?.setSeconds(end_time.getSeconds() + next_spin_delay);
       setTimerEndDate(end_time);
       setTimerStartDate(new Date());
-      setNoOfSpinsRemaining(spins_remaining - 1);
     }
     if (no_of_winner_display < 4) {
       console.log("fetching new ....... 2");

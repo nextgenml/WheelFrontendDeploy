@@ -1,5 +1,5 @@
 const spin_hours = [3, 9, 15, 23];
-const spin_minute = 29;
+const spin_minute = 44;
 const next_spin_delay = 20;
 module.exports = {
   spin_hours,
