@@ -13,6 +13,26 @@ dbConnection.connect(function (err) {
   }
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
 
+  if (process.argv.includes("repopulate_spins")) {
+    const delete_all = `delete from scheduled_spins;`;
+    dbConnection.query(delete_all, function (err) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("created table scheduled_spins");
+    });
+
+    const inserts = [
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00', 'saturday', 10000, 3, 20, '100,50,25');`,
+    ];
+    inserts.forEach((insert) =>
+      dbConnection.query(insert, function (err) {
+        if (err) {
+          console.log(err.message);
+        } else console.log("inserted");
+      })
+    );
+  }
+
   if (process.argv.includes("run_migrations")) {
     console.log("running db migrations");
     const scheduled_spins = `create table scheduled_spins (
