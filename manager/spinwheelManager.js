@@ -42,11 +42,7 @@ function initiateSpinProcess() {
                 .substring(0, item[1].length - 18);
               await createParticipant(item[0], value, spin_no);
             }
-            today_spinner_data = {
-              items: new_addresses,
-              created_at: currentSpin.created_at,
-              updated_at: currentSpin.updated_at,
-            };
+            today_spinner_data = await currentSpinData(spin_no);
             if (today_spinner_data["items"].length < 6) {
               console.warn("Insufficient spinner items, length < 6");
               return;

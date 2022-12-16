@@ -47,22 +47,19 @@ function App() {
 
     let curr_winners = (spinner_data.winners || []).filter((w: string) => !!w);
 
-    if (curr_winners.length > 0) {
-      setWinner(curr_winners.indexOf(curr_winners[curr_winners.length - 1]));
+    if (spinner_data.items && curr_winners.length > 0) {
+      console.log(
+        "calculated index",
+        spinner_data.items,
+        curr_winners,
+        spinner_data.items.indexOf(curr_winners[curr_winners.length - 1])
+      );
+      setWinner(
+        spinner_data.items.indexOf(curr_winners[curr_winners.length - 1])
+      );
     }
   };
 
-  const getWinnersFromObject = (data: any) => {
-    const x: any = Object.values(data);
-    if (x && x.length) {
-      const y: any = Object.values(x[0]);
-      if (y && y.length) {
-        const z: any = y[0];
-        if (z) return z.winners || [];
-      }
-    }
-    return [];
-  };
   const fetchSpinnerData = async () => {
     let spinner_data_res = await fetch(api_url + "spinner-data", {
       method: "GET",
@@ -78,15 +75,6 @@ function App() {
       setIsNoSpinnerData(false);
     }
 
-    // let winners_data_res = await fetch(api_url + "winners-data", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    // let winners_data_temp = await winners_data_res.json();
-
     let end_time = new Date(spinner_data["end_time"]);
     let start_time = new Date(spinner_data["start_time"]);
     console.log("fetching again", end_time, start_time);
@@ -96,10 +84,6 @@ function App() {
     setSpinnerData(spinner_data);
 
     let wCount = (spinner_data.winners || []).filter((x: string) => !!x).length;
-    // if (winners_data) {
-    //   let currentWinnerSet = getWinnersFromObject(winners_data_temp);
-    //   wCount = currentWinnerSet.filter((x: any) => !!x).length;
-    // }
 
     setSelectedDate(start_time);
     // setWinnersData(winners_data_temp);

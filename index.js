@@ -27,7 +27,6 @@ const relativeSpinIndex = (hour) => {
 };
 const getSpinData = async (spin) => {
   let today_spinner_data = await currentSpinData(spin);
-  console.log("today_spinner_data", today_spinner_data, min_wallets_count);
   if (
     today_spinner_data &&
     today_spinner_data.items.length >= min_wallets_count

@@ -21,7 +21,9 @@ const currentSpinData = async (spin_no) => {
   const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}' order by value desc limit 25;`;
   let users = await executeQueryAsync(query);
 
-  const addresses = users.map((user) => user.transaction_id);
+  const addresses = users.map((user) =>
+    formatTransactionId(user.transaction_id)
+  );
 
   const spinQuery = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
