@@ -7,20 +7,25 @@ interface Props {
   items: string[];
   selected_item: number | null;
   onFinish?: Function;
-  spinner_wheel_color?: string;
 }
 
-export default function Wheel({
-  items,
-  selected_item,
-  onFinish,
-  spinner_wheel_color,
-}: Props) {
+const spinner_colors = [
+  "#CBE4F9",
+  "#CDF5F6",
+  "#EFF9DA",
+  "#F9EBDF",
+  "#F9D8D6",
+  "#D6CDEA",
+];
+
+export default function Wheel({ items, selected_item, onFinish }: Props) {
   const [spinning, setSpinning] = useState<"spinning" | "">("");
   const [wheelVars, setwheelVars] = useState<any>({});
+  const spinner_color =
+    spinner_colors[Math.floor(Math.random() * spinner_colors.length)];
 
   const bg_color: any = {
-    "--wheel-color": spinner_wheel_color,
+    "--wheel-color": spinner_color,
     // '--neutral-color':
   };
 

@@ -1,21 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import Wheel from "./components/wheel";
 import CountDown from "./components/countdown";
 import WinnersTable from "./components/WinnersTable";
 import Calendar from "react-calendar";
 import { next_spin_delay } from "./config";
-import { DateToString, stringToDate } from "./utils";
+import { DateToString } from "./utils";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import AboutSection from "./components/About";
-const spinner_colors = [
-  "#CBE4F9",
-  "#CDF5F6",
-  "#EFF9DA",
-  "#F9EBDF",
-  "#F9D8D6",
-  "#D6CDEA",
-];
 
 function App() {
   var api_url = "/";
@@ -25,17 +18,11 @@ function App() {
 
   const [loading, setLoading] = useState(true);
   const [wheel_items, setWheelItems] = useState<any[] | undefined>(undefined);
-  const [winners_data, setWinnersData] = useState<[] | undefined>(undefined);
-  const [winners_data_1, setWinnersData_1] = useState<any>();
+  const [winners_data, setWinnersData] = useState<any>();
+
   const [timer_end_date, setTimerEndDate] = useState<Date>();
   const [timer_start_date, setTimerStartDate] = useState<Date>(new Date());
-  const [selected_date, setSelectedDate] = useState<Date>(new Date());
   const [winner, setWinner] = useState<number | null>(null);
-
-  const [no_of_winner_display, setNoOfWinnersDisplay] = useState(0);
-  const [spinner_color, setSpinnerColor] = useState(
-    spinner_colors[Math.floor(Math.random() * spinner_colors.length)]
-  );
 
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
@@ -71,20 +58,14 @@ function App() {
 
     let end_time = new Date(spinner_data["end_time"]);
     let start_time = new Date(spinner_data["start_time"]);
-    console.log("fetching again", end_time, start_time);
-    localStorage.setItem("spinner_data", JSON.stringify(spinner_data));
-    // localStorage.setItem("winners_data", JSON.stringify(winners_data_temp));
 
     setSpinnerData(spinner_data);
 
     let wCount = (spinner_data.winners || []).filter((x: string) => !!x).length;
 
-    setSelectedDate(start_time);
-    // setWinnersData(winners_data_temp);
-
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
-    let winners_data_res_1 = await fetch(
+    let winners_data_res = await fetch(
       api_url + `winners-data-1?from=${f_start}&to=${f_end}`,
       {
         method: "GET",
@@ -94,8 +75,8 @@ function App() {
       }
     );
 
-    let winners_data_1 = await winners_data_res_1.json();
-    setWinnersData_1(winners_data_1);
+    let winners_data = await winners_data_res.json();
+    setWinnersData(winners_data);
     setLoading(false);
     return {
       start_time,
@@ -125,10 +106,6 @@ function App() {
       setTimerEndDate(end_time);
       setTimerStartDate(new Date());
     }
-    if (no_of_winner_display < 4) {
-      console.log("fetching new ....... 2");
-      await fetchSpinnerData();
-    }
   };
 
   useEffect(() => {
@@ -144,13 +121,11 @@ function App() {
         style={{ margin: "1rem auto" }}
         className="flex flex-row items-center justify-center object-cover w-fit"
       >
-        <a className="text-white font-medium first-letter:" href="#">
-          {" "}
+        <a className="text-white font-medium first-letter:" href="/">
           Contact Us{" "}
         </a>
-        <img src="logo.png" className="w-60 h-60" />
-        <a className="text-white font-medium first-letter:" href="#">
-          {" "}
+        <img src="logo.png" className="w-60 h-60" alt="logo" />
+        <a className="text-white font-medium first-letter:" href="/">
           About Us{" "}
         </a>
       </nav>
@@ -162,10 +137,7 @@ function App() {
           >
             {!is_no_spinner_data && wheel_items ? (
               <Wheel
-                spinner_wheel_color={spinner_color}
-                onFinish={() => {
-                  setNoOfWinnersDisplay(no_of_winner_display + 1);
-                }}
+                onFinish={() => {}}
                 selected_item={winner}
                 items={wheel_items}
               />
@@ -182,11 +154,9 @@ function App() {
           </div>
 
           <div style={{ padding: "0 5rem" }} className="flex flex-col  ">
-            {winners_data && (
-              <h2 className="text-white font-medium mx-auto  text-center text-4xl">
-                Winners on the selected date range
-              </h2>
-            )}
+            <h2 className="text-white font-medium mx-auto  text-center text-4xl">
+              Winners on the selected date range
+            </h2>
             <div
               style={{ marginTop: "3rem", gap: "0.2rem" }}
               className="flex flex-row  items-center justify-center mt-8 lg:justify-end w-full"
@@ -236,7 +206,7 @@ function App() {
                     setStartDate(new_date);
                   }}
                   calendarType="US"
-                  defaultActiveStartDate={selected_date}
+                  defaultActiveStartDate={new Date()}
                 />
               )}
               {!showEnd && (
@@ -275,7 +245,7 @@ function App() {
                     setEndDate(new_date);
                   }}
                   calendarType="US"
-                  defaultActiveStartDate={selected_date}
+                  defaultActiveStartDate={new Date()}
                 />
               )}
               <button
@@ -292,7 +262,7 @@ function App() {
               </button>
             </div>
           </div>
-          {winners_data_1 && <WinnersTable winners_data={winners_data_1} />}
+          {winners_data && <WinnersTable winners_data={winners_data} />}
         </>
       )}
 
