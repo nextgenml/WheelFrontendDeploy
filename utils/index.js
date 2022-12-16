@@ -107,7 +107,7 @@ updateWinners = async () => {
     }
   }
 };
-pickWinner = (participants) => {
+const pickWinner = (participants) => {
   const size = participants.length;
   const index = Math.floor(Math.random() * size);
   return participants[index];
