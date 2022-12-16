@@ -6,13 +6,8 @@ const cors = require("cors");
 const utils = require("./utils/index.js");
 const { spin_hours, spin_minute } = require("./config.js");
 const moment = require("moment");
-// const fetchAddress = require('./script/tracking')
-//import express from 'express'
-//import path from 'path';
-//import fs from 'fs';
-//import cors from 'cors';
-//import utils from './utils/index.js';
-//import { spin_hours, spin_minute } from '../config.js'
+require("./manager/spinwheelManager");
+
 const {
   getParticipants,
   getWinners,
@@ -21,8 +16,6 @@ const {
 } = require("./repository/spinwheel");
 
 const app = express();
-
-utils.randomItemSetter();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
