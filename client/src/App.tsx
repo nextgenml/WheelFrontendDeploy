@@ -9,6 +9,7 @@ import { DateToString } from "./utils";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import AboutSection from "./components/About";
+import DateIcon from "./components/Icons/DateIcon";
 
 function App() {
   var api_url = "/";
@@ -24,11 +25,12 @@ function App() {
   const [timer_start_date, setTimerStartDate] = useState<Date>(new Date());
   const [winner, setWinner] = useState<number | null>(null);
 
+  // For filtering winners in the table
   const [showStart, setShowStart] = useState(false);
   const [showEnd, setShowEnd] = useState(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [is_no_spinner_data, setIsNoSpinnerData] = useState(false);
+
   const setSpinnerData = (spinner_data: any) => {
     setWheelItems(spinner_data.items);
 
@@ -50,22 +52,11 @@ function App() {
     });
 
     let spinner_data = await spinner_data_res.json();
-    if (Object.keys(spinner_data).length <= 3) {
-      setIsNoSpinnerData(true);
-    } else {
-      setIsNoSpinnerData(false);
-    }
-
-    let end_time = new Date(spinner_data["end_time"]);
-    let start_time = new Date(spinner_data["start_time"]);
-
     setSpinnerData(spinner_data);
-
-    let wCount = (spinner_data.winners || []).filter((x: string) => !!x).length;
 
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
-    let winners_data_res = await fetch(
+    const winners_data_res = await fetch(
       api_url + `winners-data-1?from=${f_start}&to=${f_end}`,
       {
         method: "GET",
@@ -75,12 +66,17 @@ function App() {
       }
     );
 
-    let winners_data = await winners_data_res.json();
+    const winners_data = await winners_data_res.json();
     setWinnersData(winners_data);
     setLoading(false);
+
+    const wCount = (spinner_data.winners || []).filter(
+      (x: string) => !!x
+    ).length;
+
     return {
-      start_time,
-      end_time,
+      start_time: new Date(spinner_data["start_time"]),
+      end_time: new Date(spinner_data["end_time"]),
       spins_remaining: 3 - wCount,
     };
   };
@@ -135,7 +131,7 @@ function App() {
             style={{ gap: "4rem", minHeight: "90vh", padding: "1rem 0" }}
             className="flex w-fit lg:gap-20 flex-row flex-wrap justify-center items-center mx-auto py-9"
           >
-            {!is_no_spinner_data && wheel_items ? (
+            {wheel_items && wheel_items.length ? (
               <Wheel
                 onFinish={() => {}}
                 selected_item={winner}
@@ -163,24 +159,7 @@ function App() {
             >
               {!showStart && (
                 <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-calendar"
-                  >
-                    <rect x={3} y={4} width={18} height={18} rx={2} ry={2} />
-                    <line x1={16} y1={2} x2={16} y2={6} />
-                    <line x1={8} y1={2} x2={8} y2={6} />
-                    <line x1={3} y1={10} x2={21} y2={10} />
-                  </svg>
-
+                  <DateIcon />
                   <p
                     onClick={() => setShowStart(true)}
                     className="cursor-pointer font-medium text-white"
@@ -211,24 +190,7 @@ function App() {
               )}
               {!showEnd && (
                 <>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="feather feather-calendar"
-                  >
-                    <rect x={3} y={4} width={18} height={18} rx={2} ry={2} />
-                    <line x1={16} y1={2} x2={16} y2={6} />
-                    <line x1={8} y1={2} x2={8} y2={6} />
-                    <line x1={3} y1={10} x2={21} y2={10} />
-                  </svg>
-
+                  <DateIcon />
                   <p
                     onClick={() => setShowEnd(true)}
                     className="cursor-pointer font-medium text-white"
@@ -248,16 +210,7 @@ function App() {
                   defaultActiveStartDate={new Date()}
                 />
               )}
-              <button
-                onClick={fetchSpinnerData}
-                style={{
-                  color: "white",
-                  border: "1px solid orange",
-                  marginLeft: "16px",
-                  padding: "8px",
-                  borderRadius: "8px",
-                }}
-              >
+              <button onClick={fetchSpinnerData} className="get-winners-btn">
                 Get Winners
               </button>
             </div>

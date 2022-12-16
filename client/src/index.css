@@ -4,18 +4,25 @@
 
 body {
   margin: 0;
-  font-family: -apple-system,"Inter", 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, "Inter", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(10, 7, 20);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.date-calender{
+.date-calender {
   border-radius: 20px;
+}
+
+.get-winners-btn {
+  color: white;
+  border: 1px solid orange;
+  margin-left: 16px;
+  padding: 8px;
+  border-radius: 8px;
 }
