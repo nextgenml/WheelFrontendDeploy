@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
 const utils = require("./utils/index.js");
-const { spin_hours, spin_minute } = require("./config.js");
+const { spin_hours, spin_minute, min_wallets_count } = require("./config.js");
 const moment = require("moment");
 require("./manager/spinwheelManager");
 
@@ -26,17 +26,17 @@ const relativeSpinIndex = (hour) => {
   return hour > spin_hours[spin_hours.length - 1] ? spin_hours.length : -1;
 };
 const getSpinData = async (spin) => {
-  const today_date_str = utils.dateToString(new Date());
   let today_spinner_data = await currentSpinData(spin);
-  if (today_spinner_data && today_spinner_data.items.length) {
-    return {
-      [today_date_str]: today_spinner_data,
-    };
+  console.log("today_spinner_data", today_spinner_data, min_wallets_count);
+  if (
+    today_spinner_data &&
+    today_spinner_data.items.length >= min_wallets_count
+  ) {
+    return today_spinner_data;
   }
 };
 const getWinnersForSpin = async (spin_no) => {
   let date = new Date();
-  const formattedDate = moment(date).format("DD/MM/YYY");
 
   const winners = await getWinners(date, date);
   const currentSpin = await getSpin(spin_no);
@@ -45,18 +45,14 @@ const getWinnersForSpin = async (spin_no) => {
   )[0];
   if (currentSpin && currentSpinRow) {
     return {
-      [formattedDate]: {
-        [spin_hours[spin_no - 1]]: {
-          updated_at: currentSpin.updated_at,
-          winners: [
-            currentSpinRow.first,
-            currentSpinRow.second,
-            currentSpinRow.third,
-          ],
-        },
-      },
+      winners: [
+        currentSpinRow.first,
+        currentSpinRow.second,
+        currentSpinRow.third,
+      ],
     };
   }
+  return {};
 };
 app.get("/spinner-data", async (req, res) => {
   const today_date_str = utils.dateToString(new Date());
@@ -106,40 +102,8 @@ app.get("/spinner-data", async (req, res) => {
     let spinIndex = relativeSpinIndex(hours);
     spinner_data = await getSpinData(spinIndex);
   }
-  if (
-    spinner_data &&
-    spinner_data[today_date_str] &&
-    spinner_data[today_date_str].items.length < 6
-  )
-    spinner_data = null;
-  if (spinner_data) {
-    res.json({
-      ...spinner_data,
-      current_time: {
-        hours: hours_diff,
-        minutes: minute_diff,
-        seconds: current_time.getSeconds(),
-      },
-      start_time: current_time.toUTCString(),
-      end_time: end_date.toUTCString(),
-    });
-  } else {
-    res.json({
-      current_time: {
-        hours: hours_diff,
-        minutes: minute_diff,
-        seconds: current_time.getSeconds(),
-      },
-      start_time: current_time.toUTCString(),
-      end_time: end_date.toUTCString(),
-    });
-  }
-});
 
-app.get("/winners-data", async (req, res) => {
-  let date = new Date();
-  let hours = date.getHours();
-  let winners_data;
+  let winners_data = {};
   if (spin_hours.indexOf(hours) > -1) {
     let spin_no = spin_hours.indexOf(hours) + 1;
     winners_data = await getWinnersForSpin(spin_no);
@@ -151,8 +115,19 @@ app.get("/winners-data", async (req, res) => {
     winners_data = await getWinnersForSpin(spinIndex);
   }
 
-  if (winners_data) res.json(winners_data);
-  else res.json({});
+  if (spinner_data) {
+    res.json({
+      ...spinner_data,
+      ...winners_data,
+      end_time: end_date.toUTCString(),
+      start_time: current_time.toUTCString(),
+    });
+  } else {
+    res.json({
+      start_time: current_time.toUTCString(),
+      end_time: end_date.toUTCString(),
+    });
+  }
 });
 
 app.get("/winners-data-1", async (req, res) => {
