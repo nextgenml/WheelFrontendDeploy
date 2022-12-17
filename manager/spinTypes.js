@@ -104,16 +104,6 @@ const getNextAdhocSpin = (spin) => {
   nextSpinTime.minutes(minutes);
   nextSpinTime.seconds(seconds);
 
-  console.log(
-    "nextSpinTime",
-    nextSpinTime,
-    day,
-    month,
-    year,
-    hours,
-    minutes,
-    seconds
-  );
   const currDate = moment();
   if (currDate.diff(nextSpinTime) <= 0) {
     return nextSpinTime;
