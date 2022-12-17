@@ -36,11 +36,7 @@ const currentSpinData = async (spin_no) => {
     updated_at: spin.updated_at,
   };
 };
-const updateSpin = async (id) => {
-  const update = `update spins set updated_at = now() where id = ${id};`;
 
-  return await executeQueryAsync(update);
-};
 const getSpin = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
   const spin = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
@@ -140,7 +136,6 @@ module.exports = {
   createParticipant,
   currentSpinData,
   getSpin,
-  updateSpin,
   markAsWinner,
   markWinnerAsPaid,
 };

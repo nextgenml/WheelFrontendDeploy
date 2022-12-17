@@ -11,7 +11,7 @@ const {
   getNextYearlySpin,
   getNextAdhocSpin,
 } = require("./spinTypes");
-
+const moment = require("moment");
 const nextSpinDetails = async () => {
   const spins = await getAllSpins();
   let nextSpins = [];

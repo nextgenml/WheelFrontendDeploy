@@ -1,4 +1,5 @@
-const { executeQueryAsync } = require("../utils/spinwheelUtil");
+const { executeQueryAsync, runQueryAsync } = require("../utils/spinwheelUtil");
+const moment = require("moment");
 
 const getAllSpins = async () => {
   const query = "select * from scheduled_spins where is_active = 1;";
@@ -8,14 +9,14 @@ const getAllSpins = async () => {
 const updateLaunchDate = async (id) => {
   const dateFormatted = moment().format();
   const query = "update scheduled_spins set prev_launch_date = ? where id = ?;";
-  return await executeQueryAsync(query, [dateFormatted, id]);
+  return await runQueryAsync(query, [dateFormatted, id]);
 };
 
 const recentDailyLaunchAt = async () => {
   const query =
     "select * from scheduled_spins where type = 'daily' order by prev_launch_date desc limit 1;";
   const records = await executeQueryAsync(query);
-  return records[0];
+  return records[0]?.prev_launch_date;
 };
 module.exports = {
   getAllSpins,
