@@ -69,12 +69,7 @@ dbConnection.connect(function (err) {
       spin_day DATE not null,
       spin_no SMALLINT not null,
       scheduled_spin_id INT not null,
-      to_be_run TINYINT not null,
-      running TINYINT not null,
-      started_at DATETIME,
-      ended_at DATETIME,
-      created_at datetime not null,
-      updated_at datetime not null)`;
+      running TINYINT)`;
     dbConnection.query(spins, function (err, results, fields) {
       if (err) {
         console.log(err.message);

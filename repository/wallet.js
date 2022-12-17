@@ -6,14 +6,23 @@ const createWallet = async (walletId, value) => {
   return await runQueryAsync(query, [walletId, value]);
 };
 
-const dataExistsForCurrentCycle = async () => {
-  const fDate = moment().format("YYYY-MM-DD HH:MM:SS");
-  const query = `select 1 from wallets where created_at > ?;`;
+const currSpinParticipants = async (start, minWalletValue) => {
+  start = moment(start).startOf("day").format();
+  const query = `select * from wallets where created_at > ? and value >= ?;`;
 
-  return await runQueryAsync(query, [fDate]);
+  const users = await runQueryAsync(query, [start, end, minWalletValue]);
+  return users.map((user) => {
+    return {
+      id: user.id,
+      day: moment(user.spin_day).format("YYYY-MM-DD"),
+      spin: user.spin_no,
+      walletId: formatTransactionId(user.wallet_id),
+      rank: user.winning_rank,
+    };
+  });
 };
 
 module.exports = {
   createWallet,
-  dataExistsForCurrentCycle,
+  currSpinParticipants,
 };

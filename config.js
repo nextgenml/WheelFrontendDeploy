@@ -1,5 +1,5 @@
-const spin_hours = [0, 9, 15, 22];
-const spin_minute = 9;
+const spin_hours = [0, 1, 15, 22];
+const spin_minute = 1;
 const next_spin_delay = 20;
 const min_wallets_count = 6;
 

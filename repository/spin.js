@@ -12,7 +12,28 @@ const toBeRunSpin = async () => {
   return spins[0];
 };
 
+const getSpinNo = async (type) => {
+  const spinDay = moment().format("YYYY-MM-DD");
+
+  const query = "select count(1) from spins where spin_day = ? and type = ?;";
+  const records = await runQueryAsync(query, [spinDay, type]);
+  return (records[0] || 0) + 1;
+};
+
+const createSpin = async (nextSpin) => {
+  const spinDay = moment().format("YYYY-MM-DD");
+  const query = `insert into spins (spin_no, type, spin_day, running, scheduled_spin_id) values(?, ?, ?, 1, ?);`;
+
+  return await runQueryAsync(query, [
+    nextSpin.spinNo,
+    nextSpin.type,
+    spinDay,
+    nextSpin.id,
+  ]);
+};
 module.exports = {
   isAnySpinStarting,
   toBeRunSpin,
+  getSpinNo,
+  createSpin,
 };

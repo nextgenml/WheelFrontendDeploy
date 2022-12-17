@@ -13,24 +13,23 @@ const {
   updateSpin,
   getWinners,
   getParticipants,
-  createSpin,
   markAsWinner,
-  currSpinParticipants,
 } = require("../repository/spinwheel.js");
 const { nextSpinDetails } = require("./scheduledSpinsManager.js");
-const { isAnySpinStarting } = require("../repository/spin.js");
+const { isAnySpinStarting, createSpin } = require("../repository/spin.js");
 const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { splitIntoGroups } = require("../utils/spinwheelUtil.js");
+const { currSpinParticipants } = require("../repository/wallet.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
 const initiateNextSpin = () => {
-  let alreadyExecuting = false;
-  console.log("process started");
+  let running = false;
+  console.log("spin process started");
   setInterval(async () => {
-    if (alreadyExecuting) return;
-    alreadyExecuting = true;
+    if (running) return;
+    running = true;
 
     const nextSpin = await nextSpinDetails();
 
@@ -54,25 +53,23 @@ const initiateNextSpin = () => {
         console.log("scheduled next spin cycle", nextSpin, waitingTime);
       }
     } else if (currentSpinTimeout) deleteScheduledJob();
-    alreadyExecuting = false;
+    running = false;
   }, 1000);
 };
 
 const createParticipants = async (nextSpin) => {
-  const wallets = await fetchAddress();
-  const currDate = moment();
-  for (const item of wallets) {
-    // ignoring last 18 characters from wallet amount
-    const value = item[1].toString().substring(0, item[1].length - 18);
-    await createParticipant(item[0], value, nextSpin, currDate);
-  }
-  await updateLaunchDate(nextSpin, currDate);
+  await createSpin(nextSpin);
 
   const currParticipants = await currSpinParticipants(
     nextSpin.prevLaunchAt,
-    currDate,
     nextSpin.minWalletValue
   );
+
+  for (const item of currParticipants) {
+    await createParticipant(item.wallet_id, item.value, nextSpin);
+  }
+  await updateLaunchDate(nextSpin);
+
   console.log("currParticipants", currParticipants);
   if (currParticipants && currParticipants.length >= min_wallets_count) {
     const groups = splitIntoGroups(currParticipants, 25);
