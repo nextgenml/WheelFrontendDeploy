@@ -31,11 +31,11 @@ const initiateNextSpin = () => {
     const nextSpin = await nextSpinDetails();
 
     if (nextSpin) {
-      const isSpinRunning = isAnySpinRunning(nextSpin.id);
-
+      const isSpinRunning = await isAnySpinRunning(nextSpin.id);
+      // console.log("created next isSpinRunning", isSpinRunning);
       if (!isSpinRunning) {
-        console.log("created next spin", nextSpin);
         await createSpin(nextSpin);
+        console.log("created next spin", nextSpin);
       }
       if (!currentSpinTimeout) {
         const waitingTime = nextSpin.nextSpinAt.diff(moment(), "ms");

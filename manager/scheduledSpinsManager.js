@@ -38,7 +38,7 @@ const nextSpinDetails = async () => {
     }
     if (nextSpin) {
       nextSpins.push({
-        spinId: spin.id,
+        id: spin.id,
         nextSpinAt: nextSpin,
         type: spin.frequency,
         spin_no,
@@ -47,7 +47,7 @@ const nextSpinDetails = async () => {
   });
   nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
   // console.log(nextSpins);
-  console.log("result", nextSpins[0]);
+  // console.log("result", nextSpins[0]);
   return nextSpins[0];
 };
 

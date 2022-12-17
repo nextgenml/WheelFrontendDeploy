@@ -52,9 +52,14 @@ const getSpin = async (spin_no) => {
 };
 const createSpin = async (nextSpin) => {
   const spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
-  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at, running, scheduled_spin_id) values(?, 'daily', ?, now(), now(), ?);`;
+  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at, running, scheduled_spin_id) values(?, ?, ?, now(), now(), 1, ?);`;
 
-  await runQueryAsync(query, [nextSpin.spin_no, spin_day, nextSpin.type]);
+  await runQueryAsync(query, [
+    nextSpin.spin_no,
+    nextSpin.type,
+    spin_day,
+    nextSpin.id,
+  ]);
 
   const spin = `select * from spins where id = LAST_INSERT_ID();`;
 
