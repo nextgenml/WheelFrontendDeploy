@@ -13,14 +13,14 @@ dbConnection.connect(function (err) {
   }
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
 
-  if (process.argv.includes("smart_contract_wallets")) {
-    const deleteQuery = "DROP TABLE IF EXISTS smart_contract_wallets;";
+  if (process.argv.includes("wallets")) {
+    const deleteQuery = "DROP TABLE IF EXISTS wallets;";
     dbConnection.query(deleteQuery, function (err, results, fields) {
       if (err) {
         console.log(err.message);
-      } else console.log("dropped table smart_contract_wallets");
+      } else console.log("dropped table wallets");
     });
-    const spins = `create table smart_contract_wallets (
+    const spins = `create table wallets (
       id int primary key auto_increment,
       wallet_id varchar(255),
       value INT,
@@ -28,7 +28,7 @@ dbConnection.connect(function (err) {
     dbConnection.query(spins, function (err, results, fields) {
       if (err) {
         console.log(err.message);
-      } else console.log("created table smart_contract_wallets");
+      } else console.log("created table wallets");
     });
   }
   if (process.argv.includes("repopulate_spins")) {
