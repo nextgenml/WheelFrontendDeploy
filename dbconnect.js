@@ -25,6 +25,9 @@ dbConnection.connect(function (err) {
       `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00:0', '6', 10000, 3, 20, '100,50,25');`,
       `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('daily', 1, '15:00:0', null, 10000, 2, 15, '100,50');`,
       `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('biweekly', 1, '15:00:0', '17:28', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('monthly', 1, '15:00:0', '1', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('yearly', 1, '15:00:0', '1:1', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('adhoc', 1, '15:00:0', '1:1:2023', 10000, 1, 15, '100');`,
     ];
     inserts.forEach((insert) =>
       dbConnection.query(insert, function (err) {

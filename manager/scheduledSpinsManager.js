@@ -3,6 +3,9 @@ const {
   getNextWeeklySpin,
   getNextDailySpin,
   getNextBiWeeklySpin,
+  getNextMonthlySpin,
+  getNextYearlySpin,
+  getNextAdhocSpin,
 } = require("./spinTypes");
 
 const nextSpinDetails = async () => {
@@ -12,14 +15,23 @@ const nextSpinDetails = async () => {
   spins.forEach((spin) => {
     let nextSpin = null;
     switch (spin.frequency) {
-      case "weekly":
-        nextSpin = getNextWeeklySpin(spin);
-        break;
       case "daily":
         nextSpin = getNextDailySpin(spin);
         break;
+      case "weekly":
+        nextSpin = getNextWeeklySpin(spin);
+        break;
       case "biweekly":
         nextSpin = getNextBiWeeklySpin(spin);
+        break;
+      case "monthly":
+        nextSpin = getNextMonthlySpin(spin);
+        break;
+      case "yearly":
+        nextSpin = getNextYearlySpin(spin);
+        break;
+      case "adhoc":
+        nextSpin = getNextAdhocSpin(spin);
         break;
     }
     if (nextSpin) {

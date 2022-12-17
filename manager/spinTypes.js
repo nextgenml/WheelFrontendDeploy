@@ -56,8 +56,75 @@ const getNextBiWeeklySpin = (spin) => {
   return nextSpinTime;
 };
 
+const getNextMonthlySpin = (spin) => {
+  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+
+  const day = parseInt(spin.spin_day);
+  const nextSpinTime = moment();
+  nextSpinTime.set("date", day);
+  nextSpinTime.hours(hours);
+  nextSpinTime.minutes(minutes);
+  nextSpinTime.seconds(seconds);
+
+  const currDate = moment();
+  if (currDate.diff(nextSpinTime) > 0) {
+    nextSpinTime.add(1, "month");
+  }
+  return nextSpinTime;
+};
+
+const getNextYearlySpin = (spin) => {
+  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+
+  const [day, month] = parseDateTime(spin.spin_day);
+  const nextSpinTime = moment();
+  nextSpinTime.set("date", day);
+  nextSpinTime.set("month", month - 1);
+  nextSpinTime.hours(hours);
+  nextSpinTime.minutes(minutes);
+  nextSpinTime.seconds(seconds);
+
+  const currDate = moment();
+  if (currDate.diff(nextSpinTime) > 0) {
+    nextSpinTime.add(1, "year");
+  }
+  return nextSpinTime;
+};
+
+const getNextAdhocSpin = (spin) => {
+  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+
+  const [day, month, year] = parseDateTime(spin.spin_day);
+  const nextSpinTime = moment();
+  nextSpinTime.set("year", year);
+  nextSpinTime.set("month", month - 1);
+  nextSpinTime.set("date", day);
+
+  nextSpinTime.hours(hours);
+  nextSpinTime.minutes(minutes);
+  nextSpinTime.seconds(seconds);
+
+  console.log(
+    "nextSpinTime",
+    nextSpinTime,
+    day,
+    month,
+    year,
+    hours,
+    minutes,
+    seconds
+  );
+  const currDate = moment();
+  if (currDate.diff(nextSpinTime) <= 0) {
+    return nextSpinTime;
+  }
+};
+
 module.exports = {
   getNextWeeklySpin,
   getNextDailySpin,
   getNextBiWeeklySpin,
+  getNextMonthlySpin,
+  getNextYearlySpin,
+  getNextAdhocSpin,
 };
