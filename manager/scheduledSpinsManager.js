@@ -10,12 +10,14 @@ const {
 
 const nextSpinDetails = async () => {
   const spins = await getAllSpins();
-  const nextSpins = [];
+  let nextSpins = [];
+  let spin_no = 1;
 
   spins.forEach((spin) => {
     let nextSpin = null;
     switch (spin.frequency) {
       case "daily":
+        spin_no = parseInt(spin.spin_day);
         nextSpin = getNextDailySpin(spin);
         break;
       case "weekly":
@@ -38,11 +40,13 @@ const nextSpinDetails = async () => {
       nextSpins.push({
         spinId: spin.id,
         nextSpinAt: nextSpin,
+        type: spin.frequency,
+        spin_no,
       });
     }
   });
   nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
-  console.log(nextSpins);
+  // console.log(nextSpins);
   console.log("result", nextSpins[0]);
   return nextSpins[0];
 };

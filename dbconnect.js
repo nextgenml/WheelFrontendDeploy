@@ -38,6 +38,22 @@ dbConnection.connect(function (err) {
     );
   }
 
+  if (process.argv.includes("create_spins")) {
+    const spins = `create table spins (
+      id int primary key auto_increment,
+      type varchar(255) not null,
+      spin_day DATE not null,
+      spin_no SMALLINT not null,
+      scheduled_spin_id INT not null,
+      running TINYINT not null,
+      created_at datetime not null,
+      updated_at datetime not null)`;
+    dbConnection.query(spins, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("created table spins");
+    });
+  }
   if (process.argv.includes("run_migrations")) {
     console.log("running db migrations");
     const scheduled_spins = `create table scheduled_spins (
@@ -58,19 +74,6 @@ dbConnection.connect(function (err) {
       } else console.log("created table scheduled_spins");
     });
 
-    const spins = `create table spins (
-      id int primary key auto_increment,
-      type varchar(255) not null,
-      spin_day DATE not null,
-      spin_no SMALLINT not null,
-      created_at datetime not null,
-      updated_at datetime not null)`;
-    dbConnection.query(spins, function (err, results, fields) {
-      if (err) {
-        console.log(err.message);
-      } else console.log("created table spins");
-    });
-    console.log("Connected to the MySQL server.");
     const deleteQuery = "DROP TABLE IF EXISTS participants;";
     dbConnection.query(deleteQuery, function (err, results, fields) {
       if (err) {

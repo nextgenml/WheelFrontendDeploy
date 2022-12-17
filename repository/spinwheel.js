@@ -4,6 +4,7 @@ const {
   groupByDate,
   groupBy,
   executeQueryAsync,
+  runQueryAsync,
 } = require("../utils/spinwheelUtil");
 
 const markWinnerAsPaid = async (transaction_id) => {
@@ -49,11 +50,11 @@ const getSpin = async (spin_no) => {
   let users = await executeQueryAsync(spin);
   return users[0];
 };
-const createSpin = async (spin_no) => {
-  spin_day = moment().format("YYYY-MM-DD");
-  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at) values(${spin_no}, 'daily', '${spin_day}', now(), now());`;
+const createSpin = async (nextSpin) => {
+  const spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
+  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at, running, scheduled_spin_id) values(?, 'daily', ?, now(), now(), ?);`;
 
-  await executeQueryAsync(query);
+  await runQueryAsync(query, [nextSpin.spin_no, spin_day, nextSpin.type]);
 
   const spin = `select * from spins where id = LAST_INSERT_ID();`;
 
@@ -69,8 +70,8 @@ const dataExistsForCurrentSpin = async (spin_no) => {
 
   return users.length > 0;
 };
-const createParticipant = async (transaction_id, value, spin_no) => {
-  spin_day = moment().format("YYYY-MM-DD");
+const createParticipant = async (transaction_id, value, nextSpin) => {
+  spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
   const query = `insert into participants (transaction_id, value, spin_no, type, spin_at, spin_day) values('${transaction_id}', '${value}', ${spin_no}, 'daily', now(), '${spin_day}');`;
 
   return await executeQueryAsync(query);

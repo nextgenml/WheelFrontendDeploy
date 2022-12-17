@@ -1,8 +1,9 @@
 const { parseDateTime } = require("../utils");
 const moment = require("moment");
+const seconds = 59;
 
 const getNextWeeklySpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const dayInNeed = parseInt(spin.spin_day);
   const spinDayInstance = moment().isoWeekday(dayInNeed);
@@ -20,7 +21,7 @@ const getNextWeeklySpin = (spin) => {
 };
 
 const getNextDailySpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const nextSpinTime = moment();
   nextSpinTime.hours(hours);
@@ -35,7 +36,7 @@ const getNextDailySpin = (spin) => {
 };
 
 const getNextBiWeeklySpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const [day1, day2] = parseDateTime(spin.spin_day);
   const nextSpinTime = moment();
@@ -57,7 +58,7 @@ const getNextBiWeeklySpin = (spin) => {
 };
 
 const getNextMonthlySpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const day = parseInt(spin.spin_day);
   const nextSpinTime = moment();
@@ -74,7 +75,7 @@ const getNextMonthlySpin = (spin) => {
 };
 
 const getNextYearlySpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const [day, month] = parseDateTime(spin.spin_day);
   const nextSpinTime = moment();
@@ -92,7 +93,7 @@ const getNextYearlySpin = (spin) => {
 };
 
 const getNextAdhocSpin = (spin) => {
-  const [hours, minutes, seconds] = parseDateTime(spin.run_at);
+  const [hours, minutes] = parseDateTime(spin.run_at);
 
   const [day, month, year] = parseDateTime(spin.spin_day);
   const nextSpinTime = moment();

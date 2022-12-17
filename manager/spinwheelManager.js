@@ -1,4 +1,9 @@
-const { spin_hours, spin_minute, next_spin_delay } = require("../config.js");
+const {
+  spin_hours,
+  spin_minute,
+  next_spin_delay,
+  min_wallets_count,
+} = require("../config.js");
 const fetchAddress = require("../script/tracking");
 const {
   dataExistsForCurrentSpin,
@@ -11,7 +16,58 @@ const {
   createSpin,
   markAsWinner,
 } = require("../repository/spinwheel.js");
+const { nextSpinDetails } = require("./scheduledSpinsManager.js");
+const { isAnySpinRunning } = require("../repository/spin.js");
+const moment = require("moment");
 
+let currentSpinTimeout = null;
+const initiateNextSpin = () => {
+  let alreadyExecuting = false;
+  console.log("process started");
+  setInterval(async () => {
+    if (alreadyExecuting) return;
+    alreadyExecuting = true;
+
+    const nextSpin = await nextSpinDetails();
+
+    if (nextSpin) {
+      const isSpinRunning = isAnySpinRunning(nextSpin.id);
+
+      if (!isSpinRunning) {
+        console.log("created next spin", nextSpin);
+        await createSpin(nextSpin);
+      }
+      if (!currentSpinTimeout) {
+        const waitingTime = nextSpin.nextSpinAt.diff(moment(), "ms");
+
+        currentSpinTimeout = setTimeout(
+          () => createParticipants(nextSpin),
+          waitingTime
+        );
+        console.log("scheduled next spin cycle", nextSpin, waitingTime);
+      }
+    }
+    alreadyExecuting = false;
+  }, 1000);
+};
+
+const createParticipants = async (nextSpin) => {
+  const wallets = await fetchAddress();
+  if (wallets && wallets.length >= min_wallets_count) {
+    console.log("wallets", wallets);
+    for (const item of wallets) {
+      // ignoring last 18 characters from wallet amount
+      const value = item[1].toString().substring(0, item[1].length - 18);
+      // await createParticipant(item[0], value, nextSpin);
+    }
+  } else {
+    console.warn(
+      "skipping spinner because min wallets criteria not met for ",
+      nextSpin.id,
+      nextSpin.type
+    );
+  }
+};
 function initiateSpinProcess() {
   EXECUTING = false;
   console.log("process started");
@@ -64,6 +120,7 @@ function initiateSpinProcess() {
       EXECUTING = false;
     } catch (err) {
       console.log(err);
+      EXECUTING = false;
     }
   }, 1000);
 }
@@ -109,4 +166,6 @@ const pickWinner = (participants) => {
   const index = Math.floor(Math.random() * size);
   return participants[index];
 };
-initiateSpinProcess();
+
+initiateNextSpin();
+// initiateSpinProcess();

@@ -33,9 +33,20 @@ const executeQueryAsync = (query) =>
     });
   });
 
+const runQueryAsync = (query, args) =>
+  new Promise((resolve, reject) => {
+    dbConnection.query(query, args, (error, elements) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(elements);
+    });
+  });
+
 module.exports = {
   formatTransactionId,
   groupByDate,
   groupBy,
   executeQueryAsync,
+  runQueryAsync,
 };
