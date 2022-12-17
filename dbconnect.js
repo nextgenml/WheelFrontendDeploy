@@ -45,13 +45,43 @@ dbConnection.connect(function (err) {
       spin_day DATE not null,
       spin_no SMALLINT not null,
       scheduled_spin_id INT not null,
+      to_be_run TINYINT not null,
       running TINYINT not null,
+      started_at DATETIME,
+      ended_at DATETIME,
       created_at datetime not null,
       updated_at datetime not null)`;
     dbConnection.query(spins, function (err, results, fields) {
       if (err) {
         console.log(err.message);
       } else console.log("created table spins");
+    });
+  }
+  if (process.argv.includes("create_participants")) {
+    const deleteQuery = "DROP TABLE IF EXISTS participants;";
+    dbConnection.query(deleteQuery, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("dropped table participants");
+    });
+    const participants = `create table participants (
+      id int primary key auto_increment,
+      transaction_id varchar(255) not null,
+      type varchar(255) not null,
+      is_winner TINYINT,
+      win_at DATETIME,
+      spin_at DATETIME,
+      spin_day DATE,
+      spin_no SMALLINT,
+      paid_flag TINYINT,
+      value INT,
+      winning_rank SMALLINT,
+      prize INT
+    )`;
+    dbConnection.query(participants, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("created table participants");
     });
   }
   if (process.argv.includes("run_migrations")) {
@@ -74,30 +104,6 @@ dbConnection.connect(function (err) {
       } else console.log("created table scheduled_spins");
     });
 
-    const deleteQuery = "DROP TABLE IF EXISTS participants;";
-    dbConnection.query(deleteQuery, function (err, results, fields) {
-      if (err) {
-        console.log(err.message);
-      } else console.log("dropped table participants");
-    });
-    const participants = `create table participants (
-      id int primary key auto_increment,
-      transaction_id varchar(255) not null,
-      type varchar(255) not null,
-      is_winner TINYINT,
-      win_at DATETIME,
-      spin_at DATETIME,
-      spin_day DATE,
-      spin_no SMALLINT,
-      paid_flag TINYINT,
-      value INT,
-      winning_rank SMALLINT
-    )`;
-    dbConnection.query(participants, function (err, results, fields) {
-      if (err) {
-        console.log(err.message);
-      } else console.log("created table participants");
-    });
     dbConnection.end(function (err) {
       if (err) {
         return console.log(err.message);

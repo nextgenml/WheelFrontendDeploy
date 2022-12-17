@@ -43,10 +43,17 @@ const runQueryAsync = (query, args) =>
     });
   });
 
+const splitIntoGroups = (a, size) => {
+  var arrays = [];
+  while (a.length > 0) arrays.push(a.splice(0, size));
+  return arrays;
+};
+
 module.exports = {
   formatTransactionId,
   groupByDate,
   groupBy,
   executeQueryAsync,
   runQueryAsync,
+  splitIntoGroups,
 };

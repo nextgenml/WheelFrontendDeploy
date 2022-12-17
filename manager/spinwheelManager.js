@@ -15,12 +15,16 @@ const {
   getParticipants,
   createSpin,
   markAsWinner,
+  currSpinParticipants,
 } = require("../repository/spinwheel.js");
 const { nextSpinDetails } = require("./scheduledSpinsManager.js");
-const { isAnySpinRunning } = require("../repository/spin.js");
+const { isAnySpinStarting } = require("../repository/spin.js");
 const moment = require("moment");
+const { updateLaunchDate } = require("../repository/scheduledSpin.js");
+const { splitIntoGroups } = require("../utils/spinwheelUtil.js");
 
 let currentSpinTimeout = null;
+let currentSpinId = null;
 const initiateNextSpin = () => {
   let alreadyExecuting = false;
   console.log("process started");
@@ -31,12 +35,15 @@ const initiateNextSpin = () => {
     const nextSpin = await nextSpinDetails();
 
     if (nextSpin) {
-      const isSpinRunning = await isAnySpinRunning(nextSpin.id);
-      // console.log("created next isSpinRunning", isSpinRunning);
-      if (!isSpinRunning) {
+      const isSpinStarting = await isAnySpinStarting(nextSpin.id);
+      if (!isSpinStarting) {
         await createSpin(nextSpin);
         console.log("created next spin", nextSpin);
       }
+
+      // after scheduling a spin, if some update happens in the DB
+      if (currentSpinId && currentSpinId != nextSpin.id) deleteScheduledJob();
+
       if (!currentSpinTimeout) {
         const waitingTime = nextSpin.nextSpinAt.diff(moment(), "ms");
 
@@ -46,20 +53,32 @@ const initiateNextSpin = () => {
         );
         console.log("scheduled next spin cycle", nextSpin, waitingTime);
       }
-    }
+    } else if (currentSpinTimeout) deleteScheduledJob();
     alreadyExecuting = false;
   }, 1000);
 };
 
 const createParticipants = async (nextSpin) => {
   const wallets = await fetchAddress();
-  if (wallets && wallets.length >= min_wallets_count) {
-    console.log("wallets", wallets);
-    for (const item of wallets) {
-      // ignoring last 18 characters from wallet amount
-      const value = item[1].toString().substring(0, item[1].length - 18);
-      // await createParticipant(item[0], value, nextSpin);
-    }
+  const currDate = moment();
+  for (const item of wallets) {
+    // ignoring last 18 characters from wallet amount
+    const value = item[1].toString().substring(0, item[1].length - 18);
+    await createParticipant(item[0], value, nextSpin, currDate);
+  }
+  await updateLaunchDate(nextSpin, currDate);
+
+  const currParticipants = await currSpinParticipants(
+    nextSpin.prevLaunchAt,
+    currDate,
+    nextSpin.minWalletValue
+  );
+  console.log("currParticipants", currParticipants);
+  if (currParticipants && currParticipants.length >= min_wallets_count) {
+    const groups = splitIntoGroups(currParticipants, 25);
+    groups.forEach((group, index) => {
+      setTimeout(() => processWinners(group, nextSpin), 20 * 1000 * index);
+    });
   } else {
     console.warn(
       "skipping spinner because min wallets criteria not met for ",
@@ -68,6 +87,27 @@ const createParticipants = async (nextSpin) => {
     );
   }
 };
+
+const processWinners = async (group, nextSpin) => {
+  let index = 0;
+  for (const prize of nextSpin.winnerPrizes) {
+    setTimeout(async () => {
+      const winner = pickWinner(group);
+      await markAsWinner(winner.id, index + 1, prize);
+      group = group.filter((g) => g.id !== winner.id);
+    }, index * nextSpin.spinDelay);
+    index += 1;
+  }
+};
+const deleteScheduledJob = () => {
+  clearTimeout(currentSpinTimeout);
+  currentSpinTimeout = null;
+  currentSpinId = null;
+};
+const hasWinnerAlready = (group, rank) => {
+  return group.filter((x) => x.rank == rank).length > 0;
+};
+
 function initiateSpinProcess() {
   EXECUTING = false;
   console.log("process started");

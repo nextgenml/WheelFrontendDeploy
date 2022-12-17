@@ -1,4 +1,7 @@
-const { getAllSpins } = require("../repository/scheduledSpin");
+const {
+  getAllSpins,
+  recentDailyLaunchAt,
+} = require("../repository/scheduledSpin");
 const {
   getNextWeeklySpin,
   getNextDailySpin,
@@ -11,14 +14,16 @@ const {
 const nextSpinDetails = async () => {
   const spins = await getAllSpins();
   let nextSpins = [];
-  let spin_no = 1;
 
-  spins.forEach((spin) => {
+  for (const spin of spins) {
     let nextSpin = null;
+    let spin_no = 1;
+    prevLaunchAt = spin.prevLaunchAt || moment("2022-12-12");
     switch (spin.frequency) {
       case "daily":
         spin_no = parseInt(spin.spin_day);
         nextSpin = getNextDailySpin(spin);
+        prevLaunchAt = (await recentDailyLaunchAt()) || moment("2022-12-12");
         break;
       case "weekly":
         nextSpin = getNextWeeklySpin(spin);
@@ -41,10 +46,15 @@ const nextSpinDetails = async () => {
         id: spin.id,
         nextSpinAt: nextSpin,
         type: spin.frequency,
+        prevLaunchAt,
+        winnerPrizes: spin.winner_prizes.split(",").map((x) => parseInt(x)),
+        spinDelay: spin.spin_delay,
+        minWalletValue: spin.min_wallet_amount,
         spin_no,
       });
     }
-  });
+  }
+
   nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
   // console.log(nextSpins);
   // console.log("result", nextSpins[0]);

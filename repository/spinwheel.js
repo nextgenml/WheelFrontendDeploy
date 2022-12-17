@@ -12,10 +12,10 @@ const markWinnerAsPaid = async (transaction_id) => {
   await executeQueryAsync(update);
 };
 
-const markAsWinner = async (id, rank) => {
-  const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ${rank} where id = ${id};`;
+const markAsWinner = async (id, rank, prize) => {
+  const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ?, prize = ? where id = ?;`;
   console.log("update", update);
-  await executeQueryAsync(update);
+  await runQueryAsync(update, [rank, prize, id]);
 };
 const currentSpinData = async (spin_no) => {
   spin_day = moment().format("YYYY-MM-DD");
@@ -52,7 +52,7 @@ const getSpin = async (spin_no) => {
 };
 const createSpin = async (nextSpin) => {
   const spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
-  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at, running, scheduled_spin_id) values(?, ?, ?, now(), now(), 1, ?);`;
+  const query = `insert into spins (spin_no, type, spin_day, created_at, updated_at, to_be_run, scheduled_spin_id) values(?, ?, ?, now(), now(), 1, ?);`;
 
   await runQueryAsync(query, [
     nextSpin.spin_no,
@@ -75,11 +75,19 @@ const dataExistsForCurrentSpin = async (spin_no) => {
 
   return users.length > 0;
 };
-const createParticipant = async (transaction_id, value, nextSpin) => {
+const createParticipant = async (transaction_id, value, nextSpin, currDate) => {
   spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
-  const query = `insert into participants (transaction_id, value, spin_no, type, spin_at, spin_day) values('${transaction_id}', '${value}', ${spin_no}, 'daily', now(), '${spin_day}');`;
+  currDateFormat = moment(currDate).format("YYYY-MM-DD HH:MM:SS");
+  const query = `insert into participants (transaction_id, value, spin_no, type, spin_at, spin_day) values(?, ?, ?, ?, ?, ?);`;
 
-  return await executeQueryAsync(query);
+  return await runQueryAsync(query, [
+    transaction_id,
+    value,
+    nextSpin.spin_no,
+    nextSpin.type,
+    currDateFormat,
+    spin_day,
+  ]);
 };
 const getParticipants = async (start, end, type, spin) => {
   start = moment(start).startOf("day").format();
@@ -101,6 +109,24 @@ const getParticipants = async (start, end, type, spin) => {
       win_at: user.is_winner
         ? moment(user.win_at).format("YYYY-MM-DD HH:mm:ss")
         : undefined,
+    };
+  });
+};
+
+const currSpinParticipants = async (start, end, minWalletValue) => {
+  start = moment(start).startOf("day").format();
+  end = moment(end).endOf("day").format();
+
+  const query = `select * from participants where spin_day > ? and spin_day <= ? and value >= ?;`;
+
+  let users = await runQueryAsync(query, [start, end, minWalletValue]);
+  return users.map((user) => {
+    return {
+      id: user.id,
+      day: moment(user.spin_day).format("YYYY-MM-DD"),
+      spin: user.spin_no,
+      transaction_id: formatTransactionId(user.transaction_id),
+      rank: user.winning_rank,
     };
   });
 };
@@ -153,4 +179,5 @@ module.exports = {
   updateSpin,
   markAsWinner,
   markWinnerAsPaid,
+  currSpinParticipants,
 };
