@@ -8,10 +8,10 @@ let dbConnection = mysql.createConnection({
 });
 
 dbConnection.connect(function (err) {
-  if (err) {
-    return console.error("error: " + err.message);
-  }
-  //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
+  // if (err) {
+  //   return console.error("error: " + err.message);
+  // }
+  // //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
   // const spins = `create table spins (
   //   id int primary key auto_increment,
   //   type varchar(255) not null,
