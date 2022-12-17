@@ -19,7 +19,7 @@ const nextSpinDetails = async () => {
     let nextSpin = null;
     let spin_no = 1;
     prevLaunchAt = spin.prevLaunchAt || moment("2022-12-12");
-    switch (spin.frequency) {
+    switch (spin.type) {
       case "daily":
         spin_no = parseInt(spin.spin_day);
         nextSpin = getNextDailySpin(spin);
@@ -45,7 +45,7 @@ const nextSpinDetails = async () => {
       nextSpins.push({
         id: spin.id,
         nextSpinAt: nextSpin,
-        type: spin.frequency,
+        type: spin.type,
         prevLaunchAt,
         winnerPrizes: spin.winner_prizes.split(",").map((x) => parseInt(x)),
         spinDelay: spin.spin_delay,

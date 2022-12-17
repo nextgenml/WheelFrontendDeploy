@@ -7,8 +7,8 @@ const {
   runQueryAsync,
 } = require("../utils/spinwheelUtil");
 
-const markWinnerAsPaid = async (transaction_id) => {
-  const update = `update participants set paid_flag = 1 where transaction_id = ${transaction_id};`;
+const markWinnerAsPaid = async (wallet_id) => {
+  const update = `update participants set paid_flag = 1 where wallet_id = ${wallet_id};`;
   await executeQueryAsync(update);
 };
 
@@ -22,9 +22,7 @@ const currentSpinData = async (spin_no) => {
   const query = `select * from participants where spin_no = ${spin_no} and spin_day = '${spin_day}' order by value desc limit 25;`;
   let users = await executeQueryAsync(query);
 
-  const addresses = users.map((user) =>
-    formatTransactionId(user.transaction_id)
-  );
+  const addresses = users.map((user) => formatTransactionId(user.wallet_id));
 
   const spinQuery = `select * from spins where spin_no = ${spin_no} and spin_day = '${spin_day}';`;
 
@@ -75,13 +73,13 @@ const dataExistsForCurrentSpin = async (spin_no) => {
 
   return users.length > 0;
 };
-const createParticipant = async (transaction_id, value, nextSpin, currDate) => {
+const createParticipant = async (wallet_id, value, nextSpin, currDate) => {
   spin_day = moment(nextSpin.nextSpinAt).format("YYYY-MM-DD");
   currDateFormat = moment(currDate).format("YYYY-MM-DD HH:MM:SS");
-  const query = `insert into participants (transaction_id, value, spin_no, type, spin_at, spin_day) values(?, ?, ?, ?, ?, ?);`;
+  const query = `insert into participants (wallet_id, value, spin_no, type, spin_at, spin_day) values(?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
-    transaction_id,
+    wallet_id,
     value,
     nextSpin.spin_no,
     nextSpin.type,
@@ -104,7 +102,7 @@ const getParticipants = async (start, end, type, spin) => {
       id: user.id,
       day: moment(user.spin_day).format("YYYY-MM-DD"),
       spin: user.spin_no,
-      transaction_id: formatTransactionId(user.transaction_id),
+      wallet_id: formatTransactionId(user.wallet_id),
       rank: user.winning_rank,
       win_at: user.is_winner
         ? moment(user.win_at).format("YYYY-MM-DD HH:mm:ss")
@@ -125,7 +123,7 @@ const currSpinParticipants = async (start, end, minWalletValue) => {
       id: user.id,
       day: moment(user.spin_day).format("YYYY-MM-DD"),
       spin: user.spin_no,
-      transaction_id: formatTransactionId(user.transaction_id),
+      wallet_id: formatTransactionId(user.wallet_id),
       rank: user.winning_rank,
     };
   });
@@ -149,18 +147,18 @@ const getWinners = async (start, end) => {
     // console.log("users_by_spin", users_by_spin);
     Object.keys(users_by_spin).forEach((spin) => {
       temp_users2 = users_by_spin[spin];
-      // console.log("temp_users2", temp_users2[0].transaction_id);
+      // console.log("temp_users2", temp_users2[0].wallet_id);
       result.push({
         day,
         spin,
         first: formatTransactionId(
-          temp_users2.filter((x) => x["winning_rank"] == 1)[0]?.transaction_id
+          temp_users2.filter((x) => x["winning_rank"] == 1)[0]?.wallet_id
         ),
         second: formatTransactionId(
-          temp_users2.filter((x) => x["winning_rank"] == 2)[0]?.transaction_id
+          temp_users2.filter((x) => x["winning_rank"] == 2)[0]?.wallet_id
         ),
         third: formatTransactionId(
-          temp_users2.filter((x) => x["winning_rank"] == 3)[0]?.transaction_id
+          temp_users2.filter((x) => x["winning_rank"] == 3)[0]?.wallet_id
         ),
       });
     });

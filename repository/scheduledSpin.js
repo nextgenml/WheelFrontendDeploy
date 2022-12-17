@@ -12,7 +12,7 @@ const updateLaunchDate = async (id, date) => {
 };
 const recentDailyLaunchAt = async () => {
   const query =
-    "select * from scheduled_spins where frequency = 'daily' order by prev_launch_date limit 1;";
+    "select * from scheduled_spins where type = 'daily' order by prev_launch_date limit 1;";
   const records = await executeQueryAsync(query);
   return records[0];
 };

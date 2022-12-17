@@ -16,11 +16,11 @@ const groupBy = function (xs, key) {
   }, {});
 };
 
-const formatTransactionId = (transaction_id) =>
-  transaction_id
-    ? transaction_id.substring(0, 5) +
+const formatTransactionId = (wallet_id) =>
+  wallet_id
+    ? wallet_id.substring(0, 5) +
       "..." +
-      transaction_id.substring(transaction_id.length - 5)
+      wallet_id.substring(wallet_id.length - 5)
     : null;
 
 const executeQueryAsync = (query) =>

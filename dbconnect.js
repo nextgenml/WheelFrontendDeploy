@@ -13,6 +13,24 @@ dbConnection.connect(function (err) {
   }
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
 
+  if (process.argv.includes("smart_contract_wallets")) {
+    const deleteQuery = "DROP TABLE IF EXISTS smart_contract_wallets;";
+    dbConnection.query(deleteQuery, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("dropped table smart_contract_wallets");
+    });
+    const spins = `create table smart_contract_wallets (
+      id int primary key auto_increment,
+      wallet_id varchar(255),
+      value INT,
+      created_at DATETIME)`;
+    dbConnection.query(spins, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("created table smart_contract_wallets");
+    });
+  }
   if (process.argv.includes("repopulate_spins")) {
     const delete_all = `delete from scheduled_spins;`;
     dbConnection.query(delete_all, function (err) {
@@ -22,12 +40,12 @@ dbConnection.connect(function (err) {
     });
 
     const inserts = [
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00:0', '6', 10000, 3, 20, '100,50,25');`,
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('daily', 1, '15:00:0', null, 10000, 2, 15, '100,50');`,
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('biweekly', 1, '15:00:0', '17:28', 10000, 1, 15, '100');`,
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('monthly', 1, '15:00:0', '1', 10000, 1, 15, '100');`,
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('yearly', 1, '15:00:0', '1:1', 10000, 1, 15, '100');`,
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('adhoc', 1, '15:00:0', '1:1:2023', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00:0', '6', 10000, 3, 20, '100,50,25');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('daily', 1, '15:00:0', null, 10000, 2, 15, '100,50');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('biweekly', 1, '15:00:0', '17:28', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('monthly', 1, '15:00:0', '1', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('yearly', 1, '15:00:0', '1:1', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('adhoc', 1, '15:00:0', '1:1:2023', 10000, 1, 15, '100');`,
     ];
     inserts.forEach((insert) =>
       dbConnection.query(insert, function (err) {
@@ -39,6 +57,12 @@ dbConnection.connect(function (err) {
   }
 
   if (process.argv.includes("create_spins")) {
+    const deleteQuery = "DROP TABLE IF EXISTS spins;";
+    dbConnection.query(deleteQuery, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("dropped table spins");
+    });
     const spins = `create table spins (
       id int primary key auto_increment,
       type varchar(255) not null,
@@ -66,7 +90,7 @@ dbConnection.connect(function (err) {
     });
     const participants = `create table participants (
       id int primary key auto_increment,
-      transaction_id varchar(255) not null,
+      wallet_id varchar(255) not null,
       type varchar(255) not null,
       is_winner TINYINT,
       win_at DATETIME,
@@ -84,11 +108,17 @@ dbConnection.connect(function (err) {
       } else console.log("created table participants");
     });
   }
-  if (process.argv.includes("run_migrations")) {
-    console.log("running db migrations");
+  if (process.argv.includes("scheduled_spins")) {
+    const deleteQuery = "DROP TABLE IF EXISTS scheduled_spins;";
+    dbConnection.query(deleteQuery, function (err, results, fields) {
+      if (err) {
+        console.log(err.message);
+      } else console.log("dropped table scheduled_spins");
+    });
+
     const scheduled_spins = `create table scheduled_spins (
       id int primary key auto_increment,
-      frequency varchar(255) not null,
+      type varchar(255) not null,
       is_active TINYINT not null,
       run_at varchar(255) not null,
       spin_day varchar(255),
