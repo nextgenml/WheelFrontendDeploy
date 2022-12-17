@@ -20,8 +20,12 @@ function getFormattedHash(hash) {
   return hash.splice(0, 5) + "..." + hash.substr(hash.length - 5);
 }
 
+const parseDateTime = (time) => {
+  return time.split(":").map((x) => parseInt(x));
+};
 module.exports = {
   dateToString,
   stringToDate,
   getFormattedHash,
+  parseDateTime,
 };

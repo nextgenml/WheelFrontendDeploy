@@ -22,7 +22,9 @@ dbConnection.connect(function (err) {
     });
 
     const inserts = [
-      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00', 'saturday', 10000, 3, 20, '100,50,25');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('weekly', 1, '3:00:0', '6', 10000, 3, 20, '100,50,25');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('daily', 1, '15:00:0', null, 10000, 2, 15, '100,50');`,
+      `insert into scheduled_spins(frequency, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('biweekly', 1, '15:00:0', '17:28', 10000, 1, 15, '100');`,
     ];
     inserts.forEach((insert) =>
       dbConnection.query(insert, function (err) {
