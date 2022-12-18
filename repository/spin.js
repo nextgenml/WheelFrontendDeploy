@@ -44,10 +44,23 @@ const markSpinAsDone = async (id) => {
 
   return await runQueryAsync(update, [id]);
 };
+
+const getRunningSpin = async () => {
+  const query =
+    "select * from spins where running = 1 order by id desc limit 1;";
+  const spins = await runQueryAsync(query, []);
+  const spin = spins[0];
+  if (spin) {
+    const scheduledSpin = await getScheduledSpin(spin.scheduled_spin_id);
+    return [spin, scheduledSpin];
+  }
+  return [null, null];
+};
 module.exports = {
   isAnySpinStarting,
   toBeRunSpin,
   getSpinNo,
   createSpin,
   markSpinAsDone,
+  getRunningSpin,
 };

@@ -128,6 +128,21 @@ const getWinners = async (start, end) => {
   // console.log("result", result);
   return result;
 };
+
+// new functions
+const getParticipantsOfSpin = async (spin) => {
+  const fDate = moment(spin.spin_day).format("YYYY-MM-DD");
+  const query =
+    "select * from participants where spin_day = ? and spin_no = ? and type = ?;";
+  let records = await runQueryAsync(query, [fDate, spin.spin_no, spin.type]);
+
+  participants = records.map((r) => formatTransactionId(r.wallet_id));
+  winners = records
+    .filter((r) => r.is_winner)
+    .sort((a, b) => a.winning_rank - b.winning_rank)
+    .map((r) => formatTransactionId(r.wallet_id));
+  return [participants, winners];
+};
 module.exports = {
   getWinners,
   getParticipants,
@@ -137,4 +152,5 @@ module.exports = {
   getSpin,
   markAsWinner,
   markWinnerAsPaid,
+  getParticipantsOfSpin,
 };

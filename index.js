@@ -13,7 +13,10 @@ const {
   getWinners,
   getSpin,
   currentSpinData,
+  getParticipantsOfSpin,
 } = require("./repository/spinwheel");
+const { getRunningSpin } = require("./repository/spin.js");
+const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
 
 const app = express();
 
@@ -54,82 +57,35 @@ const getWinnersForSpin = async (spin_no) => {
   return {};
 };
 app.get("/spinner-data", async (req, res) => {
-  const today_date_str = utils.dateToString(new Date());
   let current_time = new Date();
-  let end_date = new Date();
-  let end_hour = 12;
+  const [runningSpin, scheduledSpin] = await getRunningSpin();
+  let data;
 
-  if (current_time.getHours() > 21) {
-    end_hour = 24 - current_time.getHours() + spin_hours[0];
+  if (runningSpin && scheduledSpin) {
+    [participants, winners] = await getParticipantsOfSpin(runningSpin);
+    data = {
+      participants,
+      winners,
+      end_time: current_time.toUTCString(),
+      no_of_winners: scheduledSpin.no_of_winners,
+      spin_delay: scheduledSpin.spin_delay,
+    };
   } else {
-  }
-  for (let i = 0; i < spin_hours.length; i++) {
-    let diff = spin_hours[i] - current_time.getHours();
-    if (diff >= 0) {
-      if (diff === 0) {
-        if (current_time.getMinutes() <= spin_minute) {
-          end_hour = Math.min(end_hour, diff);
-        }
-      } else {
-        end_hour = Math.min(end_hour, diff);
-      }
-    }
+    const nextSpin = await nextSpinDetails();
+    data = {
+      end_time: nextSpin.nextSpinAt.format(),
+      no_of_winners: nextSpin.winnerPrizes.length,
+      spin_delay: nextSpin.spinDelay,
+    };
   }
 
-  end_date.setHours(current_time.getHours() + end_hour);
-  end_date.setMinutes(spin_minute);
-  end_date.setSeconds(10);
-
-  let hours_diff = Math.abs(end_date.getHours() - current_time.getHours());
-  if (hours_diff > 12) {
-    hours_diff = hours_diff - 12;
-  }
-  let time_diff = (end_date - current_time) / 1000;
-
-  let minute_diff = (time_diff / 60) % 3600;
-
-  let date = new Date();
-  let hours = date.getHours();
-  let spinner_data;
-  if (spin_hours.indexOf(hours) > -1) {
-    let spin_no = spin_hours.indexOf(hours) + 1;
-    spinner_data = await getSpinData(spin_no);
-    if (!spinner_data && spin_no - 1 > 0) {
-      spinner_data = await getSpinData(spin_no - 1);
-    }
-  } else {
-    let spinIndex = relativeSpinIndex(hours);
-    spinner_data = await getSpinData(spinIndex);
-  }
-
-  let winners_data = {};
-  if (spin_hours.indexOf(hours) > -1) {
-    let spin_no = spin_hours.indexOf(hours) + 1;
-    winners_data = await getWinnersForSpin(spin_no);
-    if (!winners_data && spin_no - 1 > 0) {
-      winners_data = await getWinnersForSpin(spin_no - 1);
-    }
-  } else {
-    let spinIndex = relativeSpinIndex(hours);
-    winners_data = await getWinnersForSpin(spinIndex);
-  }
-
-  if (spinner_data) {
-    res.json({
-      ...spinner_data,
-      ...winners_data,
-      end_time: end_date.toUTCString(),
-      start_time: current_time.toUTCString(),
-    });
-  } else {
-    res.json({
-      start_time: current_time.toUTCString(),
-      end_time: end_date.toUTCString(),
-    });
-  }
+  res.json({
+    ...data,
+    start_time: current_time.toUTCString(),
+  });
 });
 
-app.get("/winners-data-1", async (req, res) => {
+app.get("/winners-data", async (req, res) => {
   console.log("req.params.date", req.query);
   const winner_data = await getWinners(req.query.from, req.query.to);
   res.json(winner_data);

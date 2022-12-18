@@ -6,7 +6,6 @@ import CountDown from "./components/countdown";
 import DateIcon from "./components/Icons/DateIcon";
 import Wheel from "./components/wheel";
 import WinnersTable from "./components/WinnersTable";
-import { next_spin_delay } from "./config";
 import { DateToString } from "./utils";
 
 export default function SpinAndWin() {
@@ -28,15 +27,16 @@ export default function SpinAndWin() {
   const [showEnd, setShowEnd] = useState(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
+  const [spinDelay, setSpinDelay] = useState(20);
 
   const setSpinnerData = (spinner_data: any) => {
-    setWheelItems(spinner_data.items);
+    setWheelItems(spinner_data.participants);
 
     let curr_winners = (spinner_data.winners || []).filter((w: string) => !!w);
 
-    if (spinner_data.items && curr_winners.length > 0) {
+    if (spinner_data.participants && curr_winners.length > 0) {
       setWinner(
-        spinner_data.items.indexOf(curr_winners[curr_winners.length - 1])
+        spinner_data.participants.indexOf(curr_winners[curr_winners.length - 1])
       );
     }
   };
@@ -55,7 +55,7 @@ export default function SpinAndWin() {
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
     const winners_data_res = await fetch(
-      api_url + `winners-data-1?from=${f_start}&to=${f_end}`,
+      api_url + `winners-data?from=${f_start}&to=${f_end}`,
       {
         method: "GET",
         headers: {
@@ -72,10 +72,11 @@ export default function SpinAndWin() {
       (x: string) => !!x
     ).length;
 
+    setSpinDelay(spinner_data.spin_delay);
     return {
       start_time: new Date(spinner_data["start_time"]),
       end_time: new Date(spinner_data["end_time"]),
-      spins_remaining: 3 - wCount,
+      spins_remaining: spinner_data.no_of_winners - wCount,
     };
   };
 
@@ -96,7 +97,7 @@ export default function SpinAndWin() {
     if (spins_remaining > 0) {
       console.log("fetching new ....... 1");
       let end_time = new Date();
-      end_time?.setSeconds(end_time.getSeconds() + next_spin_delay);
+      end_time?.setSeconds(end_time.getSeconds() + spinDelay);
       setTimerEndDate(end_time);
       setTimerStartDate(new Date());
     }

@@ -64,7 +64,6 @@ const createParticipants = async (nextSpin) => {
 
     console.log("currParticipants length", currParticipants.length);
     const spin = await createSpin(nextSpin);
-    nextSpin.spinNo += 1;
 
     for (const item of currParticipants) {
       const participant = await createParticipant(
@@ -83,6 +82,7 @@ const createParticipants = async (nextSpin) => {
     if (nextSpin.type === "daily") break;
 
     await timer(nextSpin.spinDelay * 1000);
+    nextSpin.spinNo += 1;
   }
   console.log("spin completed for a type:", nextSpin.type);
 };

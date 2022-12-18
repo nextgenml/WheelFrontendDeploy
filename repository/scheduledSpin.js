@@ -18,8 +18,15 @@ const recentDailyLaunchAt = async () => {
   const records = await executeQueryAsync(query);
   return records[0]?.prev_launch_date;
 };
+
+const getScheduledSpin = async (id) => {
+  const query = "select * from scheduled_spins where id = ?;";
+  const spins = await runQueryAsync(query, [id]);
+  return spins[0];
+};
 module.exports = {
   getAllSpins,
   updateLaunchDate,
   recentDailyLaunchAt,
+  getScheduledSpin,
 };
