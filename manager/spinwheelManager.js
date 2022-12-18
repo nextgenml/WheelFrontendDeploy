@@ -24,7 +24,7 @@ const initiateNextSpin = () => {
 
     if (nextSpin) {
       // after scheduling a spin, if some update happens in the DB
-      if (currentSpinId && currentSpinId != nextSpin.id) deleteScheduledJob();
+      if (currentSpinId && currentSpinId !== nextSpin.id) deleteScheduledJob();
 
       if (!currentSpinTimeout) {
         const waitingTime = nextSpin.nextSpinAt.diff(moment(), "ms");
