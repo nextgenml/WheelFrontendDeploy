@@ -1,7 +1,6 @@
 import moment from "moment";
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
-import AboutSection from "./components/About";
 import CountDown from "./components/countdown";
 import DateIcon from "./components/Icons/DateIcon";
 import Wheel from "./components/wheel";
@@ -112,18 +111,7 @@ export default function SpinAndWin() {
 
   return (
     <div className="main">
-      <nav
-        style={{ margin: "1rem auto" }}
-        className="flex flex-row items-center justify-center object-cover w-fit"
-      >
-        <a className="text-white font-medium first-letter:" href="/">
-          Contact Us{" "}
-        </a>
-        <img src="logo.png" className="w-60 h-60" alt="logo" />
-        <a className="text-white font-medium first-letter:" href="/">
-          About Us{" "}
-        </a>
-      </nav>
+  
       {!loading && (
         <>
           <div
@@ -232,7 +220,6 @@ export default function SpinAndWin() {
           <span className="visually-hidden">Loading...</span>
         </div>
       )}
-      <AboutSection />
     </div>
   );
 }
