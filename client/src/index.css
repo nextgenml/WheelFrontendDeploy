@@ -26,3 +26,7 @@ code {
   padding: 8px;
   border-radius: 8px;
 }
+.type-selection {
+  margin-left: 16px;
+  border-radius: 4px;
+}

@@ -8,6 +8,14 @@ import Wheel from "./components/wheel";
 import WinnersTable from "./components/WinnersTable";
 import { DateToString } from "./utils";
 
+const SPIN_TYPES = [
+  ["daily", "Daily"],
+  ["weekly", "Weekly"],
+  ["biweekly", "Biweekly"],
+  ["monthly", "Monthly"],
+  ["yearly", "Yearly"],
+  ["adhoc", "Adhoc"],
+];
 export default function SpinAndWin() {
   var api_url = "/";
   if (process.env["NODE_ENV"] === "development") {
@@ -28,6 +36,7 @@ export default function SpinAndWin() {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [spinDelay, setSpinDelay] = useState(20);
+  const [typeValue, setTypeValue] = useState("daily");
 
   const setSpinnerData = (spinner_data: any) => {
     setWheelItems(spinner_data.participants);
@@ -41,21 +50,11 @@ export default function SpinAndWin() {
     }
   };
 
-  const fetchSpinnerData = async () => {
-    let spinner_data_res = await fetch(api_url + "spinner-data", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    let spinner_data = await spinner_data_res.json();
-    setSpinnerData(spinner_data);
-
+  const fetchWinners = async () => {
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
     const winners_data_res = await fetch(
-      api_url + `winners-data?from=${f_start}&to=${f_end}`,
+      api_url + `winners-data?from=${f_start}&to=${f_end}&type=${typeValue}`,
       {
         method: "GET",
         headers: {
@@ -66,22 +65,38 @@ export default function SpinAndWin() {
 
     const winners_data = await winners_data_res.json();
     setWinnersData(winners_data);
+  };
+  const fetchSpinnerData = async () => {
+    let spinner_data_res = await fetch(api_url + "spinner-data", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    let spinner_data = await spinner_data_res.json();
+    setSpinnerData(spinner_data);
     setLoading(false);
+    setSpinDelay(spinner_data.spin_delay);
 
     const wCount = (spinner_data.winners || []).filter(
       (x: string) => !!x
     ).length;
 
-    setSpinDelay(spinner_data.spin_delay);
+    await fetchWinners();
     return {
       start_time: new Date(spinner_data["start_time"]),
       end_time: new Date(spinner_data["end_time"]),
       spins_remaining: spinner_data.no_of_winners - wCount,
+      canRun:
+        spinner_data &&
+        spinner_data.participants &&
+        spinner_data.participants.length > 0,
     };
   };
 
   const onCountDownComplete = async () => {
-    let { spins_remaining } = await fetchSpinnerData();
+    let { spins_remaining, canRun, end_time } = await fetchSpinnerData();
 
     if (spins_remaining === 0) {
       let end_date = new Date();
@@ -94,11 +109,14 @@ export default function SpinAndWin() {
       console.log(end_date);
     }
 
-    if (spins_remaining > 0) {
+    if (canRun && spins_remaining > 0) {
       console.log("fetching new ....... 1");
       let end_time = new Date();
       end_time?.setSeconds(end_time.getSeconds() + spinDelay);
       setTimerEndDate(end_time);
+      setTimerStartDate(new Date());
+    } else {
+      setTimerEndDate(new Date(end_time));
       setTimerStartDate(new Date());
     }
   };
@@ -210,7 +228,16 @@ export default function SpinAndWin() {
                   defaultActiveStartDate={new Date()}
                 />
               )}
-              <button onClick={fetchSpinnerData} className="get-winners-btn">
+              <select
+                value={typeValue}
+                className="type-selection"
+                onChange={(e) => setTypeValue(e.target.value)}
+              >
+                {SPIN_TYPES.map(([value, text]) => {
+                  return <option value={value}>{text}</option>;
+                })}
+              </select>
+              <button onClick={fetchWinners} className="get-winners-btn">
                 Get Winners
               </button>
             </div>

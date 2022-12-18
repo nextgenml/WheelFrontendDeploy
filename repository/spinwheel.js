@@ -90,7 +90,7 @@ const getParticipants = async (start, end, type, spin) => {
   });
 };
 
-const getWinners = async (start, end) => {
+const getWinnersv1 = async (start, end) => {
   start = moment(start).startOf("day").format();
   end = moment(end).endOf("day").format();
   const query = `select * from participants where is_winner = 1 and spin_day >= '${start}' and spin_day <= '${end}';`;
@@ -143,6 +143,25 @@ const getParticipantsOfSpin = async (spin) => {
     .map((r) => formatTransactionId(r.wallet_id));
   return [participants, winners];
 };
+
+const getWinners = async (from, to, type) => {
+  start = moment(from).startOf("day").format();
+  end = moment(to).endOf("day").format();
+  const query = `select * from participants where is_winner = 1 and spin_day >= ? and spin_day <= ? and type = ?;`;
+
+  let records = await runQueryAsync(query, [from, to, type]);
+
+  return records.map((r) => {
+    return {
+      day: moment(r.spin_day).format("YYYY-MM-DD"),
+      spin: r.spin_no,
+      rank: r.winning_rank,
+      type: r.type,
+      wallet_id: formatTransactionId(r.wallet_id),
+    };
+  });
+};
+
 module.exports = {
   getWinners,
   getParticipants,

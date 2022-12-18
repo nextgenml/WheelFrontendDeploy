@@ -1,6 +1,3 @@
-import React from "react";
-import { DateToString, getFormattedHash } from "../utils";
-
 interface Props {
   winners_data: any[];
 }
@@ -24,25 +21,25 @@ export default function WinnersTable(props: Props) {
                     scope="col"
                     className="text-sm font-medium text-white px-6 py-4"
                   >
+                    Type
+                  </th>
+                  <th
+                    scope="col"
+                    className="text-sm font-medium text-white px-6 py-4"
+                  >
                     Spin No
                   </th>
                   <th
                     scope="col"
                     className="text-sm font-medium text-white px-6 py-4"
                   >
-                    First Winner
+                    Winner
                   </th>
                   <th
                     scope="col"
                     className="text-sm font-medium text-white px-6 py-4"
                   >
-                    Second Winner
-                  </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
-                    Third Winner
+                    Rank
                   </th>
                 </tr>
               </thead>
@@ -55,17 +52,16 @@ export default function WinnersTable(props: Props) {
                           {row.day}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
+                          {row.type}
+                        </td>
+                        <td className="text-sm font-medium text-white px-6 py-4">
                           {row.spin}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
-                          {" "}
-                          {row.first}
+                          {row.wallet_id}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
-                          {row.second}
-                        </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
-                          {row.third}
+                          {row.rank}
                         </td>
                       </tr>
                     );

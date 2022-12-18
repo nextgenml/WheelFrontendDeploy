@@ -1,5 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
+const { getScheduledSpin } = require("./scheduledSpin");
 const isAnySpinStarting = async (scheduled_spin_id) => {
   const query = "select 1 from spins where to_be_run = 1";
   const spins = await runQueryAsync(query, [scheduled_spin_id]);
@@ -45,9 +46,10 @@ const markSpinAsDone = async (id) => {
   return await runQueryAsync(update, [id]);
 };
 
-const getRunningSpin = async () => {
-  const query =
-    "select * from spins where running = 1 order by id desc limit 1;";
+const getRunningSpin = async (running) => {
+  const query = running
+    ? "select * from spins where running = 1 order by id desc limit 1;"
+    : "select * from spins order by id desc limit 1;";
   const spins = await runQueryAsync(query, []);
   const spin = spins[0];
   if (spin) {
@@ -56,6 +58,7 @@ const getRunningSpin = async () => {
   }
   return [null, null];
 };
+
 module.exports = {
   isAnySpinStarting,
   toBeRunSpin,

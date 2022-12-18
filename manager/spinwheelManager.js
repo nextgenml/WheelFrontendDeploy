@@ -33,6 +33,7 @@ const initiateNextSpin = () => {
           () => createParticipants(nextSpin),
           waitingTime
         );
+        currentSpinId = nextSpin.id;
         console.log("scheduled next spin cycle", nextSpin, waitingTime);
       }
     } else if (currentSpinTimeout) deleteScheduledJob();
