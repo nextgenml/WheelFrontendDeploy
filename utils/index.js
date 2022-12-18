@@ -26,10 +26,26 @@ const parseDateTime = (time) => {
 
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
+const generateRandomNumber = (max) => {
+  return Math.floor(Math.random() * max);
+};
+const generateRandomString = (length) => {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 module.exports = {
   dateToString,
   stringToDate,
   getFormattedHash,
   parseDateTime,
   timer,
+  generateRandomString,
+  generateRandomNumber,
 };

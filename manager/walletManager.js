@@ -14,6 +14,7 @@ const fetchDataFromContract = () => {
       const hours = date.getHours();
       const minutes = date.getMinutes();
       const index = FETCH_HOURS.indexOf(hours);
+
       if (lastFetchedCycle != index && index > -1 && minutes === FETCH_MINUTE) {
         const new_addresses = await fetchAddress();
         console.log(

@@ -1,31 +1,15 @@
+const { min_wallets_count } = require("../config.js");
 const {
-  spin_hours,
-  spin_minute,
-  next_spin_delay,
-  min_wallets_count,
-} = require("../config.js");
-const fetchAddress = require("../script/tracking");
-const {
-  dataExistsForCurrentSpin,
   createParticipant,
-  currentSpinData,
-  getSpin,
-  getWinners,
-  getParticipants,
   markAsWinner,
 } = require("../repository/spinwheel.js");
-// const {createParticipant} = require("./repository/spinwheel.js");
+
 const { nextSpinDetails } = require("./scheduledSpinsManager.js");
-const {
-  isAnySpinStarting,
-  createSpin,
-  markSpinAsDone,
-} = require("../repository/spin.js");
+const { createSpin, markSpinAsDone } = require("../repository/spin.js");
 const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
-const { splitIntoGroups } = require("../utils/spinwheelUtil.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
-const { timer } = require("../utils/index.js");
+const { timer, generateRandomNumber } = require("../utils/index.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -58,60 +42,62 @@ const initiateNextSpin = () => {
 
 const createParticipants = async (nextSpin) => {
   console.log("creating participants");
-  const spin = await createSpin(nextSpin);
-
-  const currParticipants = await currSpinParticipants(
-    nextSpin.prevLaunchAt,
-    nextSpin.minWalletValue
-  );
-  console.log("currParticipants", currParticipants.length);
-
-  for (const item of currParticipants) {
-    const participant = await createParticipant(
-      item.walletId,
-      item.value,
-      nextSpin
+  let page = 0,
+    size = 25;
+  while (1) {
+    const currParticipants = await currSpinParticipants(
+      nextSpin.prevLaunchAt,
+      nextSpin.minWalletValue,
+      page * size,
+      size
     );
-    item["id"] = participant.insertId;
-  }
-  await updateLaunchDate(nextSpin.id);
+    page += 1;
 
-  if (currParticipants && currParticipants.length >= min_wallets_count) {
-    const groups = splitIntoGroups(currParticipants, 25);
-    await processWinners(groups[0], nextSpin, spin);
+    if (currParticipants.length < min_wallets_count) {
+      console.warn(
+        "skipping spinner because min wallets criteria not met for ",
+        nextSpin.id,
+        nextSpin.type
+      );
+      break;
+    }
 
-    // groups.forEach((group, index) => {
-    //   // setTimeout(
-    //   //   () => processWinners(group, nextSpin, spin),
-    //   //   nextSpin.spinDelay * 1000 * index
-    //   // );
-    // });
-  } else {
-    console.warn(
-      "skipping spinner because min wallets criteria not met for ",
-      nextSpin.id,
-      nextSpin.type
-    );
+    console.log("currParticipants length", currParticipants.length);
+    const spin = await createSpin(nextSpin);
+    nextSpin.spinNo += 1;
+
+    for (const item of currParticipants) {
+      const participant = await createParticipant(
+        item.walletId,
+        item.value,
+        nextSpin
+      );
+      item["id"] = participant.insertId;
+    }
+    await updateLaunchDate(nextSpin.id);
+
+    await processWinners(currParticipants, nextSpin);
+
+    await markSpinAsDone(spin.id);
+
+    if (nextSpin.type === "daily") break;
+
+    await timer(nextSpin.spinDelay * 1000);
   }
+  console.log("spin completed for a type:", nextSpin.type);
 };
 
-const processWinners = async (group, nextSpin, spin) => {
+const processWinners = async (group, nextSpin) => {
   for (let index = 1; index <= nextSpin.winnerPrizes.length; index += 1) {
-    const [winner, rIndex] = pickWinner(group);
+    const rIndex = generateRandomNumber(group.length);
+    const winner = group[rIndex];
     const prize = nextSpin.winnerPrizes[index - 1];
     console.log("winner", winner.id, prize, index);
     await markAsWinner(winner.id, index, prize);
     group.splice(rIndex, 1);
 
-    if (index == nextSpin.winnerPrizes.length) await markSpinAsDone(spin.id);
-    else await timer(index * nextSpin.spinDelay * 1000);
+    await timer(nextSpin.spinDelay * 1000);
   }
-};
-
-const pickWinner = (participants) => {
-  const size = participants.length;
-  const index = Math.floor(Math.random() * size);
-  return [participants[index], index];
 };
 
 const deleteScheduledJob = () => {

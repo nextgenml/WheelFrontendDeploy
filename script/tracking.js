@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const Web3 = require("web3");
 const path = require("path");
+const { generateRandomString, generateRandomNumber } = require("../utils");
 //RESET INSTRUCTIONS:
 //Put 0 to last_block_number.json and then run to filter the blocks from begining of the contract
 
@@ -112,6 +113,14 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 
 // Run THIS
 async function fetchAddress() {
+  // result = [];
+  // for (i = 0; i < 25; i += 1) {
+  //   result.push([
+  //     generateRandomString(32),
+  //     generateRandomNumber(10000).toString() + "000000000000000000",
+  //   ]);
+  // }
+  // return result;
   return await run_me(CONTRACT).then(async (CONTRACT) => {
     let _path = path.join(__dirname, "assets", "last_block_number.json");
     return await readFiles(_path).then(async (LAST_BLOCK) => {

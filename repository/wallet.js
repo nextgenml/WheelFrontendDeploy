@@ -7,11 +7,16 @@ const createWallet = async (walletId, value) => {
   return await runQueryAsync(query, [walletId, value]);
 };
 
-const currSpinParticipants = async (start, minWalletValue) => {
-  start = moment(start).startOf("day").format();
-  const query = `select wallet_id, sum(value) as total_value from wallets where created_at > ? and value >= ? group by wallet_id order by 2 desc limit 25;`;
+const currSpinParticipants = async (start, minWalletValue, offset, size) => {
+  start = moment(start).format();
+  const query = `select wallet_id, sum(value) as total_value from wallets where created_at > ? and value >= ? group by wallet_id order by 2 desc limit ? OFFSET ?;`;
 
-  const spins = await runQueryAsync(query, [start, minWalletValue]);
+  const spins = await runQueryAsync(query, [
+    start,
+    minWalletValue,
+    size,
+    offset,
+  ]);
   return spins.map((spin) => {
     return {
       walletId: spin.wallet_id,

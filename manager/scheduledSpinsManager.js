@@ -18,11 +18,12 @@ const nextSpinDetails = async () => {
 
   for (const spin of spins) {
     let nextSpin = null;
-    prevLaunchAt = spin.prevLaunchAt || moment("2022-12-12");
+    prevLaunchAt = spin.prev_launch_date || moment("2022-12-12");
     switch (spin.type) {
       case "daily":
         nextSpin = getNextDailySpin(spin);
-        prevLaunchAt = (await recentDailyLaunchAt()) || moment("2022-12-12");
+        const tempDate = await recentDailyLaunchAt();
+        prevLaunchAt = tempDate || moment("2022-12-12");
         break;
       case "weekly":
         nextSpin = getNextWeeklySpin(spin);
