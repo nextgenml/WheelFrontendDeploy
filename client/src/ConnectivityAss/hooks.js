@@ -1,9 +1,9 @@
 import React from "react";
 import { Contract } from "@ethersproject/contracts";
-import tokenAbi from "./tokenAbi.json";
+import stevenProtocolAbi from "./stevenProtocolAbi.json";
 import airDropAbi from "./airDropAbi.json";
 
-import { airDropAddress, tokenAddress } from "./environment.js";
+import { airDropAddress, stevenProtocolToken } from "./environment.js";
 import { BigNumber, constants, ethers } from "ethers";
 
 import { Alert, Slide, Snackbar } from "@mui/material";
@@ -33,8 +33,9 @@ function SlideTransition(props) {
 export function useAirdropContract(signer) {
   return useContract(airDropAddress, airDropAbi, signer);
 }
-export function useTokenContract(signer) {
-  return useContract(tokenAddress, tokenAbi, signer);
+
+export function useStevenProtocolContract(signer) {
+  return useContract(stevenProtocolToken, stevenProtocolAbi, signer);
 }
 
 ////////////////////////////////////////////////////////////////

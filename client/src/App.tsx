@@ -11,6 +11,7 @@ import Utilities from "./components/Utilities/Utilities";
 import Giveaway from "./components/Giveaway/Giveaway";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
+import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
 function App() {
   return (
     <>
@@ -31,6 +32,7 @@ function App() {
             </Container>
           }
         />
+        <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
       </Routes>
       <Footer />

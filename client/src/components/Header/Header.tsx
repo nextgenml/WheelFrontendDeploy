@@ -40,7 +40,7 @@ export default function Header() {
         <img width="150px" src="/logo.png" alt="" />
       </Box>
       <List>
-        <a href="#" style={{ textDecoration: "none" }}>
+        <a href="/#" style={{ textDecoration: "none" }}>
           <ListItem
             button
             style={{
@@ -62,7 +62,7 @@ export default function Header() {
             />
           </ListItem>
         </a>
-        <a href="#goals" style={{ textDecoration: "none" }}>
+        <a href="/#goals" style={{ textDecoration: "none" }}>
           <ListItem
             button
             style={{
@@ -84,7 +84,7 @@ export default function Header() {
             />
           </ListItem>
         </a>
-        <a href="#tokenomics" style={{ textDecoration: "none" }}>
+        <a href="/#tokenomics" style={{ textDecoration: "none" }}>
           <ListItem
             button
             style={{
@@ -106,7 +106,7 @@ export default function Header() {
             />
           </ListItem>
         </a>
-        <a href="#buy-nextgen" style={{ textDecoration: "none" }}>
+        <a href="/#buy-nextgen" style={{ textDecoration: "none" }}>
           <ListItem
             button
             style={{
@@ -128,7 +128,7 @@ export default function Header() {
             />
           </ListItem>
         </a>
-        <a href="#giveaway" style={{ textDecoration: "none" }}>
+        <a href="/#giveaway" style={{ textDecoration: "none" }}>
           <ListItem
             button
             style={{
@@ -173,7 +173,7 @@ export default function Header() {
           spacing={{ xs: 1, sm: 2, md: 2 }}
           flexBasis="40%"
         >
-          <a href="#" rel="noopener noreferrer">
+          <a href="/#" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{
@@ -185,7 +185,7 @@ export default function Header() {
               HOME
             </Typography>
           </a>
-          <a href="#goals" rel="noopener noreferrer">
+          <a href="/#goals" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{
@@ -197,7 +197,7 @@ export default function Header() {
               OUR GOALS
             </Typography>
           </a>
-          <a href="#tokenomics" rel="noopener noreferrer">
+          <a href="/#tokenomics" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{
@@ -225,7 +225,7 @@ export default function Header() {
           spacing={{ xs: 1, sm: 2, md: 2 }}
           flexBasis="40%"
         >
-          <a href="#buy-nextgen" rel="noopener noreferrer">
+          <a href="/#buy-nextgen" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{
@@ -237,7 +237,7 @@ export default function Header() {
               BUY NEXTGEN
             </Typography>
           </a>
-          <a href="#giveaway" rel="noopener noreferrer">
+          <a href="/#giveaway" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{

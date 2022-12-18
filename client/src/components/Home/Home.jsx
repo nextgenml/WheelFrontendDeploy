@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import homeimg from "./assets/home.png";
+import { Stack } from "@mui/system";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -40,20 +42,44 @@ export default function Home() {
             array of other advantages. Ultimately, this will make the token more
             competitive in the rapidly changing digital landscape. 
           </Typography>
-          <Button
-            sx={{
-              bgcolor: "#2E87E5",
-              color: "white",
-              my: 2,
-              fontFamily: "Audiowide",
-              borderRadius: "10px",
-              "&:hover": {
-                bgcolor: "#2E87E5b1",
-              },
-            }}
-          >
-            BUY NEXTGEN
-          </Button>
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <a
+              href="#buy-nextgen"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                sx={{
+                  bgcolor: "#2E87E5",
+                  color: "white",
+                  my: 2,
+                  fontFamily: "Audiowide",
+                  borderRadius: "10px",
+                  "&:hover": {
+                    bgcolor: "#2E87E5b1",
+                  },
+                }}
+              >
+                BUY NEXTGEN
+              </Button>
+            </a>
+            <Link to="/claim-distribution" style={{ textDecoration: "none" }}>
+              <Button
+                sx={{
+                  bgcolor: "#2E87E5",
+                  color: "white",
+                  my: 2,
+                  fontFamily: "Audiowide",
+                  borderRadius: "10px",
+                  "&:hover": {
+                    bgcolor: "#2E87E5b1",
+                  },
+                }}
+              >
+                Claim Redistribution
+              </Button>
+            </Link>
+          </Stack>
         </Grid>
       </Grid>
     </Box>
