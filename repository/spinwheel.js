@@ -14,7 +14,6 @@ const markWinnerAsPaid = async (wallet_id) => {
 
 const markAsWinner = async (id, rank, prize) => {
   const update = `update participants set win_at = now(), is_winner = 1, winning_rank = ?, prize = ? where id = ?;`;
-  console.log("update", update);
   await runQueryAsync(update, [rank, prize, id]);
 };
 const currentSpinData = async (spin_no) => {

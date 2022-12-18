@@ -25,6 +25,7 @@ const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { splitIntoGroups } = require("../utils/spinwheelUtil.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
+const { timer } = require("../utils/index.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -77,12 +78,14 @@ const createParticipants = async (nextSpin) => {
 
   if (currParticipants && currParticipants.length >= min_wallets_count) {
     const groups = splitIntoGroups(currParticipants, 25);
-    groups.forEach((group, index) => {
-      setTimeout(
-        () => processWinners(group, nextSpin, spin),
-        nextSpin.spinDelay * 1000 * index
-      );
-    });
+    await processWinners(groups[0], nextSpin, spin);
+
+    // groups.forEach((group, index) => {
+    //   // setTimeout(
+    //   //   () => processWinners(group, nextSpin, spin),
+    //   //   nextSpin.spinDelay * 1000 * index
+    //   // );
+    // });
   } else {
     console.warn(
       "skipping spinner because min wallets criteria not met for ",
@@ -93,28 +96,21 @@ const createParticipants = async (nextSpin) => {
 };
 
 const processWinners = async (group, nextSpin, spin) => {
-  console.log("group", group.length);
   for (let index = 1; index <= nextSpin.winnerPrizes.length; index += 1) {
-    markWinner(index, group, nextSpin, spin);
-    console.log("scheduled after", (index - 1) * nextSpin.spinDelay);
-  }
-};
-const markWinner = async (index, group, nextSpin, spin) => {
-  setTimeout(async () => {
     const [winner, rIndex] = pickWinner(group);
     const prize = nextSpin.winnerPrizes[index - 1];
-    console.log("winner", winner, prize, index);
+    console.log("winner", winner.id, prize, index);
     await markAsWinner(winner.id, index, prize);
     group.splice(rIndex, 1);
 
     if (index == nextSpin.winnerPrizes.length) await markSpinAsDone(spin.id);
-  }, (index - 1) * nextSpin.spinDelay);
+    else await timer(index * nextSpin.spinDelay * 1000);
+  }
 };
 
 const pickWinner = (participants) => {
   const size = participants.length;
   const index = Math.floor(Math.random() * size);
-  console.log("index", index);
   return [participants[index], index];
 };
 
@@ -220,3 +216,21 @@ const updateWinners = async () => {
 
 initiateNextSpin();
 // initiateSpinProcess();
+
+// async function task(i) {
+//   // 3
+//   await timer(2000);
+//   console.log(`Task ${i} done!`);
+// }
+
+// async function main() {
+//   console.log("running");
+//   for (let i = 0; i < 100; i += 10) {
+//     // 1
+
+//     // 2
+//     await task(i);
+//   }
+// }
+
+// main();

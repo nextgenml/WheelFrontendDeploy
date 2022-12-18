@@ -23,9 +23,13 @@ function getFormattedHash(hash) {
 const parseDateTime = (time) => {
   return time.split(":").map((x) => parseInt(x));
 };
+
+const timer = (ms) => new Promise((res) => setTimeout(res, ms));
+
 module.exports = {
   dateToString,
   stringToDate,
   getFormattedHash,
   parseDateTime,
+  timer,
 };
