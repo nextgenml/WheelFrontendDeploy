@@ -41,6 +41,12 @@ export default function WinnersTable(props: Props) {
                   >
                     Rank
                   </th>
+                  <th
+                    scope="col"
+                    className="text-sm font-medium text-white px-6 py-4"
+                  >
+                    Prize
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -62,6 +68,9 @@ export default function WinnersTable(props: Props) {
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
                           {row.rank}
+                        </td>
+                        <td className="text-sm font-medium text-white px-6 py-4">
+                          ${row.prize}
                         </td>
                       </tr>
                     );

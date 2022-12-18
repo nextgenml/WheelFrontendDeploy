@@ -158,6 +158,7 @@ const getWinners = async (from, to, type) => {
       rank: r.winning_rank,
       type: r.type,
       wallet_id: formatTransactionId(r.wallet_id),
+      prize: r.prize,
     };
   });
 };
