@@ -60,6 +60,15 @@ const getParticipants = async (
   });
 };
 
+const getSpinParticipants = async (day, spinNo, spinType) => {
+  spin_day = moment(day).format("YYYY-MM-DD");
+  const query = `select * from participants where spin_day = ? and spin_no = ? and type = ?`;
+
+  let users = await runQueryAsync(query, [spin_day, spinNo, spinType]);
+  return users.map((user) => {
+    return formatTransactionId(user.wallet_id);
+  });
+};
 const getParticipantsOfSpin = async (spin) => {
   const fDate = moment(spin.spin_day).format("YYYY-MM-DD");
   const query =
@@ -89,6 +98,7 @@ const getWinners = async (from, to, type) => {
       type: r.type,
       wallet_id: formatTransactionId(r.wallet_id),
       prize: r.prize,
+      id: r.id,
     };
   });
 };
@@ -100,4 +110,5 @@ module.exports = {
   markAsWinner,
   markWinnerAsPaid,
   getParticipantsOfSpin,
+  getSpinParticipants,
 };

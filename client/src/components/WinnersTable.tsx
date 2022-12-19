@@ -1,8 +1,13 @@
+import { useState } from "react";
+import ViewIcon from "./Icons/ViewIcon";
+import WalletsModal from "./WalletsModal";
+
 interface Props {
   winners_data: any[];
 }
 
 export default function WinnersTable(props: Props) {
+  const [currentSpin, setCurrentSpin] = useState<any>();
   return (
     <div className="w-[100%] flex flex-col">
       <div className="sm:mx-6 lg:mx-8 ">
@@ -11,6 +16,12 @@ export default function WinnersTable(props: Props) {
             <table className="min-w-full text-center ">
               <thead className="border-b bg-gray-800">
                 <tr>
+                  <th
+                    scope="col"
+                    className="text-sm font-medium text-white px-6 py-4"
+                  >
+                    View wallets
+                  </th>
                   <th
                     scope="col"
                     className="text-sm font-medium text-white px-6 py-4"
@@ -55,6 +66,14 @@ export default function WinnersTable(props: Props) {
                     return (
                       <tr>
                         <td className="text-sm font-medium text-white px-6 py-4">
+                          <div
+                            onClick={() => setCurrentSpin(row)}
+                            className="open-wallets"
+                          >
+                            <ViewIcon />
+                          </div>
+                        </td>
+                        <td className="text-sm font-medium text-white px-6 py-4">
                           {row.day}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
@@ -77,6 +96,10 @@ export default function WinnersTable(props: Props) {
                   })}
               </tbody>
             </table>
+            <WalletsModal
+              data={currentSpin}
+              onClose={() => setCurrentSpin(null)}
+            />
             {!props.winners_data.length && (
               <>
                 <p

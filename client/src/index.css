@@ -38,3 +38,23 @@ code {
   color: white;
   margin-left: 16px;
 }
+.open-wallets {
+  background-color: orange;
+  width: fit-content;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  height: 44px;
+  width: 48px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.wallets-list {
+  width: 300px;
+}
+.wallets-list > li {
+  padding: 8px;
+}
+.wallets-title {
+  font-weight: bold;
+}

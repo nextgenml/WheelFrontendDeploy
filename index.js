@@ -9,6 +9,7 @@ const {
   getParticipants,
   getWinners,
   getParticipantsOfSpin,
+  getSpinParticipants,
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
@@ -75,6 +76,15 @@ app.get("/participants-data", async (req, res) => {
     req.query.type,
     spin_no,
     SECRET_KEY === req.headers["authorization"]
+  );
+  res.json(data);
+});
+
+app.get("/spin-participants", async (req, res) => {
+  const data = await getSpinParticipants(
+    req.query.day,
+    req.query.spin_no,
+    req.query.type
   );
   res.json(data);
 });
