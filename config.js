@@ -1,15 +1,12 @@
-const spin_hours = [0, 1, 15, 22];
-const spin_minute = 1;
-const next_spin_delay = 20;
-const min_wallets_count = 6;
+const MIN_WALLETS_COUNT = 6;
 
 const FETCH_HOURS = [0, 1, 15, 22];
 const FETCH_MINUTE = 46;
+
+const SECRET_KEY = "%S93A-JB@g1Bg12P#SnA.=cmL)vH&O";
 module.exports = {
-  spin_hours,
-  spin_minute,
-  next_spin_delay,
-  min_wallets_count,
+  MIN_WALLETS_COUNT,
   FETCH_HOURS,
   FETCH_MINUTE,
+  SECRET_KEY,
 };

@@ -12,6 +12,7 @@ const {
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
+const { SECRET_KEY } = require("./config");
 
 const app = express();
 
@@ -71,7 +72,8 @@ app.get("/participants-data", async (req, res) => {
     req.query.from,
     req.query.to,
     type,
-    spin_no
+    spin_no,
+    SECRET_KEY === req.headers["authorization"]
   );
   res.json(winner_data);
 });

@@ -66,7 +66,7 @@ const createParticipant = async (wallet_id, value, nextSpin) => {
     spin_day,
   ]);
 };
-const getParticipants = async (start, end, type, spin) => {
+const getParticipants = async (start, end, type, spin, authenticated) => {
   start = moment(start).startOf("day").format();
   end = moment(end).endOf("day").format();
   const query = `select * from participants where ${
@@ -81,7 +81,7 @@ const getParticipants = async (start, end, type, spin) => {
       id: user.id,
       day: moment(user.spin_day).format("YYYY-MM-DD"),
       spin: user.spin_no,
-      wallet_id: formatTransactionId(user.wallet_id),
+      wallet_id: formatTransactionId(user.wallet_id, authenticated),
       rank: user.winning_rank,
       win_at: user.is_winner
         ? moment(user.win_at).format("YYYY-MM-DD HH:mm:ss")

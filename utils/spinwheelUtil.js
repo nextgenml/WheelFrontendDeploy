@@ -1,4 +1,6 @@
 const { dbConnection } = require("../dbconnect");
+const sha256 = require("js-sha256");
+
 const moment = require("moment");
 const groupByDate = function (xs, key) {
   return xs.reduce(function (rv, x) {
@@ -16,12 +18,15 @@ const groupBy = function (xs, key) {
   }, {});
 };
 
-const formatTransactionId = (wallet_id) =>
-  wallet_id
-    ? wallet_id.substring(0, 5) +
-      "..." +
-      wallet_id.substring(wallet_id.length - 5)
-    : null;
+const formatTransactionId = (wallet_id, authenticated) => {
+  if (authenticated) return wallet_id;
+  else {
+    const hash = sha256(wallet_id);
+    return hash
+      ? hash.substring(0, 5) + "..." + hash.substring(hash.length - 5)
+      : null;
+  }
+};
 
 const executeQueryAsync = (query) =>
   new Promise((resolve, reject) => {

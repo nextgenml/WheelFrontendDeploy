@@ -1,4 +1,4 @@
-const { min_wallets_count } = require("../config.js");
+const { MIN_WALLETS_COUNT } = require("../config.js");
 const {
   createParticipant,
   markAsWinner,
@@ -54,7 +54,7 @@ const createParticipants = async (nextSpin) => {
     );
     page += 1;
 
-    if (currParticipants.length < min_wallets_count) {
+    if (currParticipants.length < MIN_WALLETS_COUNT) {
       console.warn(
         "skipping spinner because min wallets criteria not met for ",
         nextSpin.id,
