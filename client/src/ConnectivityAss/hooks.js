@@ -3,7 +3,7 @@ import { Contract } from "@ethersproject/contracts";
 import stevenProtocolAbi from "./stevenProtocolAbi.json";
 import airDropAbi from "./airDropAbi.json";
 
-import { airDropAddress, stevenProtocolToken } from "./environment.js";
+import { airDropAddress, ABCToken } from "./environment.js";
 import { BigNumber, constants, ethers } from "ethers";
 
 import { Alert, Slide, Snackbar } from "@mui/material";
@@ -11,10 +11,8 @@ let walletAddress = "0x8ba1f109551bD432803012645Ac136ddd64DBA72";
 let { MaxUint256 } = constants;
 
 const provider = new ethers.providers.JsonRpcProvider(
-  // "https://data-seed-prebsc-1-s1.binance.org:8545/"
-  // "https://bsc-dataseed.binance.org/"
   "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-  // "https://api.avax-test.network/ext/bc/C/rpc"
+  // "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 );
 export const voidAccount = new ethers.VoidSigner(walletAddress, provider);
 function useContract(address, ABI, signer) {
@@ -35,7 +33,7 @@ export function useAirdropContract(signer) {
 }
 
 export function useStevenProtocolContract(signer) {
-  return useContract(stevenProtocolToken, stevenProtocolAbi, signer);
+  return useContract(ABCToken, stevenProtocolAbi, signer);
 }
 
 ////////////////////////////////////////////////////////////////
