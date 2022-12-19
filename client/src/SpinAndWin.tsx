@@ -7,6 +7,7 @@ import DateIcon from "./components/Icons/DateIcon";
 import Wheel from "./components/wheel";
 import WinnersTable from "./components/WinnersTable";
 import { DateToString } from "./utils";
+import "react-calendar/dist/Calendar.css";
 
 const SPIN_TYPES = [
   ["daily", "Daily"],
