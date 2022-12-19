@@ -134,18 +134,6 @@ export default function SpinAndWin() {
 
   return (
     <div className="main">
-      <nav
-        style={{ margin: "1rem auto" }}
-        className="flex flex-row items-center justify-center object-cover w-fit"
-      >
-        <a className="text-white font-medium first-letter:" href="/">
-          Contact Us{" "}
-        </a>
-        <img src="logo.png" className="w-60 h-60" alt="logo" />
-        <a className="text-white font-medium first-letter:" href="/">
-          About Us{" "}
-        </a>
-      </nav>
       {!loading && (
         <>
           <div

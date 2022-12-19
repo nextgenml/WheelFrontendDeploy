@@ -58,3 +58,7 @@ code {
 .wallets-title {
   font-weight: bold;
 }
+
+html {
+  scroll-behavior: smooth;
+}
