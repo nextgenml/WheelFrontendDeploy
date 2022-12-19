@@ -22,10 +22,10 @@ app.use(express.json(), express.urlencoded({ extended: true }), cors());
 app.get("/spinner-data", async (req, res) => {
   let current_time = moment().format();
   const [runningSpin, scheduledSpin] = await getRunningSpin(true);
-  let data;
+  let data, participants, winners;
 
   if (runningSpin && scheduledSpin) {
-    let [participants, winners] = await getParticipantsOfSpin(runningSpin);
+    [participants, winners] = await getParticipantsOfSpin(runningSpin);
     data = {
       participants,
       winners,
@@ -35,7 +35,8 @@ app.get("/spinner-data", async (req, res) => {
     };
   } else {
     const [lastRunningSpin, _] = await getRunningSpin(false);
-    let [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
+    if (lastRunningSpin)
+      [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
     const nextSpin = await nextSpinDetails();
     data = {
       participants,

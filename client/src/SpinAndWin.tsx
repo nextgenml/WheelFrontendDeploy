@@ -160,7 +160,7 @@ export default function SpinAndWin() {
               />
             ) : (
               <p style={{ color: "white", fontSize: "20px" }}>
-                No Spin Last Time As Minimum Wallet Requirement Is Not Met
+                No Spin As Minimum Wallet Requirement Is Not Met
               </p>
             )}
             <CustomCountDown

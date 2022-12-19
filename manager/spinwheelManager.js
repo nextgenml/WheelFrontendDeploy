@@ -52,7 +52,6 @@ const createParticipants = async (nextSpin) => {
       page * size,
       size
     );
-    page += 1;
 
     if (currParticipants.length < MIN_WALLETS_COUNT) {
       console.warn(
@@ -64,6 +63,7 @@ const createParticipants = async (nextSpin) => {
     }
 
     console.log("currParticipants length", currParticipants.length);
+
     const spin = await createSpin(nextSpin);
 
     for (const item of currParticipants) {
@@ -76,7 +76,10 @@ const createParticipants = async (nextSpin) => {
     }
     await updateLaunchDate(nextSpin.id);
 
-    if (page != 0) await timer(nextSpin.spinDelay * 1000);
+    if (page != 0) {
+      console.log("waiting in createParticipants");
+      await timer(nextSpin.spinDelay * 1000);
+    }
 
     await processWinners(currParticipants, nextSpin);
 
@@ -85,6 +88,7 @@ const createParticipants = async (nextSpin) => {
     if (nextSpin.type === "daily") break;
 
     nextSpin.spinNo += 1;
+    page += 1;
   }
   console.log("spin completed for a type:", nextSpin.type);
 };
@@ -98,8 +102,10 @@ const processWinners = async (group, nextSpin) => {
     await markAsWinner(winner.id, index, prize);
     group.splice(rIndex, 1);
 
-    if (index != nextSpin.winnerPrizes.length)
+    if (index != nextSpin.winnerPrizes.length) {
+      console.log("waiting in processWinners");
       await timer(nextSpin.spinDelay * 1000);
+    }
   }
 };
 
