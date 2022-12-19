@@ -10,6 +10,11 @@ const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
+const ethers = require("ethers");
+const providerETH = new ethers.providers.JsonRpcProvider(
+  "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+);
+const signerETH = new ethers.Wallet(process.env.ADMIN_KEY, providerETH);
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -99,6 +104,7 @@ const processWinners = async (group, nextSpin) => {
     const prize = nextSpin.winnerPrizes[index - 1];
     console.log("winner", winner.id, prize, index);
     await markAsWinner(winner.id, index, prize);
+    // TODO - add payment logic here
     group.splice(rIndex, 1);
 
     if (index != nextSpin.winnerPrizes.length) {
