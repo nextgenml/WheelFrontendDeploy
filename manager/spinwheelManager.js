@@ -76,13 +76,14 @@ const createParticipants = async (nextSpin) => {
     }
     await updateLaunchDate(nextSpin.id);
 
+    if (page != 0) await timer(nextSpin.spinDelay * 1000);
+
     await processWinners(currParticipants, nextSpin);
 
     await markSpinAsDone(spin.id);
 
     if (nextSpin.type === "daily") break;
 
-    await timer(nextSpin.spinDelay * 1000);
     nextSpin.spinNo += 1;
   }
   console.log("spin completed for a type:", nextSpin.type);
@@ -97,7 +98,8 @@ const processWinners = async (group, nextSpin) => {
     await markAsWinner(winner.id, index, prize);
     group.splice(rIndex, 1);
 
-    await timer(nextSpin.spinDelay * 1000);
+    if (index != nextSpin.winnerPrizes.length)
+      await timer(nextSpin.spinDelay * 1000);
   }
 };
 
