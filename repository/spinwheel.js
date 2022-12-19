@@ -1,13 +1,12 @@
 const moment = require("moment");
 const {
   formatTransactionId,
-  executeQueryAsync,
   runQueryAsync,
 } = require("../utils/spinwheelUtil");
 
-const markWinnerAsPaid = async (wallet_id) => {
-  const update = `update participants set paid_flag = 1 where wallet_id = ${wallet_id};`;
-  await executeQueryAsync(update);
+const markWinnerAsPaid = async (id) => {
+  const update = `update participants set paid_flag = 1 where id = ?;`;
+  await runQueryAsync(update, [id]);
 };
 
 const markAsWinner = async (id, rank, prize) => {
