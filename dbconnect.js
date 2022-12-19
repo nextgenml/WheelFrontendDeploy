@@ -12,7 +12,12 @@ dbConnection.connect(function (err) {
     return console.error("error: " + err.message);
   }
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
-
+  const deleteQuery = "update spins set running = 0;";
+  dbConnection.query(deleteQuery, function (err) {
+    if (err) {
+      console.log(err.message);
+    } else console.log("dropped table wallets");
+  });
   if (process.argv.includes("wallets")) {
     const deleteQuery = "DROP TABLE IF EXISTS wallets;";
     dbConnection.query(deleteQuery, function (err) {
@@ -129,7 +134,6 @@ dbConnection.connect(function (err) {
         console.log(err.message);
       } else console.log("created table scheduled_spins");
     });
-
     dbConnection.end(function (err) {
       if (err) {
         return console.log(err.message);

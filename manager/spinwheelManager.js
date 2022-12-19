@@ -10,7 +10,7 @@ const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
-const { distributeReward } = require("./rewardTransfer");
+// const { distributeReward } = require("./rewardTransfer");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -101,7 +101,7 @@ const processWinners = async (group, nextSpin) => {
     console.log("winner", winner.id, prize, index);
     await markAsWinner(winner.id, index, prize);
     // TODO - add payment logic here
-    distributeReward(winner.walletId, prize, winner.id);
+    // distributeReward(winner.walletId, prize, winner.id);
 
     group.splice(rIndex, 1);
 

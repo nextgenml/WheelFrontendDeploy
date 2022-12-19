@@ -35,16 +35,20 @@ app.get("/spinner-data", async (req, res) => {
       spin_delay: scheduledSpin.spin_delay,
     };
   } else {
-    const [lastRunningSpin, _] = await getRunningSpin(false);
-    if (lastRunningSpin)
+    const [lastRunningSpin, lastScheduledSpin] = await getRunningSpin(false);
+    let no_of_winners, spin_delay;
+    if (lastRunningSpin) {
+      no_of_winners = lastScheduledSpin.winner_prizes.split(",").length;
+      spin_delay = lastScheduledSpin.spin_day;
       [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
+    }
     const nextSpin = await nextSpinDetails();
     data = {
       participants,
       winners,
       end_time: nextSpin.nextSpinAt.add(10, "seconds").format(),
-      no_of_winners: nextSpin.winnerPrizes.length,
-      spin_delay: nextSpin.spinDelay,
+      no_of_winners,
+      spin_delay,
     };
   }
 

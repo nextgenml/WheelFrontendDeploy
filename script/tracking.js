@@ -113,25 +113,25 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 
 // Run THIS
 async function fetchAddress() {
-  // result = [];
-  // for (i = 0; i < 25; i += 1) {
-  //   result.push([
-  //     generateRandomString(32),
-  //     generateRandomNumber(10000).toString() + "000000000000000000",
-  //   ]);
-  // }
-  // return result;
-  return await run_me(CONTRACT).then(async (CONTRACT) => {
-    let _path = path.join(__dirname, "assets", "last_block_number.json");
-    return await readFiles(_path).then(async (LAST_BLOCK) => {
-      console.log("LAST_BLOCK", LAST_BLOCK);
-      return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(
-        async (final) => {
-          return final;
-        }
-      );
-    });
-  });
+  result = [];
+  for (i = 0; i < 66; i += 1) {
+    result.push([
+      generateRandomString(32),
+      generateRandomNumber(10000).toString() + "000000000000000000",
+    ]);
+  }
+  return result;
+  // return await run_me(CONTRACT).then(async (CONTRACT) => {
+  //   let _path = path.join(__dirname, "assets", "last_block_number.json");
+  //   return await readFiles(_path).then(async (LAST_BLOCK) => {
+  //     console.log("LAST_BLOCK", LAST_BLOCK);
+  //     return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(
+  //       async (final) => {
+  //         return final;
+  //       }
+  //     );
+  //   });
+  // });
 }
 
 // run it directly

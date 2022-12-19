@@ -85,7 +85,7 @@ const getParticipantsOfSpin = async (spin) => {
 const getWinners = async (from, to, type) => {
   start = moment(from).startOf("day").format();
   end = moment(to).endOf("day").format();
-  const query = `select * from participants where is_winner = 1 and spin_day >= ? and spin_day <= ? and type = ?;`;
+  const query = `select * from participants where is_winner = 1 and spin_day >= ? and spin_day <= ? and type = ? order by spin_no, winning_rank asc`;
 
   let records = await runQueryAsync(query, [from, to, type]);
 

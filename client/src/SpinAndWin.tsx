@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import moment from "moment";
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
@@ -23,7 +24,7 @@ export default function SpinAndWin() {
     api_url = "http://0.0.0.0:8000/";
   }
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [wheel_items, setWheelItems] = useState<any[] | undefined>(undefined);
   const [winners_data, setWinnersData] = useState<any>();
 
@@ -40,6 +41,12 @@ export default function SpinAndWin() {
   const [spinDelay, setSpinDelay] = useState(20);
   const [typeValue, setTypeValue] = useState("daily");
 
+  useEffect(() => {
+    fetchWinners();
+  }, [typeValue]);
+
+  console.log("rendering SpinAndWin", typeValue);
+
   const setSpinnerData = (spinner_data: any) => {
     setWheelItems(spinner_data.participants);
 
@@ -55,8 +62,11 @@ export default function SpinAndWin() {
   const fetchWinners = async () => {
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
+
+    //@ts-ignore
+    const type = document.getElementById("type-select").value;
     const winners_data_res = await fetch(
-      api_url + `winners-data?from=${f_start}&to=${f_end}&type=${typeValue}`,
+      api_url + `winners-data?from=${f_start}&to=${f_end}&type=${type}`,
       {
         method: "GET",
         headers: {
@@ -79,7 +89,6 @@ export default function SpinAndWin() {
 
     let spinner_data = await spinner_data_res.json();
     setSpinnerData(spinner_data);
-    setLoading(false);
     setSpinDelay(spinner_data.spin_delay);
 
     const wCount = (spinner_data.winners || []).filter(
@@ -87,10 +96,12 @@ export default function SpinAndWin() {
     ).length;
 
     await fetchWinners();
+    setLoading(false);
     return {
       start_time: new Date(spinner_data["start_time"]),
       end_time: new Date(spinner_data["end_time"]),
       spins_remaining: spinner_data.no_of_winners - wCount,
+      spin_delay: spinner_data.spin_delay,
       canRun:
         spinner_data &&
         spinner_data.participants &&
@@ -99,23 +110,18 @@ export default function SpinAndWin() {
   };
 
   const onCountDownComplete = async () => {
-    let { spins_remaining, canRun, end_time } = await fetchSpinnerData();
-
-    if (spins_remaining === 0) {
-      let end_date = new Date();
-      end_date?.setHours(end_date.getHours() + 6);
-      end_date?.setMinutes(end_date.getMinutes() + 15);
-      end_date?.setSeconds(0);
-      setTimerEndDate(end_date);
-      setTimerStartDate(new Date());
-      console.log("updating ...");
-      console.log(end_date);
-    }
+    let { spins_remaining, canRun, end_time, spin_delay } =
+      await fetchSpinnerData();
 
     if (canRun && spins_remaining > 0) {
-      console.log("fetching new ....... 1");
       let end_time = new Date();
-      end_time?.setSeconds(end_time.getSeconds() + spinDelay);
+
+      console.log(
+        "fetching new ....... 1",
+        spin_delay,
+        end_time.getSeconds() + spin_delay
+      );
+      end_time?.setSeconds(end_time.getSeconds() + spin_delay);
       setTimerEndDate(end_time);
       setTimerStartDate(new Date());
     } else {
@@ -221,6 +227,7 @@ export default function SpinAndWin() {
               )}
               <select
                 value={typeValue}
+                id="type-select"
                 className="type-selection"
                 onChange={(e) => setTypeValue(e.target.value)}
               >
