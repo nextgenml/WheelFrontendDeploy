@@ -66,16 +66,17 @@ app.get("/winners-data", async (req, res) => {
 });
 
 app.get("/participants-data", async (req, res) => {
-  const type = req.query.winners === "yes" ? "winners" : "participants";
+  const resultType = req.query.winners === "yes" ? "winners" : "participants";
   const spin_no = parseInt(req.query.spin);
-  const winner_data = await getParticipants(
+  const data = await getParticipants(
     req.query.from,
     req.query.to,
-    type,
+    resultType,
+    req.query.type,
     spin_no,
     SECRET_KEY === req.headers["authorization"]
   );
-  res.json(winner_data);
+  res.json(data);
 });
 
 app.get("/time-now", (req, res) => {
