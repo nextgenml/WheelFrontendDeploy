@@ -12,7 +12,7 @@ const {
   getNextAdhocSpin,
 } = require("./spinTypes");
 const moment = require("moment");
-const nextSpinDetails = async () => {
+const nextSpinDetails = async (type) => {
   const spins = await getAllSpins();
   let nextSpins = [];
 
@@ -56,10 +56,14 @@ const nextSpinDetails = async () => {
     }
   }
 
-  nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
-  // console.log(nextSpins);
-  // console.log("result", nextSpins[0]);
-  return nextSpins[0];
+  if (type) {
+    return nextSpins.filter((x) => x.type === type)[0];
+  } else {
+    nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
+    // console.log(nextSpins);
+    // console.log("result", nextSpins[0]);
+    return nextSpins[0];
+  }
 };
 
 nextSpinDetails();

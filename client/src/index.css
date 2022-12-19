@@ -30,3 +30,11 @@ code {
   margin-left: 16px;
   border-radius: 4px;
 }
+.spin-timer {
+  color: white;
+  margin-left: 2px;
+}
+.next-spin-time {
+  color: white;
+  margin-left: 16px;
+}

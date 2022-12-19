@@ -1,18 +1,13 @@
 require("dotenv").config({ path: "./config.env" });
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 const cors = require("cors");
-const utils = require("./utils/index.js");
-const { spin_hours, spin_minute, min_wallets_count } = require("./config.js");
 const moment = require("moment");
 require("./manager/spinwheelManager");
 
 const {
   getParticipants,
   getWinners,
-  getSpin,
-  currentSpinData,
   getParticipantsOfSpin,
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
@@ -61,7 +56,12 @@ app.get("/winners-data", async (req, res) => {
     req.query.to,
     req.query.type
   );
-  res.json(winner_data);
+
+  const nextSpin = await nextSpinDetails(req.query.type);
+  res.json({
+    data: winner_data,
+    next_spin_at: nextSpin ? nextSpin.nextSpinAt.add(10, "seconds") : undefined,
+  });
 });
 
 app.get("/participants-data", async (req, res) => {

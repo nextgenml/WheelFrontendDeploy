@@ -1,7 +1,8 @@
 import moment from "moment";
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
-import CountDown from "./components/countdown";
+import Countdown from "react-countdown";
+import CustomCountDown from "./components/countdown";
 import DateIcon from "./components/Icons/DateIcon";
 import Wheel from "./components/wheel";
 import WinnersTable from "./components/WinnersTable";
@@ -28,6 +29,7 @@ export default function SpinAndWin() {
   const [timer_end_date, setTimerEndDate] = useState<Date>();
   const [timer_start_date, setTimerStartDate] = useState<Date>(new Date());
   const [winner, setWinner] = useState<number | null>(null);
+  const [nextTypeSpinAt, setNextTypeAt] = useState<string | null>(null);
 
   // For filtering winners in the table
   const [showStart, setShowStart] = useState(false);
@@ -63,7 +65,8 @@ export default function SpinAndWin() {
     );
 
     const winners_data = await winners_data_res.json();
-    setWinnersData(winners_data);
+    setWinnersData(winners_data.data);
+    setNextTypeAt(winners_data.next_spin_at);
   };
   const fetchSpinnerData = async () => {
     let spinner_data_res = await fetch(api_url + "spinner-data", {
@@ -159,7 +162,7 @@ export default function SpinAndWin() {
                 No Spin Last Time As Minimum Wallet Requirement Is Not Met
               </p>
             )}
-            <CountDown
+            <CustomCountDown
               on_Complete={onCountDownComplete}
               start_date={timer_start_date}
               end_date={timer_end_date ? timer_end_date : new Date()}
@@ -239,6 +242,14 @@ export default function SpinAndWin() {
               <button onClick={fetchWinners} className="get-winners-btn">
                 Get Winners
               </button>
+              {nextTypeSpinAt && (
+                <>
+                  <span className="next-spin-time">
+                    Next {typeValue} spin is in
+                  </span>
+                  <Countdown date={nextTypeSpinAt} className="spin-timer" />
+                </>
+              )}
             </div>
           </div>
           {winners_data && <WinnersTable winners_data={winners_data} />}
