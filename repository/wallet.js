@@ -7,13 +7,16 @@ const createWallet = async (walletId, value) => {
   return await runQueryAsync(query, [walletId, value]);
 };
 
-const currSpinParticipants = async (start, minWalletValue, offset, size) => {
-  start = moment(start).format();
+const currSpinParticipants = async (offset, size, nextSpin) => {
+  if (nextSpin.type === "adhoc")
+    return nextSpin.participants.map((p) => ({ walletId: p }));
+
+  const start = moment(nextSpin.prevLaunchAt).format();
   const query = `select wallet_id, sum(value) as total_value from wallets where created_at > ? and value >= ? group by wallet_id order by 2 desc limit ? OFFSET ?;`;
 
   const spins = await runQueryAsync(query, [
     start,
-    minWalletValue,
+    nextSpin.minWalletValue,
     size,
     offset,
   ]);

@@ -15,7 +15,7 @@ dbConnection.connect(function (err) {
 
   if (process.argv.includes("wallets")) {
     const deleteQuery = "DROP TABLE IF EXISTS wallets;";
-    dbConnection.query(deleteQuery, function (err, results, fields) {
+    dbConnection.query(deleteQuery, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("dropped table wallets");
@@ -25,7 +25,7 @@ dbConnection.connect(function (err) {
       wallet_id varchar(255),
       value INT,
       created_at DATETIME)`;
-    dbConnection.query(spins, function (err, results, fields) {
+    dbConnection.query(spins, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("created table wallets");
@@ -45,7 +45,7 @@ dbConnection.connect(function (err) {
       `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('biweekly', 1, '15:00:0', '17:28', 10000, 1, 15, '100');`,
       `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('monthly', 1, '15:00:0', '1', 10000, 1, 15, '100');`,
       `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('yearly', 1, '15:00:0', '1:1', 10000, 1, 15, '100');`,
-      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes) values('adhoc', 1, '15:00:0', '1:1:2023', 10000, 1, 15, '100');`,
+      `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes, participants) values('adhoc', 1, '15:00:0', '1:1:2023', 10000, 1, 15, '100', 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y');`,
     ];
     inserts.forEach((insert) =>
       dbConnection.query(insert, function (err) {
@@ -58,7 +58,7 @@ dbConnection.connect(function (err) {
 
   if (process.argv.includes("create_spins")) {
     const deleteQuery = "DROP TABLE IF EXISTS spins;";
-    dbConnection.query(deleteQuery, function (err, results, fields) {
+    dbConnection.query(deleteQuery, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("dropped table spins");
@@ -70,7 +70,7 @@ dbConnection.connect(function (err) {
       spin_no SMALLINT not null,
       scheduled_spin_id INT not null,
       running TINYINT)`;
-    dbConnection.query(spins, function (err, results, fields) {
+    dbConnection.query(spins, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("created table spins");
@@ -78,7 +78,7 @@ dbConnection.connect(function (err) {
   }
   if (process.argv.includes("create_participants")) {
     const deleteQuery = "DROP TABLE IF EXISTS participants;";
-    dbConnection.query(deleteQuery, function (err, results, fields) {
+    dbConnection.query(deleteQuery, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("dropped table participants");
@@ -97,7 +97,7 @@ dbConnection.connect(function (err) {
       winning_rank SMALLINT,
       prize INT
     )`;
-    dbConnection.query(participants, function (err, results, fields) {
+    dbConnection.query(participants, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("created table participants");
@@ -105,7 +105,7 @@ dbConnection.connect(function (err) {
   }
   if (process.argv.includes("scheduled_spins")) {
     const deleteQuery = "DROP TABLE IF EXISTS scheduled_spins;";
-    dbConnection.query(deleteQuery, function (err, results, fields) {
+    dbConnection.query(deleteQuery, function (err) {
       if (err) {
         console.log(err.message);
       } else console.log("dropped table scheduled_spins");
@@ -121,7 +121,8 @@ dbConnection.connect(function (err) {
       no_of_winners TINYINT not null,
       spin_delay SMALLINT,
       winner_prizes varchar(255),
-      prev_launch_date DATETIME
+      prev_launch_date DATETIME,
+      participants TEXT
       )`;
     dbConnection.query(scheduled_spins, function (err) {
       if (err) {

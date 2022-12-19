@@ -47,10 +47,9 @@ const createParticipants = async (nextSpin) => {
     size = 25;
   while (1) {
     const currParticipants = await currSpinParticipants(
-      nextSpin.prevLaunchAt,
-      nextSpin.minWalletValue,
       page * size,
-      size
+      size,
+      nextSpin
     );
 
     if (currParticipants.length < MIN_WALLETS_COUNT) {
@@ -85,7 +84,7 @@ const createParticipants = async (nextSpin) => {
 
     await markSpinAsDone(spin.id);
 
-    if (nextSpin.type === "daily") break;
+    if (nextSpin.type === "daily" || nextSpin.type === "adhoc") break;
 
     nextSpin.spinNo += 1;
     page += 1;
