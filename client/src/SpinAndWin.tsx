@@ -264,6 +264,7 @@ export default function SpinAndWin() {
                         ? timer_end_date
                         : nextTypeSpinAt
                     }
+                    key={Math.floor(Math.random() * 100)}
                     className="spin-timer"
                   />
                 </>
