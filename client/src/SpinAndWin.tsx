@@ -38,8 +38,11 @@ export default function SpinAndWin() {
   const [showEnd, setShowEnd] = useState(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [spinDelay, setSpinDelay] = useState(20);
   const [typeValue, setTypeValue] = useState("daily");
+  const [spinTypes, setSpinTypes] = useState({
+    prev_spin_type: "",
+    next_spin_type: "",
+  });
 
   useEffect(() => {
     fetchWinners();
@@ -89,14 +92,17 @@ export default function SpinAndWin() {
 
     let spinner_data = await spinner_data_res.json();
     setSpinnerData(spinner_data);
-    setSpinDelay(spinner_data.spin_delay);
 
     const wCount = (spinner_data.winners || []).filter(
       (x: string) => !!x
     ).length;
 
-    await fetchWinners();
     setLoading(false);
+    setSpinTypes({
+      prev_spin_type: spinner_data.prev_spin_type,
+      next_spin_type: spinner_data.next_spin_type,
+    });
+
     return {
       start_time: new Date(spinner_data["start_time"]),
       end_time: new Date(spinner_data["end_time"]),
@@ -147,11 +153,16 @@ export default function SpinAndWin() {
             className="flex w-fit lg:gap-20 flex-row flex-wrap justify-center items-center mx-auto py-9"
           >
             {wheel_items && wheel_items.length ? (
-              <Wheel
-                onFinish={() => {}}
-                selected_item={winner}
-                items={wheel_items}
-              />
+              <div>
+                <Wheel
+                  onFinish={() => setTimeout(fetchWinners, 1000)}
+                  selected_item={winner}
+                  items={wheel_items}
+                />
+                <div className="spin-wheel-title">
+                  {spinTypes.prev_spin_type.toUpperCase()} SPIN
+                </div>
+              </div>
             ) : (
               <p style={{ color: "white", fontSize: "20px" }}>
                 No Spin As Minimum Wallet Requirement Is Not Met
@@ -161,10 +172,14 @@ export default function SpinAndWin() {
               on_Complete={onCountDownComplete}
               start_date={timer_start_date}
               end_date={timer_end_date ? timer_end_date : new Date()}
+              spinType={spinTypes.next_spin_type}
             />
           </div>
 
-          <div style={{ padding: "0 5rem" }} className="flex flex-col  ">
+          <div
+            style={{ padding: "0 5rem", marginTop: "30px" }}
+            className="flex flex-col  "
+          >
             <h2 className="text-white font-medium mx-auto  text-center text-4xl">
               Winners on the selected date range
             </h2>

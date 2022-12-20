@@ -33,6 +33,8 @@ app.get("/spinner-data", async (req, res) => {
       end_time: current_time,
       no_of_winners: scheduledSpin.no_of_winners,
       spin_delay: scheduledSpin.spin_delay,
+      prev_spin_type: scheduledSpin.type,
+      next_spin_type: scheduledSpin.type,
     };
   } else {
     const [lastRunningSpin, lastScheduledSpin] = await getRunningSpin(false);
@@ -49,6 +51,8 @@ app.get("/spinner-data", async (req, res) => {
       end_time: nextSpin.nextSpinAt.add(10, "seconds").format(),
       no_of_winners,
       spin_delay,
+      prev_spin_type: lastScheduledSpin?.type,
+      next_spin_type: nextSpin.type,
     };
   }
 

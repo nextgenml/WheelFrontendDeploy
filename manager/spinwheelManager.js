@@ -47,19 +47,26 @@ const createParticipants = async (nextSpin) => {
   let page = 0,
     size = 25;
   while (1) {
-    const currParticipants = await currSpinParticipants(
+    let currParticipants = await currSpinParticipants(
       page * size,
       size,
       nextSpin
     );
 
-    if (currParticipants.length < MIN_WALLETS_COUNT) {
-      console.warn(
-        "skipping spinner because min wallets criteria not met for ",
-        nextSpin.id,
-        nextSpin.type
-      );
+    if (currParticipants.length === 0) {
+      console.log("there are no participants for ", nextSpin.id, page);
       break;
+    }
+
+    if (nextSpin.type !== "daily" && nextSpin.type !== "adhoc") {
+      const extraParticipants = await currSpinParticipants(
+        (page + 1) * size,
+        size,
+        nextSpin
+      );
+      if (extraParticipants.length < MIN_WALLETS_COUNT) {
+        currParticipants = [...currParticipants, ...extraParticipants];
+      }
     }
 
     console.log("currParticipants length", currParticipants.length);
@@ -88,7 +95,7 @@ const createParticipants = async (nextSpin) => {
     if (nextSpin.type === "daily" || nextSpin.type === "adhoc") break;
 
     nextSpin.spinNo += 1;
-    page += 1;
+    page += currParticipants.length > size ? 2 : 1;
   }
   console.log("spin completed for a type:", nextSpin.type);
 };
