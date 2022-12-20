@@ -258,7 +258,14 @@ export default function SpinAndWin() {
                   <span className="next-spin-time">
                     Next {typeValue} spin is in
                   </span>
-                  <Countdown date={nextTypeSpinAt} className="spin-timer" />
+                  <Countdown
+                    date={
+                      typeValue === spinTypes.next_spin_type && timer_end_date
+                        ? timer_end_date
+                        : nextTypeSpinAt
+                    }
+                    className="spin-timer"
+                  />
                 </>
               )}
             </div>
