@@ -12,6 +12,7 @@ import Giveaway from "./components/Giveaway/Giveaway";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
 import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
+import GameSection from "./components/GameSection/GameSection";
 function App() {
   return (
     <>
@@ -28,6 +29,7 @@ function App() {
               <Utilities />
               <BuyNextGen />
               <Giveaway />
+              <GameSection />
               <Community />
             </Container>
           }
