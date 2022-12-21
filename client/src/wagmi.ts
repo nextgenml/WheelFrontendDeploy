@@ -17,3 +17,12 @@ export const client = createClient({
 })
 
 export { chains }
+// Uncaught (in promise) Error: invalid address or ENS name (argument="name", value=undefined, code=INVALID_ARGUMENT, version=contracts/5.7.0)
+//     at e.value (index.ts:269:28)
+//     at e.value (index.ts:281:20)
+//     at e.value (index.ts:285:21)
+//     at index.ts:123:16
+//     at d (regeneratorRuntime.js:44:17)
+//     at Generator.<anonymous> (regeneratorRuntime.js:125:22)
+//     at Generator.next (regeneratorRuntime.js:69:21)
+//     at a (Utilities.jsx:85:1)
