@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.dfe70bc9.css",
+    "main.js": "/static/js/main.4593cdbb.js",
+    "static/js/64.ba8a5e95.chunk.js": "/static/js/64.ba8a5e95.chunk.js",
+    "static/js/563.86059638.chunk.js": "/static/js/563.86059638.chunk.js",
+    "static/js/942.a3aae9b0.chunk.js": "/static/js/942.a3aae9b0.chunk.js",
+    "static/js/419.4c4507c5.chunk.js": "/static/js/419.4c4507c5.chunk.js",
+    "static/js/48.fcd126cb.chunk.js": "/static/js/48.fcd126cb.chunk.js",
+    "static/media/home.png": "/static/media/home.a3b621e6121e1fa013fc.png",
+    "static/media/airdrop.jpg": "/static/media/airdrop.45f61171b1363b8573d4.jpg",
+    "static/media/audiowide-all-400-normal.woff": "/static/media/audiowide-all-400-normal.8ba5a367d470a1dfb412.woff",
+    "static/media/audiowide-latin-400-normal.woff2": "/static/media/audiowide-latin-400-normal.56cbe5a59cb6a30c3f06.woff2",
+    "static/media/audiowide-latin-ext-400-normal.woff2": "/static/media/audiowide-latin-ext-400-normal.f4b1d860ffbc7c54d90c.woff2",
+    "index.html": "/index.html",
+    "main.dfe70bc9.css.map": "/static/css/main.dfe70bc9.css.map",
+    "main.4593cdbb.js.map": "/static/js/main.4593cdbb.js.map",
+    "64.ba8a5e95.chunk.js.map": "/static/js/64.ba8a5e95.chunk.js.map",
+    "419.4c4507c5.chunk.js.map": "/static/js/419.4c4507c5.chunk.js.map",
+    "48.fcd126cb.chunk.js.map": "/static/js/48.fcd126cb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.dfe70bc9.css",
+    "static/js/main.4593cdbb.js"
+  ]
+}
