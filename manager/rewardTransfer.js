@@ -11,13 +11,17 @@ const providerETH = new providers.JsonRpcProvider(
   //   "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 );
 // admin/owner wallet
-const signerETH = new Wallet(process.env.ADMIN_KEY, providerETH);
+console.log(process.env.REWARD_TOKEN, process.env.ADMIN_KEY);
+const signerETH = new Wallet(
+  "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
+  providerETH
+);
 const rewardContract = new Contract(
-  process.env.REWARD_TOKEN,
+  "0x4bb4954fc47ce04b62f3493040ff8318e4a72981",
   tokenAbi,
   signerETH
 );
-
+console.log(signerETH, rewardContract);
 // gas estimation for transaction
 let { MaxUint256 } = constants;
 function calculateGasMargin(value) {
@@ -38,18 +42,20 @@ const gasEstimationForAll = async (account, fn, data) => {
 };
 const distributeReward = async (address, amount, id) => {
   let fn = rewardContract.estimateGas.transfer;
+  console.log(address, amount, +parseUnits(amount.toString()));
   let params = [address, parseUnits(amount.toString())];
   const tx = await rewardContract.transfer(...params, {
     gasLimit: gasEstimationForAll(address, fn, params),
   });
+  await tx.wait();
   console.log(tx, "tx");
   let receipt = null;
   while (receipt === null) {
     try {
       receipt = await providerETH.getTransactionReceipt(tx.hash);
-      if (receipt?.status) {
-        await markWinnerAsPaid(id);
-      } else {
+      if (receipt && receipt?.status) {
+        // await markWinnerAsPaid(id);
+      } else if (receipt && !receipt?.status) {
         distributeReward(address, amount);
       }
     } catch (error) {
@@ -58,4 +64,12 @@ const distributeReward = async (address, amount, id) => {
     }
   }
 };
+ let addressArray = [
+   "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
+   "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
+   "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
+ ];
+ for (let index = 0; index < addressArray.length; index++) {
+   distributeReward(addressArray[index], 1);
+ }
 module.exports = { distributeReward };
