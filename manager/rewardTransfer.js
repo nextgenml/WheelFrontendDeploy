@@ -38,44 +38,54 @@ const gasEstimationForAll = async (account, fn, data) => {
     return calculateGasMargin(estimateGas);
   }
 };
-const distributeReward = async (address, amount, id) => {
-  let fn = rewardContract.estimateGas.transfer;
-  let params = [address, parseUnits(amount.toString())];
-  const tx = await rewardContract.transfer(...params, {
-    gasLimit: gasEstimationForAll(address, fn, params),
-  });
-  await tx.wait();
-  let receipt = null;
-  while (receipt === null) {
-    try {
-      receipt = await providerETH.getTransactionReceipt(tx.hash);
-      if (receipt && receipt?.status) {
-        console.log("its done");
-        // await markWinnerAsPaid(id);
-      } else if (receipt && !receipt?.status) {
-        distributeReward(address, amount);
-      }
-    } catch (error) {
-      console.log(error);
-      break;
+const distributeReward = async (address, amount, participant_id) => {
+  try {
+    let fn = rewardContract.estimateGas.transfer;
+    let params = [address, parseUnits(amount.toString())];
+    const tx = await rewardContract.transfer(...params, {
+      gasLimit: gasEstimationForAll(address, fn, params),
+    });
+    await tx.wait();
+
+    const receipt = await providerETH.getTransactionReceipt(tx.hash);
+    if (receipt && receipt?.status) {
+      await markWinnerAsPaid(participant_id);
+      return true;
     }
+  } catch {
+    console.log(
+      "distribute reward is failed for ",
+      participant_id,
+      address,
+      amount
+    );
+    return false;
   }
 };
 
-let addressArray = [
-  //  "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
-  //  "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
-  //  "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
-  "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
-  "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
-];
-
-const startTransfer = async () => {
-  for (let index = 0; index < addressArray.length; index++) {
-    await distributeReward(addressArray[index], 1);
-    console.log("awaiting");
+const processPrizes = async (participantIds) => {
+  for (const item of participantIds) {
+    const success = await distributeReward(item.walletId, item.value, item.id);
+    console.log(
+      "processPrizes reward distribution: ",
+      success ? "completed" : `failed for participant ${item.id}`
+    );
   }
 };
+// let addressArray = [
+//   //  "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
+//   //  "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
+//   //  "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
+//   "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
+//   "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
+// ];
 
-startTransfer();
-module.exports = { distributeReward };
+// const startTransfer = async () => {
+//   for (let index = 0; index < addressArray.length; index++) {
+//     await distributeReward(addressArray[index], 1);
+//     console.log("awaiting");
+//   }
+// };
+
+// startTransfer();
+module.exports = { processPrizes };
