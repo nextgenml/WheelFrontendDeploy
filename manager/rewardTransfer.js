@@ -11,7 +11,6 @@ const providerETH = new providers.JsonRpcProvider(
   //   "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 );
 // admin/owner wallet
-console.log(process.env.REWARD_TOKEN, process.env.ADMIN_KEY);
 const signerETH = new Wallet(
   "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
   providerETH
@@ -21,7 +20,6 @@ const rewardContract = new Contract(
   tokenAbi,
   signerETH
 );
-console.log(signerETH, rewardContract);
 // gas estimation for transaction
 let { MaxUint256 } = constants;
 function calculateGasMargin(value) {
@@ -42,18 +40,17 @@ const gasEstimationForAll = async (account, fn, data) => {
 };
 const distributeReward = async (address, amount, id) => {
   let fn = rewardContract.estimateGas.transfer;
-  console.log(address, amount, +parseUnits(amount.toString()));
   let params = [address, parseUnits(amount.toString())];
   const tx = await rewardContract.transfer(...params, {
     gasLimit: gasEstimationForAll(address, fn, params),
   });
   await tx.wait();
-  console.log(tx, "tx");
   let receipt = null;
   while (receipt === null) {
     try {
       receipt = await providerETH.getTransactionReceipt(tx.hash);
       if (receipt && receipt?.status) {
+        console.log("its done");
         // await markWinnerAsPaid(id);
       } else if (receipt && !receipt?.status) {
         distributeReward(address, amount);
@@ -64,12 +61,20 @@ const distributeReward = async (address, amount, id) => {
     }
   }
 };
- let addressArray = [
-   "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
-   "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
-   "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
- ];
- for (let index = 0; index < addressArray.length; index++) {
-   distributeReward(addressArray[index], 1);
- }
+let addressArray = [
+  //  "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
+  //  "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
+  //  "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
+  "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
+  "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
+];
+
+const startTransfer = async () => {
+  for (let index = 0; index < addressArray.length; index++) {
+    await distributeReward(addressArray[index], 1);
+    console.log("awaiting");
+  }
+};
+
+startTransfer();
 module.exports = { distributeReward };

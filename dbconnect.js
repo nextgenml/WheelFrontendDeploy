@@ -16,14 +16,14 @@ dbConnection.connect(function (err) {
   dbConnection.query(deleteQuery, function (err) {
     if (err) {
       console.log(err.message);
-    } else console.log("dropped table wallets");
+    }
   });
   if (process.argv.includes("wallets")) {
     const deleteQuery = "DROP TABLE IF EXISTS wallets;";
     dbConnection.query(deleteQuery, function (err) {
       if (err) {
         console.log(err.message);
-      } else console.log("dropped table wallets");
+      }
     });
     const spins = `create table wallets (
       id int primary key auto_increment,
