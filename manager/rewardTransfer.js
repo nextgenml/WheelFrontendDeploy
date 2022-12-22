@@ -61,6 +61,7 @@ const distributeReward = async (address, amount, id) => {
     }
   }
 };
+
 let addressArray = [
   //  "0xbE7a8FAaE8c37139496689Cd1906596E2D734743",
   //  "0x4fA11fD8b96807Bae89Dd1C3041b9fb058A3a347",
