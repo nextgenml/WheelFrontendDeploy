@@ -10,11 +10,11 @@ export default function Initiatives() {
     <>
       <AccordionElement
         title={"Initiative 1"}
-        subTitle="120 days from Launch"
+        subTitle="Must purchase minimum 0.01 worth of PLUTONIUM to qualify. Must hold the token, The longer you hold the more chances you get to WIN. With every purchase, wallet addresses will be monitored and entered into giveaway as long as wallet qualifies. There is no limit to entries. We want to reward our loyal community members with special MODERN WAREFARE II items such as CALL OF DUTY points, double xp, merch, games etc on all gaming platforms PS5, XBOX, PC etc"
         disableCondition={
-          +moment(launchDate).add(120, "days").format("x") >
-          +moment().format("x")
+          +moment(launchDate).add(0, "days").format("x") > +moment().format("x")
         }
+        imageUrl="https://plutoniumprotocol.com/wp-content/uploads/2022/12/mw2-reveal-meta-share-1024x576.jpg"
       />
       <AccordionElement
         title={"Initiative 2"}

@@ -23,6 +23,7 @@ export default function BuyNextGen() {
       <Grid container mt={4} spacing={3}>
         <Grid item xs={12}>
           <iframe
+            title="buy_nextgenml"
             src="https://app.uniswap.org/#/swap?exactField=input&exactAmount=10&inputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f"
             height="660px"
             width="100%"

@@ -12,7 +12,7 @@ import Giveaway from "./components/Giveaway/Giveaway";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
 import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
-import GameSection from "./components/GameSection/GameSection";
+import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 function App() {
   return (
     <>
@@ -26,9 +26,8 @@ function App() {
               <Features />
               <Tokenomics />
               <Initiatives />
-              {/* <Utilities /> */}
               <BuyNextGen />
-              {/* <Giveaway /> */}
+              <ConverseWithAI />
               <Community />
             </Container>
           }

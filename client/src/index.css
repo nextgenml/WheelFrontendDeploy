@@ -70,3 +70,31 @@ html {
   font-weight: bold;
   letter-spacing: 6px;
 }
+.initiative-section {
+  margin: 0px 100px;
+  background-color: #894b10;
+  padding: 50px;
+  border: 2px solid #802600;
+  border-radius: 8px;
+}
+.initiative-image {
+  border: 2px solid #7bc32c;
+  border-radius: 8px;
+}
+
+.initiative-btn {
+  background-color: #2e87e5 !important;
+  color: white !important;
+  margin-top: 16px !important;
+  font-family: Audiowide !important;
+  border-radius: 10px !important;
+  /* margin-right: 20px !important; */
+}
+.initiative-btn:hover {
+  background-color: #2e87e5b1 !important;
+}
+@media (max-width: 600px) {
+  .initiative-btn {
+    margin: 0 !important;
+  }
+}
