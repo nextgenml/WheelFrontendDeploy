@@ -1,4 +1,4 @@
-const MIN_WALLETS_COUNT = 6;
+const MIN_WALLETS_COUNT = 3;
 
 const FETCH_HOURS = [0, 2, 15, 20];
 const FETCH_MINUTE = 20;

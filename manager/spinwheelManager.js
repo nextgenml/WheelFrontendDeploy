@@ -46,7 +46,7 @@ const createParticipants = async (nextSpin) => {
   console.log("creating participants");
   let page = 0,
     size = 25;
-  const allParticipants = [];
+  let winners = [];
   while (1) {
     let currParticipants = await currSpinParticipants(
       page * size,
@@ -81,7 +81,6 @@ const createParticipants = async (nextSpin) => {
         nextSpin
       );
       item["id"] = participant.insertId;
-      allParticipants.push(item);
     }
     await updateLaunchDate(nextSpin.id);
 
@@ -90,7 +89,7 @@ const createParticipants = async (nextSpin) => {
       await timer(nextSpin.spinDelay * 1000);
     }
 
-    await processWinners(currParticipants, nextSpin);
+    winners = await processWinners(currParticipants, nextSpin);
 
     await markSpinAsDone(spin.id);
 
@@ -99,17 +98,23 @@ const createParticipants = async (nextSpin) => {
     nextSpin.spinNo += 1;
     page += currParticipants.length > size ? 2 : 1;
   }
-  await processPrizes(allParticipants);
+  await processPrizes(winners);
   console.log("spin completed for a type:", nextSpin.type);
 };
 
 const processWinners = async (group, nextSpin) => {
+  const winners = [];
   for (let index = 1; index <= nextSpin.winnerPrizes.length; index += 1) {
     const rIndex = generateRandomNumber(group.length);
     const winner = group[rIndex];
     const prize = nextSpin.winnerPrizes[index - 1];
     console.log("winner", winner.id, prize, index);
     await markAsWinner(winner.id, index, prize);
+    winners.push({
+      id: winner.id,
+      prize: prize,
+      walletId: winner.walletId,
+    });
 
     group.splice(rIndex, 1);
 
@@ -118,6 +123,7 @@ const processWinners = async (group, nextSpin) => {
       await timer(nextSpin.spinDelay * 1000);
     }
   }
+  return winners;
 };
 
 const deleteScheduledJob = () => {
