@@ -3,6 +3,7 @@ const { parseUnits } = require("ethers/lib/utils.js");
 const { markWinnerAsPaid } = require("../repository/spinwheel");
 const tokenAbi = require("./tokenAbi.json");
 const config = require("../config.js");
+const logger = require("../logger");
 
 //network provider goerli/mainnet
 const providerETH = new providers.JsonRpcProvider(config.RPC_URL);
@@ -41,20 +42,20 @@ const distributeReward = async (address, amount) => {
       return true;
     }
   } catch (ex) {
-    console.error("exception while distributing reward", ex);
+    logger.error(`exception while distributing reward: ${ex}`);
     return false;
   }
 };
 
 const processPrizes = async (winners) => {
   for (const item of winners) {
-    console.log("transfer to ", item.walletId, " reward: ", item.prize);
+    logger.info(`transfer to ${item.walletId}, reward: ${item.prize}`);
     const success = await distributeReward(item.walletId, item.prize);
     if (success) {
       await markWinnerAsPaid(item.id);
-      console.log("processPrizes reward distribution: completed", item.id);
+      logger.info(`processPrizes reward distribution: completed: ${item.id}`);
     } else
-      console.log(
+      logger.error(
         `processPrizes reward distribution: failed for participant ${item.id}`
       );
   }
@@ -66,10 +67,10 @@ const processPrizes = async (winners) => {
 // ];
 
 // const startTransfer = async () => {
-//   console.log("starting");
+//   logger.info("starting");
 //   for (let index = 0; index < addressArray.length; index++) {
 //     await distributeReward(addressArray[index], 1);
-//     console.log("awaiting");
+//     logger.info("awaiting");
 //   }
 // };
 

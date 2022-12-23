@@ -61,8 +61,6 @@ const nextSpinDetails = async (type) => {
     return nextSpins.filter((x) => x.type === type)[0];
   } else {
     nextSpins.sort((a, b) => a.nextSpinAt.diff(b.nextSpinAt));
-    // console.log(nextSpins);
-    // console.log("result", nextSpins[0]);
     return nextSpins[0];
   }
 };

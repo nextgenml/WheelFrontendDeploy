@@ -15,6 +15,7 @@ const {
 const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
 const config = require("./config");
+const logger = require("./logger");
 
 const app = express();
 
@@ -56,13 +57,14 @@ app.get("/spinner-data", async (req, res) => {
         next_spin_type: nextSpin.type,
       };
     }
+    logger.info(JSON.stringify(data));
 
     res.json({
       ...data,
       start_time: current_time,
     });
   } catch (ex) {
-    console.error("error occurred in spinner-data api", ex);
+    logger.error(`error occurred in spinner-data api: ${ex}`);
     res.sendStatus(500);
   }
 });
@@ -83,7 +85,7 @@ app.get("/winners-data", async (req, res) => {
         : undefined,
     });
   } catch (ex) {
-    console.error("error occurred in winners-data api", ex);
+    logger.error(`error occurred in winners-data api: ${ex}`);
     res.sendStatus(500);
   }
 });
@@ -102,7 +104,7 @@ app.get("/participants-data", async (req, res) => {
     );
     res.json(data);
   } catch (ex) {
-    console.error("error occurred in participants-data api", ex);
+    logger.error(`error occurred in participants-data api: ${ex}`);
     res.sendStatus(500);
   }
 });
@@ -116,7 +118,7 @@ app.get("/spin-participants", async (req, res) => {
     );
     res.json(data);
   } catch (ex) {
-    console.error("error occurred in spin-participants api", ex);
+    logger.error(`error occurred in spinner-participants api: ${ex}`);
     res.sendStatus(500);
   }
 });
@@ -136,5 +138,6 @@ app.get("*", (req, res) => {
 const port = process.env["PORT"] || 8000;
 
 app.listen(port, function () {
-  console.log("app listening at ", "http://localhost:" + port);
+  logger.info("----------------------------app start---------------------");
+  logger.info(`app listening at ", "http://localhost: ${port}`);
 });

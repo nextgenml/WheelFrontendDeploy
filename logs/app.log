@@ -1,0 +1,33 @@
+{"level":"info","message":"app listening at "}
+2022-12-23T20:51:04.765Z - [INFO   ] - app listening at 
+2022-12-23T20:51:20.741Z - [INFO] - app listening at 
+2022-12-23T21:06:41.972Z - [INFO] - spin process started
+2022-12-23T21:06:42.819Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:06:51.998Z - [INFO] - scheduled next spin cycle, [object Object], 81307991
+2022-12-23T21:07:32.543Z - [INFO] - spin process started
+2022-12-23T21:07:33.370Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:07:35.857Z - [ERROR] - error occurred in spinner-data api: ReferenceError: aslkdfjaslfdj is not defined
+2022-12-23T21:07:37.055Z - [ERROR] - error occurred in spinner-data api: ReferenceError: aslkdfjaslfdj is not defined
+2022-12-23T21:07:42.560Z - [INFO] - scheduled next spin cycle, [object Object], 81256991
+2022-12-23T21:08:03.090Z - [INFO] - spin process started
+2022-12-23T21:08:04.123Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:08:13.109Z - [INFO] - scheduled next spin cycle, [object Object], 81225990
+2022-12-23T21:08:23.790Z - [INFO] - spin process started
+2022-12-23T21:08:24.736Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:08:26.351Z - [INFO] - data
+2022-12-23T21:08:33.876Z - [INFO] - scheduled next spin cycle, [object Object], 81205957
+2022-12-23T21:09:04.026Z - [INFO] - spin process started
+2022-12-23T21:09:04.748Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:09:07.525Z - [INFO] - {"participants":["e422c...30154","d7382...ecb92","9c4c8...acd00","48350...eb8f9","8a1d8...5fe86","e8299...035e0","e70a8...03e71","86cc1...9b279","a0e4b...a25e0","dc9f3...4a2a1","4d038...cbd46","d718f...27934","0c824...74ed7","6efaf...bff36","a5e02...6aea1","122cf...dde43","a1d71...16095","35a50...81244","62ac6...6961b","47403...f95ab","17ab7...b0cd3","3b163...88523","e3a37...d17a1","cea6a...5d8cb","f220f...956c4"],"winners":["86cc1...9b279","6efaf...bff36","d7382...ecb92"],"end_time":"2022-12-25T01:12:09+05:30","no_of_winners":3,"spin_delay":"3","prev_spin_type":"daily","next_spin_type":"daily"}
+2022-12-23T21:09:28.429Z - [INFO] - "spin process started"
+2022-12-23T21:09:29.029Z - [INFO] - "app listening at \", \"http://localhost: 8000"
+2022-12-23T21:09:31.872Z - [INFO] - "{\"participants\":[\"e422c...30154\",\"d7382...ecb92\",\"9c4c8...acd00\",\"48350...eb8f9\",\"8a1d8...5fe86\",\"e8299...035e0\",\"e70a8...03e71\",\"86cc1...9b279\",\"a0e4b...a25e0\",\"dc9f3...4a2a1\",\"4d038...cbd46\",\"d718f...27934\",\"0c824...74ed7\",\"6efaf...bff36\",\"a5e02...6aea1\",\"122cf...dde43\",\"a1d71...16095\",\"35a50...81244\",\"62ac6...6961b\",\"47403...f95ab\",\"17ab7...b0cd3\",\"3b163...88523\",\"e3a37...d17a1\",\"cea6a...5d8cb\",\"f220f...956c4\"],\"winners\":[\"86cc1...9b279\",\"6efaf...bff36\",\"d7382...ecb92\"],\"end_time\":\"2022-12-25T01:12:09+05:30\",\"no_of_winners\":3,\"spin_delay\":\"3\",\"prev_spin_type\":\"daily\",\"next_spin_type\":\"daily\"}"
+2022-12-23T21:09:38.444Z - [INFO] - "scheduled next spin cycle, [object Object], 81140993"
+2022-12-23T21:11:54.544Z - [INFO] - spin process started
+2022-12-23T21:11:55.129Z - [INFO] - ----------------------------app start---------------------
+2022-12-23T21:11:55.129Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:12:04.618Z - [INFO] - scheduled next spin cycle, {"id":9,"nextSpinAt":"2022-12-24T19:41:59.587Z","type":"daily","prevLaunchAt":"2022-12-23T20:10:59.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":2}, 80994969
+2022-12-23T21:12:32.485Z - [INFO] - spin process started
+2022-12-23T21:12:33.004Z - [INFO] - ----------------------------app start---------------------
+2022-12-23T21:12:33.005Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-23T21:12:42.502Z - [INFO] - scheduled next spin cycle, {"id":9,"nextSpinAt":"2022-12-24T19:41:59.492Z","type":"daily","prevLaunchAt":"2022-12-23T20:10:59.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":2}, 80956990

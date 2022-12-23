@@ -1,4 +1,5 @@
 let mysql = require("mysql");
+const logger = require("./logger");
 
 let dbConnection = mysql.createConnection({
   host: "127.0.0.1",
@@ -9,20 +10,20 @@ let dbConnection = mysql.createConnection({
 
 dbConnection.connect(function (err) {
   if (err) {
-    return console.error("error: " + err.message);
+    return logger.error(`error: ${err.message}`);
   }
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
   const deleteQuery = "update spins set running = 0;";
   dbConnection.query(deleteQuery, function (err) {
     if (err) {
-      console.log(err.message);
+      logger.info(err.message);
     }
   });
   if (process.argv.includes("wallets")) {
     const deleteQuery = "DROP TABLE IF EXISTS wallets;";
     dbConnection.query(deleteQuery, function (err) {
       if (err) {
-        console.log(err.message);
+        logger.info(err.message);
       }
     });
     const spins = `create table wallets (
@@ -32,16 +33,16 @@ dbConnection.connect(function (err) {
       created_at DATETIME)`;
     dbConnection.query(spins, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("created table wallets");
+        logger.info(err.message);
+      } else logger.info("created table wallets");
     });
   }
   if (process.argv.includes("repopulate_spins")) {
     const delete_all = `delete from scheduled_spins;`;
     dbConnection.query(delete_all, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("created table scheduled_spins");
+        logger.info(err.message);
+      } else logger.info("created table scheduled_spins");
     });
 
     const inserts = [
@@ -60,8 +61,8 @@ dbConnection.connect(function (err) {
     inserts.forEach((insert) =>
       dbConnection.query(insert, function (err) {
         if (err) {
-          console.log(err.message);
-        } else console.log("inserted");
+          logger.info(err.message);
+        } else logger.info("inserted");
       })
     );
   }
@@ -70,8 +71,8 @@ dbConnection.connect(function (err) {
     const deleteQuery = "DROP TABLE IF EXISTS spins;";
     dbConnection.query(deleteQuery, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("dropped table spins");
+        logger.info(err.message);
+      } else logger.info("dropped table spins");
     });
     const spins = `create table spins (
       id int primary key auto_increment,
@@ -82,16 +83,16 @@ dbConnection.connect(function (err) {
       running TINYINT)`;
     dbConnection.query(spins, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("created table spins");
+        logger.info(err.message);
+      } else logger.info("created table spins");
     });
   }
   if (process.argv.includes("create_participants")) {
     const deleteQuery = "DROP TABLE IF EXISTS participants;";
     dbConnection.query(deleteQuery, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("dropped table participants");
+        logger.info(err.message);
+      } else logger.info("dropped table participants");
     });
     const participants = `create table participants (
       id int primary key auto_increment,
@@ -109,16 +110,16 @@ dbConnection.connect(function (err) {
     )`;
     dbConnection.query(participants, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("created table participants");
+        logger.info(err.message);
+      } else logger.info("created table participants");
     });
   }
   if (process.argv.includes("scheduled_spins")) {
     const deleteQuery = "DROP TABLE IF EXISTS scheduled_spins;";
     dbConnection.query(deleteQuery, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("dropped table scheduled_spins");
+        logger.info(err.message);
+      } else logger.info("dropped table scheduled_spins");
     });
 
     const scheduled_spins = `create table scheduled_spins (
@@ -136,13 +137,13 @@ dbConnection.connect(function (err) {
       )`;
     dbConnection.query(scheduled_spins, function (err) {
       if (err) {
-        console.log(err.message);
-      } else console.log("created table scheduled_spins");
+        logger.info(err.message);
+      } else logger.info("created table scheduled_spins");
     });
     dbConnection.end(function (err) {
       if (err) {
-        return console.log(err.message);
-      } else console.log("closed connection");
+        return logger.info(err.message);
+      } else logger.info("closed connection");
     });
   }
 });

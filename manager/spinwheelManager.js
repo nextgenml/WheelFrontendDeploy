@@ -11,12 +11,14 @@ const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
 const { processPrizes } = require("./rewardTransfer.js");
+const logger = require("../logger.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
+
 const initiateNextSpin = () => {
   let running = false;
-  console.log("spin process started");
+  logger.info("spin process started");
   setInterval(async () => {
     try {
       if (running) return;
@@ -37,12 +39,16 @@ const initiateNextSpin = () => {
             waitingTime
           );
           currentSpinId = nextSpin.id;
-          console.log("scheduled next spin cycle", nextSpin, waitingTime);
+          logger.info(
+            `scheduled next spin cycle, ${JSON.stringify(
+              nextSpin
+            )}, ${waitingTime}`
+          );
         }
       } else if (currentSpinTimeout) deleteScheduledJob();
       running = false;
     } catch (error) {
-      console.error("error in initiateNextSpin", error);
+      logger.error(`error in initiateNextSpin: ${error}`);
     }
   }, 10000);
 };
@@ -60,7 +66,9 @@ const createParticipants = async (nextSpin) => {
       );
 
       if (currParticipants.length === 0) {
-        console.log("there are no participants for ", nextSpin.id, page);
+        logger.info(
+          `there are no participants for ${nextSpin.id}, page: ${page}`
+        );
         break;
       }
 
@@ -75,7 +83,7 @@ const createParticipants = async (nextSpin) => {
         }
       }
 
-      console.log("currParticipants length", currParticipants.length);
+      logger.info(`currParticipants length: ${currParticipants.length}`);
 
       const spin = await createSpin(nextSpin);
 
@@ -90,7 +98,6 @@ const createParticipants = async (nextSpin) => {
       await updateLaunchDate(nextSpin.id);
 
       if (page != 0) {
-        console.log("waiting in createParticipants");
         await timer(nextSpin.spinDelay * 1000);
       }
 
@@ -104,9 +111,13 @@ const createParticipants = async (nextSpin) => {
       page += currParticipants.length > size ? 2 : 1;
     }
     await processPrizes(winners);
-    console.log("spin completed for a type:", nextSpin.type);
+    logger.info(`spin completed for a type: ${nextSpin.type}`);
   } catch (error) {
-    console.error("error in createParticipants", error, nextSpin);
+    logger.error(
+      `error in createParticipants: ${error}, nextSpin: ${JSON.stringify(
+        nextSpin
+      )}`
+    );
   }
 };
 
@@ -117,7 +128,7 @@ const processWinners = async (group, nextSpin) => {
       const rIndex = generateRandomNumber(group.length);
       const winner = group[rIndex];
       const prize = nextSpin.winnerPrizes[index - 1];
-      console.log("winner", winner.id, prize, index);
+      logger.info(`winner: ${winner.id}, prize: ${prize}, ${index}`);
       await markAsWinner(winner.id, index, prize);
       winners.push({
         id: winner.id,
@@ -128,12 +139,14 @@ const processWinners = async (group, nextSpin) => {
       group.splice(rIndex, 1);
 
       if (index != nextSpin.winnerPrizes.length) {
-        console.log("waiting in processWinners");
+        logger.info("waiting in processWinners");
         await timer(nextSpin.spinDelay * 1000);
       }
     }
   } catch (error) {
-    console.error("error in processWinners", group, nextSpin);
+    logger.error(
+      `error in processWinners: ${group}, nextSpin: ${JSON.stringify(nextSpin)}`
+    );
   }
   return winners;
 };

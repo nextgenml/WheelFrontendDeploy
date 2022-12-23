@@ -1,4 +1,5 @@
 const config = require("../config.js");
+const logger = require("../logger.js");
 const { createWallet } = require("../repository/wallet.js");
 const fetchAddress = require("../script/tracking.js");
 
@@ -21,10 +22,10 @@ const fetchDataFromContract = () => {
         minutes === config.FETCH_MINUTE
       ) {
         const new_addresses = await fetchAddress();
-        console.log(
-          "successfully fetched data at",
-          date.toDateString(),
-          new_addresses
+        logger.info(
+          `successfully fetched data at: ${date.toDateString()}, new_addresses: ${JSON.stringify(
+            new_addresses
+          )}`
         );
         for (const item of new_addresses) {
           const value = item[1].toString().substring(0, item[1].length - 18);
@@ -33,7 +34,9 @@ const fetchDataFromContract = () => {
         lastFetchedCycle = index;
       }
     } catch (err) {
-      console.error("error fetching wallet at", date.toDateString(), err);
+      logger.error(
+        `error fetching wallet at ${date.toDateString()}, err: ${err}`
+      );
     }
     running = false;
   }, 10000);
