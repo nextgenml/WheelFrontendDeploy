@@ -24,6 +24,7 @@ export default function Utilities() {
         sx={{
           fontFamily: "Audiowide",
           textAlign: "center",
+          marginTop: "40px",
         }}
         variant="h4"
       >
