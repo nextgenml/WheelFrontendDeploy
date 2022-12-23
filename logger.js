@@ -1,4 +1,5 @@
 const { createLogger, transports, format } = require("winston");
+const config = require("./config");
 
 const customFormat = format.combine(
   format.timestamp(),
@@ -15,6 +16,7 @@ const logger = createLogger({
     // new transports.Console(),
     new transports.File({ filename: `logs/app.log` }),
   ],
+  silent: config.DISABLE_LOGS,
 });
 
 module.exports = logger;
