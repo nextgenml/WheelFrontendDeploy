@@ -36,7 +36,7 @@ const fetchDataFromContract = () => {
       console.error("error fetching wallet at", date.toDateString(), err);
     }
     running = false;
-  }, 1000);
+  }, 10000);
 };
 
 fetchDataFromContract();

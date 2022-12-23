@@ -39,7 +39,7 @@ const initiateNextSpin = () => {
       }
     } else if (currentSpinTimeout) deleteScheduledJob();
     running = false;
-  }, 1000);
+  }, 10000);
 };
 
 const createParticipants = async (nextSpin) => {
