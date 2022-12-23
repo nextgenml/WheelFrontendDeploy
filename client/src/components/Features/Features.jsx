@@ -27,7 +27,7 @@ export default function Features() {
         OUR GOALS
       </Typography>
       <Grid container mt={4} spacing={3}>
-      <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
               color="rgb(251, 156, 3)"
@@ -37,7 +37,7 @@ export default function Features() {
               }}
               variant="h6"
             >
-             Vision
+              Vision
             </Typography>
             <Typography
               color="white"
@@ -66,7 +66,7 @@ export default function Features() {
               }}
               variant="h6"
             >
-             Mission
+              Mission
             </Typography>
             <Typography
               color="white"
@@ -86,27 +86,26 @@ export default function Features() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={12}>
-
-        <Typography
-        color="#3B7AAA"
-        sx={{
-          fontFamily: "Audiowide",
-          textAlign: "center",
-        }}
-        variant="h4"
-      >
-       OUR VALUES
-      </Typography>
-      <Typography
-              color="white"
-              sx={{
-                textAlign: "center",
-                mt: 2,
-              }}
-            >
+          <Typography
+            color="#3B7AAA"
+            sx={{
+              fontFamily: "Audiowide",
+              textAlign: "center",
+            }}
+            variant="h4"
+            id="values"
+          >
+            OUR VALUES
+          </Typography>
+          <Typography
+            color="white"
+            sx={{
+              textAlign: "center",
+              mt: 2,
+            }}
+          >
             The bedrock of our culture
-            </Typography>
-
+          </Typography>
         </Grid>
 
         <Grid item xs={12} sm={12}>
@@ -139,7 +138,6 @@ export default function Features() {
             </Typography>
           </Box>
         </Grid>
-       
 
         <Grid item xs={12} sm={6}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
@@ -166,9 +164,7 @@ export default function Features() {
             </Typography>
           </Box>
         </Grid>
-       
-       
-     
+
         <Grid item xs={12} sm={6}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography

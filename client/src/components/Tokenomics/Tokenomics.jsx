@@ -152,6 +152,7 @@ export default function Tokenomics() {
         }}
         variant="h4"
         mt={4}
+        id="services"
       >
         SERVICES
       </Typography>
@@ -231,6 +232,7 @@ export default function Tokenomics() {
         }}
         variant="h4"
         mt={4}
+        id="roadmap"
       >
         ROADMAP
       </Typography>

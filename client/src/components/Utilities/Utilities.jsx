@@ -27,6 +27,7 @@ export default function Utilities() {
           marginTop: "40px",
         }}
         variant="h4"
+        id="utilities"
       >
         VARIOUS UTILITIES
       </Typography>

@@ -8,7 +8,7 @@ let borderStyle = {
 };
 export default function ConverseWithAI() {
   return (
-    <Box my={5} id="converse-with-ai">
+    <Box my={5} id="converse_with_ai">
       <Typography
         color="#3B7AAA"
         sx={{

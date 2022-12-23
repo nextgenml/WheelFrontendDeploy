@@ -98,3 +98,8 @@ html {
     margin: 0 !important;
   }
 }
+.header-link {
+  color: white !important;
+  font-family: Audiowide !important;
+  text-decoration: none !important;
+}
