@@ -14,7 +14,7 @@ const {
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
-const { SECRET_KEY } = require("./config");
+const config = require("./config");
 
 const app = express();
 
@@ -85,7 +85,7 @@ app.get("/participants-data", async (req, res) => {
     resultType,
     req.query.type,
     spin_no,
-    SECRET_KEY === req.headers["authorization"]
+    config.SECRET_KEY === req.headers["authorization"]
   );
   res.json(data);
 });
@@ -102,19 +102,17 @@ app.get("/spin-participants", async (req, res) => {
 app.get("/time-now", (req, res) => {
   res.send(new Date());
 });
-app.use("/", express.static(path.join(__dirname, "build")));
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static(path.join(__dirname, "/client/build")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("server is running");
-  });
-}
+app.use("/", express.static(path.join(__dirname, "build")));
+
+app.use(express.static(path.join(__dirname, "/client/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
 const port = process.env["PORT"] || 8000;
+
 app.listen(port, function () {
   console.log("app listening at ", "http://localhost:" + port);
 });

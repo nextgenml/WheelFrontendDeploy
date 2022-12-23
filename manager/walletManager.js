@@ -1,4 +1,4 @@
-const { FETCH_HOURS, FETCH_MINUTE } = require("../config.js");
+const config = require("../config.js");
 const { createWallet } = require("../repository/wallet.js");
 const fetchAddress = require("../script/tracking.js");
 
@@ -13,9 +13,13 @@ const fetchDataFromContract = () => {
     try {
       const hours = date.getHours();
       const minutes = date.getMinutes();
-      const index = FETCH_HOURS.indexOf(hours);
+      const index = config.FETCH_HOURS.indexOf(hours);
 
-      if (lastFetchedCycle != index && index > -1 && minutes === FETCH_MINUTE) {
+      if (
+        lastFetchedCycle != index &&
+        index > -1 &&
+        minutes === config.FETCH_MINUTE
+      ) {
         const new_addresses = await fetchAddress();
         console.log(
           "successfully fetched data at",

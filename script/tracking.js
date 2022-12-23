@@ -2,19 +2,11 @@ const fs = require("fs").promises;
 const Web3 = require("web3");
 const path = require("path");
 const { generateRandomString, generateRandomNumber } = require("../utils");
+const config = require("../config.js");
 //RESET INSTRUCTIONS:
 //Put 0 to last_block_number.json and then run to filter the blocks from begining of the contract
 
 let w3, CONTRACT;
-// Switch Mainnet/Testnet
-let CHAINID = 5; //1 for Ethereum mainnet & 5 for Goerli testnet
-let TESTURL =
-  "https://eth-goerli.g.alchemy.com/v2/surwT5Ql_QhEc083ru_C98XrwbDj-jVx";
-let CONTRACT_ADDRESS = "0x60F2CE0a06E1974a1378322B948567673f6eBF89";
-// Script Wallet Address Details
-let PRIVKEY =
-  "4349749f97226605564c20fa6b9f35f259456a710ce23ca01bffe239cab3ae5f";
-let WALLETADDRESS = "0x04c63D8c2fc9DD602aeE46F12083af1DdE69C713";
 
 async function readFiles(filename) {
   const data = await fs.readFile(filename);
@@ -23,11 +15,11 @@ async function readFiles(filename) {
 
 async function run_me(CONTRACT) {
   // Initializing web3
-  w3 = new Web3(new Web3.providers.HttpProvider(TESTURL));
+  w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
   // Initializing Contract
   let _path = path.join(__dirname, "assets", "abi.json");
   return readFiles(_path).then((data) => {
-    CONTRACT = new w3.eth.Contract(JSON.parse(data), CONTRACT_ADDRESS);
+    CONTRACT = new w3.eth.Contract(JSON.parse(data), config.CONTRACT_ADDRESS);
     return CONTRACT;
   });
 }
@@ -113,25 +105,25 @@ async function fetch_my_events(CONTRACT, LAST_BLOCK, DICT) {
 
 // Run THIS
 async function fetchAddress() {
-  result = [];
-  for (i = 0; i < 66; i += 1) {
-    result.push([
-      generateRandomString(32),
-      generateRandomNumber(10000).toString() + "000000000000000000",
-    ]);
-  }
-  return result;
-  // return await run_me(CONTRACT).then(async (CONTRACT) => {
-  //   let _path = path.join(__dirname, "assets", "last_block_number.json");
-  //   return await readFiles(_path).then(async (LAST_BLOCK) => {
-  //     console.log("LAST_BLOCK", LAST_BLOCK);
-  //     return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(
-  //       async (final) => {
-  //         return final;
-  //       }
-  //     );
-  //   });
-  // });
+  // result = [];
+  // for (i = 0; i < 66; i += 1) {
+  //   result.push([
+  //     generateRandomString(32),
+  //     generateRandomNumber(10000).toString() + "000000000000000000",
+  //   ]);
+  // }
+  // return result;
+  return await run_me(CONTRACT).then(async (CONTRACT) => {
+    let _path = path.join(__dirname, "assets", "last_block_number.json");
+    return await readFiles(_path).then(async (LAST_BLOCK) => {
+      console.log("LAST_BLOCK", LAST_BLOCK);
+      return await fetch_my_events(CONTRACT, LAST_BLOCK, {}).then(
+        async (final) => {
+          return final;
+        }
+      );
+    });
+  });
 }
 
 // run it directly

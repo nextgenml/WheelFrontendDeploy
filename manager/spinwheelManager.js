@@ -1,4 +1,4 @@
-const { MIN_WALLETS_COUNT } = require("../config.js");
+const config = require("../config.js");
 const {
   createParticipant,
   markAsWinner,
@@ -65,7 +65,7 @@ const createParticipants = async (nextSpin) => {
         size,
         nextSpin
       );
-      if (extraParticipants.length < MIN_WALLETS_COUNT) {
+      if (extraParticipants.length < config.MIN_WALLETS_COUNT) {
         currParticipants = [...currParticipants, ...extraParticipants];
       }
     }

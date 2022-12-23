@@ -2,24 +2,13 @@ const { Contract, Wallet, providers, constants, BigNumber } = require("ethers");
 const { parseUnits } = require("ethers/lib/utils.js");
 const { markWinnerAsPaid } = require("../repository/spinwheel");
 const tokenAbi = require("./tokenAbi.json");
+const config = require("../config.js");
 
-//network provider goreli/mainnet
-const providerETH = new providers.JsonRpcProvider(
-  //goreli RPC URL
-  "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-  //mainnet RPC URL
-  //   "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-);
+//network provider goerli/mainnet
+const providerETH = new providers.JsonRpcProvider(config.RPC_URL);
 // admin/owner wallet
-const signerETH = new Wallet(
-  "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
-  providerETH
-);
-const rewardContract = new Contract(
-  "0x4bb4954fc47ce04b62f3493040ff8318e4a72981",
-  tokenAbi,
-  signerETH
-);
+const signerETH = new Wallet(config.DEPLOYER_WALLET, providerETH);
+const rewardContract = new Contract(config.REWARD_TOKEN, tokenAbi, signerETH);
 // gas estimation for transaction
 let { MaxUint256 } = constants;
 function calculateGasMargin(value) {
