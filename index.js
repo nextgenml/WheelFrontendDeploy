@@ -21,82 +21,104 @@ const app = express();
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
 app.get("/spinner-data", async (req, res) => {
-  let current_time = moment().format();
-  const [runningSpin, scheduledSpin] = await getRunningSpin(true);
-  let data, participants, winners;
+  try {
+    let current_time = moment().format();
+    const [runningSpin, scheduledSpin] = await getRunningSpin(true);
+    let data, participants, winners;
 
-  if (runningSpin && scheduledSpin) {
-    [participants, winners] = await getParticipantsOfSpin(runningSpin);
-    data = {
-      participants,
-      winners,
-      end_time: current_time,
-      no_of_winners: scheduledSpin.no_of_winners,
-      spin_delay: scheduledSpin.spin_delay,
-      prev_spin_type: scheduledSpin.type,
-      next_spin_type: scheduledSpin.type,
-    };
-  } else {
-    const [lastRunningSpin, lastScheduledSpin] = await getRunningSpin(false);
-    let no_of_winners, spin_delay;
-    if (lastRunningSpin) {
-      no_of_winners = lastScheduledSpin.winner_prizes.split(",").length;
-      spin_delay = lastScheduledSpin.spin_day;
-      [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
+    if (runningSpin && scheduledSpin) {
+      [participants, winners] = await getParticipantsOfSpin(runningSpin);
+      data = {
+        participants,
+        winners,
+        end_time: current_time,
+        no_of_winners: scheduledSpin.no_of_winners,
+        spin_delay: scheduledSpin.spin_delay,
+        prev_spin_type: scheduledSpin.type,
+        next_spin_type: scheduledSpin.type,
+      };
+    } else {
+      const [lastRunningSpin, lastScheduledSpin] = await getRunningSpin(false);
+      let no_of_winners, spin_delay;
+      if (lastRunningSpin) {
+        no_of_winners = lastScheduledSpin.winner_prizes.split(",").length;
+        spin_delay = lastScheduledSpin.spin_day;
+        [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
+      }
+      const nextSpin = await nextSpinDetails();
+      data = {
+        participants,
+        winners,
+        end_time: nextSpin.nextSpinAt.add(10, "seconds").format(),
+        no_of_winners,
+        spin_delay,
+        prev_spin_type: lastScheduledSpin?.type,
+        next_spin_type: nextSpin.type,
+      };
     }
-    const nextSpin = await nextSpinDetails();
-    data = {
-      participants,
-      winners,
-      end_time: nextSpin.nextSpinAt.add(10, "seconds").format(),
-      no_of_winners,
-      spin_delay,
-      prev_spin_type: lastScheduledSpin?.type,
-      next_spin_type: nextSpin.type,
-    };
-  }
 
-  res.json({
-    ...data,
-    start_time: current_time,
-  });
+    res.json({
+      ...data,
+      start_time: current_time,
+    });
+  } catch (ex) {
+    console.error("error occurred in spinner-data api", ex);
+    res.sendStatus(500);
+  }
 });
 
 app.get("/winners-data", async (req, res) => {
-  const winner_data = await getWinners(
-    req.query.from,
-    req.query.to,
-    req.query.type
-  );
+  try {
+    const winner_data = await getWinners(
+      req.query.from,
+      req.query.to,
+      req.query.type
+    );
 
-  const nextSpin = await nextSpinDetails(req.query.type);
-  res.json({
-    data: winner_data,
-    next_spin_at: nextSpin ? nextSpin.nextSpinAt.add(10, "seconds") : undefined,
-  });
+    const nextSpin = await nextSpinDetails(req.query.type);
+    res.json({
+      data: winner_data,
+      next_spin_at: nextSpin
+        ? nextSpin.nextSpinAt.add(10, "seconds")
+        : undefined,
+    });
+  } catch (ex) {
+    console.error("error occurred in winners-data api", ex);
+    res.sendStatus(500);
+  }
 });
 
 app.get("/participants-data", async (req, res) => {
-  const resultType = req.query.winners === "yes" ? "winners" : "participants";
-  const spin_no = parseInt(req.query.spin);
-  const data = await getParticipants(
-    req.query.from,
-    req.query.to,
-    resultType,
-    req.query.type,
-    spin_no,
-    config.SECRET_KEY === req.headers["authorization"]
-  );
-  res.json(data);
+  try {
+    const resultType = req.query.winners === "yes" ? "winners" : "participants";
+    const spin_no = parseInt(req.query.spin);
+    const data = await getParticipants(
+      req.query.from,
+      req.query.to,
+      resultType,
+      req.query.type,
+      spin_no,
+      config.SECRET_KEY === req.headers["authorization"]
+    );
+    res.json(data);
+  } catch (ex) {
+    console.error("error occurred in participants-data api", ex);
+    res.sendStatus(500);
+  }
 });
 
 app.get("/spin-participants", async (req, res) => {
-  const data = await getSpinParticipants(
-    req.query.day,
-    req.query.spin_no,
-    req.query.type
-  );
-  res.json(data);
+  try {
+    const data = await getSpinParticipants(
+      req.query.day,
+      req.query.spin_no,
+      req.query.type
+    );
+    res.json(data);
+  } catch (ex) {
+    console.error("error occurred in spin-participants api", ex);
+    res.sendStatus(500);
+  }
 });
 
 app.get("/time-now", (req, res) => {
