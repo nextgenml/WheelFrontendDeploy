@@ -26,10 +26,9 @@ function App() {
               <Features />
               <Tokenomics />
               <Initiatives />
-              <Utilities />
+              {/* <Utilities /> */}
               <BuyNextGen />
-              <Giveaway />
-              <GameSection />
+              {/* <Giveaway /> */}
               <Community />
             </Container>
           }

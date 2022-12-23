@@ -1,4 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
+import GameSection from "../../components/GameSection/GameSection";
+
 import React from "react";
 let borderStyle = {
   borderRight: "2px solid #3B7AAA",
@@ -27,7 +29,9 @@ export default function Utilities() {
       >
         VARIOUS UTILITIES
       </Typography>
-      <Grid container mt={4} spacing={3}>
+      <GameSection />
+
+      {/* <Grid container mt={4} spacing={3}>
         <Grid item xs={12} sm={6}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
@@ -79,7 +83,7 @@ export default function Utilities() {
             </Typography>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
     </Box>
   );
 }

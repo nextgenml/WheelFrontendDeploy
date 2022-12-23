@@ -237,7 +237,7 @@ export default function Header() {
               BUY NEXTGEN
             </Typography>
           </a>
-          <a href="/#giveaway" rel="noopener noreferrer">
+          {/* <a href="/#giveaway" rel="noopener noreferrer">
             <Typography
               color="white"
               sx={{
@@ -248,7 +248,7 @@ export default function Header() {
             >
               GIVEAWAY
             </Typography>
-          </a>
+          </a> */}
 
           <Web3Button />
         </Stack>

@@ -1,5 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
+import Utilities from "../../components/Utilities/Utilities";
+
 let borderStyle = {
   borderRight: "2px solid #3B7AAA",
   borderLeft: "2px solid #3B7AAA",
@@ -300,6 +302,7 @@ export default function Tokenomics() {
           </Typography>
         </li>
       </ul>
+      <Utilities />
       <Typography
         color="#3B7AAA"
         sx={{

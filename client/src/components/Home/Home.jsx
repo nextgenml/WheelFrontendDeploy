@@ -63,22 +63,21 @@ export default function Home() {
                 BUY NEXTGEN
               </Button>
             </a>
-            <Link to="/claim-distribution" style={{ textDecoration: "none" }}>
-              <Button
-                sx={{
-                  bgcolor: "#2E87E5",
-                  color: "white",
-                  my: 2,
-                  fontFamily: "Audiowide",
-                  borderRadius: "10px",
-                  "&:hover": {
-                    bgcolor: "#2E87E5b1",
-                  },
-                }}
-              >
-                Claim Redistribution
-              </Button>
-            </Link>
+
+            <Button
+              sx={{
+                bgcolor: "#2E87E5",
+                color: "white",
+                my: 2,
+                fontFamily: "Audiowide",
+                borderRadius: "10px",
+                "&:hover": {
+                  bgcolor: "#2E87E5b1",
+                },
+              }}
+            >
+              LAUNCH WHEEL
+            </Button>
           </Stack>
         </Grid>
       </Grid>
