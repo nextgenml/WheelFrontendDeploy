@@ -62,3 +62,19 @@
 2022-12-24T08:38:02.528Z - [INFO] - {"participants":["e422c...30154","d7382...ecb92","9c4c8...acd00","48350...eb8f9","8a1d8...5fe86","e8299...035e0","e70a8...03e71","86cc1...9b279","a0e4b...a25e0","dc9f3...4a2a1","4d038...cbd46","d718f...27934","0c824...74ed7","6efaf...bff36","a5e02...6aea1","122cf...dde43","a1d71...16095","35a50...81244","62ac6...6961b","47403...f95ab","17ab7...b0cd3","3b163...88523","e3a37...d17a1","cea6a...5d8cb","f220f...956c4"],"winners":["86cc1...9b279","6efaf...bff36","d7382...ecb92"],"end_time":"2022-12-25T01:12:09+05:30","no_of_winners":3,"spin_delay":"3","prev_spin_type":"daily","next_spin_type":"daily"}
 2022-12-24T08:42:50.361Z - [INFO] - {"participants":["e422c...30154","d7382...ecb92","9c4c8...acd00","48350...eb8f9","8a1d8...5fe86","e8299...035e0","e70a8...03e71","86cc1...9b279","a0e4b...a25e0","dc9f3...4a2a1","4d038...cbd46","d718f...27934","0c824...74ed7","6efaf...bff36","a5e02...6aea1","122cf...dde43","a1d71...16095","35a50...81244","62ac6...6961b","47403...f95ab","17ab7...b0cd3","3b163...88523","e3a37...d17a1","cea6a...5d8cb","f220f...956c4"],"winners":["86cc1...9b279","6efaf...bff36","d7382...ecb92"],"end_time":"2022-12-25T01:12:09+05:30","no_of_winners":3,"spin_delay":"3","prev_spin_type":"daily","next_spin_type":"daily"}
 2022-12-24T09:00:01.744Z - [INFO] - {"participants":["e422c...30154","d7382...ecb92","9c4c8...acd00","48350...eb8f9","8a1d8...5fe86","e8299...035e0","e70a8...03e71","86cc1...9b279","a0e4b...a25e0","dc9f3...4a2a1","4d038...cbd46","d718f...27934","0c824...74ed7","6efaf...bff36","a5e02...6aea1","122cf...dde43","a1d71...16095","35a50...81244","62ac6...6961b","47403...f95ab","17ab7...b0cd3","3b163...88523","e3a37...d17a1","cea6a...5d8cb","f220f...956c4"],"winners":["86cc1...9b279","6efaf...bff36","d7382...ecb92"],"end_time":"2022-12-25T01:12:09+05:30","no_of_winners":3,"spin_delay":"3","prev_spin_type":"daily","next_spin_type":"daily"}
+2022-12-24T12:38:21.202Z - [INFO] - spin process started
+2022-12-24T12:38:21.422Z - [INFO] - ----------------------------app start---------------------
+2022-12-24T12:38:21.422Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-24T12:38:31.218Z - [INFO] - scheduled next spin cycle, {"id":3,"nextSpinAt":"2022-12-24T15:00:59.213Z","type":"daily","prevLaunchAt":"2022-12-12T06:00:00.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":1}, 8547996
+2022-12-24T12:40:28.455Z - [INFO] - spin process started
+2022-12-24T12:40:28.643Z - [INFO] - ----------------------------app start---------------------
+2022-12-24T12:40:28.643Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-24T12:40:38.479Z - [INFO] - scheduled next spin cycle, {"id":3,"nextSpinAt":"2022-12-24T15:00:59.465Z","type":"daily","prevLaunchAt":"2022-12-12T06:00:00.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":1}, 8420986
+2022-12-24T12:42:14.524Z - [INFO] - spin process started
+2022-12-24T12:42:14.712Z - [INFO] - ----------------------------app start---------------------
+2022-12-24T12:42:14.712Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-24T12:42:24.549Z - [INFO] - scheduled next spin cycle, {"id":3,"nextSpinAt":"2022-12-24T15:00:59.538Z","type":"daily","prevLaunchAt":"2022-12-12T06:00:00.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":1}, 8314989
+2022-12-24T12:43:38.147Z - [INFO] - spin process started
+2022-12-24T12:43:38.345Z - [INFO] - ----------------------------app start---------------------
+2022-12-24T12:43:38.345Z - [INFO] - app listening at ", "http://localhost: 8000
+2022-12-24T12:43:48.164Z - [INFO] - scheduled next spin cycle, {"id":3,"nextSpinAt":"2022-12-24T15:00:59.158Z","type":"daily","prevLaunchAt":"2022-12-12T06:00:00.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":1}, 8230995
