@@ -27,7 +27,12 @@ const Footer = () => {
             </a>
           </Box>
           <Box mt="10px" px={{ md: "0px", xs: "20px" }}>
-            <a href="#" target="_blank" style={{ textDecoration: "none" }}>
+            <a
+              href="https://www.google.com"
+              target="_blank"
+              rel="noreferrer"
+              style={{ textDecoration: "none" }}
+            >
               <Typography
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
               >
