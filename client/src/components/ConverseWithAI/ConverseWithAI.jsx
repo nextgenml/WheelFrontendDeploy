@@ -1,11 +1,14 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
+import config from "../../config.js";
+
 let borderStyle = {
   borderRight: "2px solid #3B7AAA",
   borderLeft: "2px solid #3B7AAA",
   borderTop: "2px solid rgb(251, 156, 3)",
   borderBottom: "2px solid rgb(251, 156, 3)",
 };
+
 export default function ConverseWithAI() {
   return (
     <Box my={5} id="converse_with_ai">
@@ -24,7 +27,7 @@ export default function ConverseWithAI() {
         <Grid item xs={12}>
           <iframe
             title="converse-with-ai"
-            src="https://app.uniswap.org/#/swap?exactField=input&exactAmount=10&inputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f"
+            src={config.CHAT_BOT_URL}
             height="660px"
             width="100%"
             style={{
