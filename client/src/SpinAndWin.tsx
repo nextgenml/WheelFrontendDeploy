@@ -18,6 +18,7 @@ const SPIN_TYPES = [
   ["yearly", "Yearly"],
   ["adhoc", "Adhoc"],
 ];
+
 export default function SpinAndWin() {
   var api_url = "/";
   if (process.env["NODE_ENV"] === "development") {

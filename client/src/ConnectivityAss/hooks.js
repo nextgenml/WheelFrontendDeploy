@@ -3,18 +3,16 @@ import { Contract } from "@ethersproject/contracts";
 import stevenProtocolAbi from "./stevenProtocolAbi.json";
 import airDropAbi from "./airDropAbi.json";
 
-import { airDropAddress, ABCToken } from "./environment.js";
 import { BigNumber, constants, ethers } from "ethers";
-
+import config from "../config.js";
 import { Alert, Slide, Snackbar } from "@mui/material";
-let walletAddress = "0x8ba1f109551bD432803012645Ac136ddd64DBA72";
 let { MaxUint256 } = constants;
 
-const provider = new ethers.providers.JsonRpcProvider(
-  "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-  // "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+const provider = new ethers.providers.JsonRpcProvider(config.RPC_URL);
+export const voidAccount = new ethers.VoidSigner(
+  config.WALLET_ADDRESS,
+  provider
 );
-export const voidAccount = new ethers.VoidSigner(walletAddress, provider);
 function useContract(address, ABI, signer) {
   return React.useMemo(() => {
     if (signer) {
@@ -29,11 +27,11 @@ function SlideTransition(props) {
   return <Slide {...props} direction="down" />;
 }
 export function useAirdropContract(signer) {
-  return useContract(airDropAddress, airDropAbi, signer);
+  return useContract(config.AIR_DROP_ADDRESS, airDropAbi, signer);
 }
 
 export function useStevenProtocolContract(signer) {
-  return useContract(ABCToken, stevenProtocolAbi, signer);
+  return useContract(config.ABC_TOKEN, stevenProtocolAbi, signer);
 }
 
 ////////////////////////////////////////////////////////////////

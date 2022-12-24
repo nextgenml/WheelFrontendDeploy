@@ -24,6 +24,7 @@
     "@web3modal/react": "2.0.0-beta.6",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
+    "env-cmd": "^10.1.0",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
     "moment": "^2.29.4",
@@ -32,8 +33,8 @@
     "react-calendar": "^4.0.0",
     "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
-    "react-responsive-modal": "^6.4.1",
     "react-papaparse": "^4.1.0",
+    "react-responsive-modal": "^6.4.1",
     "react-router-dom": "^6.5.0",
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.7",
@@ -44,7 +45,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "env-cmd -f config.env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

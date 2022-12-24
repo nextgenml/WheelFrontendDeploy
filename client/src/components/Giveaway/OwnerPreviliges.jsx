@@ -18,8 +18,8 @@ import { Chip, TextField } from "@mui/joy";
 import { ConnectButton } from "@web3modal/react";
 import { formatUnits, hexlify, parseUnits } from "ethers/lib/utils.js";
 import Loading from "../loading";
-import { airDropAddress } from "../../ConnectivityAss/environment";
 import CSVReader from "./CsvReader";
+import config from "../../config.js";
 
 let borderStyle = {
   color: "white",
@@ -168,7 +168,7 @@ export default function OwnerPreviliges() {
             signer.getTransactionCount("latest"),
           ]);
           let txdata = {
-            to: airDropAddress,
+            to: config.AIR_DROP_ADDRESS,
             value: parseUnits(tokenAmount.toString()),
             nonce: transactionCount,
             gasLimit: hexlify(21000), // 100000
@@ -184,7 +184,7 @@ export default function OwnerPreviliges() {
           );
           let fn = tokenNameContract.estimateGas.transfer;
           let params = [
-            airDropAddress,
+            config.AIR_DROP_ADDRESS,
             parseUnits(tokenAmount.toString(), selectedToken.decimals),
           ];
           const tx = await tokenNameContract.transfer(...params, {

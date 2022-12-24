@@ -1,11 +1,11 @@
 {
   "files": {
     "main.css": "/static/css/main.7d451dcd.css",
-    "main.js": "/static/js/main.ecda65c0.js",
+    "main.js": "/static/js/main.49777e17.js",
     "static/js/64.ba8a5e95.chunk.js": "/static/js/64.ba8a5e95.chunk.js",
     "static/js/563.86059638.chunk.js": "/static/js/563.86059638.chunk.js",
     "static/js/942.a3aae9b0.chunk.js": "/static/js/942.a3aae9b0.chunk.js",
-    "static/js/419.4c4507c5.chunk.js": "/static/js/419.4c4507c5.chunk.js",
+    "static/js/419.1ea32439.chunk.js": "/static/js/419.1ea32439.chunk.js",
     "static/js/48.fcd126cb.chunk.js": "/static/js/48.fcd126cb.chunk.js",
     "static/media/spinwheel.png": "/static/media/spinwheel.cc8734a244cc83f15eec.png",
     "static/media/home.png": "/static/media/home.a3b621e6121e1fa013fc.png",
@@ -14,13 +14,13 @@
     "static/media/audiowide-latin-ext-400-normal.woff2": "/static/media/audiowide-latin-ext-400-normal.f4b1d860ffbc7c54d90c.woff2",
     "index.html": "/index.html",
     "main.7d451dcd.css.map": "/static/css/main.7d451dcd.css.map",
-    "main.ecda65c0.js.map": "/static/js/main.ecda65c0.js.map",
+    "main.49777e17.js.map": "/static/js/main.49777e17.js.map",
     "64.ba8a5e95.chunk.js.map": "/static/js/64.ba8a5e95.chunk.js.map",
-    "419.4c4507c5.chunk.js.map": "/static/js/419.4c4507c5.chunk.js.map",
+    "419.1ea32439.chunk.js.map": "/static/js/419.1ea32439.chunk.js.map",
     "48.fcd126cb.chunk.js.map": "/static/js/48.fcd126cb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7d451dcd.css",
-    "static/js/main.ecda65c0.js"
+    "static/js/main.49777e17.js"
   ]
 }

@@ -3,7 +3,7 @@ import { ConnectButton } from "@web3modal/react";
 import { formatUnits } from "ethers/lib/utils.js";
 import React, { useEffect, useState } from "react";
 import { useAccount, useSigner } from "wagmi";
-import { rewardToken } from "../../ConnectivityAss/environment";
+import config from "../../config.js";
 import {
   gasEstimationForAll,
   getCommas,
@@ -39,7 +39,7 @@ export default function ClaimRedistribution() {
       const claimAbleAmount =
         await stevenProtocolContract.withdrawableDividendOf(
           address,
-          rewardToken
+          config.REWARD_TOKEN
         );
       setclaimAble(formatUnits(claimAbleAmount));
     } catch (error) {
