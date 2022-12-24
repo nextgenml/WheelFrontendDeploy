@@ -1,6 +1,9 @@
 import { useState } from "react";
 import ViewIcon from "./Icons/ViewIcon";
 import WalletsModal from "./WalletsModal";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 interface Props {
   winners_data: any[];
@@ -8,6 +11,16 @@ interface Props {
 
 export default function WinnersTable(props: Props) {
   const [currentSpin, setCurrentSpin] = useState<any>();
+  const formatTweet = (row: any) => {
+    return `Winner for the day
+
+Congratulations !!
+
+Wallet - ${row.wallet_id} Amount - $${row.prize}
+
+come join NextGen ML and explore various tools where user owns data and monetizes data on their terms
+`;
+  };
   return (
     <div className="w-[100%] flex flex-col">
       <div className="sm:mx-6 lg:mx-8 ">
@@ -21,6 +34,12 @@ export default function WinnersTable(props: Props) {
                     className="text-sm font-medium text-white px-6 py-4"
                   >
                     View wallets
+                  </th>
+                  <th
+                    scope="col"
+                    className="text-sm font-medium text-white px-6 py-4"
+                  >
+                    Winner for the day
                   </th>
                   <th
                     scope="col"
@@ -71,6 +90,20 @@ export default function WinnersTable(props: Props) {
                             className="open-wallets"
                           >
                             <ViewIcon />
+                          </div>
+                        </td>
+                        <td className="text-sm font-medium text-white px-6 py-4">
+                          <div
+                            onClick={() => {
+                              navigator.clipboard.writeText(formatTweet(row));
+                            }}
+                            className="open-wallets"
+                          >
+                            <Tooltip title={formatTweet(row)}>
+                              <IconButton>
+                                <ContentCopyIcon className="content-copy-icon" />
+                              </IconButton>
+                            </Tooltip>
                           </div>
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">

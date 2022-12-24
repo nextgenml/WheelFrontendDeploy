@@ -103,3 +103,7 @@ html {
   font-family: Audiowide !important;
   text-decoration: none !important;
 }
+.content-copy-icon {
+  color: black;
+  font-weight: 600;
+}
