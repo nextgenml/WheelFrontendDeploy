@@ -19,13 +19,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 const linkStyle = { fontSize: { sm: "12px", md: "15px" } };
 const headerLinks = [
   { link: "", title: "HOME" },
-  { link: "goals", title: "OUR GOALS" },
-  { link: "values", title: "OUR VALUES" },
+  { link: "goals", title: "GOALS" },
+  { link: "values", title: "VALUES" },
   { link: "tokenomics", title: "TOKENOMICS" },
   { link: "services", title: "SERVICES" },
   { link: "roadmap", title: "ROADMAP" },
-  { link: "utilities", title: "VARIOUS UTILITIES" },
-  { link: "buy-nextgen", title: "BUY NEXTGEN" },
+  { link: "utilities", title: "UTILITIES" },
+  { link: "buy-nextgen", title: "BUY" },
   { link: "converse_with_ai", title: "CONVERSE WITH AI" },
 ];
 
