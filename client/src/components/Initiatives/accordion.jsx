@@ -4,7 +4,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Grid, Button } from "@mui/material";
+import { Box, Grid, Button, Link } from "@mui/material";
 
 let borderStyle = {
   backgroundColor: "#f57a2f",
@@ -18,6 +18,8 @@ export default function AccordionElement({
   subTitle,
   disableCondition,
   imageUrl,
+  extArticleUrl,
+  extVideoUrl,
 }) {
   return (
     <Accordion disabled={disableCondition} sx={{ ...borderStyle }}>
@@ -49,8 +51,20 @@ export default function AccordionElement({
                 alt={title}
                 className="initiative-image"
               />
-              <Button className="initiative-btn">ARTICLE</Button>
-              <Button className="initiative-btn">IMAGE</Button>
+              <Link
+                href={extArticleUrl}
+                target="_blank"
+                style={{ textDecoration: "none" }}
+              >
+                <Button className="initiative-btn">ARTICLE</Button>
+              </Link>
+              <Link
+                href={extVideoUrl}
+                target="_blank"
+                style={{ textDecoration: "none" }}
+              >
+                <Button className="initiative-btn">VIDEO</Button>
+              </Link>
             </Grid>
           </Grid>
         </Box>

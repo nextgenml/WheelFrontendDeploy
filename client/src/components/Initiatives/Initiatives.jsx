@@ -17,7 +17,9 @@ export default function Initiatives() {
         disableCondition={
           +moment(launchDate).add(0, "days").format("x") > +moment().format("x")
         }
-        imageUrl="https://plutoniumprotocol.com/wp-content/uploads/2022/12/mw2-reveal-meta-share-1024x576.jpg"
+        imageUrl="/initiative1.jpg"
+        extVideoUrl="https://www.google.com"
+        extArticleUrl="https://www.google.com"
       />
       <AccordionElement
         title={"Initiative 2"}
