@@ -88,13 +88,13 @@ html {
   margin-top: 16px !important;
   font-family: Audiowide !important;
   border-radius: 10px !important;
-  /* margin-right: 20px !important; */
+  margin-right: 20px !important;
 }
 .initiative-btn:hover {
   background-color: #2e87e5b1 !important;
 }
 @media (max-width: 600px) {
-  .initiative-btn {
+  .initiative-section {
     margin: 0 !important;
   }
 }
