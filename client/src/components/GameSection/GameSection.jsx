@@ -87,7 +87,11 @@ export default function GameSection() {
           </Grid>
           <Grid item xs={12}>
             <Stack alignItems="center">
-              <Link to="/spin-wheel" style={{ textDecoration: "none" }}>
+              <Link
+                to="/spin-wheel"
+                target="_blank"
+                style={{ textDecoration: "none" }}
+              >
                 <Button
                   sx={{
                     bgcolor: "#2E87E5",
@@ -100,13 +104,6 @@ export default function GameSection() {
                     "&:hover": {
                       bgcolor: "#2E87E5b1",
                     },
-                  }}
-                  onClick={() => {
-                    return window.open(
-                      "/spin-wheel",
-                      "Windows",
-                      "width=650,height=350,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,directories=no,status=no,addressbar=no"
-                    );
                   }}
                 >
                   Launch
