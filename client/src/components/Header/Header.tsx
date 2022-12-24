@@ -57,7 +57,7 @@ export default function Header() {
           return (
             <a
               href={`/#${h.link}`}
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", whiteSpace: "nowrap" }}
               key={h.title}
             >
               <ListItem
@@ -114,7 +114,12 @@ export default function Header() {
         >
           {headerLinks.map((h) => {
             return (
-              <a href={`/#${h.link}`} rel="noopener noreferrer" key={h.title}>
+              <a
+                href={`/#${h.link}`}
+                rel="noopener noreferrer"
+                key={h.title}
+                style={{ whiteSpace: "nowrap" }}
+              >
                 <Typography
                   className="header-link"
                   color="white"
