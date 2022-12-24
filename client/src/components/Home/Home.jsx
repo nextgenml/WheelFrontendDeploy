@@ -64,26 +64,27 @@ export default function Home() {
               </Button>
             </a>
 
-            <Link
-              to="/spin-wheel"
-              target="_blank"
-              style={{ textDecoration: "none" }}
+            <Button
+              sx={{
+                bgcolor: "#2E87E5",
+                color: "white",
+                my: 2,
+                fontFamily: "Audiowide",
+                borderRadius: "10px",
+                "&:hover": {
+                  bgcolor: "#2E87E5b1",
+                },
+              }}
+              onClick={() => {
+                return window.open(
+                  "/spin-wheel",
+                  "Windows",
+                  "width=650,height=350,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,directories=no,status=no,addressbar=no"
+                );
+              }}
             >
-              <Button
-                sx={{
-                  bgcolor: "#2E87E5",
-                  color: "white",
-                  my: 2,
-                  fontFamily: "Audiowide",
-                  borderRadius: "10px",
-                  "&:hover": {
-                    bgcolor: "#2E87E5b1",
-                  },
-                }}
-              >
-                LAUNCH WHEEL
-              </Button>
-            </Link>
+              LAUNCH WHEEL
+            </Button>
           </Stack>
         </Grid>
       </Grid>
