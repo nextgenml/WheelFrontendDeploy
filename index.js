@@ -26,9 +26,13 @@ app.get("/spinner-data", async (req, res) => {
     let current_time = moment().format();
     const [runningSpin, scheduledSpin] = await getRunningSpin(true);
     let data, participants, winners;
+    const { walletAddress } = req.query;
 
     if (runningSpin && scheduledSpin) {
-      [participants, winners] = await getParticipantsOfSpin(runningSpin);
+      [participants, winners] = await getParticipantsOfSpin(
+        runningSpin,
+        walletAddress
+      );
       data = {
         participants,
         winners,
@@ -44,7 +48,10 @@ app.get("/spinner-data", async (req, res) => {
       if (lastRunningSpin) {
         no_of_winners = lastScheduledSpin.winner_prizes.split(",").length;
         spin_delay = lastScheduledSpin.spin_day;
-        [participants, winners] = await getParticipantsOfSpin(lastRunningSpin);
+        [participants, winners] = await getParticipantsOfSpin(
+          lastRunningSpin,
+          walletAddress
+        );
       }
       const nextSpin = await nextSpinDetails();
       data = {
@@ -74,7 +81,8 @@ app.get("/winners-data", async (req, res) => {
     const winner_data = await getWinners(
       req.query.from,
       req.query.to,
-      req.query.type
+      req.query.type,
+      req.query.walletAddress
     );
 
     const nextSpin = await nextSpinDetails(req.query.type);

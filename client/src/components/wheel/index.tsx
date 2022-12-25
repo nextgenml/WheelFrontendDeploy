@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { getFormattedHash } from "../../utils";
 
 import "./index.css";
 
@@ -32,7 +31,6 @@ export default function Wheel({ items, selected_item, onFinish }: Props) {
 
   useEffect(() => {
     setSpinning(selected_item !== null ? "spinning" : "");
-    console.log("calculated", selected_item);
     setwheelVars({
       "--nb-item": items.length,
       "--selected-item": selected_item,
@@ -46,9 +44,6 @@ export default function Wheel({ items, selected_item, onFinish }: Props) {
       if (onFinish) {
         onFinish(selected_item, items);
       }
-      console.log(
-        "Rotation complete 5 seconds before " + new Date().toTimeString()
-      );
     }, 1000 * 3.5);
   };
   const spin_wheel = () => {
@@ -67,7 +62,7 @@ export default function Wheel({ items, selected_item, onFinish }: Props) {
           };
           return (
             <div className="wheel-item" key={index} style={item_num}>
-              {getFormattedHash(item)}
+              {item}
             </div>
           );
         })}

@@ -18,8 +18,8 @@ const groupBy = function (xs, key) {
   }, {});
 };
 
-const formatTransactionId = (wallet_id, authenticated) => {
-  if (authenticated) return wallet_id;
+const formatTransactionId = (wallet_id, authenticated, walletAddress) => {
+  if (authenticated || walletAddress === wallet_id) return wallet_id;
   else {
     const hash = sha256(wallet_id);
     return hash

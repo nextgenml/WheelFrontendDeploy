@@ -9,6 +9,7 @@ import Wheel from "./components/wheel";
 import WinnersTable from "./components/WinnersTable";
 import { DateToString } from "./utils";
 import "react-calendar/dist/Calendar.css";
+import { useAccount } from "wagmi";
 
 const SPIN_TYPES = [
   ["daily", "Daily"],
@@ -24,6 +25,10 @@ export default function SpinAndWin() {
   if (process.env["NODE_ENV"] === "development") {
     api_url = "http://0.0.0.0:8000/";
   }
+
+  const { isConnected, address } = useAccount();
+
+  console.log("isConnected", isConnected, "address", address);
 
   const [loading, setLoading] = useState(false);
   const [wheel_items, setWheelItems] = useState<any[] | undefined>(undefined);
@@ -49,6 +54,13 @@ export default function SpinAndWin() {
     fetchWinners();
   }, [typeValue]);
 
+  useEffect(() => {
+    if (winners_data) {
+      fetchWinners();
+      fetchSpinnerData();
+    }
+  }, [isConnected]);
+
   console.log("rendering SpinAndWin", typeValue);
 
   const setSpinnerData = (spinner_data: any) => {
@@ -69,22 +81,37 @@ export default function SpinAndWin() {
 
     //@ts-ignore
     const type = document.getElementById("type-select").value;
-    const winners_data_res = await fetch(
-      api_url + `winners-data?from=${f_start}&to=${f_end}&type=${type}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+
+    const url =
+      api_url +
+      "winners-data?" +
+      new URLSearchParams({
+        from: f_start,
+        to: f_end,
+        type: type,
+        walletAddress: (address || "").toString(),
+      });
+
+    const winners_data_res = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     const winners_data = await winners_data_res.json();
     setWinnersData(winners_data.data);
     setNextTypeAt(winners_data.next_spin_at);
   };
   const fetchSpinnerData = async () => {
-    let spinner_data_res = await fetch(api_url + "spinner-data", {
+    const spinnerURL =
+      api_url +
+      "spinner-data?" +
+      new URLSearchParams({
+        walletAddress: (address || "").toString(),
+      });
+
+    let spinner_data_res = await fetch(spinnerURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

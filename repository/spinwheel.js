@@ -1,3 +1,4 @@
+const { logger } = require("ethers");
 const moment = require("moment");
 const {
   formatTransactionId,
@@ -68,13 +69,16 @@ const getSpinParticipants = async (day, spinNo, spinType) => {
     return formatTransactionId(user.wallet_id);
   });
 };
-const getParticipantsOfSpin = async (spin) => {
+const getParticipantsOfSpin = async (spin, walletAddress) => {
   const fDate = moment(spin.spin_day).format("YYYY-MM-DD");
   const query =
     "select * from participants where spin_day = ? and spin_no = ? and type = ?;";
   let records = await runQueryAsync(query, [fDate, spin.spin_no, spin.type]);
 
-  participants = records.map((r) => formatTransactionId(r.wallet_id));
+  const participants = records.map((r) =>
+    formatTransactionId(r.wallet_id, false, walletAddress)
+  );
+
   winners = records
     .filter((r) => r.is_winner)
     .sort((a, b) => a.winning_rank - b.winning_rank)
@@ -82,7 +86,7 @@ const getParticipantsOfSpin = async (spin) => {
   return [participants, winners];
 };
 
-const getWinners = async (from, to, type) => {
+const getWinners = async (from, to, type, walletAddress) => {
   start = moment(from).startOf("day").format();
   end = moment(to).endOf("day").format();
   const query = `select * from participants where is_winner = 1 and spin_day >= ? and spin_day <= ? and type = ? order by spin_no, winning_rank asc`;
@@ -95,7 +99,7 @@ const getWinners = async (from, to, type) => {
       spin: r.spin_no,
       rank: r.winning_rank,
       type: r.type,
-      wallet_id: formatTransactionId(r.wallet_id),
+      wallet_id: formatTransactionId(r.wallet_id, false, walletAddress),
       prize: r.prize,
       id: r.id,
     };
