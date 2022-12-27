@@ -1,1 +1,0 @@
-export const next_spin_delay = 20

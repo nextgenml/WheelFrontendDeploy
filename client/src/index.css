@@ -4,18 +4,106 @@
 
 body {
   margin: 0;
-  font-family: -apple-system,"Inter", 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, "Inter", "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(10, 7, 20);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.date-calender{
+.date-calender {
   border-radius: 20px;
+}
+
+.get-winners-btn {
+  color: white;
+  border: 1px solid orange;
+  margin-left: 16px;
+  padding: 8px;
+  border-radius: 8px;
+}
+.type-selection {
+  margin-left: 16px;
+  border-radius: 4px;
+}
+.spin-timer {
+  color: white;
+  margin-left: 2px;
+}
+.next-spin-time {
+  color: white;
+  margin-left: 16px;
+}
+.open-wallets {
+  background-color: orange;
+  width: fit-content;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  height: 44px;
+  width: 48px;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.wallets-list {
+  width: 300px;
+}
+.wallets-list > li {
+  padding: 8px;
+}
+.wallets-title {
+  font-weight: bold;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+.spin-wheel-title {
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  padding-top: 16px;
+  font-weight: bold;
+  letter-spacing: 6px;
+}
+.initiative-section {
+  margin: 0px 100px;
+  background-color: #894b10;
+  padding: 50px;
+  border: 2px solid #802600;
+  border-radius: 8px;
+}
+.initiative-image {
+  border: 2px solid #7bc32c;
+  border-radius: 8px;
+}
+
+.initiative-btn {
+  background-color: #2e87e5 !important;
+  color: white !important;
+  margin-top: 16px !important;
+  font-family: Audiowide !important;
+  border-radius: 10px !important;
+  margin-right: 20px !important;
+}
+.initiative-btn:hover {
+  background-color: #2e87e5b1 !important;
+}
+@media (max-width: 600px) {
+  .initiative-section {
+    margin: 0 !important;
+  }
+}
+.header-link {
+  color: white !important;
+  font-family: Audiowide !important;
+  text-decoration: none !important;
+}
+.content-copy-icon {
+  color: black;
+  font-weight: 600;
 }
