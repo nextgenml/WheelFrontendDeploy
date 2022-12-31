@@ -20,9 +20,11 @@ const searchTweets = async () => {
   const result = [];
   for await (const tweet of jsTweets) {
     const data = includes.author(tweet);
+    // console.log(tweet, data);
     result.push({
       ...tweet,
       ...data,
+      link: `https://twitter.com/${data.username}/status/${tweet.id}`,
     });
   }
 
