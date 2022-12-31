@@ -1,5 +1,6 @@
 const config = require("../config.js");
 const logger = require("../logger.js");
+const { createHolder } = require("../repository/holder.js");
 const { createWallet } = require("../repository/wallet.js");
 const fetchAddress = require("../script/tracking.js");
 
@@ -15,7 +16,6 @@ const fetchDataFromContract = () => {
       const hours = date.getHours();
       const minutes = date.getMinutes();
       const index = config.FETCH_HOURS.indexOf(hours);
-
       if (
         lastFetchedCycle != index &&
         index > -1 &&
@@ -28,8 +28,10 @@ const fetchDataFromContract = () => {
           )}`
         );
         for (const item of new_addresses) {
-          const value = item[1].toString().substring(0, item[1].length - 18);
+          const value =
+            parseInt(item[1].toString().substring(0, item[1].length - 18)) || 0;
           await createWallet(item[0], value, date);
+          await createHolder(item[0], value);
         }
         lastFetchedCycle = index;
       }

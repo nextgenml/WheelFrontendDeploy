@@ -1,6 +1,8 @@
 let mysql = require("mysql");
 const logger = require("./logger");
-var config = require("./config/config.json")[process.env.NODE_ENV];
+var config = require("./config/config.json")[
+  process.env.NODE_ENV || "development"
+];
 
 let dbConnection = mysql.createConnection({
   host: config.host,

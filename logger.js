@@ -13,7 +13,7 @@ const logger = createLogger({
   level: "debug",
   format: customFormat,
   transports: [
-    // new transports.Console(),
+    new transports.Console(),
     new transports.File({ filename: `logs/app.log` }),
   ],
   silent: config.DISABLE_LOGS,
