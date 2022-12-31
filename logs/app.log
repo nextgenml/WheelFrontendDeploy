@@ -88,3 +88,6 @@
 2022-12-24T13:03:11.042Z - [INFO] - ----------------------------app start---------------------
 2022-12-24T13:03:11.042Z - [INFO] - app listening at ", "http://localhost: 8000
 2022-12-24T13:03:20.892Z - [INFO] - scheduled next spin cycle, {"id":3,"nextSpinAt":"2022-12-24T15:00:59.878Z","type":"daily","prevLaunchAt":"2022-12-12T06:00:00.000Z","winnerPrizes":[100,50,25],"spinDelay":20,"minWalletValue":100,"participants":[""],"spinNo":1}, 7058987
+2022-12-31T09:46:56.459Z - [INFO] - spin process started
+2022-12-31T09:46:57.109Z - [INFO] - ----------------------------app start---------------------
+2022-12-31T09:46:57.109Z - [INFO] - app listening at ", "http://localhost: 8000

@@ -10,17 +10,23 @@ const searchTweets = async () => {
     {
       "tweet.fields": ["conversation_id"],
       expansions: "author_id",
-      "user.fields": ["location", "name"],
+      "user.fields": ["name"],
       max_results: 100,
     }
   );
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
 
+  const result = [];
   for await (const tweet of jsTweets) {
     const data = includes.author(tweet);
-    console.log(tweet, data);
+    result.push({
+      ...tweet,
+      ...data,
+    });
   }
+
+  return result;
 };
 
 const tweetLikedUsers = async () => {
@@ -68,10 +74,10 @@ const tweetReplies = async () => {
     console.log(tweet, data);
   }
 };
-// searchTweets();
+searchTweets();
 // tweetLikedUsers();
 // retweetedUsers();
-tweetReplies();
+// tweetReplies();
 
 module.exports = {
   searchTweets,

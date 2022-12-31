@@ -3,8 +3,8 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const moment = require("moment");
-require("./manager/spinwheelManager");
-require("./manager/walletManager");
+require("./manager/spinwheel");
+require("./manager/wallet");
 
 const {
   getParticipants,
@@ -13,7 +13,7 @@ const {
   getSpinParticipants,
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
-const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
+const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
 

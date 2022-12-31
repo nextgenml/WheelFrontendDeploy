@@ -4,7 +4,7 @@ const {
   markAsWinner,
 } = require("../repository/spinwheel.js");
 
-const { nextSpinDetails } = require("./scheduledSpinsManager.js");
+const { nextSpinDetails } = require("./scheduledSpins.js");
 const { createSpin, markSpinAsDone } = require("../repository/spin.js");
 const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
