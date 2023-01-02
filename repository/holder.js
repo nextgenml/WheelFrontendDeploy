@@ -18,6 +18,17 @@ const createHolder = async (walletId, walletBalance) => {
   }
 };
 
+const getActiveHolders = async (walletBalance) => {
+  const query = `select * from holders where wallet_balance >= ?`;
+
+  return await runQueryAsync(query, [walletBalance]);
+};
+
+module.exports = {
+  createHolder,
+  getActiveHolders,
+};
+
 const getUniqueName = async (walletId) => {
   while (1) {
     const existsQuery = `select 1 from holders where alias = ?`;
@@ -30,8 +41,4 @@ const getUniqueName = async (walletId) => {
     // console.log("randomName", randomName);
     if (!existsResults.length) return randomName;
   }
-};
-// createHolder("alskdjflasf", 12411);
-module.exports = {
-  createHolder,
 };
