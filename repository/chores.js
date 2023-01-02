@@ -5,7 +5,6 @@ const getPreviousCampaignIds = async (walletId) => {
 
   const results = await runQueryAsync(query, [walletId]);
 
-  console.log("results", results);
   return results.map((r) => r.campaign_detail_id);
 };
 

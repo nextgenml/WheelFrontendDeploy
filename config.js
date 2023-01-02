@@ -1,7 +1,4 @@
 const prodConfig = {
-  MIN_WALLETS_COUNT: 6,
-  FETCH_HOURS: [3, 9, 15, 21],
-  FETCH_MINUTE: 0,
   // https://randomkeygen.com/
   // this key is used for authentication in end points
   SECRET_KEY: "%S93A-JB@g1Bg12P#SnA.=cmL)vH&O",
@@ -19,17 +16,9 @@ const prodConfig = {
   DISABLE_LOGS: true,
   TWITTER_DEV_TOKEN: "",
   // holders having min balance will be able to participate in chores
-  MINIMUM_WALLET_BALANCE: 100,
-  NO_OF_POSTS_PER_DAY: 10,
-  COST_PER_CHORE: 1,
-  POST_CHORE_VALID_DAYS: 1,
-  OTHER_CHORE_VALID_DAYS: 3,
 };
 
 const testConfig = {
-  MIN_WALLETS_COUNT: 3,
-  FETCH_HOURS: [2, 5, 17, 19],
-  FETCH_MINUTE: 43,
   SECRET_KEY: "%S93A-JB@g1Bg12P#SnA.=cmL)vH&",
   REWARD_TOKEN: "0x4bB4954FC47ce04B62F3493040ff8318E4A72981",
   CONTRACT_ADDRESS: "0x60F2CE0a06E1974a1378322B948567673f6eBF89",
@@ -41,12 +30,21 @@ const testConfig = {
   DISABLE_LOGS: false,
   TWITTER_DEV_TOKEN:
     "AAAAAAAAAAAAAAAAAAAAAA1ukwEAAAAAlSl4X%2FTjbuuLXmNS8kJNO8MgGz4%3D9uhtUccA0oQNe9rkz9wPhxZ0472SeJhZ5p19YIIXyWtGnoJ6yV",
+};
+
+const commonConfig = {
+  MIN_WALLETS_COUNT: 6,
+  FETCH_HOURS: [3, 9, 15, 21],
+  FETCH_MINUTE: 0,
   MINIMUM_WALLET_BALANCE: 100,
   NO_OF_POSTS_PER_DAY: 10,
   COST_PER_CHORE: 1,
   POST_CHORE_VALID_DAYS: 1,
   OTHER_CHORE_VALID_DAYS: 3,
+  CREATE_POST_CHORES_AT: [23, 26],
 };
 
 module.exports =
-  process.env.NODE_ENV === "production" ? prodConfig : testConfig;
+  process.env.NODE_ENV === "production"
+    ? { ...prodConfig, ...commonConfig }
+    : { ...testConfig, ...commonConfig };

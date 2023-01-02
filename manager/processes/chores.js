@@ -1,10 +1,14 @@
-const { getActiveCampaigns } = require("../repository/campaignDetails");
-const { getActiveHolders } = require("../repository/holder");
-const config = require("../config.js");
-const { createChore, getPreviousCampaignIds } = require("../repository/chores");
+const { getActiveCampaigns } = require("../../repository/campaignDetails");
+const { getActiveHolders } = require("../../repository/holder");
+const config = require("../../config.js");
+const {
+  createChore,
+  getPreviousCampaignIds,
+} = require("../../repository/chores");
 const moment = require("moment");
-const { shuffleArray } = require("../utils");
-const logger = require("../logger");
+const { shuffleArray } = require("../../utils");
+const logger = require("../../logger");
+const schedule = require("node-schedule");
 
 const createChores = async () => {
   const campaigns = await getActiveCampaigns();
@@ -13,7 +17,6 @@ const createChores = async () => {
   for (const holder of holders) {
     const prevCampaignIds = await getPreviousCampaignIds(holder.wallet_id);
 
-    console.log("prevCampaignIds", prevCampaignIds);
     const newCampaigns = campaigns.filter(
       (c) => !prevCampaignIds.includes(c.id)
     );
@@ -43,4 +46,14 @@ const createChores = async () => {
   logger.info("completed creating chores");
 };
 
-createChores();
+const rule = new schedule.RecurrenceRule();
+const [hours, minutes] = config.CREATE_POST_CHORES_AT;
+rule.hour = hours;
+rule.minute = minutes;
+
+schedule.scheduleJob(rule, createChores);
+
+process.on("SIGINT", function () {
+  console.log("closing");
+  schedule.gracefulShutdown().then(() => process.exit(0));
+});

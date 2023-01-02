@@ -16,6 +16,7 @@ const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
+const schedule = require("node-schedule");
 
 const app = express();
 
