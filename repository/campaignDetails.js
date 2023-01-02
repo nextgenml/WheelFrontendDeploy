@@ -1,8 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 
-// TODO collection_id handling
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, cd.collection_id from campaign_details cd 
+  const query = `select distinct cd.collection_id, cd.id, cd.media_type from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now()`;

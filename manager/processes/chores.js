@@ -53,7 +53,7 @@ rule.minute = minutes;
 
 schedule.scheduleJob(rule, createChores);
 
-process.on("SIGINT", function () {
+process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
 });
