@@ -4,16 +4,15 @@ const config = require("../../config.js");
 let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 
-const searchTweets = async () => {
-  const jsTweets = await readOnlyClient.v2.search(
-    "Am confused how can someone bath today in this weather -is:retweet",
-    {
-      "tweet.fields": ["conversation_id"],
-      expansions: "author_id",
-      "user.fields": ["name"],
-      max_results: 100,
-    }
-  );
+const searchTweets = async (search, start_time, end_time) => {
+  const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
+    "tweet.fields": ["conversation_id", "created_at"],
+    expansions: "author_id",
+    "user.fields": ["name"],
+    max_results: 100,
+    start_time,
+    end_time,
+  });
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
 
@@ -22,9 +21,10 @@ const searchTweets = async () => {
     const data = includes.author(tweet);
     // console.log(tweet, data);
     result.push({
-      ...tweet,
-      ...data,
-      link: `https://twitter.com/${data.username}/status/${tweet.id}`,
+      postId: tweet.id,
+      username: data.username,
+      postLink: `https://twitter.com/${data.username}/status/${tweet.id}`,
+      createdAt: tweet.created_at,
     });
   }
 
@@ -76,7 +76,7 @@ const tweetReplies = async () => {
     console.log(tweet, data);
   }
 };
-searchTweets();
+// searchTweets("javascript");
 // tweetLikedUsers();
 // retweetedUsers();
 // tweetReplies();

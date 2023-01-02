@@ -24,9 +24,23 @@ const getActiveHolders = async (walletBalance) => {
   return await runQueryAsync(query, [walletBalance]);
 };
 
+const getHoldersByWalletId = async (userNames) => {
+  const query = `select alias, wallet_id from holders where alias in (?) and is_active = 1`;
+
+  const results = await runQueryAsync(query, [userNames]);
+
+  const result = {};
+
+  results.forEach((r) => {
+    result[r.alias] = r.wallet_id;
+  });
+  return result;
+};
+
 module.exports = {
   createHolder,
   getActiveHolders,
+  getHoldersByWalletId,
 };
 
 const getUniqueName = async (walletId) => {
