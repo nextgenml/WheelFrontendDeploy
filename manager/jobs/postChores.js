@@ -100,6 +100,7 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
                 linkToPost: user.postLink,
                 mediaPostId: user.postId,
                 createdAt: user.createdAt,
+                choreType: "post",
               });
           }
         }
@@ -123,13 +124,12 @@ schedule.scheduleJob(rule, async () => {
   const postedCampaigns = await getPostedCampaigns();
   await checkIfPostsChoreCompleted(postedCampaigns, endTime);
 
+  await createOtherChores();
+  await checkIfOtherChoresCompleted(postedCampaigns, endTime);
+
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
   }
-
-  await checkIfOtherChoresCompleted(postedCampaigns, endTime);
-
-  await createOtherChores();
 });
 
 process.on("SIGINT", () => {

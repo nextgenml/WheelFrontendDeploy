@@ -3,6 +3,7 @@ const {
   getPrevOtherUserPostIds,
   otherUserPosts,
   markChoreAsCompleted,
+  getMediaPostIds,
 } = require("../../repository/chores");
 const {
   getActiveHolders,
@@ -14,6 +15,7 @@ const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
+const { getPostedCampaigns } = require("../../repository/campaignDetails");
 
 const createOtherChores = async () => {
   try {
@@ -57,11 +59,14 @@ const createOtherChores = async () => {
   }
 };
 
-const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
+const checkIfOtherChoresCompleted = async (postedCampaigns) => {
+  postedCampaigns = await getPostedCampaigns();
+
   try {
     for (const campaign of postedCampaigns) {
       const actions = getMediaActions(campaign.media_type);
       for (const action of actions) {
+        console.log("action", action);
         let searchContentFn = null;
 
         switch (campaign.media_type) {
@@ -71,20 +76,25 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
         }
 
         if (searchContentFn) {
-          const mediaUsers = await searchContentFn(campaign.ref_chore_id);
+          const mediaPostIds = await getMediaPostIds(campaign.id);
 
-          // console.log("postedUsers", postedUsers);
-          if (mediaUsers.length) {
-            const holdersByWalletId = await getHoldersByWalletId(
-              mediaUsers.map((u) => u.username)
-            );
+          for (const row of mediaPostIds) {
+            console.log("media_post_id", row);
+            const mediaUsers = await searchContentFn(row.media_post_id);
 
-            for (const user of mediaUsers) {
-              await markChoreAsCompleted({
-                walletId: holdersByWalletId[user.username],
-                campaignDetailsId: campaign.id,
-                createdAt: user.createdAt,
-              });
+            if (mediaUsers.length) {
+              const holdersByWalletId = await getHoldersByWalletId(
+                mediaUsers.map((u) => u.username)
+              );
+
+              for (const user of mediaUsers) {
+                await markChoreAsCompleted({
+                  walletId: holdersByWalletId[user.username],
+                  campaignDetailsId: campaign.id,
+                  createdAt: user.createdAt,
+                  choreType: action,
+                });
+              }
             }
           }
         }
@@ -97,6 +107,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
 };
 
 // createOtherChores();
+checkIfOtherChoresCompleted();
 module.exports = {
   createOtherChores,
   checkIfOtherChoresCompleted,

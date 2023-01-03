@@ -138,3 +138,12 @@
 2023-01-03T17:36:26.478Z - [INFO] - completed createOtherChores
 2023-01-03T17:37:12.688Z - [INFO] - completed createOtherChores
 2023-01-03T17:37:33.691Z - [INFO] - completed createOtherChores
+2023-01-03T18:30:49.835Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:31:31.894Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:31:58.544Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:32:13.299Z - [INFO] - error in checkIfPostsChoreCompleted process: ReferenceError: media_post_id is not defined
+2023-01-03T18:32:25.031Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:42:53.130Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:43:12.432Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:43:34.424Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
+2023-01-03T18:44:22.966Z - [INFO] - completed checkIfPostsChoreCompleted process

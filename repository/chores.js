@@ -45,14 +45,15 @@ const createChore = async (data) => {
 
 const markChoreAsCompleted = async (data) => {
   if (!data.walletId) return;
-  // console.log("markChoreAsCompleted", data);
+  console.log("markChoreAsCompleted", data);
 
-  const existsQuery = `select id from chores where wallet_id = ? and campaign_detail_id = ? and valid_to >= ?`;
+  const existsQuery = `select id from chores where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ?`;
 
   const existsResults = await runQueryAsync(existsQuery, [
     data.walletId,
     data.campaignDetailsId,
     data.createdAt,
+    data.choreType,
   ]);
 
   if (existsResults.length) {
@@ -73,10 +74,17 @@ const markChoreAsCompleted = async (data) => {
   }
 };
 
+const getMediaPostIds = async (campaignId) => {
+  const query = `select distinct media_post_id from chores where campaign_detail_id = ? and is_completed = 0 and chore_type != 'post' and valid_to >= NOW() - INTERVAL 1 DAY`;
+
+  return await runQueryAsync(query, [campaignId]);
+};
+
 module.exports = {
   getPreviousCampaignIds,
   createChore,
   markChoreAsCompleted,
   getPrevOtherUserPostIds,
   otherUserPosts,
+  getMediaPostIds,
 };
