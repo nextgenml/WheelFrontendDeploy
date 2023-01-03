@@ -115,7 +115,7 @@ const rule = new schedule.RecurrenceRule();
 const [hours, minutes] = config.CREATE_POST_CHORES_AT;
 rule.hour = hours;
 rule.minute = minutes;
-gatherPostsFromMedia();
+
 schedule.scheduleJob(rule, async () => {
   await createChores();
   await gatherPostsFromMedia();
