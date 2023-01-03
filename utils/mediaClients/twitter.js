@@ -31,7 +31,7 @@ const searchTweets = async (search, start_time, end_time) => {
     });
   }
 
-  console.log("result", result);
+  // console.log("result", result);
   return result;
 };
 

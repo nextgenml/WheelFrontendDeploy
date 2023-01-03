@@ -24,7 +24,7 @@ const createChore = async (data) => {
 
 const markChoreAsCompleted = async (data) => {
   if (!data.walletId) return;
-  console.log("markChoreAsCompleted", data);
+  // console.log("markChoreAsCompleted", data);
 
   const existsQuery = `select id from chores where wallet_id = ? and campaign_detail_id = ? and valid_to >= ?`;
 
@@ -37,7 +37,6 @@ const markChoreAsCompleted = async (data) => {
   if (existsResults.length) {
     const chore = existsResults[0];
 
-    console.log("chore", chore);
     const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ? where id = ?`;
 
     return await runQueryAsync(query, [

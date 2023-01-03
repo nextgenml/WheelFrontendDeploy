@@ -6,7 +6,7 @@ const areTwoImagesSimilar = async (image1Path, image2Url) => {
   const imageName = image1Path.split("/").at(-1);
 
   const image2Path = `tmp/images/${imageName}`;
-  const res = await downloadImage(image2Url, image2Path);
+  await downloadImage(image2Url, image2Path);
 
   const { equal } = await looksSame(image1Path, image2Path);
 

@@ -2,6 +2,7 @@ const {
   getActiveCampaigns,
   getPostedCampaigns,
   updateLastCheckedDate,
+  getCampaignImages,
 } = require("../../repository/campaignDetails");
 const {
   getActiveHolders,
@@ -18,6 +19,7 @@ const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const schedule = require("node-schedule");
 const { searchTweets } = require("../../utils/mediaClients/twitter");
+const { areImagesMatching } = require("./choresHelper");
 
 const createChores = async () => {
   try {
@@ -64,6 +66,7 @@ const gatherPostsFromMedia = async () => {
     const postedCampaigns = await getPostedCampaigns();
 
     for (const campaign of postedCampaigns) {
+      const campaignImages = await getCampaignImages(campaign.collection_id);
       let searchContentFn = null;
       switch (campaign.media_type) {
         case "twitter":
@@ -71,7 +74,7 @@ const gatherPostsFromMedia = async () => {
       }
 
       if (searchContentFn) {
-        const endTime = moment().subtract(11, "seconds").toISOString();
+        const endTime = moment().subtract(10, "seconds").toISOString();
         const postedUsers = await searchContentFn(
           campaign.content,
           moment(
@@ -88,13 +91,14 @@ const gatherPostsFromMedia = async () => {
 
           // console.log("holdersByWalletId", holdersByWalletId);
           for (const user of postedUsers) {
-            await markChoreAsCompleted({
-              walletId: holdersByWalletId[user.username],
-              campaignDetailsId: campaign.id,
-              linkToPost: user.postLink,
-              mediaPostId: user.postId,
-              createdAt: user.createdAt,
-            });
+            if (await areImagesMatching(campaignImages, user))
+              await markChoreAsCompleted({
+                walletId: holdersByWalletId[user.username],
+                campaignDetailsId: campaign.id,
+                linkToPost: user.postLink,
+                mediaPostId: user.postId,
+                createdAt: user.createdAt,
+              });
           }
         }
 
@@ -111,7 +115,7 @@ const rule = new schedule.RecurrenceRule();
 const [hours, minutes] = config.CREATE_POST_CHORES_AT;
 rule.hour = hours;
 rule.minute = minutes;
-
+gatherPostsFromMedia();
 schedule.scheduleJob(rule, async () => {
   await createChores();
   await gatherPostsFromMedia();
