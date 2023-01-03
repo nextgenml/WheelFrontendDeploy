@@ -116,3 +116,8 @@
 2023-01-03T16:26:38.078Z - [INFO] - completed gatherPostsFromMedia process
 2023-01-03T16:27:14.854Z - [INFO] - completed gatherPostsFromMedia process
 2023-01-03T16:27:20.744Z - [INFO] - completed gatherPostsFromMedia process
+2023-01-03T17:22:12.162Z - [ERROR] - error in createOtherChores: TypeError: actions is not iterable
+2023-01-03T17:22:33.158Z - [INFO] - completed createOtherChores
+2023-01-03T17:25:47.871Z - [INFO] - completed createOtherChores
+2023-01-03T17:26:42.217Z - [INFO] - completed createOtherChores
+2023-01-03T17:27:06.789Z - [INFO] - completed createOtherChores

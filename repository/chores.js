@@ -1,11 +1,28 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 
 const getPreviousCampaignIds = async (walletId) => {
-  const query = `select campaign_detail_id from chores where wallet_id = ? and chore_type = 'post'`;
+  const query = `select distinct campaign_detail_id from chores where wallet_id = ? and chore_type = 'post'`;
 
   const results = await runQueryAsync(query, [walletId]);
 
   return results.map((r) => r.campaign_detail_id);
+};
+
+const getPrevOtherUserPostIds = async (walletId) => {
+  const query = `select distinct ref_chore_id from chores where wallet_id = ? and chore_type != 'post'`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results.map((r) => r.ref_chore_id);
+};
+
+const otherUserPosts = async (prevIds) => {
+  const query = `select c.* from chores c
+                inner join campaign_details cd on c.campaign_detail_id = cd.id 
+                where cd.start_time <= now() and cd.end_time >= now() 
+                and cd.is_active = 1 and cd.content_type = 'text' and c.id not in (?)`;
+
+  return await runQueryAsync(query, [prevIds]);
 };
 
 const createChore = async (data) => {
@@ -51,4 +68,6 @@ module.exports = {
   getPreviousCampaignIds,
   createChore,
   markChoreAsCompleted,
+  getPrevOtherUserPostIds,
+  otherUserPosts,
 };
