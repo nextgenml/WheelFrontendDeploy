@@ -1,4 +1,4 @@
-const { areTwoImagesSimilar } = require("../../utils/imageComparison");
+const { areTwoImagesSimilar } = require("./imageComparison");
 
 const areImagesMatching = async (campaignImages, user) => {
   let matchingCount = 0;

@@ -19,7 +19,7 @@ const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const schedule = require("node-schedule");
 const { searchTweets } = require("../../utils/mediaClients/twitter");
-const { areImagesMatching } = require("./choresHelper");
+const { areImagesMatching } = require("../../utils/choresHelper");
 
 const createPostChores = async () => {
   try {
