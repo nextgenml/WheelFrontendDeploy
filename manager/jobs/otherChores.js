@@ -60,8 +60,8 @@ const createOtherChores = async () => {
 };
 
 const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
-  postedCampaigns = await getPostedCampaigns();
-  endTime = moment().subtract(10, "seconds").toISOString();
+  // postedCampaigns = await getPostedCampaigns();
+  // endTime = moment().subtract(10, "seconds").toISOString();
 
   try {
     for (const campaign of postedCampaigns) {
@@ -114,7 +114,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
 };
 
 // createOtherChores();
-checkIfOtherChoresCompleted();
+// checkIfOtherChoresCompleted();
 module.exports = {
   createOtherChores,
   checkIfOtherChoresCompleted,

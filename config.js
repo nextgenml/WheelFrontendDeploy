@@ -41,7 +41,7 @@ const commonConfig = {
   COST_PER_CHORE: 1,
   POST_CHORE_VALID_DAYS: 1,
   OTHER_CHORE_VALID_DAYS: 3,
-  CREATE_POST_CHORES_AT: [23, 26],
+  CREATE_POST_CHORES_AT: [0, 56],
 };
 
 module.exports =

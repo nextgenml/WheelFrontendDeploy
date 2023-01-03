@@ -149,3 +149,9 @@
 2023-01-03T18:44:22.966Z - [INFO] - completed checkIfPostsChoreCompleted process
 2023-01-03T19:01:02.546Z - [INFO] - completed checkIfPostsChoreCompleted process
 2023-01-03T19:07:56.607Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-03T19:25:39.272Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-03T19:26:00.023Z - [INFO] - started chores process
+2023-01-03T19:26:00.035Z - [INFO] - completed creating chores
+2023-01-03T19:26:00.714Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-03T19:26:00.728Z - [INFO] - completed createOtherChores
+2023-01-03T19:26:20.103Z - [INFO] - completed checkIfPostsChoreCompleted process

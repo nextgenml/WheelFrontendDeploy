@@ -118,6 +118,7 @@ rule.hour = hours;
 rule.minute = minutes;
 
 schedule.scheduleJob(rule, async () => {
+  logger.info("started chores process");
   await createPostChores();
 
   const endTime = moment().subtract(10, "seconds").toISOString();
