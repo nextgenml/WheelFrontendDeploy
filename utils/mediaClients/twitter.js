@@ -36,7 +36,7 @@ const searchTweets = async (search, start_time, end_time) => {
   return result;
 };
 
-const tweetLikedUsers = async (postId) => {
+const tweetLikedUsers = async (postId, start_time, end_time) => {
   const users = await readOnlyClient.v2.tweetLikedBy(postId, {
     asPaginator: true,
     max_results: 100,
@@ -44,12 +44,14 @@ const tweetLikedUsers = async (postId) => {
 
   const result = [];
   for await (const user of users) {
-    result.push(user.username);
+    result.push({
+      username: user.username,
+    });
   }
   return result;
 };
 
-const retweetedUsers = async (postId) => {
+const retweetedUsers = async (postId, start_time, end_time) => {
   const users = await readOnlyClient.v2.tweetRetweetedBy(postId, {
     asPaginator: true,
     max_results: 100,
@@ -57,17 +59,21 @@ const retweetedUsers = async (postId) => {
 
   const result = [];
   for await (const user of users) {
-    result.push(user.username);
+    result.push({
+      username: user.username,
+    });
   }
   return result;
 };
 
-const tweetRepliedUsers = async (postId) => {
+const tweetRepliedUsers = async (postId, start_time, end_time) => {
   const jsTweets = await readOnlyClient.v2.search(`conversation_id:${postId}`, {
-    "tweet.fields": ["conversation_id"],
+    "tweet.fields": ["conversation_id", "created_at"],
     expansions: ["author_id"],
     "user.fields": ["location", "name"],
     max_results: 100,
+    start_time,
+    end_time,
   });
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
@@ -75,7 +81,11 @@ const tweetRepliedUsers = async (postId) => {
   const result = [];
   for await (const tweet of jsTweets) {
     const data = includes.author(tweet);
-    result.push(data.username);
+    // console.log("result", data, tweet);
+    result.push({
+      username: data.username,
+      createdAt: tweet.created_at,
+    });
   }
   // console.log("result", result);
   return result;
@@ -96,7 +106,7 @@ const getTwitterActionFunc = (action) => {
 // );
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
-// tweetRepliedUsers("1607679115536072704");
+tweetRepliedUsers("1607679115536072704");
 
 module.exports = {
   searchTweets,

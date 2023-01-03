@@ -147,3 +147,5 @@
 2023-01-03T18:43:12.432Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
 2023-01-03T18:43:34.424Z - [INFO] - error in checkIfPostsChoreCompleted process: Error: Request failed with code 400 - Invalid Request: One or more parameters to your request was invalid. (see https://api.twitter.com/2/problems/invalid-request)
 2023-01-03T18:44:22.966Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-03T19:01:02.546Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-03T19:07:56.607Z - [INFO] - completed checkIfPostsChoreCompleted process

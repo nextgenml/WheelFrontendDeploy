@@ -59,14 +59,14 @@ const createOtherChores = async () => {
   }
 };
 
-const checkIfOtherChoresCompleted = async (postedCampaigns) => {
+const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
   postedCampaigns = await getPostedCampaigns();
+  endTime = moment().subtract(10, "seconds").toISOString();
 
   try {
     for (const campaign of postedCampaigns) {
       const actions = getMediaActions(campaign.media_type);
       for (const action of actions) {
-        console.log("action", action);
         let searchContentFn = null;
 
         switch (campaign.media_type) {
@@ -79,9 +79,15 @@ const checkIfOtherChoresCompleted = async (postedCampaigns) => {
           const mediaPostIds = await getMediaPostIds(campaign.id);
 
           for (const row of mediaPostIds) {
-            console.log("media_post_id", row);
-            const mediaUsers = await searchContentFn(row.media_post_id);
-
+            // console.log("media_post_id", row);
+            const mediaUsers = await searchContentFn(
+              row.media_post_id,
+              moment(
+                campaign.last_checked_date || campaign.start_time
+              ).toISOString(),
+              endTime
+            );
+            // console.log(action, mediaUsers);
             if (mediaUsers.length) {
               const holdersByWalletId = await getHoldersByWalletId(
                 mediaUsers.map((u) => u.username)
@@ -91,7 +97,8 @@ const checkIfOtherChoresCompleted = async (postedCampaigns) => {
                 await markChoreAsCompleted({
                   walletId: holdersByWalletId[user.username],
                   campaignDetailsId: campaign.id,
-                  createdAt: user.createdAt,
+                  createdAt:
+                    user.createdAt || moment().subtract(1, "day").format(),
                   choreType: action,
                 });
               }
