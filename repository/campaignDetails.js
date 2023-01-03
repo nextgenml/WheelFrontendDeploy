@@ -11,7 +11,7 @@ const getActiveCampaigns = async () => {
 };
 
 const getPostedCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, cd.last_checked_date, cd.start_time, cd.content, cd.collection_id from campaign_details cd 
+  const query = `select cd.* from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where (cd.last_checked_date is null or cd.end_time > cd.last_checked_date) 
                 and c.is_active = 1 and cd.is_active = 1 and cd.content_type = 'text'`;

@@ -2,13 +2,18 @@ const { getMediaActions } = require("../../constants/mediaActions");
 const {
   getPrevOtherUserPostIds,
   otherUserPosts,
+  markChoreAsCompleted,
 } = require("../../repository/chores");
-const { getActiveHolders } = require("../../repository/holder");
+const {
+  getActiveHolders,
+  getHoldersByWalletId,
+} = require("../../repository/holder");
 const config = require("../../config.js");
 const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
+const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
 
 const createOtherChores = async () => {
   try {
@@ -51,7 +56,48 @@ const createOtherChores = async () => {
     logger.error(`error in createOtherChores: ${error}`);
   }
 };
-createOtherChores();
+
+const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
+  try {
+    for (const campaign of postedCampaigns) {
+      const actions = getMediaActions(campaign.media_type);
+      for (const action of actions) {
+        let searchContentFn = null;
+
+        switch (campaign.media_type) {
+          case "twitter":
+            searchContentFn = getTwitterActionFunc(action);
+            break;
+        }
+
+        if (searchContentFn) {
+          const mediaUsers = await searchContentFn(campaign.ref_chore_id);
+
+          // console.log("postedUsers", postedUsers);
+          if (mediaUsers.length) {
+            const holdersByWalletId = await getHoldersByWalletId(
+              mediaUsers.map((u) => u.username)
+            );
+
+            for (const user of mediaUsers) {
+              await markChoreAsCompleted({
+                walletId: holdersByWalletId[user.username],
+                campaignDetailsId: campaign.id,
+                createdAt: user.createdAt,
+              });
+            }
+          }
+        }
+      }
+    }
+    logger.info("completed checkIfPostsChoreCompleted process");
+  } catch (error) {
+    logger.info(`error in checkIfPostsChoreCompleted process: ${error}`);
+  }
+};
+
+// createOtherChores();
 module.exports = {
   createOtherChores,
+  checkIfOtherChoresCompleted,
 };

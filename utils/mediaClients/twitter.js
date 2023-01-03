@@ -5,6 +5,7 @@ let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 
 const searchTweets = async (search, start_time, end_time) => {
+  // TODO check for pagination
   const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
     "tweet.fields": ["conversation_id", "created_at", "attachments"],
     expansions: ["author_id", "attachments.media_keys"],
@@ -35,61 +36,72 @@ const searchTweets = async (search, start_time, end_time) => {
   return result;
 };
 
-const tweetLikedUsers = async () => {
-  const jsTweets = await readOnlyClient.v2.tweetLikedBy("1607679115536072704", {
+const tweetLikedUsers = async (postId) => {
+  const users = await readOnlyClient.v2.tweetLikedBy(postId, {
     asPaginator: true,
     max_results: 100,
   });
 
-  for await (const tweet of jsTweets) {
-    console.log(tweet);
+  const result = [];
+  for await (const user of users) {
+    result.push(user.username);
   }
+  return result;
 };
 
-const retweetedUsers = async () => {
-  const jsTweets = await readOnlyClient.v2.tweetRetweetedBy(
-    "1607679115536072704",
-    {
-      asPaginator: true,
-      max_results: 100,
-    }
-  );
+const retweetedUsers = async (postId) => {
+  const users = await readOnlyClient.v2.tweetRetweetedBy(postId, {
+    asPaginator: true,
+    max_results: 100,
+  });
 
-  let count = 0;
-  for await (const tweet of jsTweets) {
-    console.log(tweet);
+  const result = [];
+  for await (const user of users) {
+    result.push(user.username);
   }
-  console.log("count", count);
+  return result;
 };
 
-const tweetReplies = async () => {
-  const jsTweets = await readOnlyClient.v2.search(
-    "conversation_id:1607679115536072704",
-    {
-      "tweet.fields": ["conversation_id", "attachments"],
-      expansions: ["author_id", "attachments"],
-      "user.fields": ["location", "name"],
-      max_results: 100,
-    }
-  );
+const tweetRepliedUsers = async (postId) => {
+  const jsTweets = await readOnlyClient.v2.search(`conversation_id:${postId}`, {
+    "tweet.fields": ["conversation_id"],
+    expansions: ["author_id"],
+    "user.fields": ["location", "name"],
+    max_results: 100,
+  });
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
 
+  const result = [];
   for await (const tweet of jsTweets) {
     const data = includes.author(tweet);
-    console.log(tweet, data);
+    result.push(data.username);
+  }
+  // console.log("result", result);
+  return result;
+};
+
+const getTwitterActionFunc = (action) => {
+  switch (action) {
+    case "like":
+      return tweetLikedUsers;
+    case "retweet":
+      return retweetedUsers;
+    case "comment":
+      return tweetRepliedUsers;
   }
 };
 // searchTweets(
 //   "One of the goals for me this year is to travel to 5 countries.And I know with God, it is popsible."
 // );
 // tweetLikedUsers();
-// retweetedUsers();
-// tweetReplies();
+// retweetedUsers("1607679115536072704");
+// tweetRepliedUsers("1607679115536072704");
 
 module.exports = {
   searchTweets,
   tweetLikedUsers,
   retweetedUsers,
-  tweetReplies,
+  tweetRepliedUsers,
+  getTwitterActionFunc,
 };

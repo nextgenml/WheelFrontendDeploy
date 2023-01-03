@@ -58,13 +58,18 @@ const markChoreAsCompleted = async (data) => {
   if (existsResults.length) {
     const chore = existsResults[0];
 
-    const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ? where id = ?`;
+    if (chore.chore_type === "post") {
+      const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ? where id = ?`;
+      return await runQueryAsync(query, [
+        data.linkToPost,
+        data.mediaPostId,
+        chore.id,
+      ]);
+    } else {
+      const query = `update chores set is_completed = 1 where id = ?`;
 
-    return await runQueryAsync(query, [
-      data.linkToPost,
-      data.mediaPostId,
-      chore.id,
-    ]);
+      return await runQueryAsync(query, [chore.id]);
+    }
   }
 };
 

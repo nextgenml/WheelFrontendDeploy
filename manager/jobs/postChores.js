@@ -20,6 +20,10 @@ const logger = require("../../logger");
 const schedule = require("node-schedule");
 const { searchTweets } = require("../../utils/mediaClients/twitter");
 const { areImagesMatching } = require("../../utils/choresHelper");
+const {
+  createOtherChores,
+  checkIfOtherChoresCompleted,
+} = require("./otherChores");
 
 const createPostChores = async () => {
   try {
@@ -61,12 +65,11 @@ const createPostChores = async () => {
   }
 };
 
-const gatherPostsFromMedia = async () => {
+const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
   try {
-    const postedCampaigns = await getPostedCampaigns();
-
     for (const campaign of postedCampaigns) {
       const campaignImages = await getCampaignImages(campaign.collection_id);
+
       let searchContentFn = null;
       switch (campaign.media_type) {
         case "twitter":
@@ -74,7 +77,6 @@ const gatherPostsFromMedia = async () => {
       }
 
       if (searchContentFn) {
-        const endTime = moment().subtract(10, "seconds").toISOString();
         const postedUsers = await searchContentFn(
           campaign.content,
           moment(
@@ -101,13 +103,11 @@ const gatherPostsFromMedia = async () => {
               });
           }
         }
-
-        await updateLastCheckedDate(campaign.id, endTime);
       }
     }
-    logger.info("completed gatherPostsFromMedia process");
+    logger.info("completed checkIfPostsChoreCompleted process");
   } catch (error) {
-    logger.info(`error in gatherPostsFromMedia process: ${error}`);
+    logger.info(`error in checkIfPostsChoreCompleted process: ${error}`);
   }
 };
 
@@ -118,7 +118,18 @@ rule.minute = minutes;
 
 schedule.scheduleJob(rule, async () => {
   await createPostChores();
-  await gatherPostsFromMedia();
+
+  const endTime = moment().subtract(10, "seconds").toISOString();
+  const postedCampaigns = await getPostedCampaigns();
+  await checkIfPostsChoreCompleted(postedCampaigns, endTime);
+
+  for (const campaign of postedCampaigns) {
+    await updateLastCheckedDate(campaign.id, endTime);
+  }
+
+  await checkIfOtherChoresCompleted(postedCampaigns, endTime);
+
+  await createOtherChores();
 });
 
 process.on("SIGINT", () => {
