@@ -16,7 +16,7 @@ const createOtherChores = async () => {
 
     for (const holder of holders) {
       const prevPostIds = await getPrevOtherUserPostIds(holder.wallet_id);
-      console.log("prevPostIds", prevPostIds);
+      // console.log("prevPostIds", prevPostIds);
       const userPosts = await otherUserPosts([...prevPostIds, -1]);
 
       const noOfPosts = Math.min(config.NO_OF_POSTS_PER_DAY, userPosts.length);
@@ -25,6 +25,7 @@ const createOtherChores = async () => {
 
       for (const post of randomPosts) {
         const actions = getMediaActions(post.media_type);
+        // console.log("post", post.id);
 
         for (const action of actions) {
           await createChore({
@@ -39,6 +40,8 @@ const createOtherChores = async () => {
               .format(),
             value: config.COST_PER_CHORE,
             ref_chore_id: post.id,
+            linkToPost: post.link_to_post,
+            mediaPostId: post.media_post_id,
           });
         }
       }

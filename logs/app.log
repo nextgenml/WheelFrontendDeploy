@@ -121,3 +121,20 @@
 2023-01-03T17:25:47.871Z - [INFO] - completed createOtherChores
 2023-01-03T17:26:42.217Z - [INFO] - completed createOtherChores
 2023-01-03T17:27:06.789Z - [INFO] - completed createOtherChores
+2023-01-03T17:28:00.235Z - [INFO] - completed createOtherChores
+2023-01-03T17:28:24.211Z - [INFO] - completed createOtherChores
+2023-01-03T17:28:48.314Z - [INFO] - completed createOtherChores
+2023-01-03T17:29:09.992Z - [INFO] - completed createOtherChores
+2023-01-03T17:29:35.679Z - [INFO] - completed createOtherChores
+2023-01-03T17:30:30.058Z - [INFO] - completed createOtherChores
+2023-01-03T17:30:40.353Z - [INFO] - completed createOtherChores
+2023-01-03T17:30:46.699Z - [INFO] - completed createOtherChores
+2023-01-03T17:31:06.183Z - [INFO] - completed createOtherChores
+2023-01-03T17:32:58.686Z - [ERROR] - error in createOtherChores: Error: ER_BAD_FIELD_ERROR: Unknown column 'cd.chore_type' in 'where clause'
+2023-01-03T17:33:29.550Z - [INFO] - completed createOtherChores
+2023-01-03T17:33:44.606Z - [INFO] - completed createOtherChores
+2023-01-03T17:33:50.761Z - [INFO] - completed createOtherChores
+2023-01-03T17:36:16.256Z - [INFO] - completed createOtherChores
+2023-01-03T17:36:26.478Z - [INFO] - completed createOtherChores
+2023-01-03T17:37:12.688Z - [INFO] - completed createOtherChores
+2023-01-03T17:37:33.691Z - [INFO] - completed createOtherChores

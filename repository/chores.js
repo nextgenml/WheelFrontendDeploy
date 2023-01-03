@@ -20,13 +20,14 @@ const otherUserPosts = async (prevIds) => {
   const query = `select c.* from chores c
                 inner join campaign_details cd on c.campaign_detail_id = cd.id 
                 where cd.start_time <= now() and cd.end_time >= now() 
-                and cd.is_active = 1 and cd.content_type = 'text' and c.id not in (?)`;
+                and cd.is_active = 1 and cd.content_type = 'text' and c.chore_type = 'post' 
+                and c.id not in (?) and c.media_post_id is not null`;
 
   return await runQueryAsync(query, [prevIds]);
 };
 
 const createChore = async (data) => {
-  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value) values(?, ?, ?, ?, ?, ? ,?);`;
+  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
@@ -36,6 +37,9 @@ const createChore = async (data) => {
     data.validFrom,
     data.validTo,
     data.value,
+    data.ref_chore_id || "",
+    data.linkToPost || "",
+    data.mediaPostId || "",
   ]);
 };
 
