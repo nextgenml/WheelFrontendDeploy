@@ -106,7 +106,7 @@ const getTwitterActionFunc = (action) => {
 // );
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
-tweetRepliedUsers("1607679115536072704");
+// tweetRepliedUsers("1607679115536072704");
 
 module.exports = {
   searchTweets,
