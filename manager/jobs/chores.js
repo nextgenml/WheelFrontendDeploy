@@ -86,7 +86,7 @@ const gatherPostsFromMedia = async () => {
             postedUsers.map((u) => u.username)
           );
 
-          console.log("holdersByWalletId", holdersByWalletId);
+          // console.log("holdersByWalletId", holdersByWalletId);
           for (const user of postedUsers) {
             await markChoreAsCompleted({
               walletId: holdersByWalletId[user.username],
