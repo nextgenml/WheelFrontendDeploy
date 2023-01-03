@@ -21,7 +21,7 @@ const schedule = require("node-schedule");
 const { searchTweets } = require("../../utils/mediaClients/twitter");
 const { areImagesMatching } = require("./choresHelper");
 
-const createChores = async () => {
+const createPostChores = async () => {
   try {
     const campaigns = await getActiveCampaigns();
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
@@ -117,7 +117,7 @@ rule.hour = hours;
 rule.minute = minutes;
 
 schedule.scheduleJob(rule, async () => {
-  await createChores();
+  await createPostChores();
   await gatherPostsFromMedia();
 });
 
