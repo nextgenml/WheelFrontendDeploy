@@ -29,6 +29,7 @@ const searchTweets = async (search, start_time, end_time) => {
       postLink: `https://twitter.com/${author.username}/status/${tweet.id}`,
       createdAt: tweet.created_at,
       imageUrls: medias.filter((x) => x.type == "photo").map((x) => x.url),
+      followLink: `https://twitter.com/${author.username}`,
     });
   }
 
