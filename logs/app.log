@@ -155,3 +155,18 @@
 2023-01-03T19:26:00.714Z - [INFO] - completed checkIfPostsChoreCompleted process
 2023-01-03T19:26:00.728Z - [INFO] - completed createOtherChores
 2023-01-03T19:26:20.103Z - [INFO] - completed checkIfPostsChoreCompleted process
+2023-01-05T17:36:06.446Z - [ERROR] - error in createFollowChores: ReferenceError: userPosts is not defined
+2023-01-05T17:36:18.680Z - [ERROR] - error in createFollowChores: Error: ER_BAD_NULL_ERROR: Column 'campaign_detail_id' cannot be null
+2023-01-05T17:40:30.389Z - [ERROR] - error in createFollowChores: Error: ER_TRUNCATED_WRONG_VALUE_FOR_FIELD: Incorrect integer value: '' for column 'ref_chore_id' at row 1
+2023-01-05T17:41:03.460Z - [INFO] - completed createFollowChores
+2023-01-05T17:41:37.533Z - [INFO] - completed createFollowChores
+2023-01-05T17:43:04.950Z - [ERROR] - error in createFollowChores: Error: ER_WRONG_VALUE_COUNT_ON_ROW: Column count doesn't match value count at row 1
+2023-01-05T17:43:18.117Z - [INFO] - completed createFollowChores
+2023-01-05T17:43:29.155Z - [INFO] - completed createFollowChores
+2023-01-05T17:44:19.458Z - [INFO] - completed createFollowChores
+2023-01-05T17:44:24.455Z - [INFO] - completed createFollowChores
+2023-01-05T17:45:03.621Z - [INFO] - completed createFollowChores
+2023-01-05T17:45:05.478Z - [INFO] - completed createFollowChores
+2023-01-05T17:45:12.132Z - [INFO] - completed createFollowChores
+2023-01-05T17:45:22.200Z - [INFO] - completed createFollowChores
+2023-01-05T17:45:24.413Z - [INFO] - completed createFollowChores

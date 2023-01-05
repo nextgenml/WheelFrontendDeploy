@@ -101,6 +101,7 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
                 mediaPostId: user.postId,
                 createdAt: user.createdAt,
                 choreType: "post",
+                followLink: user.followLink,
               });
           }
         }

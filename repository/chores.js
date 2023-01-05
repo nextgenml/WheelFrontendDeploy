@@ -26,8 +26,22 @@ const otherUserPosts = async (prevIds) => {
   return await runQueryAsync(query, [prevIds]);
 };
 
+const nextFollowUsers = async (walletId, mediaType) => {
+  const query = `select distinct wallet_id, follow_link from chores 
+                  where wallet_id not in 
+                  (
+                  select distinct follow_user from chores where wallet_id = ? 
+                  and chore_type = 'follow' and media_type = ? and follow_user is not null
+                  )
+                  and chore_type = 'post' and media_type = ? 
+                  and wallet_id != ?;
+                `;
+
+  return await runQueryAsync(query, [walletId, mediaType, mediaType, walletId]);
+};
+
 const createChore = async (data) => {
-  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
+  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
@@ -37,9 +51,11 @@ const createChore = async (data) => {
     data.validFrom,
     data.validTo,
     data.value,
-    data.ref_chore_id || "",
-    data.linkToPost || "",
-    data.mediaPostId || "",
+    data.ref_chore_id || null,
+    data.linkToPost || null,
+    data.mediaPostId || null,
+    data.follow_link || null,
+    data.follow_user || null,
   ]);
 };
 
@@ -60,10 +76,11 @@ const markChoreAsCompleted = async (data) => {
     const chore = existsResults[0];
 
     if (chore.chore_type === "post") {
-      const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ? where id = ?`;
+      const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ?, follow_link = ? where id = ?`;
       return await runQueryAsync(query, [
         data.linkToPost,
         data.mediaPostId,
+        data.followLink,
         chore.id,
       ]);
     } else {
@@ -87,4 +104,5 @@ module.exports = {
   getPrevOtherUserPostIds,
   otherUserPosts,
   getMediaPostIds,
+  nextFollowUsers,
 };
