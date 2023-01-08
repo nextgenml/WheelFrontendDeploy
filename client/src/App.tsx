@@ -7,12 +7,11 @@ import Tokenomics from "./components/Tokenomics/Tokenomics";
 import BuyNextGen from "./components/Buy NextGen/BuyNextGen";
 import Community from "./components/Community/Community";
 import Footer from "./components/Footer/Footer";
-import Utilities from "./components/Utilities/Utilities";
-import Giveaway from "./components/Giveaway/Giveaway";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
 import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
 import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
+import SocialSharing from "./components/SocialSharing/SocialSharing";
 function App() {
   return (
     <>
@@ -34,6 +33,7 @@ function App() {
         />
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
+        <Route path="/social-sharing" element={<SocialSharing />} />
       </Routes>
       <Footer />
     </>
