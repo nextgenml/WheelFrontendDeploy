@@ -1,3 +1,19 @@
-.test {
-  color: aquamarine;
+.main {
+  padding: 16px;
+  color: white;
+}
+.topBar {
+  display: flex;
+}
+.topBar > div {
+  margin-right: 20px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+.navList svg {
+  color: white;
+}
+.navList span {
+  font-size: 1.2rem;
 }
