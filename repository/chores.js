@@ -91,6 +91,14 @@ const markChoreAsCompleted = async (data) => {
   }
 };
 
+const markFollowChoreAsCompleted = async (data) => {
+  if (!data.walletId || !data.followUser) return;
+  console.log("markChoreAsCompleted", data);
+
+  const query = `update chores set is_completed = 1 where wallet_id = ? and follow_user = ? and chore_type = 'follow'`;
+  return await runQueryAsync(query, [data.walletId, data.followUser]);
+};
+
 const getMediaPostIds = async (campaignId) => {
   const query = `select distinct media_post_id from chores where campaign_detail_id = ? and is_completed = 0 and chore_type != 'post' and valid_to >= NOW() - INTERVAL 1 DAY`;
 
@@ -105,4 +113,5 @@ module.exports = {
   otherUserPosts,
   getMediaPostIds,
   nextFollowUsers,
+  markFollowChoreAsCompleted,
 };

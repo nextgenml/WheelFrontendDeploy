@@ -37,10 +37,27 @@ const getHoldersByWalletId = async (userNames) => {
   return result;
 };
 
+const updateMediaIds = async (users) => {
+  for (const user of users) {
+    const records = await runQueryAsync(
+      `select * from holders where alias = ? limit 1;`,
+      [user.username]
+    );
+    const holder = records[0];
+    if (holder && holder.twitter_id != user.userId) {
+      await runQueryAsync(`update holders set twitter_id =  ? where id = ?;`, [
+        user.username,
+        holder.id,
+      ]);
+    }
+  }
+};
+
 module.exports = {
   createHolder,
   getActiveHolders,
   getHoldersByWalletId,
+  updateMediaIds,
 };
 
 const getUniqueName = async (walletId) => {

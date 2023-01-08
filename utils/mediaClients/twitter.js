@@ -30,6 +30,7 @@ const searchTweets = async (search, start_time, end_time) => {
       createdAt: tweet.created_at,
       imageUrls: medias.filter((x) => x.type == "photo").map((x) => x.url),
       followLink: `https://twitter.com/${author.username}`,
+      userId: author.id,
     });
   }
 
@@ -102,17 +103,34 @@ const getTwitterActionFunc = (action) => {
       return tweetRepliedUsers;
   }
 };
+
+const followingUsers = async (userId) => {
+  const users = await readOnlyClient.v2.following(userId, {
+    asPaginator: true,
+    max_results: 100,
+  });
+
+  const result = [];
+  for await (const user of users) {
+    result.push({
+      username: user.username,
+    });
+  }
+  return result;
+};
+
 // searchTweets(
 //   "One of the goals for me this year is to travel to 5 countries.And I know with God, it is popsible."
 // );
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
 // tweetRepliedUsers("1607679115536072704");
-
+// followingUsers()
 module.exports = {
   searchTweets,
   tweetLikedUsers,
   retweetedUsers,
   tweetRepliedUsers,
   getTwitterActionFunc,
+  followingUsers,
 };

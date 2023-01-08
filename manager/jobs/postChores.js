@@ -7,6 +7,7 @@ const {
 const {
   getActiveHolders,
   getHoldersByWalletId,
+  updateMediaIds,
 } = require("../../repository/holder");
 const config = require("../../config.js");
 const {
@@ -91,6 +92,7 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
             postedUsers.map((u) => u.username)
           );
 
+          await updateMediaIds(postedUsers);
           // console.log("holdersByWalletId", holdersByWalletId);
           for (const user of postedUsers) {
             if (await areImagesMatching(campaignImages, user))

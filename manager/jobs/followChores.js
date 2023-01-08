@@ -1,10 +1,17 @@
-const { nextFollowUsers } = require("../../repository/chores");
-const { getActiveHolders } = require("../../repository/holder");
+const {
+  nextFollowUsers,
+  markFollowChoreAsCompleted,
+} = require("../../repository/chores");
+const {
+  getActiveHolders,
+  getHoldersByWalletId,
+} = require("../../repository/holder");
 const config = require("../../config.js");
 const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
+const { followingUsers } = require("../../utils/mediaClients/twitter");
 
 const createFollowChores = async (activeCampaignId) => {
   try {
@@ -43,9 +50,29 @@ const createFollowChores = async (activeCampaignId) => {
   }
 };
 
-const checkIfFollowComplete = async () => {};
+const checkIfFollowComplete = async () => {
+  const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 
-createFollowChores();
+  for (const holder of holders) {
+    if (holder.twitter_id) {
+      const followings = await followingUsers(holder.twitter_id);
+
+      const holdersByWalletId = await getHoldersByWalletId(
+        followings.map((u) => u.username)
+      );
+
+      for (const user of followings) {
+        await markFollowChoreAsCompleted({
+          walletId: holder.wallet_id,
+          followUser: holdersByWalletId[user.username],
+        });
+      }
+    }
+  }
+};
+
+checkIfFollowComplete();
 module.exports = {
   createFollowChores,
+  checkIfFollowComplete,
 };
