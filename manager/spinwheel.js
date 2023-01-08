@@ -2,6 +2,7 @@ const config = require("../config.js");
 const {
   createParticipant,
   markAsWinner,
+  markWinnerAsPaid,
 } = require("../repository/spinwheel.js");
 
 const { nextSpinDetails } = require("./scheduledSpins.js");
@@ -110,7 +111,7 @@ const createParticipants = async (nextSpin) => {
       nextSpin.spinNo += 1;
       page += currParticipants.length > size ? 2 : 1;
     }
-    await processPrizes(winners);
+    await processPrizes(winners, async (id) => await markWinnerAsPaid(id));
     logger.info(`spin completed for a type: ${nextSpin.type}`);
   } catch (error) {
     logger.error(

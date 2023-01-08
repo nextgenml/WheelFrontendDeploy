@@ -25,6 +25,8 @@ const {
   createOtherChores,
   checkIfOtherChoresCompleted,
 } = require("./otherChores");
+const { createFollowChores, checkIfFollowComplete } = require("./followChores");
+const { transferRewards } = require("./tranferRewards");
 
 const createPostChores = async () => {
   try {
@@ -131,6 +133,10 @@ schedule.scheduleJob(rule, async () => {
   await createOtherChores();
   await checkIfOtherChoresCompleted(postedCampaigns, endTime);
 
+  await createFollowChores();
+  await checkIfFollowComplete();
+
+  await transferRewards();
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
   }

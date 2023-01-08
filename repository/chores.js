@@ -105,6 +105,18 @@ const getMediaPostIds = async (campaignId) => {
   return await runQueryAsync(query, [campaignId]);
 };
 
+const unPaidChores = async () => {
+  const query = `select wallet_id, sum(value) as value, GROUP_CONCAT(id) as ids from chores where is_completed = 1 and is_paid != 1 group by wallet_id;`;
+
+  return await runQueryAsync(query, []);
+};
+
+const markChoresAsPaid = async (ids) => {
+  const query = `update chores set is_paid = 1 where id in (?);`;
+
+  return await runQueryAsync(query, [ids]);
+};
+
 module.exports = {
   getPreviousCampaignIds,
   createChore,
@@ -114,4 +126,6 @@ module.exports = {
   getMediaPostIds,
   nextFollowUsers,
   markFollowChoreAsCompleted,
+  unPaidChores,
+  markChoresAsPaid,
 };
