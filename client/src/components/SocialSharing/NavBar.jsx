@@ -12,48 +12,51 @@ import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import styles from "./SocialSharing.module.css";
+import { useState } from "react";
 
 const NavBar = () => {
+  const [selected, setSelected] = useState("New");
+  const navItems = [
+    {
+      text: "New",
+      icon: <StarOutlinedIcon />,
+    },
+    {
+      text: "Old",
+      icon: <KeyOutlinedIcon />,
+    },
+    {
+      text: "Like",
+      icon: <FavoriteBorderOutlinedIcon />,
+    },
+    {
+      text: "Retweet",
+      icon: <ContentCopyIcon />,
+    },
+    {
+      text: "Comment",
+      icon: <ModeCommentOutlinedIcon />,
+    },
+    {
+      text: "Follow",
+      icon: <AddBoxIcon />,
+    },
+  ];
   return (
     <div>
       <List className={styles.navList}>
-        <ListItemButton>
-          <ListItemIcon>
-            <StarOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="New" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <KeyOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="Old" />
-        </ListItemButton>
-        <Divider />
-        <ListItemButton>
-          <ListItemIcon>
-            <FavoriteBorderOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="Like" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <ContentCopyIcon />
-          </ListItemIcon>
-          <ListItemText primary="Retweet" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <ModeCommentOutlinedIcon />
-          </ListItemIcon>
-          <ListItemText primary="Comment" />
-        </ListItemButton>
-        <ListItemButton>
-          <ListItemIcon>
-            <AddBoxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Follow" />
-        </ListItemButton>
+        {navItems.map((item) => {
+          return (
+            <ListItemButton
+              key={item.text}
+              onClick={() => setSelected(item.text)}
+              className={selected === item.text ? styles.selectedListItem : ""}
+            >
+              <ListItemIcon>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.text} />
+            </ListItemButton>
+          );
+        })}
       </List>
     </div>
   );

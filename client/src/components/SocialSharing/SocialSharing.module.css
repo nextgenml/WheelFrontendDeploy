@@ -5,8 +5,7 @@
 .topBar {
   display: flex;
 }
-.topBar > div {
-  margin-right: 20px;
+.earnings {
   display: flex;
   justify-items: center;
   align-items: center;
@@ -16,4 +15,10 @@
 }
 .navList span {
   font-size: 1.2rem;
+}
+.earningsText {
+  color: #f4b77c;
+}
+.selectedListItem {
+  background-color: #625858 !important;
 }

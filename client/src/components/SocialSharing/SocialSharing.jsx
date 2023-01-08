@@ -11,19 +11,39 @@ const SocialSharing = () => {
     <div className={styles.main}>
       <Grid className={styles.topBar} container spacing={2}>
         <Grid item md={2} sm={4}>
-          <Typography variant="h6">$121.00</Typography>
+          <div className={styles.earnings}>
+            <Typography variant="h6">$121.00</Typography>
+          </div>
+          <Typography variant="body2" className={styles.earningsText}>
+            Total Earnings
+          </Typography>
         </Grid>
         <Grid item md={2} sm={4}>
-          <Typography variant="h6">$121.00</Typography>
-          <ArrowUpwardIcon color="success" />
+          <div className={styles.earnings}>
+            <Typography variant="h6">$121.00</Typography>
+            <ArrowUpwardIcon color="success" />
+          </div>
+          <Typography variant="body2" className={styles.earningsText}>
+            Today Earnings
+          </Typography>
         </Grid>
         <Grid item md={2} sm={4}>
-          <Typography variant="h6">$121.00</Typography>
-          <RestartAltRoundedIcon color="primary" />
+          <div className={styles.earnings}>
+            <Typography variant="h6">$121.00</Typography>
+            <RestartAltRoundedIcon color="primary" />
+          </div>
+          <Typography variant="body2" className={styles.earningsText}>
+            Today Max Earnings
+          </Typography>
         </Grid>
         <Grid item md={2} sm={4}>
-          <Typography variant="h6">$121.00</Typography>
-          <ArrowDownwardIcon color="error" />
+          <div className={styles.earnings}>
+            <Typography variant="h6">$121.00</Typography>
+            <ArrowDownwardIcon color="error" />
+          </div>
+          <Typography variant="body2" className={styles.earningsText}>
+            Today Lost{" "}
+          </Typography>
         </Grid>
       </Grid>
 
