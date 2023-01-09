@@ -16,9 +16,9 @@ const Content = () => {
   ];
   return (
     <List>
-      {chores.map((chore) => {
+      {chores.map((chore, index) => {
         return (
-          <ListItem>
+          <ListItem key={index}>
             <Card>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">

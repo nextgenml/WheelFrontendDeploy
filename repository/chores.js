@@ -1,5 +1,5 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
-
+const moment = require("moment");
 const getPreviousCampaignIds = async (walletId) => {
   const query = `select distinct campaign_detail_id from chores where wallet_id = ? and chore_type = 'post'`;
 
@@ -117,8 +117,79 @@ const markChoresAsPaid = async (ids) => {
   return await runQueryAsync(query, [ids]);
 };
 
+const getTotalEarnings = async (walletId) => {
+  const query = `select sum(value) as sum from chores where is_paid = 1 and wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results[0].sum || 0;
+};
+const getTodayEarnings = async (walletId) => {
+  const query = `select sum(value) as sum from chores where is_paid = 1 and valid_from >= ? and wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+  ]);
+
+  return results[0].sum || 0;
+};
+const getTodayLost = async (walletId) => {
+  const query = `select sum(value) as sum from chores where is_paid = 0 and valid_from >= ? and wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+  ]);
+
+  return results[0].sum || 0;
+};
+const getTodayTotal = async (walletId) => {
+  const query = `select sum(value) as sum from chores where valid_from >= ? and wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+  ]);
+
+  return results[0].sum || 0;
+};
+const getTodayChoresTotal = async (walletId, mediaType) => {
+  const query = `select sum(value) as sum from chores where valid_from >= ? and wallet_id = ? and media_type = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+    mediaType,
+  ]);
+
+  return results[0].sum || 0;
+};
+const getOldChoresTotal = async (walletId, mediaType) => {
+  const query = `select sum(value) as sum from chores where valid_from < ? and wallet_id = ? and media_type = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+    mediaType,
+  ]);
+
+  return results[0].sum || 0;
+};
+
+const getTotalByChore = async (walletId, mediaType, choreType) => {
+  const query = `select sum(value) as sum from chores where wallet_id = ? and media_type = ? and chore_type = ?`;
+
+  const results = await runQueryAsync(query, [walletId, mediaType, choreType]);
+
+  return results[0].sum || 0;
+};
+
 module.exports = {
+  getTotalByChore,
+  getOldChoresTotal,
   getPreviousCampaignIds,
+  getTodayChoresTotal,
   createChore,
   markChoreAsCompleted,
   getPrevOtherUserPostIds,
@@ -128,4 +199,8 @@ module.exports = {
   markFollowChoreAsCompleted,
   unPaidChores,
   markChoresAsPaid,
+  getTotalEarnings,
+  getTodayEarnings,
+  getTodayLost,
+  getTodayTotal,
 };

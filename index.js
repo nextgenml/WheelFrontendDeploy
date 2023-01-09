@@ -17,6 +17,7 @@ const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
 const schedule = require("node-schedule");
+const { getSocialSharingStats } = require("./controllers/socialSharing");
 
 const app = express();
 
@@ -135,6 +136,9 @@ app.get("/spin-participants", async (req, res) => {
 app.get("/time-now", (req, res) => {
   res.send(new Date());
 });
+
+// social sharing routes
+app.get("/social-sharing", getSocialSharingStats);
 
 app.use("/", express.static(path.join(__dirname, "build")));
 

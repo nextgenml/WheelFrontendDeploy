@@ -49,7 +49,7 @@ const SocialSharing = () => {
             <ArrowDownwardIcon color="error" />
           </div>
           <Typography variant="body2" className={styles.earningsText}>
-            Today Lost{" "}
+            Today Lost
           </Typography>
         </Grid>
       </Grid>
