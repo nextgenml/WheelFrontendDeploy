@@ -185,8 +185,42 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
   return results[0].sum || 0;
 };
 
+const getTodayChores = async (walletId, mediaType) => {
+  const query = `select * from chores where valid_from >= ? and wallet_id = ? and media_type = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+    mediaType,
+  ]);
+
+  return results;
+};
+const getOldChores = async (walletId, mediaType) => {
+  const query = `select * from chores where valid_from < ? and wallet_id = ? and media_type = ?`;
+
+  const results = await runQueryAsync(query, [
+    moment().startOf("day").format(),
+    walletId,
+    mediaType,
+  ]);
+
+  return results;
+};
+
+const getChoresByType = async (walletId, mediaType, choreType) => {
+  const query = `select * from chores where wallet_id = ? and media_type = ? and chore_type = ?`;
+
+  const results = await runQueryAsync(query, [walletId, mediaType, choreType]);
+
+  return results[0];
+};
+
 module.exports = {
+  getTodayChores,
   getTotalByChore,
+  getOldChores,
+  getChoresByType,
   getOldChoresTotal,
   getPreviousCampaignIds,
   getTodayChoresTotal,

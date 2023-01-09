@@ -16,8 +16,11 @@ const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
-const schedule = require("node-schedule");
-const { getSocialSharingStats } = require("./controllers/socialSharing");
+
+const {
+  getSocialSharingStats,
+  getChoresByType,
+} = require("./controllers/socialSharing");
 
 const app = express();
 
@@ -139,6 +142,7 @@ app.get("/time-now", (req, res) => {
 
 // social sharing routes
 app.get("/social-sharing-stats", getSocialSharingStats);
+app.get("/social-sharing-chores", getChoresByType);
 
 app.use("/", express.static(path.join(__dirname, "build")));
 

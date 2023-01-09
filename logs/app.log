@@ -230,3 +230,6 @@
 2023-01-09T19:57:25.818Z - [INFO] - spin process started
 2023-01-09T19:57:26.471Z - [INFO] - ----------------------------app start---------------------
 2023-01-09T19:57:26.472Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-09T20:04:42.660Z - [INFO] - spin process started
+2023-01-09T20:04:43.165Z - [INFO] - ----------------------------app start---------------------
+2023-01-09T20:04:43.165Z - [INFO] - app listening at ", "http://localhost: 8000
