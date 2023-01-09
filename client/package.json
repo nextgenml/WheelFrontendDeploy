@@ -10,6 +10,7 @@
     "@fontsource/audiowide": "^4.5.9",
     "@mui/icons-material": "^5.11.0",
     "@mui/joy": "^5.0.0-alpha.58",
+    "@mui/lab": "^5.0.0-alpha.115",
     "@mui/material": "^5.11.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

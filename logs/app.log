@@ -170,3 +170,33 @@
 2023-01-05T17:45:12.132Z - [INFO] - completed createFollowChores
 2023-01-05T17:45:22.200Z - [INFO] - completed createFollowChores
 2023-01-05T17:45:24.413Z - [INFO] - completed createFollowChores
+2023-01-07T17:09:35.249Z - [INFO] - spin process started
+2023-01-07T17:09:35.970Z - [INFO] - ----------------------------app start---------------------
+2023-01-07T17:09:35.971Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-07T17:11:39.148Z - [ERROR] - error occurred in spinner-data api: TypeError: Cannot read properties of undefined (reading 'nextSpinAt')
+2023-01-07T17:12:02.786Z - [ERROR] - error occurred in spinner-data api: TypeError: Cannot read properties of undefined (reading 'nextSpinAt')
+2023-01-07T17:12:04.096Z - [ERROR] - error occurred in spinner-data api: TypeError: Cannot read properties of undefined (reading 'nextSpinAt')
+2023-01-08T14:34:51.363Z - [INFO] - transfer to 0x0030B1331Dce886e332Ac1f3ed17d3018C542114, reward: 1
+2023-01-08T14:56:59.492Z - [INFO] - transfer to 0x0030B1331Dce886e332Ac1f3ed17d3018C542114, reward: 1
+2023-01-08T14:59:40.219Z - [INFO] - transfer to 0x0030B1331Dce886e332Ac1f3ed17d3018C542114, reward: 1
+2023-01-08T15:00:30.936Z - [INFO] - processPrizes reward distribution: completed: 0x0030B1331Dce886e332Ac1f3ed17d3018C542114
+2023-01-08T15:00:30.937Z - [INFO] - transfer to 0x990c8121ec42C9b7a3049Df585352759c2eA149e, reward: 1
+2023-01-08T15:01:07.826Z - [INFO] - processPrizes reward distribution: completed: 0x990c8121ec42C9b7a3049Df585352759c2eA149e
+2023-01-08T15:01:07.827Z - [INFO] - transfer to 0xe6ea3Cde2d567993E80cc44Ce0c308Da94965F3f, reward: 1
+2023-01-08T15:01:55.324Z - [INFO] - processPrizes reward distribution: completed: 0xe6ea3Cde2d567993E80cc44Ce0c308Da94965F3f
+2023-01-08T16:15:16.710Z - [INFO] - spin process started
+2023-01-08T16:15:17.715Z - [INFO] - ----------------------------app start---------------------
+2023-01-08T16:15:17.715Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-09T16:59:01.033Z - [INFO] - spin process started
+2023-01-09T16:59:06.188Z - [INFO] - ----------------------------app start---------------------
+2023-01-09T16:59:06.191Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-09T16:59:06.482Z - [ERROR] - error: ER_BAD_DB_ERROR: Unknown database 'nextgenml'
+2023-01-09T16:59:31.037Z - [INFO] - spin process started
+2023-01-09T16:59:32.064Z - [INFO] - ----------------------------app start---------------------
+2023-01-09T16:59:32.065Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-09T18:35:47.659Z - [INFO] - spin process started
+2023-01-09T18:35:48.989Z - [INFO] - ----------------------------app start---------------------
+2023-01-09T18:35:48.990Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-01-09T19:06:46.772Z - [INFO] - spin process started
+2023-01-09T19:06:47.741Z - [INFO] - ----------------------------app start---------------------
+2023-01-09T19:06:47.742Z - [INFO] - app listening at ", "http://localhost: 8000
