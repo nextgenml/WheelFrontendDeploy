@@ -138,7 +138,7 @@ app.get("/time-now", (req, res) => {
 });
 
 // social sharing routes
-app.get("/social-sharing", getSocialSharingStats);
+app.get("/social-sharing-stats", getSocialSharingStats);
 
 app.use("/", express.static(path.join(__dirname, "build")));
 
