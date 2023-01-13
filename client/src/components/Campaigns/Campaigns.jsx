@@ -32,6 +32,7 @@ const Campaigns = () => {
     }));
   };
 
+  const onEditorStateChange = (e) => setEditorState(e);
   return (
     <div className={styles.main}>
       <Typography variant="h4" className={styles.heading}>
@@ -118,7 +119,7 @@ const Campaigns = () => {
             toolbarClassName={styles.toolbarMain}
             wrapperClassName="wrapperClassName"
             editorClassName={styles.editorMain}
-            onEditorStateChange={(e) => setEditorState(e)}
+            onEditorStateChange={onEditorStateChange}
           />
         </Grid>
         <Grid item md={6} xs={12}>
@@ -148,6 +149,12 @@ const Campaigns = () => {
               Maximum of 3 files can be uploaded
             </Typography>
           )}
+        </Grid>
+
+        <Grid item md={6} xs={12} sx={{ textAlign: "right" }}>
+          <Button variant="contained" component="label">
+            Submit
+          </Button>
         </Grid>
       </Grid>
     </div>
