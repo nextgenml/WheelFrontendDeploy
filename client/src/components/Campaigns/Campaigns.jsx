@@ -31,8 +31,16 @@ const Campaigns = () => {
       files: tempFiles,
     }));
   };
-
   const onEditorStateChange = (e) => setEditorState(e);
+  const onFormDataChange = (newValue, key) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: newValue,
+    }));
+  };
+  const onSubmit = () => {
+    console.log("data", formData);
+  };
   return (
     <div className={styles.main}>
       <Typography variant="h4" className={styles.heading}>
@@ -45,6 +53,8 @@ const Campaigns = () => {
             label="Client"
             variant="outlined"
             fullWidth
+            value={formData.client}
+            onChange={(e) => onFormDataChange(e.target.value, "client")}
           />
         </Grid>
         <Grid item md={6} xs={12}>
@@ -53,13 +63,21 @@ const Campaigns = () => {
             label="Campaign Name"
             variant="outlined"
             fullWidth
+            value={formData.campaign_name}
+            onChange={(e) => onFormDataChange(e.target.value, "campaign_name")}
           />
         </Grid>
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <InputLabel>Success factor</InputLabel>
-            <Select label="Success factor">
+            <Select
+              label="Success factor"
+              value={formData.success_factor}
+              onChange={(e) =>
+                onFormDataChange(e.target.value, "success_factor")
+              }
+            >
               <MenuItem value="good">Good</MenuItem>
               <MenuItem value="better">Better</MenuItem>
               <MenuItem value="best">Best</MenuItem>
@@ -93,8 +111,11 @@ const Campaigns = () => {
             <Stack spacing={3}>
               <MobileDatePicker
                 label="Start Time"
-                inputFormat="MM/DD/YYYY"
+                disablePast
+                inputFormat="DD/MM/YYYY"
                 renderInput={(params) => <TextField {...params} />}
+                value={formData.start_date}
+                onChange={(value) => onFormDataChange(value, "start_date")}
               />
             </Stack>
           </LocalizationProvider>
@@ -104,8 +125,11 @@ const Campaigns = () => {
             <Stack spacing={3}>
               <MobileDatePicker
                 label="End Time"
-                inputFormat="MM/DD/YYYY"
+                disablePast
+                inputFormat="DD/MM/YYYY"
                 renderInput={(params) => <TextField {...params} />}
+                value={formData.end_date}
+                onChange={(value) => onFormDataChange(value, "end_date")}
               />
             </Stack>
           </LocalizationProvider>
@@ -152,7 +176,7 @@ const Campaigns = () => {
         </Grid>
 
         <Grid item md={6} xs={12} sx={{ textAlign: "right" }}>
-          <Button variant="contained" component="label">
+          <Button variant="contained" component="label" onClick={onSubmit}>
             Submit
           </Button>
         </Grid>
