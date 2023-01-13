@@ -2,7 +2,26 @@
   padding: 16px;
   background-color: white;
 }
-.form{
+.form {
   padding-left: 200px;
   padding-right: 200px;
+}
+.editorMain {
+  border: 1px solid #cdc5c5;
+  border-radius: 4px;
+  height: 200px;
+  padding: 16px;
+}
+.toolbarMain {
+  border: 1px solid #cdc5c5 !important;
+}
+
+@media only screen and (max-width: 640px) {
+  .form {
+    padding: 0;
+  }
+}
+.heading {
+  text-align: center;
+  margin-bottom: 30px;
 }

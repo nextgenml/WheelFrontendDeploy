@@ -14,11 +14,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useState } from "react";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { EditorState } from "draft-js";
+
 const Campaigns = () => {
   const [formData, setFormData] = useState({
     media: [],
   });
 
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const onFilesChange = (e) => {
     const tempFiles = e.target.files;
     setFormData((prev) => ({
@@ -29,6 +34,9 @@ const Campaigns = () => {
 
   return (
     <div className={styles.main}>
+      <Typography variant="h4" className={styles.heading}>
+        Enter campaign details
+      </Typography>
       <Grid container spacing={2} className={styles.form}>
         <Grid item md={6} xs={12}>
           <TextField
@@ -46,6 +54,7 @@ const Campaigns = () => {
             fullWidth
           />
         </Grid>
+
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <InputLabel>Success factor</InputLabel>
@@ -53,6 +62,28 @@ const Campaigns = () => {
               <MenuItem value="good">Good</MenuItem>
               <MenuItem value="better">Better</MenuItem>
               <MenuItem value="best">Best</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth>
+            <InputLabel>Media</InputLabel>
+            <Select
+              label="Media"
+              multiple
+              value={formData.media}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  media:
+                    typeof e.target.value === "string"
+                      ? e.target.value.split(",")
+                      : e.target.value,
+                }))
+              }
+            >
+              <MenuItem value="twitter">Twitter</MenuItem>
+              <MenuItem value="facebook">Facebook</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -79,12 +110,15 @@ const Campaigns = () => {
           </LocalizationProvider>
         </Grid>
 
-        <Grid item md={6} xs={12}>
-          <TextField
-            id="outlined-basic"
-            label="Campaign Content"
-            variant="outlined"
-            fullWidth
+        <Grid item md={12} xs={12}>
+          <InputLabel sx={{ mb: 1 }}>Campaign Content</InputLabel>
+
+          <Editor
+            editorState={editorState}
+            toolbarClassName={styles.toolbarMain}
+            wrapperClassName="wrapperClassName"
+            editorClassName={styles.editorMain}
+            onEditorStateChange={(e) => setEditorState(e)}
           />
         </Grid>
         <Grid item md={6} xs={12}>
@@ -114,29 +148,6 @@ const Campaigns = () => {
               Maximum of 3 files can be uploaded
             </Typography>
           )}
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
-            <InputLabel>Media</InputLabel>
-            <Select
-              label="Media"
-              multiple
-              value={formData.media}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  media:
-                    typeof e.target.value === "string"
-                      ? e.target.value.split(",")
-                      : e.target.value,
-                }))
-              }
-            >
-              <MenuItem value="twitter">Twitter</MenuItem>
-              <MenuItem value="facebook">Facebook</MenuItem>
-            </Select>
-          </FormControl>
         </Grid>
       </Grid>
     </div>
