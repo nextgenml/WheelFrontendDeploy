@@ -12,6 +12,7 @@ import Initiatives from "./components/Initiatives/Initiatives";
 import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
 import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import SocialSharing from "./components/SocialSharing/SocialSharing";
+import Campaigns from "./components/Campaigns/Campaigns";
 function App() {
   return (
     <>
@@ -34,6 +35,7 @@ function App() {
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/social-sharing" element={<SocialSharing />} />
+        <Route path="/campaigns" element={<Campaigns />} />
       </Routes>
       <Footer />
     </>
