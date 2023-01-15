@@ -1,5 +1,3 @@
-const multiparty = require("multiparty");
-
 const {
   getTotalEarnings,
   getTodayEarnings,
@@ -11,8 +9,10 @@ const {
   getOldChores,
 } = require("../repository/chores");
 
+const holderRepo = require("../repository/holder");
 const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
+const config = require("../config");
 
 const getSocialSharingStats = async (req, res) => {
   try {
@@ -91,6 +91,21 @@ const saveCampaign = async (req, res) => {
 
     const { insertId } = await campaignRepo.saveCampaign(body);
 
+    const holder = await holderRepo.getById(body.wallet_id);
+    console.log(
+      "wallet_id",
+      body.wallet_id,
+      holder,
+      holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+    );
+    if (
+      !holder ||
+      holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+    )
+      return res.status(400).json({
+        statusCode: 400,
+        message: `Minimum ${config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required to create a campaign`,
+      });
     const mediaTypes = (body.media || "").split(",");
 
     for (const mediaType of mediaTypes) {

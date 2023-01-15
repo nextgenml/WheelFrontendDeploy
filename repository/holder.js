@@ -53,7 +53,13 @@ const updateMediaIds = async (users) => {
   }
 };
 
+const getById = async (wallet_id) => {
+  const query = `select * from holders where wallet_id = ?;`;
+
+  return await runQueryAsync(query, [wallet_id]);
+};
 module.exports = {
+  getById,
   createHolder,
   getActiveHolders,
   getHoldersByWalletId,

@@ -42,6 +42,7 @@ const commonConfig = {
   POST_CHORE_VALID_DAYS: 1,
   OTHER_CHORE_VALID_DAYS: 3,
   CREATE_POST_CHORES_AT: [0, 56],
+  MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 100,
 };
 
 module.exports =
