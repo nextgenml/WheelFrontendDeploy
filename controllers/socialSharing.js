@@ -86,40 +86,44 @@ const getChoresByType = async (req, res) => {
 };
 
 const saveCampaign = async (req, res) => {
-  const { body, files } = req;
+  try {
+    const { body, files } = req;
 
-  // console.log("data", body, files);
+    const { insertId } = await campaignRepo.saveCampaign(body);
 
-  const { insertId } = await campaignRepo.saveCampaign(body);
+    const mediaTypes = (body.media || "").split(",");
 
-  const mediaTypes = (body.media || "").split(",");
+    for (const mediaType of mediaTypes) {
+      const collection_id = uuid.v4();
+      await campaignRepo.saveCampaignDetails({
+        ...body,
+        campaign_id: insertId,
+        content_type: "text",
+        collection_id,
+        media_type: mediaType,
+      });
 
-  for (const mediaType of mediaTypes) {
-    const collection_id = uuid.v4();
-    await campaignRepo.saveCampaignDetails({
-      ...body,
-      campaign_id: insertId,
-      content_type: "text",
-      collection_id,
-      media_type: mediaType,
-    });
-
-    if (files && files.length) {
-      for (const file of files) {
-        await campaignRepo.saveCampaignDetails({
-          ...body,
-          content: file.path,
-          campaign_id: insertId,
-          content_type: "image",
-          collection_id,
-          media_type: mediaType,
-        });
+      if (files && files.length) {
+        for (const file of files) {
+          await campaignRepo.saveCampaignDetails({
+            ...body,
+            content: file.path,
+            campaign_id: insertId,
+            content_type: "image",
+            collection_id,
+            media_type: mediaType,
+          });
+        }
       }
     }
+    res.json({
+      message: "done",
+    });
+  } catch (error) {
+    res.json({
+      error,
+    });
   }
-  res.json({
-    message: "done",
-  });
 };
 
 module.exports = {

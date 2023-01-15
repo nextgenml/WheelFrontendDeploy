@@ -20,13 +20,19 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
 import config from "../../config.js";
 import draftToHtml from "draftjs-to-html";
+import moment from "moment";
 
 const Campaigns = () => {
-  const [formData, setFormData] = useState({
+  const initialState = {
     media: [],
-  });
+    start_time: moment().format(),
+    end_time: moment().format(),
+  };
+  const [formData, setFormData] = useState(initialState);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const onFilesChange = (e) => {
     const tempFiles = e.target.files;
     setFormData((prev) => ({
@@ -45,21 +51,18 @@ const Campaigns = () => {
     }));
   };
   const onSubmit = async () => {
+    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    console.log("formdata", formData, content);
     if (
       !formData.media ||
       !formData.client ||
       !formData.campaign_name ||
       !formData.success_factor ||
-      !formData.end_date ||
-      !formData.start_date
+      !formData.start_time ||
+      !formData.end_time ||
+      !content
     ) {
-      setError(true);
-      return;
-    }
-    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-
-    if (!content) {
-      setError(true);
+      setError("Please fill all mandatory fields *");
       return;
     }
 
@@ -73,14 +76,19 @@ const Campaigns = () => {
         body.append(`file-${i}`, file, file.name);
       });
 
-    body.append(
-      "content",
-      draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    );
+    body.append("content", content);
     const res = await fetch(`${config.API_ENDPOINT}/save-campaign`, {
       method: "POST",
       body,
     });
+    if (res.ok) {
+      setSuccess("Campaign saved successfully");
+      setFormData(initialState);
+      setError("");
+    } else {
+      setError("Something went wrong. Please try again after sometime");
+      setSuccess("");
+    }
   };
   return (
     <div className={styles.main}>
@@ -90,7 +98,12 @@ const Campaigns = () => {
       <Grid container spacing={2} className={styles.form}>
         {error && (
           <Grid item md={12} xs={12}>
-            <Alert severity="error">Please fill all mandatory fields *</Alert>
+            <Alert severity="error">{error}</Alert>
+          </Grid>
+        )}
+        {success && (
+          <Grid item md={12} xs={12}>
+            <Alert severity="success">{success}</Alert>
           </Grid>
         )}
         <Grid item md={6} xs={12}>
@@ -210,7 +223,7 @@ const Campaigns = () => {
             ))
           ) : (
             <Typography variant="body2">
-              Optional. You can upload images that to be shared to along with
+              Optional. You can upload images that to be shared along with the
               post.
             </Typography>
           )}
