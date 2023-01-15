@@ -17,6 +17,7 @@ import { useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from "draft-js";
+import config from "../../config.js";
 
 const Campaigns = () => {
   const [formData, setFormData] = useState({
@@ -38,8 +39,22 @@ const Campaigns = () => {
       [key]: newValue,
     }));
   };
-  const onSubmit = () => {
+  const onSubmit = async () => {
     console.log("data", formData);
+    const body = new FormData();
+    for (const name in formData) {
+      if (name !== "files") body.append(name, formData[name]);
+    }
+
+    Array.from(formData.files).forEach((file, i) => {
+      body.append(`file-${i}`, file, file.name);
+    });
+
+    const res = await fetch(`${config.API_ENDPOINT}/save-campaign`, {
+      method: "POST",
+      body,
+    });
+    console.log(await res.json());
   };
   return (
     <div className={styles.main}>

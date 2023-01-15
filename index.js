@@ -5,6 +5,9 @@ const cors = require("cors");
 const moment = require("moment");
 require("./manager/spinwheel");
 require("./manager/wallet");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+const { static } = require("express");
 
 const {
   getParticipants,
@@ -20,6 +23,7 @@ const logger = require("./logger");
 const {
   getSocialSharingStats,
   getChoresByType,
+  saveCampaign,
 } = require("./controllers/socialSharing");
 
 const app = express();
@@ -143,10 +147,11 @@ app.get("/time-now", (req, res) => {
 // social sharing routes
 app.get("/social-sharing-stats", getSocialSharingStats);
 app.get("/social-sharing-chores", getChoresByType);
-
+app.post("/save-campaign", upload.any(), saveCampaign);
 app.use("/", express.static(path.join(__dirname, "build")));
 
 app.use(express.static(path.join(__dirname, "/client/build")));
+app.use("/images/", static("./uploads/"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));

@@ -30,9 +30,41 @@ const updateLastCheckedDate = async (id, endTime) => {
 
   return await runQueryAsync(query, [moment(endTime).format(), id]);
 };
+
+const saveCampaign = async (data) => {
+  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id) values(?, ?, ?, ?, ?, ? ,?, ?);`;
+
+  return await runQueryAsync(query, [
+    data.client,
+    data.campaign_name,
+    moment(data.start_time).startOf("day").format(),
+    moment(data.end_time).endOf("day").format(),
+    1,
+    data.success_factor,
+    1,
+    data.wallet_id,
+  ]);
+};
+
+const saveCampaignDetails = async (data) => {
+  const query = `insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active) values(?, ?, ?, ?, ?, ? ,?, ?);`;
+
+  return await runQueryAsync(query, [
+    data.campaign_id,
+    data.content || "",
+    data.content_type,
+    moment(data.start_time).startOf("day").format(),
+    moment(data.end_time).endOf("day").format(),
+    data.collection_id,
+    data.media_type,
+    1,
+  ]);
+};
 module.exports = {
   getActiveCampaigns,
   getPostedCampaigns,
   updateLastCheckedDate,
   getCampaignImages,
+  saveCampaign,
+  saveCampaignDetails,
 };
