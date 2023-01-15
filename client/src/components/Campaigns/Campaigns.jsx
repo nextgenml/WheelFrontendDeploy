@@ -8,6 +8,7 @@ import {
   Stack,
   Button,
   Typography,
+  Alert,
 } from "@mui/material";
 import styles from "./Campaigns.module.css";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -24,8 +25,8 @@ const Campaigns = () => {
   const [formData, setFormData] = useState({
     media: [],
   });
-
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [error, setError] = useState(false);
   const onFilesChange = (e) => {
     const tempFiles = e.target.files;
     setFormData((prev) => ({
@@ -44,7 +45,24 @@ const Campaigns = () => {
     }));
   };
   const onSubmit = async () => {
-    console.log("data", formData);
+    if (
+      !formData.media ||
+      !formData.client ||
+      !formData.campaign_name ||
+      !formData.success_factor ||
+      !formData.end_date ||
+      !formData.start_date
+    ) {
+      setError(true);
+      return;
+    }
+    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
+    if (!content) {
+      setError(true);
+      return;
+    }
+
     const body = new FormData();
     for (const name in formData) {
       if (name !== "files") body.append(name, formData[name]);
@@ -70,10 +88,15 @@ const Campaigns = () => {
         Enter campaign details
       </Typography>
       <Grid container spacing={2} className={styles.form}>
+        {error && (
+          <Grid item md={12} xs={12}>
+            <Alert severity="error">Please fill all mandatory fields *</Alert>
+          </Grid>
+        )}
         <Grid item md={6} xs={12}>
           <TextField
             id="outlined-basic"
-            label="Client"
+            label="Client*"
             variant="outlined"
             fullWidth
             value={formData.client}
@@ -83,7 +106,7 @@ const Campaigns = () => {
         <Grid item md={6} xs={12}>
           <TextField
             id="outlined-basic"
-            label="Campaign Name"
+            label="Campaign Name*"
             variant="outlined"
             fullWidth
             value={formData.campaign_name}
@@ -93,9 +116,9 @@ const Campaigns = () => {
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel>Success factor</InputLabel>
+            <InputLabel>Success factor*</InputLabel>
             <Select
-              label="Success factor"
+              label={"Success factor*"}
               value={formData.success_factor}
               onChange={(e) =>
                 onFormDataChange(e.target.value, "success_factor")
@@ -109,9 +132,9 @@ const Campaigns = () => {
         </Grid>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel>Media</InputLabel>
+            <InputLabel>Media*</InputLabel>
             <Select
-              label="Media"
+              label="Media*"
               multiple
               value={formData.media}
               onChange={(e) =>
@@ -133,7 +156,7 @@ const Campaigns = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack spacing={3}>
               <MobileDatePicker
-                label="Start Time"
+                label="Start Time*"
                 disablePast
                 inputFormat="DD/MM/YYYY"
                 renderInput={(params) => <TextField {...params} />}
@@ -147,7 +170,7 @@ const Campaigns = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Stack spacing={3}>
               <MobileDatePicker
-                label="End Time"
+                label="End Time*"
                 disablePast
                 inputFormat="DD/MM/YYYY"
                 renderInput={(params) => <TextField {...params} />}
@@ -159,7 +182,7 @@ const Campaigns = () => {
         </Grid>
 
         <Grid item md={12} xs={12}>
-          <InputLabel sx={{ mb: 1 }}>Campaign Content</InputLabel>
+          <InputLabel sx={{ mb: 1 }}>Campaign Content*</InputLabel>
 
           <Editor
             editorState={editorState}
