@@ -16,8 +16,9 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 import config from "../../config.js";
+import draftToHtml from "draftjs-to-html";
 
 const Campaigns = () => {
   const [formData, setFormData] = useState({
@@ -32,7 +33,10 @@ const Campaigns = () => {
       files: tempFiles,
     }));
   };
-  const onEditorStateChange = (e) => setEditorState(e);
+  const onEditorStateChange = (e) => {
+    console.log("changed", e);
+    setEditorState(e);
+  };
   const onFormDataChange = (newValue, key) => {
     setFormData((prev) => ({
       ...prev,
@@ -46,15 +50,19 @@ const Campaigns = () => {
       if (name !== "files") body.append(name, formData[name]);
     }
 
-    Array.from(formData.files).forEach((file, i) => {
-      body.append(`file-${i}`, file, file.name);
-    });
+    if (formData.files && formData.files.length)
+      Array.from(formData.files).forEach((file, i) => {
+        body.append(`file-${i}`, file, file.name);
+      });
 
+    body.append(
+      "content",
+      draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    );
     const res = await fetch(`${config.API_ENDPOINT}/save-campaign`, {
       method: "POST",
       body,
     });
-    console.log(await res.json());
   };
   return (
     <div className={styles.main}>
