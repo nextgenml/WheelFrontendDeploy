@@ -4,8 +4,21 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import config from "../../config";
 
 const Content = () => {
+  const [stats, setStats] = useState();
+  const fetchStats = async () => {
+    const res = await fetch(`${config.API_ENDPOINT}/social-sharing-stats`, {
+      method: "GET",
+    });
+    const data = await res.json();
+    setStats(data);
+  };
+  useEffect(() => {
+    fetchStats();
+  }, []);
   const chores = [
     "Lizards are a widespread group of squamate reptiles, with over",
     "ranging across all continents except Antarctica",
@@ -19,7 +32,7 @@ const Content = () => {
       {chores.map((chore, index) => {
         return (
           <ListItem key={index}>
-            <Card>
+            <Card sx={{ width: "100%" }}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
                   Lizard

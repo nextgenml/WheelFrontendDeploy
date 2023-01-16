@@ -13,6 +13,7 @@ const holderRepo = require("../repository/holder");
 const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
 const config = require("../config");
+const logger = require("../logger");
 
 const getSocialSharingStats = async (req, res) => {
   try {

@@ -14,32 +14,38 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import styles from "./SocialSharing.module.css";
 import { useState } from "react";
 
-const NavBar = () => {
+const NavBar = ({ stats }) => {
   const [selected, setSelected] = useState("New");
   const navItems = [
     {
       text: "New",
       icon: <StarOutlinedIcon />,
+      stat: stats.newTotal,
     },
     {
       text: "Old",
       icon: <KeyOutlinedIcon />,
+      stat: stats.old,
     },
     {
       text: "Like",
       icon: <FavoriteBorderOutlinedIcon />,
+      stat: stats.like,
     },
     {
       text: "Retweet",
       icon: <ContentCopyIcon />,
+      stat: stats.retweet,
     },
     {
       text: "Comment",
       icon: <ModeCommentOutlinedIcon />,
+      stat: stats.comment,
     },
     {
       text: "Follow",
       icon: <AddBoxIcon />,
+      stat: stats.follow,
     },
   ];
   return (
@@ -53,7 +59,7 @@ const NavBar = () => {
               className={selected === item.text ? styles.selectedListItem : ""}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <ListItemText primary={`${item.text} (${item.stat})`} />
             </ListItemButton>
           );
         })}
