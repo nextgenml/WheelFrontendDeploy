@@ -7,12 +7,15 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import config from "../../config";
 
-const Content = () => {
+const Content = ({ tab, walletId }) => {
   const [stats, setStats] = useState();
   const fetchStats = async () => {
-    const res = await fetch(`${config.API_ENDPOINT}/social-sharing-stats`, {
-      method: "GET",
-    });
+    const res = await fetch(
+      `${config.API_ENDPOINT}/social-sharing-chores?mediaType=${tab}&walletId=${walletId}`,
+      {
+        method: "GET",
+      }
+    );
     const data = await res.json();
     setStats(data);
   };

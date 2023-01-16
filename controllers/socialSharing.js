@@ -56,14 +56,17 @@ const getSocialSharingStats = async (req, res) => {
     });
   } catch (ex) {
     logger.error(`error occurred in getTabStats api: ${ex}`);
-    res.sendStatus(500);
+    return res.status(400).json({
+      statusCode: 400,
+      message: ex,
+    });
   }
 };
 
 const getChoresByType = async (req, res) => {
   try {
     const { mediaType, walletId, type } = req.query;
-
+    console.log("mediaType", mediaType, "walletId", walletId);
     let data = [];
     switch (type) {
       case "new":
@@ -82,7 +85,10 @@ const getChoresByType = async (req, res) => {
     });
   } catch (ex) {
     logger.error(`error occurred in getTabStats api: ${ex}`);
-    res.sendStatus(500);
+    res.status(400).json({
+      statusCode: 400,
+      message: ex,
+    });
   }
 };
 
@@ -136,8 +142,9 @@ const saveCampaign = async (req, res) => {
       message: "done",
     });
   } catch (error) {
-    res.json({
-      error,
+    return res.status(400).json({
+      statusCode: 400,
+      message: error,
     });
   }
 };

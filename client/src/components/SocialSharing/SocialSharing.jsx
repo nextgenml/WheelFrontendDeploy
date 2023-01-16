@@ -13,20 +13,24 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
+import { useAccount } from "wagmi";
 
 const SocialSharing = () => {
   const [tabValue, setTabValue] = React.useState("twitter");
+  const { isConnected, address } = useAccount();
   const [stats, setStats] = useState();
-  const fetchStats = async () => {
-    const res = await fetch(`${config.API_ENDPOINT}/social-sharing-stats`, {
-      method: "GET",
-    });
+  const [menuOption, setMenuOption] = useState("new");
+
+  const fetchStats = async (tab, menuOption) => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption}`
+    );
     const data = await res.json();
     setStats(data);
   };
   useEffect(() => {
-    fetchStats();
-  }, []);
+    fetchStats(tabValue, "new");
+  }, [tabValue]);
 
   const renderContent = () => {
     return (
@@ -83,10 +87,13 @@ const SocialSharing = () => {
           <TabPanel value="twitter">
             <Grid container spacing={2}>
               <Grid item md={3}>
-                <NavBar stats={stats} />
+                <NavBar
+                  stats={stats}
+                  onMenuChange={(option) => setMenuOption(option)}
+                />
               </Grid>
               <Grid item md={9}>
-                <Content />
+                <Content tab={"twitter"} walletId={address} />
               </Grid>
             </Grid>
           </TabPanel>
@@ -95,6 +102,16 @@ const SocialSharing = () => {
       </div>
     );
   };
-  return <>{stats ? renderContent() : <Loading loading />}</>;
+  return (
+    <>
+      {isConnected ? (
+        <>{stats ? renderContent() : <Loading loading />}</>
+      ) : (
+        <Typography variant="h6" sx={{ mb: 20 }}>
+          Please connect your wallet
+        </Typography>
+      )}
+    </>
+  );
 };
 export default SocialSharing;
