@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 
 import { Grid, Typography } from "@mui/material";
@@ -23,7 +24,9 @@ const SocialSharing = () => {
 
   const fetchStats = async (tab, menuOption) => {
     const res = await fetch(
-      `${config.API_ENDPOINT}/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption}`
+      `${
+        config.API_ENDPOINT
+      }/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption.toLowerCase()}`
     );
     const data = await res.json();
     setStats(data);
@@ -93,7 +96,11 @@ const SocialSharing = () => {
                 />
               </Grid>
               <Grid item md={9}>
-                <Content tab={"twitter"} walletId={address} />
+                <Content
+                  tab={"twitter"}
+                  walletId={address}
+                  menuOption={menuOption}
+                />
               </Grid>
             </Grid>
           </TabPanel>

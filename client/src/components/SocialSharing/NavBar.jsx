@@ -14,7 +14,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import styles from "./SocialSharing.module.css";
 import { useState } from "react";
 
-const NavBar = ({ stats }) => {
+const NavBar = ({ stats, onMenuChange }) => {
   const [selected, setSelected] = useState("New");
   const navItems = [
     {
@@ -55,7 +55,10 @@ const NavBar = ({ stats }) => {
           return (
             <ListItemButton
               key={item.text}
-              onClick={() => setSelected(item.text)}
+              onClick={() => {
+                setSelected(item.text);
+                onMenuChange(item.text);
+              }}
               className={selected === item.text ? styles.selectedListItem : ""}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>

@@ -55,7 +55,7 @@ const getSocialSharingStats = async (req, res) => {
       follow,
     });
   } catch (ex) {
-    logger.error(`error occurred in getTabStats api: ${ex}`);
+    logger.error(`error occurred in getSocialSharingStats api: ${ex}`);
     return res.status(400).json({
       statusCode: 400,
       message: ex,
@@ -84,7 +84,7 @@ const getChoresByType = async (req, res) => {
       data,
     });
   } catch (ex) {
-    logger.error(`error occurred in getTabStats api: ${ex}`);
+    logger.error(`error occurred in getChoresByType api: ${ex}`);
     res.status(400).json({
       statusCode: 400,
       message: ex,
