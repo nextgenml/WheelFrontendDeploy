@@ -73,7 +73,6 @@ const Content = ({ tab, walletId, menuOption }) => {
   const renderContent = () => {
     return (
       <List>
-        {console.log("chores", chores)}
         {chores.map((chore, index) => {
           return (
             <ListItem key={index}>
