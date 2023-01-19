@@ -15,13 +15,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useState } from "react";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw } from "draft-js";
 import config from "../../config.js";
-import draftToHtml from "draftjs-to-html";
 import moment from "moment";
 import { useAccount } from "wagmi";
+import RichTextEditor from "../RichTextEditor/RichTextEditor";
 
 const initialState = {
   media: [],
@@ -30,12 +27,12 @@ const initialState = {
   success_factor: "best",
   start_time: moment().format(),
   end_time: moment().format(),
+  content: "",
 };
 const Campaigns = () => {
   const { isConnected, address } = useAccount();
 
   const [formData, setFormData] = useState(initialState);
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -46,16 +43,31 @@ const Campaigns = () => {
       files: tempFiles,
     }));
   };
-  const onEditorStateChange = (e) => setEditorState(e);
+
   const onFormDataChange = (newValue, key) => {
     setFormData((prev) => ({
       ...prev,
       [key]: newValue,
     }));
   };
+  const allowedContentSize = (mediaType) => {
+    switch (mediaType) {
+      case "twitter":
+        return 280;
+      default:
+        return 280;
+    }
+  };
   const onSubmit = async () => {
-    const content = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    console.log("formData.content", formData.content);
 
+    // const allowedLimit = allowedContentSize(formData.media);
+    // if (formData.content.length > allowedLimit) {
+    //   setError(
+    //     `Length of campaign content cannot be more than ${allowedLimit}`
+    //   );
+    //   return;
+    // }
     if (
       !formData.media ||
       !formData.client ||
@@ -63,7 +75,7 @@ const Campaigns = () => {
       !formData.success_factor ||
       !formData.start_time ||
       !formData.end_time ||
-      !content
+      !formData.content
     ) {
       setError("Please fill all mandatory fields *");
       return;
@@ -79,7 +91,6 @@ const Campaigns = () => {
         body.append(`file-${i}`, file, file.name);
       });
     body.append("wallet_id", address);
-    body.append("content", content);
     const res = await fetch(`${config.API_ENDPOINT}/save-campaign`, {
       method: "POST",
       body,
@@ -88,7 +99,6 @@ const Campaigns = () => {
       setSuccess("Campaign saved successfully");
       setFormData(initialState);
       setError("");
-      setEditorState(EditorState.createEmpty());
     } else {
       const error = await res.json();
       setError(
@@ -207,12 +217,10 @@ const Campaigns = () => {
           <Grid item md={12} xs={12}>
             <InputLabel sx={{ mb: 1 }}>Campaign Content*</InputLabel>
 
-            <Editor
-              editorState={editorState}
-              toolbarClassName={styles.toolbarMain}
-              wrapperClassName="wrapperClassName"
-              editorClassName={styles.editorMain}
-              onEditorStateChange={onEditorStateChange}
+            <RichTextEditor
+              onChange={(content) => onFormDataChange(content, "content")}
+              initialHtml=""
+              readOnly={false}
             />
           </Grid>
           <Grid item md={6} xs={12}>
