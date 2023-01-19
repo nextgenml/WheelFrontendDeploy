@@ -17,8 +17,10 @@ import config from "../../config";
 import Loading from "../loading";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { copyImageToClipboard } from "copy-image-clipboard";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+import styles from "./SocialSharing.module.css";
 
-const Content = ({ tab, walletId, menuOption }) => {
+const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
   const fetchStats = async () => {
     const res = await fetch(
@@ -122,29 +124,37 @@ const Content = ({ tab, walletId, menuOption }) => {
     }
   };
   const renderContent = () => {
-    return (
-      <List>
-        {chores.map((chore, index) => {
-          return (
-            <ListItem key={index}>
-              <Card sx={{ width: "100%" }}>
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {chore.media_type} - {chore.chore_type}
-                  </Typography>
-                  {renderCardBody(chore)}
-                </CardContent>
-                {/* <CardActions>
+    if (chores.length)
+      return (
+        <List>
+          {chores.map((chore, index) => {
+            return (
+              <ListItem key={index}>
+                <Card sx={{ width: "100%" }}>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {chore.media_type} - {chore.chore_type}
+                    </Typography>
+                    {renderCardBody(chore)}
+                  </CardContent>
+                  {/* <CardActions>
                   <Button size="small">Download Image</Button>
                   <Button size="small">Like</Button>
                 </CardActions> */}
-              </Card>
-            </ListItem>
-          );
-        })}
-      </List>
-    );
+                </Card>
+              </ListItem>
+            );
+          })}
+        </List>
+      );
+    else
+      return (
+        <div styles={{ textAlign: "center" }}>
+          <NewspaperIcon className={styles.blankIcon} />
+          <Typography variant="subtitle1">No items present</Typography>
+        </div>
+      );
   };
   return chores ? renderContent() : <Loading loading />;
 };
-export default Content;
+export default ChoresContent;

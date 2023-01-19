@@ -82,7 +82,7 @@ const SocialSharing = () => {
               onChange={(e, newValue) => setTabValue(newValue)}
               variant="fullWidth"
             >
-              <Tab label="Twitter" value="twitter" />
+              <Tab label={`Twitter`} value="twitter" />
               <Tab label="Facebook" value="facebook" />
             </TabList>
           </Box>
