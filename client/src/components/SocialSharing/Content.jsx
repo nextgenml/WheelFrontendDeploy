@@ -30,6 +30,7 @@ const Content = ({ tab, walletId, menuOption }) => {
   const renderContent = () => {
     return (
       <List>
+        {console.log("chores", chores)}
         {chores.map((chore, index) => {
           return (
             <ListItem key={index}>
@@ -39,7 +40,7 @@ const Content = ({ tab, walletId, menuOption }) => {
                     Lizard
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {chore}
+                    {chore.link_to_post}
                   </Typography>
                 </CardContent>
                 <CardActions>
