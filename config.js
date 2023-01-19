@@ -43,6 +43,23 @@ const commonConfig = {
   OTHER_CHORE_VALID_DAYS: 3,
   CREATE_POST_CHORES_AT: [0, 56],
   MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 100,
+  SUCCESS_FACTOR: {
+    BEST: {
+      LIKE: 2500,
+      COMMENT: 1000,
+      RETWEET: 1000,
+    },
+    BETTER: {
+      LIKE: 2500,
+      COMMENT: 1000,
+      RETWEET: 1000,
+    },
+    GOOD: {
+      LIKE: 2500,
+      COMMENT: 1000,
+      RETWEET: 1000,
+    },
+  },
 };
 
 module.exports =

@@ -15,7 +15,10 @@ const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
-const { getPostedCampaigns } = require("../../repository/campaignDetails");
+const {
+  getPostedCampaigns,
+  canCreateChore,
+} = require("../../repository/campaignDetails");
 
 const createOtherChores = async () => {
   try {
@@ -35,21 +38,22 @@ const createOtherChores = async () => {
         // console.log("post", post.id);
 
         for (const action of actions) {
-          await createChore({
-            campaignDetailsId: post.campaign_detail_id,
-            walletId: holder.wallet_id,
-            mediaType: post.media_type,
-            choreType: action,
-            validFrom: moment().add(1, "days").startOf("day").format(),
-            validTo: moment()
-              .add(config.OTHER_CHORE_VALID_DAYS, "days")
-              .endOf("day")
-              .format(),
-            value: config.COST_PER_CHORE,
-            ref_chore_id: post.id,
-            linkToPost: post.link_to_post,
-            mediaPostId: post.media_post_id,
-          });
+          if (await canCreateChore(campaign.id, action))
+            await createChore({
+              campaignDetailsId: post.campaign_detail_id,
+              walletId: holder.wallet_id,
+              mediaType: post.media_type,
+              choreType: action,
+              validFrom: moment().add(1, "days").startOf("day").format(),
+              validTo: moment()
+                .add(config.OTHER_CHORE_VALID_DAYS, "days")
+                .endOf("day")
+                .format(),
+              value: config.COST_PER_CHORE,
+              ref_chore_id: post.id,
+              linkToPost: post.link_to_post,
+              mediaPostId: post.media_post_id,
+            });
         }
       }
     }

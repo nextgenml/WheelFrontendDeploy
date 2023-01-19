@@ -3,6 +3,7 @@ const {
   getPostedCampaigns,
   updateLastCheckedDate,
   getCampaignImages,
+  canCreateChore,
 } = require("../../repository/campaignDetails");
 const {
   getActiveHolders,
@@ -48,18 +49,19 @@ const createPostChores = async () => {
       const randomCampaigns = shuffleArray(newCampaigns).slice(0, noOfPosts);
 
       for (const campaign of randomCampaigns) {
-        await createChore({
-          campaignDetailsId: campaign.id,
-          walletId: holder.wallet_id,
-          mediaType: campaign.media_type,
-          choreType: "post",
-          validFrom: moment().add(1, "days").startOf("day").format(),
-          validTo: moment()
-            .add(config.POST_CHORE_VALID_DAYS, "days")
-            .endOf("day")
-            .format(),
-          value: config.COST_PER_CHORE,
-        });
+        if (await canCreateChore(campaign.id, "post"))
+          await createChore({
+            campaignDetailsId: campaign.id,
+            walletId: holder.wallet_id,
+            mediaType: campaign.media_type,
+            choreType: "post",
+            validFrom: moment().add(1, "days").startOf("day").format(),
+            validTo: moment()
+              .add(config.POST_CHORE_VALID_DAYS, "days")
+              .endOf("day")
+              .format(),
+            value: config.COST_PER_CHORE,
+          });
       }
     }
     logger.info("completed creating chores");
@@ -124,17 +126,16 @@ rule.minute = minutes;
 
 schedule.scheduleJob(rule, async () => {
   logger.info("started chores process");
-  await createPostChores();
-
   const endTime = moment().subtract(10, "seconds").toISOString();
   const postedCampaigns = await getPostedCampaigns();
+
   await checkIfPostsChoreCompleted(postedCampaigns, endTime);
-
-  await createOtherChores();
   await checkIfOtherChoresCompleted(postedCampaigns, endTime);
-
-  await createFollowChores();
   await checkIfFollowComplete();
+
+  await createPostChores();
+  await createOtherChores();
+  await createFollowChores();
 
   await transferRewards();
   for (const campaign of postedCampaigns) {

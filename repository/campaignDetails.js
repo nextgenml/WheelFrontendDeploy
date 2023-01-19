@@ -1,5 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
+const config = require("../config");
 
 const getActiveCampaigns = async () => {
   const query = `select cd.id, cd.media_type from campaign_details cd 
@@ -60,6 +61,24 @@ const saveCampaignDetails = async (data) => {
     1,
   ]);
 };
+
+const canCreateChore = async (id, choreType) => {
+  const query = `select success_factor from campaigns c inner join campaign_details cd on cd.campaign_id = c.id where cd.id = ?`;
+
+  const campaigns = await runQueryAsync(query, [id]);
+  const successFactor = campaigns[0] ? campaigns[0].success_factor : "best";
+  const allowedChores =
+    config.SUCCESS_FACTOR[successFactor.toUpperCase()][choreType.toUpperCase()];
+
+  const query2 = await runQueryAsync(
+    `select count(id) as count from campaign_details where is_completed = 1 and choreType = ? and campaign_detail_id = ?`,
+    [choreType, id]
+  );
+  const completedChores = query2[0] ? query2[0].count : 0;
+
+  return allowedChores >= completedChores;
+};
+
 module.exports = {
   getActiveCampaigns,
   getPostedCampaigns,
@@ -67,4 +86,5 @@ module.exports = {
   getCampaignImages,
   saveCampaign,
   saveCampaignDetails,
+  canCreateChore,
 };
