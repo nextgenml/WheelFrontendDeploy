@@ -10,7 +10,7 @@ import styles from "./RichTextEditor.module.css";
 import { useState } from "react";
 import draftToHtml from "draftjs-to-html";
 
-const RichTextEditor = ({ onChange, initialHtml }) => {
+const RichTextEditor = ({ onChange, initialHtml, readOnly }) => {
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(
       ContentState.createFromBlockArray(convertFromHTML(initialHtml))
@@ -28,7 +28,7 @@ const RichTextEditor = ({ onChange, initialHtml }) => {
         setEditorState(state);
         onChange(content);
       }}
-      readOnly
+      readOnly={readOnly}
     />
   );
 };

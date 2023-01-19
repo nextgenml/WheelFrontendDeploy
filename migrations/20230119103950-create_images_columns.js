@@ -8,9 +8,15 @@ module.exports = {
       "image_urls",
       Sequelize.TEXT
     );
+    await queryInterface.addColumn(
+      "chores",
+      "comment_suggestions",
+      Sequelize.TEXT
+    );
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn("campaign_details", "image_urls");
+    await queryInterface.addColumn("chores", "comment_suggestions");
   },
 };
