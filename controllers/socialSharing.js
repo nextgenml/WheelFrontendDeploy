@@ -1,13 +1,4 @@
-const {
-  getTotalEarnings,
-  getTodayEarnings,
-  getTodayTotal,
-  getTodayChoresTotal,
-  getOldChoresTotal,
-  getTotalByChore,
-  getTodayChores,
-  getOldChores,
-} = require("../repository/chores");
+const choresRepo = require("../repository/chores");
 
 const holderRepo = require("../repository/holder");
 const campaignRepo = require("../repository/campaignDetails");
@@ -31,14 +22,14 @@ const getSocialSharingStats = async (req, res) => {
       comment,
       follow,
     ] = await Promise.all([
-      getTotalEarnings(walletId),
-      getTodayEarnings(walletId),
-      getTodayTotal(walletId),
-      getTodayTotal(walletId),
-      getTodayChoresTotal(walletId, mediaType),
-      getOldChoresTotal(walletId, mediaType),
+      choresRepo.getTotalEarnings(walletId),
+      choresRepo.getTodayEarnings(walletId),
+      choresRepo.getTodayTotal(walletId),
+      choresRepo.getTodayTotal(walletId),
+      choresRepo.getTodayChoresTotal(walletId, mediaType),
+      choresRepo.getOldChoresTotal(walletId, mediaType),
       ...["like", "retweet", "comment", "follow"].map((chore) =>
-        getTotalByChore(walletId, mediaType, chore)
+        choresRepo.getTotalByChore(walletId, mediaType, chore)
       ),
     ]);
 
@@ -66,17 +57,17 @@ const getSocialSharingStats = async (req, res) => {
 const getChoresByType = async (req, res) => {
   try {
     const { mediaType, walletId, type } = req.query;
-    console.log("mediaType", mediaType, "walletId", walletId);
+    console.log("mediaType", mediaType, "walletId", walletId, "type", type);
     let data = [];
     switch (type) {
       case "new":
-        data = await getTodayChores(walletId, mediaType);
+        data = await choresRepo.getTodayChores(walletId, mediaType);
         break;
       case "old":
-        data = await getOldChores(walletId, mediaType);
+        data = await choresRepo.getOldChores(walletId, mediaType);
         break;
       default:
-        data = await getChoresByType(walletId, mediaType, type);
+        data = await choresRepo.getChoresByType(walletId, mediaType, type);
         break;
     }
 

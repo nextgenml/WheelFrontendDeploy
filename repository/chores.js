@@ -213,7 +213,7 @@ const getChoresByType = async (walletId, mediaType, choreType) => {
 
   const results = await runQueryAsync(query, [walletId, mediaType, choreType]);
 
-  return results[0];
+  return results;
 };
 
 module.exports = {
