@@ -57,7 +57,6 @@ const getSocialSharingStats = async (req, res) => {
 const getChoresByType = async (req, res) => {
   try {
     const { mediaType, walletId, type } = req.query;
-    console.log("mediaType", mediaType, "walletId", walletId, "type", type);
     let data = [];
     switch (type) {
       case "new":

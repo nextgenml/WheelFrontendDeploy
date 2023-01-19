@@ -37,7 +37,7 @@ const Content = ({ tab, walletId, menuOption }) => {
               <Card sx={{ width: "100%" }}>
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">
-                    Lizard
+                    {chore.media_type} - {chore.chore_type}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {chore.link_to_post}

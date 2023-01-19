@@ -195,7 +195,8 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
 };
 
 const getTodayChores = async (walletId, mediaType) => {
-  const query = `select * from chores where valid_from >= ? and wallet_id = ? and media_type = ? and is_completed = 0 and valid_to >= ?`;
+  const query = `select c.*, cd.content from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(),

@@ -7,7 +7,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
 import NavBar from "./NavBar";
-import Content from "./Content";
+import Content from "./ChoresContent";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
@@ -37,7 +37,7 @@ const SocialSharing = () => {
 
   const renderContent = () => {
     return (
-      <div className={styles.main}>
+      <div>
         <Grid className={styles.topBar} container spacing={2}>
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
@@ -110,7 +110,7 @@ const SocialSharing = () => {
     );
   };
   return (
-    <>
+    <div className={styles.main}>
       {isConnected ? (
         <>{stats ? renderContent() : <Loading loading />}</>
       ) : (
@@ -118,7 +118,7 @@ const SocialSharing = () => {
           Please connect your wallet
         </Typography>
       )}
-    </>
+    </div>
   );
 };
 export default SocialSharing;
