@@ -208,7 +208,8 @@ const getTodayChores = async (walletId, mediaType) => {
   return results;
 };
 const getOldChores = async (walletId, mediaType) => {
-  const query = `select * from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(),
@@ -221,7 +222,8 @@ const getOldChores = async (walletId, mediaType) => {
 };
 
 const getChoresByType = async (walletId, mediaType, choreType) => {
-  const query = `select * from chores where wallet_id = ? and media_type = ? and chore_type = ? and valid_to >= ? and is_completed = 0`;
+  const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     walletId,

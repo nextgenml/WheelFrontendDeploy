@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { List, ListItem } from "@mui/material";
+import { List, ListItem, ImageListItem, ImageList } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
+import RichTextEditor from "../RichTextEditor/RichTextEditor";
 
 const Content = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
@@ -27,6 +28,28 @@ const Content = ({ tab, walletId, menuOption }) => {
     fetchStats();
   }, [menuOption]);
 
+  const renderCardBody = (chore) => {
+    if (chore.chore_type === "post")
+      return (
+        <>
+          <div style={{ width: "50%" }}>
+            <RichTextEditor onChange={() => {}} initialHtml={chore.content} />;
+          </div>
+          <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+            {(chore.image_urls.split(",") || []).map((url, index) => (
+              <ImageListItem key={index}>
+                <img
+                  src={`/${url}?w=164&h=164&fit=crop&auto=format`}
+                  alt={"no_image"}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            ))}
+          </ImageList>
+        </>
+      );
+    else return <Typography variant="body2">{chore.link_to_post}</Typography>;
+  };
   const renderContent = () => {
     return (
       <List>
@@ -40,7 +63,7 @@ const Content = ({ tab, walletId, menuOption }) => {
                     {chore.media_type} - {chore.chore_type}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {chore.link_to_post}
+                    {renderCardBody(chore)}
                   </Typography>
                 </CardContent>
                 <CardActions>
