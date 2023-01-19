@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { List, ListItem, ImageListItem, ImageList } from "@mui/material";
+import { List, ListItem, ImageListItem, ImageList, Grid } from "@mui/material";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
+// import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
+import { copyImageToClipboard } from "copy-image-clipboard";
 
 const Content = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
@@ -31,22 +32,41 @@ const Content = ({ tab, walletId, menuOption }) => {
   const renderCardBody = (chore) => {
     if (chore.chore_type === "post")
       return (
-        <>
-          <div style={{ width: "50%" }}>
-            <RichTextEditor onChange={() => {}} initialHtml={chore.content} />;
-          </div>
-          <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-            {(chore.image_urls.split(",") || []).map((url, index) => (
-              <ImageListItem key={index}>
-                <img
-                  src={`/${url}?w=164&h=164&fit=crop&auto=format`}
-                  alt={"no_image"}
-                  loading="lazy"
-                />
-              </ImageListItem>
-            ))}
-          </ImageList>
-        </>
+        <Grid container spacing={2}>
+          <Grid item md={6}>
+            <RichTextEditor onChange={() => {}} initialHtml={chore.content} />
+          </Grid>
+          <Grid item md={6}>
+            <ImageList cols={3} rowHeight={164}>
+              {(chore.image_urls.split(",") || []).map((url, index) => (
+                <ImageListItem key={index}>
+                  <img
+                    src={`${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`}
+                    alt={"no_image"}
+                    loading="lazy"
+                  />
+                  <Button
+                    variant="outlined"
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      copyImageToClipboard(
+                        `${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`
+                      )
+                        .then(() => {
+                          console.log("Image Copied");
+                        })
+                        .catch((e) => {
+                          console.log("Error: ", e.message);
+                        });
+                    }}
+                  >
+                    Copy Image
+                  </Button>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </Grid>
+        </Grid>
       );
     else return <Typography variant="body2">{chore.link_to_post}</Typography>;
   };
@@ -62,14 +82,12 @@ const Content = ({ tab, walletId, menuOption }) => {
                   <Typography gutterBottom variant="h5" component="div">
                     {chore.media_type} - {chore.chore_type}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {renderCardBody(chore)}
-                  </Typography>
+                  {renderCardBody(chore)}
                 </CardContent>
-                <CardActions>
+                {/* <CardActions>
                   <Button size="small">Download Image</Button>
                   <Button size="small">Like</Button>
-                </CardActions>
+                </CardActions> */}
               </Card>
             </ListItem>
           );
