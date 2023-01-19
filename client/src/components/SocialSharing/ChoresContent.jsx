@@ -111,6 +111,12 @@ const Content = ({ tab, walletId, menuOption }) => {
             </Grid>
           );
         break;
+      case "follow":
+        return (
+          <Link href={chore.follow_link} target={chore.follow_link}>
+            Follow this user
+          </Link>
+        );
       default:
         return null;
     }
