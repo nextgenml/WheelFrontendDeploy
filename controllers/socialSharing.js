@@ -89,12 +89,7 @@ const saveCampaign = async (req, res) => {
     const { insertId } = await campaignRepo.saveCampaign(body);
 
     const holder = await holderRepo.getById(body.wallet_id);
-    console.log(
-      "wallet_id",
-      body.wallet_id,
-      holder,
-      holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
-    );
+
     if (
       !holder ||
       holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
@@ -104,7 +99,7 @@ const saveCampaign = async (req, res) => {
         message: `Minimum ${config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required to create a campaign`,
       });
     const mediaTypes = (body.media || "").split(",");
-
+    console.log('files', files)
     for (const mediaType of mediaTypes) {
       const collection_id = uuid.v4();
       await campaignRepo.saveCampaignDetails({
@@ -113,20 +108,8 @@ const saveCampaign = async (req, res) => {
         content_type: "text",
         collection_id,
         media_type: mediaType,
+        image_urls: (files || []).map(x => x.path).join(',')
       });
-
-      if (files && files.length) {
-        for (const file of files) {
-          await campaignRepo.saveCampaignDetails({
-            ...body,
-            content: file.path,
-            campaign_id: insertId,
-            content_type: "image",
-            collection_id,
-            media_type: mediaType,
-          });
-        }
-      }
     }
     res.json({
       message: "done",

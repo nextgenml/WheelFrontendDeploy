@@ -2,7 +2,6 @@ const {
   getActiveCampaigns,
   getPostedCampaigns,
   updateLastCheckedDate,
-  getCampaignImages,
   canCreateChore,
 } = require("../../repository/campaignDetails");
 const {
@@ -73,8 +72,6 @@ const createPostChores = async () => {
 const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
   try {
     for (const campaign of postedCampaigns) {
-      const campaignImages = await getCampaignImages(campaign.collection_id);
-
       let searchContentFn = null;
       switch (campaign.media_type) {
         case "twitter":
@@ -95,8 +92,9 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
           const holdersByWalletId = await getHoldersByWalletId(
             postedUsers.map((u) => u.username)
           );
-
+          
           await updateMediaIds(postedUsers);
+          const campaignImages = (campaign.image_urls || '').split(',')
           // console.log("holdersByWalletId", holdersByWalletId);
           for (const user of postedUsers) {
             if (await areImagesMatching(campaignImages, user))

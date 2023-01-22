@@ -20,12 +20,6 @@ const getPostedCampaigns = async () => {
   return await runQueryAsync(query, []);
 };
 
-const getCampaignImages = async (collectionId) => {
-  const query = `select content from campaign_details where content_type = 'image' and collection_id = ?`;
-
-  return await runQueryAsync(query, [collectionId]);
-};
-
 const updateLastCheckedDate = async (id, endTime) => {
   const query = `update campaign_details set last_checked_date = ? where id = ?`;
 
