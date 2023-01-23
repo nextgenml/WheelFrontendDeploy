@@ -53,23 +53,39 @@ const uploadQuiz = async (req, res) => {
 };
 
 const getQuestionsByLevel = async (req, res) => {
-  const { level } = req.query;
+  try {
+    const { level } = req.query;
 
-  const data = await quizRepo.getQuestionsByLevel(level);
-  res.json({
-    data,
-  });
+    const data = await quizRepo.getQuestionsByLevel(level);
+    res.json({
+      data,
+    });
+  } catch (error) {
+    logger.error(`error occurred in getQuestionsByLevel api: ${ex}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: ex,
+    });
+  }
 };
 
 const saveAnswers = async (req, res) => {
-  const { answers } = req.body;
+  try {
+    const { answers } = req.body;
 
-  for (const answer of answers) {
-    await quizRepo.createQuizSubmission(answer);
+    for (const answer of answers) {
+      await quizRepo.createQuizSubmission(answer);
+    }
+    res.json({
+      message: "Quiz answers saved!",
+    });
+  } catch (error) {
+    logger.error(`error occurred in saveAnswers api: ${ex}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: ex,
+    });
   }
-  res.json({
-    message: "Quiz answers saved!",
-  });
 };
 module.exports = {
   uploadQuiz,
