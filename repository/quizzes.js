@@ -46,9 +46,27 @@ const createQuizSubmission = async (data) => {
   ]);
 };
 
+const getQuestionsByLevel = async (level) => {
+  const query = `select qs.answer as user_answer, qs.is_correct, qq.question, qq.answer, q.show_answers_at from quiz_submissions qs 
+                inner join quiz_questions qq on qq.id = qs.question_id 
+                inner join quizzes q on q.id = qq.quiz_id 
+                where level = ?;`;
+  const submissions = await runQueryAsync(query, [level]);
+
+  if (submissions && submissions.length) {
+    return submissions;
+  }
+
+  const query1 = `select qq.question, qq.id from quiz_questions qq
+                inner join quizzes q on q.id = qq.quiz_id 
+                where level = ? and qq.is_active = 1 and q.is_active = 1;`;
+
+  return await runQueryAsync(query1, [level]);
+};
 module.exports = {
   createQuiz,
   createQuizQuestion,
   createQuizSubmission,
   deleteQuiz,
+  getQuestionsByLevel,
 };

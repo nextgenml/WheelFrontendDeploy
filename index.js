@@ -33,7 +33,7 @@ const {
   getChoresByType,
   saveCampaign,
 } = require("./controllers/socialSharing");
-const { uploadQuiz } = require("./controllers/quizzes");
+const quizController = require("./controllers/quizzes");
 
 const app = express();
 
@@ -160,7 +160,8 @@ app.post("/save-campaign", upload.any(), saveCampaign);
 app.use("/", express.static(path.join(__dirname, "build")));
 
 // quizzes routes
-app.post("/upload-quizzes", upload.any(), uploadQuiz);
+app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
+app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));
