@@ -9,12 +9,12 @@ const multer = require("multer");
 const { static } = require("express");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-  }
-})
+    cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
+  },
+});
 var upload = multer({ storage: storage });
 
 const {
@@ -33,6 +33,7 @@ const {
   getChoresByType,
   saveCampaign,
 } = require("./controllers/socialSharing");
+const { uploadQuiz } = require("./controllers/quizzes");
 
 const app = express();
 
@@ -157,6 +158,9 @@ app.get("/social-sharing-stats", getSocialSharingStats);
 app.get("/social-sharing-chores", getChoresByType);
 app.post("/save-campaign", upload.any(), saveCampaign);
 app.use("/", express.static(path.join(__dirname, "build")));
+
+// quizzes routes
+app.post("/upload-quizzes", upload.any(), uploadQuiz);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));

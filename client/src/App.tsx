@@ -13,7 +13,29 @@ import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistri
 import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import SocialSharing from "./components/SocialSharing/SocialSharing";
 import Campaigns from "./components/Campaigns/Campaigns";
+import Quizzes from "./components/Quizzes/Quizzes";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
 function App() {
+  const location = useLocation();
+  const blackBgPages = [
+    "/",
+    "/spin-wheel",
+    "/claim-distribution",
+    "/spin-wheel",
+  ];
+  console.log("location.pathname", location.pathname);
+  useEffect(() => {
+    console.log("setting path color", blackBgPages.includes(location.pathname));
+
+    document.body.style.backgroundColor = blackBgPages.includes(
+      location.pathname
+    )
+      ? "rgb(10, 7, 20);"
+      : "white";
+  }, [location.pathname]);
+
   return (
     <>
       <Header />
@@ -36,6 +58,7 @@ function App() {
         <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/social-sharing" element={<SocialSharing />} />
         <Route path="/campaigns" element={<Campaigns />} />
+        <Route path="/profile" element={<Quizzes />} />
       </Routes>
       <Footer />
     </>
