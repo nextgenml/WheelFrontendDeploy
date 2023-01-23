@@ -77,7 +77,6 @@ module.exports = {
   getActiveCampaigns,
   getPostedCampaigns,
   updateLastCheckedDate,
-  getCampaignImages,
   saveCampaign,
   saveCampaignDetails,
   canCreateChore,

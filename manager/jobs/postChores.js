@@ -26,7 +26,7 @@ const {
   checkIfOtherChoresCompleted,
 } = require("./otherChores");
 const { createFollowChores, checkIfFollowComplete } = require("./followChores");
-const { transferRewards } = require("./tranferRewards");
+const { transferRewards } = require("./transferRewards");
 
 const createPostChores = async () => {
   try {
@@ -92,9 +92,9 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
           const holdersByWalletId = await getHoldersByWalletId(
             postedUsers.map((u) => u.username)
           );
-          
+
           await updateMediaIds(postedUsers);
-          const campaignImages = (campaign.image_urls || '').split(',')
+          const campaignImages = (campaign.image_urls || "").split(",");
           // console.log("holdersByWalletId", holdersByWalletId);
           for (const user of postedUsers) {
             if (await areImagesMatching(campaignImages, user))
