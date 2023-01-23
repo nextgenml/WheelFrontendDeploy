@@ -162,6 +162,7 @@ app.use("/", express.static(path.join(__dirname, "build")));
 // quizzes routes
 app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
 app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
+app.post("/save-quiz-answers", quizController.saveAnswers);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));

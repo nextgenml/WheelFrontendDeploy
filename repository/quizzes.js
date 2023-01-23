@@ -36,13 +36,17 @@ const createQuizQuestion = async (data) => {
   ]);
 };
 
-const createQuizSubmission = async (data) => {
+const createQuizSubmission = async (answer) => {
+  const query1 = `select answer as correctAnswer from quiz_questions where id = ?;`;
+  const questions = await runQueryAsync(query1, [answer.id]);
+  const { correctAnswer } = questions[0];
+
   const query = `insert into quiz_submissions (question_id, answer, is_correct) values(?, ?, ?);`;
 
   return await runQueryAsync(query, [
-    data.question_id,
-    data.answer,
-    data.is_correct,
+    answer.id,
+    answer.user_input,
+    correctAnswer == answer.user_input ? 1 : 0,
   ]);
 };
 
@@ -63,6 +67,7 @@ const getQuestionsByLevel = async (level) => {
 
   return await runQueryAsync(query1, [level]);
 };
+
 module.exports = {
   createQuiz,
   createQuizQuestion,

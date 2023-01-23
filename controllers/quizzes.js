@@ -60,7 +60,19 @@ const getQuestionsByLevel = async (req, res) => {
     data,
   });
 };
+
+const saveAnswers = async (req, res) => {
+  const { answers } = req.body;
+
+  for (const answer of answers) {
+    await quizRepo.createQuizSubmission(answer);
+  }
+  res.json({
+    message: "Quiz answers saved!",
+  });
+};
 module.exports = {
   uploadQuiz,
   getQuestionsByLevel,
+  saveAnswers,
 };
