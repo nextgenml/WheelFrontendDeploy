@@ -1,6 +1,7 @@
-import { Button } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { useState } from "react";
 import config from "../../config";
+import styles from "./Quizzes.module.css";
 
 const Quizzes = () => {
   const [file, setFile] = useState();
@@ -22,9 +23,12 @@ const Quizzes = () => {
     }
   };
   return (
-    <>
-      <Button variant="contained" component="label">
-        Select CSV
+    <Box className={styles.main}>
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        Upload quizzes here
+      </Typography>
+      <Button variant="contained" component="label" sx={{ mr: 2 }}>
+        {file ? "File selected" : "Select CSV"}
         <input
           type="file"
           multiple
@@ -37,7 +41,7 @@ const Quizzes = () => {
       <Button variant="outlined" onClick={onSubmit}>
         Submit
       </Button>
-    </>
+    </Box>
   );
 };
 export default Quizzes;
