@@ -63,9 +63,10 @@ const getQuestionsByLevel = async (level) => {
 
   const query1 = `select qq.question, qq.id from quiz_questions qq
                 inner join quizzes q on q.id = qq.quiz_id 
-                where level = ? and qq.is_active = 1 and q.is_active = 1;`;
+                where level = ? and qq.is_active = 1 and q.is_active = 1 and q.starts_at <= ? and q.ends_at >= ?;`;
 
-  return await runQueryAsync(query1, [level]);
+  const currentTime = moment().format();
+  return await runQueryAsync(query1, [level, currentTime, currentTime]);
 };
 
 module.exports = {
