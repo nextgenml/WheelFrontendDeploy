@@ -9,7 +9,7 @@ const deleteQuiz = async (level) => {
   const quiz = await runQueryAsync(query2, [level]);
   const quiz_id = quiz[0]?.id;
 
-  const query1 = `update quiz_questions set is_active = 0 where level = ?;`;
+  const query1 = `update quiz_questions set is_active = 0 where quiz_id = ?;`;
 
   await runQueryAsync(query1, [quiz_id]);
 };

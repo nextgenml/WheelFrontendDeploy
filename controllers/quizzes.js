@@ -1,3 +1,5 @@
+const logger = require("../logger");
+const fs = require("fs");
 const {
   deleteQuiz,
   createQuiz,
@@ -7,7 +9,7 @@ const { readContentsFromCsv } = require("../utils/csv");
 
 const uploadQuiz = async (req, res) => {
   try {
-    const { files } = req.body;
+    const { files } = req;
 
     if (!files || !files[0])
       return res.status(400).json({
@@ -20,10 +22,11 @@ const uploadQuiz = async (req, res) => {
     const contents = await readContentsFromCsv(csvFile.path);
 
     for (const row of contents) {
-      await deleteQuiz(row.level);
+      await deleteQuiz(row.quiz_level);
 
+      console.log(row["quiz_level"], row);
       const { insertId } = await createQuiz({
-        level: row.level,
+        level: row.quiz_level,
         starts_at: row.starts_at,
         ends_at: row.ends_at,
         show_answers_at: row.show_answers_at,
@@ -31,7 +34,7 @@ const uploadQuiz = async (req, res) => {
 
       const questions = row.questions.split("||");
       const answers = row.answers.split("||");
-      const index = 0;
+      let index = 0;
       for (const question of questions) {
         await createQuizQuestion({
           question,
@@ -41,7 +44,9 @@ const uploadQuiz = async (req, res) => {
         index += 1;
       }
     }
-
+    fs.unlink(csvFile.path, () => {
+      // console.log("deleted file");
+    });
     res.json({
       message: "Uploaded successfully",
     });
