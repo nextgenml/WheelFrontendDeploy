@@ -15,21 +15,14 @@ const Quizzes = () => {
       method: "POST",
       body,
     });
-    const { message } = await res.json();
+    if (res.ok) {
+      alert("Quiz uploaded successfully");
+    } else {
+      alert("Quiz upload failed");
+    }
   };
   return (
     <>
-      {/* <Button variant="contained">
-        Select CSV
-        <input
-          type="file"
-          name="screenshots"
-          accept=".png,.jpg"
-          hidden
-          multiple
-          onChange={onFileChange}
-        />
-      </Button> */}
       <Button variant="contained" component="label">
         Select CSV
         <input
