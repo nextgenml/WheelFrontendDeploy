@@ -56,7 +56,7 @@ const createQuizSubmission = async (answer, wallet_id) => {
 };
 
 const getQuestionsByLevel = async (level, wallet_id) => {
-  const query = `select qs.answer as user_answer, qs.is_correct, qq.question, qq.answer, q.show_answers_at from quiz_submissions qs 
+  const query = `select qs.question_id as id, qs.answer as user_answer, qs.is_correct, qq.question, qq.answer, q.show_answers_at from quiz_submissions qs 
                 inner join quiz_questions qq on qq.id = qs.question_id 
                 inner join quizzes q on q.id = qq.quiz_id 
                 where level = ? and wallet_id = ?;`;
@@ -79,10 +79,17 @@ const getQuestionsByLevel = async (level, wallet_id) => {
   ]);
 };
 
+const correctAnsweredWallets = async (level, wallet_id) => {
+  const query = `select distinct wallet_id from quiz_submissions where question_id = ? and is_correct = 1;`;
+  const submissions = await runQueryAsync(query, [level, wallet_id]);
+
+  return submissions.map((s) => s.wallet_id);
+};
 module.exports = {
   createQuiz,
   createQuizQuestion,
   createQuizSubmission,
   deleteQuiz,
   getQuestionsByLevel,
+  correctAnsweredWallets,
 };

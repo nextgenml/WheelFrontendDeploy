@@ -1,4 +1,11 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Link,
+  Tooltip,
+} from "@mui/material";
 import { useState } from "react";
 import config from "../../config";
 import styles from "./Quizzes.module.css";
@@ -6,7 +13,9 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 
-const Questions = ({ quizData, walletId, fetchData }) => {
+const Questions = ({ quiz, walletId, fetchData }) => {
+  const quizData = quiz.data;
+
   const [answers, setAnswers] = useState({});
   const onSubmit = async () => {
     const body = [];
@@ -51,8 +60,27 @@ const Questions = ({ quizData, walletId, fetchData }) => {
     );
   return (
     <Box className={styles.tabPanel}>
-      <Typography variant="h6" textAlign="center">
-        Questions
+      <Typography
+        variant="h6"
+        textAlign="center"
+        display={"flex"}
+        alignItems="center"
+      >
+        Questions&nbsp;&nbsp;
+        <Tooltip title={"Users who have answered all questions correctly"}>
+          <Link
+            className={styles.copyIcon}
+            onClick={() =>
+              navigator.clipboard.writeText(
+                quiz.correct_answered_quiz_wallets.join(",")
+              )
+            }
+          >
+            <Typography variant="body1">
+              Copy wallets ({quiz.correct_answered_quiz_wallets.length})
+            </Typography>
+          </Link>
+        </Tooltip>
       </Typography>
       {quizData &&
         quizData.map((q, index) => {
@@ -96,6 +124,22 @@ const Questions = ({ quizData, walletId, fetchData }) => {
                     </Box>
                   )}
                 </Box>
+              )}
+              {q.correct_answered_wallets && (
+                <Tooltip
+                  title={"Users who have answered this question correctly"}
+                >
+                  <Link
+                    className={styles.copyIcon}
+                    onClick={() =>
+                      navigator.clipboard.writeText(
+                        q.correct_answered_wallets.join(",")
+                      )
+                    }
+                  >
+                    Copy wallets ({q.correct_answered_wallets.length})
+                  </Link>
+                </Tooltip>
               )}
             </Box>
           );

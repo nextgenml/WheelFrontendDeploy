@@ -47,7 +47,7 @@ const Quizzes = () => {
     const res = await fetch(
       `${config.API_ENDPOINT}/quizzes-by-level?level=${tabValue}&wallet_id=${address}`
     );
-    const { data } = await res.json();
+    const data = await res.json();
     setQuizData(data);
     setLoading(false);
   };
@@ -76,7 +76,7 @@ const Quizzes = () => {
             return (
               <TabPanel value={level.value.toString()}>
                 <Questions
-                  quizData={quizData}
+                  quiz={quizData}
                   walletId={address}
                   fetchData={fetchData}
                 />

@@ -9,7 +9,13 @@
 .question {
   padding: 16px 0;
 }
+.question > * {
+  margin-right: 16px;
+}
 .submitQuiz {
   margin-top: 24px;
   float: right;
+}
+.copyIcon {
+  cursor: pointer;
 }

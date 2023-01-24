@@ -2,6 +2,8 @@ const logger = require("../logger");
 const fs = require("fs");
 const quizRepo = require("../repository/quizzes");
 const { readContentsFromCsv } = require("../utils/csv");
+const config = require("../config");
+const { intersectionOfArrays } = require("../utils");
 
 const uploadQuiz = async (req, res) => {
   try {
@@ -62,8 +64,21 @@ const getQuestionsByLevel = async (req, res) => {
       });
 
     const data = await quizRepo.getQuestionsByLevel(level, wallet_id);
+
+    let intersection;
+    if (wallet_id === config.ADMIN_WALLET) {
+      const walletsGroup = [];
+      for (const question of data) {
+        const wallets = await quizRepo.correctAnsweredWallets(question.id);
+        question.correct_answered_wallets = wallets;
+        walletsGroup.push(wallets);
+      }
+      intersection = intersectionOfArrays(walletsGroup);
+    }
+
     res.json({
       data,
+      correct_answered_quiz_wallets: intersection,
     });
   } catch (error) {
     logger.error(`error occurred in getQuestionsByLevel api: ${error}`);
