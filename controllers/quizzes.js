@@ -43,28 +43,33 @@ const uploadQuiz = async (req, res) => {
     res.json({
       message: "Uploaded successfully",
     });
-  } catch (ex) {
-    logger.error(`error occurred in uploadQuiz api: ${ex}`);
+  } catch (error) {
+    logger.error(`error occurred in uploadQuiz api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      message: ex,
+      message: error,
     });
   }
 };
 
 const getQuestionsByLevel = async (req, res) => {
   try {
-    const { level } = req.query;
+    const { level, wallet_id } = req.query;
+    if (!wallet_id)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "wallet id is missing",
+      });
 
-    const data = await quizRepo.getQuestionsByLevel(level);
+    const data = await quizRepo.getQuestionsByLevel(level, wallet_id);
     res.json({
       data,
     });
   } catch (error) {
-    logger.error(`error occurred in getQuestionsByLevel api: ${ex}`);
+    logger.error(`error occurred in getQuestionsByLevel api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      message: ex,
+      message: error,
     });
   }
 };
@@ -72,18 +77,25 @@ const getQuestionsByLevel = async (req, res) => {
 const saveAnswers = async (req, res) => {
   try {
     const { answers } = req.body;
+    const { wallet_id } = req.query;
+    console.log("req.query;", req.query, req.body);
+    if (!wallet_id || !answers)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "wallet id or answers are missing",
+      });
 
     for (const answer of answers) {
-      await quizRepo.createQuizSubmission(answer);
+      await quizRepo.createQuizSubmission(answer, wallet_id);
     }
     res.json({
       message: "Quiz answers saved!",
     });
   } catch (error) {
-    logger.error(`error occurred in saveAnswers api: ${ex}`);
+    logger.error(`error occurred in saveAnswers api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      message: ex,
+      message: error.message,
     });
   }
 };

@@ -1,5 +1,5 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
-
+const moment = require("moment");
 const deleteQuiz = async (level) => {
   const query = `update quizzes set is_active = 0 where level = ?;`;
 
@@ -36,26 +36,27 @@ const createQuizQuestion = async (data) => {
   ]);
 };
 
-const createQuizSubmission = async (answer) => {
+const createQuizSubmission = async (answer, wallet_id) => {
   const query1 = `select answer as correctAnswer from quiz_questions where id = ?;`;
   const questions = await runQueryAsync(query1, [answer.id]);
   const { correctAnswer } = questions[0];
 
-  const query = `insert into quiz_submissions (question_id, answer, is_correct) values(?, ?, ?);`;
+  const query = `insert into quiz_submissions (question_id, answer, is_correct, wallet_id) values(?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     answer.id,
     answer.user_input,
     correctAnswer == answer.user_input ? 1 : 0,
+    wallet_id,
   ]);
 };
 
-const getQuestionsByLevel = async (level) => {
+const getQuestionsByLevel = async (level, wallet_id) => {
   const query = `select qs.answer as user_answer, qs.is_correct, qq.question, qq.answer, q.show_answers_at from quiz_submissions qs 
                 inner join quiz_questions qq on qq.id = qs.question_id 
                 inner join quizzes q on q.id = qq.quiz_id 
-                where level = ?;`;
-  const submissions = await runQueryAsync(query, [level]);
+                where level = ? and wallet_id = ?;`;
+  const submissions = await runQueryAsync(query, [level, wallet_id]);
 
   if (submissions && submissions.length) {
     return submissions;

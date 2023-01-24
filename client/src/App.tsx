@@ -14,6 +14,7 @@ import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import SocialSharing from "./components/SocialSharing/SocialSharing";
 import Campaigns from "./components/Campaigns/Campaigns";
 import Profile from "./components/Profile/Profile";
+import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -59,6 +60,7 @@ function App() {
         <Route path="/social-sharing" element={<SocialSharing />} />
         <Route path="/campaigns" element={<Campaigns />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/quizzes" element={<Quizzes />} />
       </Routes>
       <Footer />
     </>
