@@ -3,7 +3,7 @@ import { useState } from "react";
 import config from "../../config";
 import styles from "./Quizzes.module.css";
 
-const Quizzes = () => {
+const Profile = () => {
   const [file, setFile] = useState();
 
   const onFileChange = (e) => {
@@ -44,4 +44,4 @@ const Quizzes = () => {
     </Box>
   );
 };
-export default Quizzes;
+export default Profile;
