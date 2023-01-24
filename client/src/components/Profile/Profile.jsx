@@ -1,7 +1,7 @@
 import { Button, Typography, Box } from "@mui/material";
 import { useState } from "react";
 import config from "../../config";
-import styles from "./Quizzes.module.css";
+import styles from "./Profile.module.css";
 
 const Profile = () => {
   const [file, setFile] = useState();
