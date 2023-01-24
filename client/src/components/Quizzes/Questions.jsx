@@ -86,12 +86,12 @@ const Questions = ({ quizData, walletId, fetchData }) => {
                 <Box>
                   {q.is_correct ? (
                     <Box sx={{ color: "var(--bs-teal)" }}>
-                      <CheckCircleOutlineIcon />
+                      <CheckCircleOutlineIcon sx={{ mr: 1 }} />
                       <Typography variant="caption">Correct Answer</Typography>
                     </Box>
                   ) : (
                     <Box sx={{ color: "var(--bs-red)" }}>
-                      <HighlightOffIcon />
+                      <HighlightOffIcon sx={{ mr: 1 }} />
                       <Typography variant="caption">Wrong Answer</Typography>
                     </Box>
                   )}

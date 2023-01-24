@@ -78,7 +78,7 @@ const saveAnswers = async (req, res) => {
   try {
     const { answers } = req.body;
     const { wallet_id } = req.query;
-    console.log("req.query;", req.query, req.body);
+
     if (!wallet_id || !answers)
       return res.status(400).json({
         statusCode: 400,

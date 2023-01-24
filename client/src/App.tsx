@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import SpinAndWin from "./SpinAndWin";
 import { Routes, Route } from "react-router-dom";
 import { Container } from "@mui/material";

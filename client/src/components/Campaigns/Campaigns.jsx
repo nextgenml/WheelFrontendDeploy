@@ -50,17 +50,8 @@ const Campaigns = () => {
       [key]: newValue,
     }));
   };
-  const allowedContentSize = (mediaType) => {
-    switch (mediaType) {
-      case "twitter":
-        return 280;
-      default:
-        return 280;
-    }
-  };
-  const onSubmit = async () => {
-    console.log("formData.content", formData.content);
 
+  const onSubmit = async () => {
     // const allowedLimit = allowedContentSize(formData.media);
     // if (formData.content.length > allowedLimit) {
     //   setError(

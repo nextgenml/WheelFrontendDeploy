@@ -1,5 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
+const config = require("../config");
 const deleteQuiz = async (level) => {
   const query = `update quizzes set is_active = 0 where level = ?;`;
 
@@ -46,7 +47,10 @@ const createQuizSubmission = async (answer, wallet_id) => {
   return await runQueryAsync(query, [
     answer.id,
     answer.user_input,
-    correctAnswer == answer.user_input ? 1 : 0,
+    correctAnswer.toString().toLowerCase() ==
+    answer.user_input.toString().toLowerCase()
+      ? 1
+      : 0,
     wallet_id,
   ]);
 };
@@ -64,10 +68,15 @@ const getQuestionsByLevel = async (level, wallet_id) => {
 
   const query1 = `select qq.question, qq.id from quiz_questions qq
                 inner join quizzes q on q.id = qq.quiz_id 
-                where level = ? and qq.is_active = 1 and q.is_active = 1 and q.starts_at <= ? and q.ends_at >= ?;`;
+                where level = ? and qq.is_active = 1 and q.is_active = 1 and (q.starts_at <= ? and q.ends_at >= ? or 1 != ?);`;
 
   const currentTime = moment().format();
-  return await runQueryAsync(query1, [level, currentTime, currentTime]);
+  return await runQueryAsync(query1, [
+    level,
+    currentTime,
+    currentTime,
+    config.ADMIN_WALLET === wallet_id ? 0 : 1,
+  ]);
 };
 
 module.exports = {

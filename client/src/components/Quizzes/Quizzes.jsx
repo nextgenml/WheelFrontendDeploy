@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Typography } from "@mui/material";
 import styles from "./Quizzes.module.css";
 

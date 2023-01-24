@@ -15,7 +15,8 @@ const prodConfig = {
   RPC_URL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   DISABLE_LOGS: true,
   TWITTER_DEV_TOKEN: "",
-  // holders having min balance will be able to participate in chores
+  // user for authenticating admin user
+  ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };
 
 const testConfig = {
@@ -30,6 +31,7 @@ const testConfig = {
   DISABLE_LOGS: false,
   TWITTER_DEV_TOKEN:
     "AAAAAAAAAAAAAAAAAAAAAA1ukwEAAAAAlSl4X%2FTjbuuLXmNS8kJNO8MgGz4%3D9uhtUccA0oQNe9rkz9wPhxZ0472SeJhZ5p19YIIXyWtGnoJ6yV",
+  ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };
 
 const commonConfig = {
