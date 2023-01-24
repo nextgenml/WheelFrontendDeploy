@@ -19,3 +19,7 @@
 .copyIcon {
   cursor: pointer;
 }
+.rightAnswer {
+  margin-left: 8px !important;
+  color: black;
+}

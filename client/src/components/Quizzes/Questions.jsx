@@ -12,6 +12,7 @@ import styles from "./Quizzes.module.css";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import moment from "moment";
 
 const Questions = ({ quiz, walletId, fetchData }) => {
   const quizData = quiz.data;
@@ -121,6 +122,15 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                     <Box sx={{ color: "var(--bs-red)" }}>
                       <HighlightOffIcon sx={{ mr: 1 }} />
                       <Typography variant="caption">Wrong Answer</Typography>
+
+                      {moment(q.show_answers_at).diff(moment()) < 0 && (
+                        <Typography
+                          variant="caption"
+                          className={styles.rightAnswer}
+                        >
+                          Right answer is {q.answer}
+                        </Typography>
+                      )}
                     </Box>
                   )}
                 </Box>
