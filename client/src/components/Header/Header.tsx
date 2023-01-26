@@ -15,8 +15,9 @@ import {
 import { Web3Button } from "@web3modal/react";
 import clsx from "clsx";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useLocation } from "react-router-dom";
+import { BlackBgPages } from "../../App";
 
-const linkStyle = { fontSize: { sm: "12px", md: "15px" } };
 const headerLinks = [
   { link: "", title: "HOME" },
   { link: "goals", title: "GOALS" },
@@ -31,7 +32,9 @@ const headerLinks = [
 
 export default function Header() {
   const [openDrawer, setState] = useState<boolean>(false);
-
+  const location = useLocation();
+  const newBg = BlackBgPages.includes(location.pathname)
+  const linkStyle = { fontSize: { sm: "12px", md: "15px", color: newBg ? 'white' : 'black' } };
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
       event &&
@@ -122,7 +125,6 @@ export default function Header() {
               >
                 <Typography
                   className="header-link"
-                  color="white"
                   sx={linkStyle}
                 >
                   {h.title}
@@ -140,7 +142,7 @@ export default function Header() {
               style={{
                 fontSize: "38px",
                 cursor: "pointer",
-                color: "white",
+                color: newBg ? 'white' : 'black'
               }}
             ></MenuIcon>
           </Button>

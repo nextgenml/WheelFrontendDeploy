@@ -18,7 +18,12 @@ import Profile from "./components/Profile/Profile";
 import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-
+export const BlackBgPages = [
+  "/",
+  "/spin-wheel",
+  "/claim-distribution",
+  "/spin-wheel",
+];
 function App() {
   const location = useLocation();
   const blackBgPages = [
