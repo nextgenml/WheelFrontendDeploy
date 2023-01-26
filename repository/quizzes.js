@@ -26,13 +26,12 @@ const updateSubmission = async (id, isCorrect) => {
   return await runQueryAsync(query, [isCorrect, id]);
 };
 const deleteQuiz = async (level) => {
-  const query = `update quizzes set is_active = 0 where level = ?;`;
+  const query = "select id from quizzes where is_active = 1 and level = ?";
+  const quizzes = await runQueryAsync(query, [level]);
+  const quiz_id = quizzes[0]?.id;
 
-  await runQueryAsync(query, [level]);
-
-  const query2 = `select id from quizzes where level = ?;`;
-  const quiz = await runQueryAsync(query2, [level]);
-  const quiz_id = quiz[0]?.id;
+  const query2 = `update quizzes set is_active = 0 where id = ?;`;
+  await runQueryAsync(query2, [quiz_id]);
 
   const query1 = `update quiz_questions set is_active = 0 where quiz_id = ?;`;
 

@@ -11,82 +11,84 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Loading from "../loading";
 import Questions from "./Questions";
 
-const levels = [
-  {
-    name: "Level 1",
-    value: 1,
-  },
-  {
-    name: "Level 2",
-    value: 2,
-  },
-  {
-    name: "Level 3",
-    value: 3,
-  },
-  {
-    name: "Level 4",
-    value: 4,
-  },
-  {
-    name: "Level 5",
-    value: 5,
-  },
-];
 const Quizzes = () => {
   const { isConnected, address } = useAccount();
   const [tabValue, setTabValue] = useState("1");
   const [loading, setLoading] = useState(true);
   const [quizData, setQuizData] = useState();
+  const [quizzes, setQuizzes] = useState();
 
-  useEffect(() => {
-    fetchData();
-  }, [tabValue]);
-
-  const fetchData = async () => {
+  const fetchQuizzes = async () => {
+    const res1 = await fetch(
+      `${config.API_ENDPOINT}/quizzes?wallet_id=${address}`
+    );
+    const data1 = await res1.json();
+    setQuizzes(data1);
+  };
+  const fetchData = async (submission) => {
     const res = await fetch(
       `${config.API_ENDPOINT}/quizzes-by-level?level=${tabValue}&wallet_id=${address}`
     );
     const data = await res.json();
     setQuizData(data);
+
+    // if (submission) fetchQuizzes();
     setLoading(false);
   };
+
+  useEffect(() => {
+    fetchQuizzes();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [tabValue]);
 
   const renderContent = () => {
     return (
       <>
-        <Typography variant="h4" className={styles.heading}>
-          Quizzes
-        </Typography>
+        <Box display={"flex"} alignItems="center">
+          <Typography variant="h4" className={styles.heading}>
+            Quizzes
+          </Typography>
+          {quizzes.total_reward > 0 && (
+            <Typography variant="subtitle1" sx={{ ml: 2 }}>
+              Total reward $({quizzes.total_reward})
+            </Typography>
+          )}
+        </Box>
+
         <TabContext value={tabValue} sx={{ mt: 4 }}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList
               onChange={(e, newValue) => setTabValue(newValue)}
               variant="fullWidth"
             >
-              {levels.map((level, index) => {
-                return (
-                  <Tab
-                    label={level.name}
-                    value={level.value.toString()}
-                    key={index}
-                  />
-                );
-              })}
+              {quizzes.quizzes &&
+                quizzes.quizzes.map((quiz, index) => {
+                  return (
+                    <Tab
+                      label={`Level ${quiz.level} (${quiz.reward || 0})`}
+                      value={quiz.level.toString()}
+                      key={index}
+                    />
+                  );
+                })}
             </TabList>
           </Box>
 
-          {levels.map((level, index) => {
-            return (
-              <TabPanel value={level.value.toString()} key={index}>
-                <Questions
-                  quiz={quizData}
-                  walletId={address}
-                  fetchData={fetchData}
-                />
-              </TabPanel>
-            );
-          })}
+          {quizzes.quizzes &&
+            quizzes.quizzes.map((quiz, index) => {
+              return (
+                <TabPanel value={quiz.level.toString()} key={index}>
+                  <Questions
+                    quiz={quizData}
+                    walletId={address}
+                    fetchData={fetchData}
+                  />
+                </TabPanel>
+              );
+            })}
         </TabContext>
       </>
     );

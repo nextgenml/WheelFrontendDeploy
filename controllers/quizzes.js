@@ -43,6 +43,7 @@ const uploadQuiz = async (req, res) => {
         index += 1;
       }
 
+      // console.log("deletedQuizId", deletedQuizId);
       const deletedQuizSubmissions = await quizRepo.getDeletedQuizSubmissions(
         deletedQuizId
       );
@@ -51,7 +52,7 @@ const uploadQuiz = async (req, res) => {
         index = 0;
         for (const question of questions) {
           if (sub.question.toLowerCase() === question.toLowerCase()) {
-            console.log("question", question, sub);
+            // console.log("question", question, "sub", sub);
             await quizRepo.updateSubmission(
               sub.id,
               sub.user_answer.toLowerCase() === answers[index].toLowerCase()
@@ -112,7 +113,6 @@ const getQuestionsByLevel = async (req, res) => {
       correct_answered_quiz_wallets: intersection,
     });
   } catch (error) {
-    console.log("error", error);
     logger.error(`error occurred in getQuestionsByLevel api: ${error}`);
     res.status(400).json({
       statusCode: 400,
