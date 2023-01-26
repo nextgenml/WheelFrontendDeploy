@@ -83,7 +83,6 @@ const getQuestionsByLevel = async (req, res) => {
         question.show_result = false;
       } else question.show_result = true;
 
-      console.log("data.show_result", question.show_result);
       if (!is_admin) question.answer = undefined;
     }
 
