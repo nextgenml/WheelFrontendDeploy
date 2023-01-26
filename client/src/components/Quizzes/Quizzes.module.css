@@ -23,3 +23,12 @@
   margin-left: 8px !important;
   color: black;
 }
+
+/* @media only screen and (max-width: 640px) {
+  .question {
+    flex-direction: column;
+  }
+  .question > * {
+    padding-bottom: 8px;
+  }
+} */

@@ -94,27 +94,27 @@ const Questions = ({ quiz, walletId, fetchData }) => {
               className={styles.question}
               key={index}
             >
-              <Typography variant="subtitle1" sx={{ mr: 2 }}>
-                {index + 1}.
-              </Typography>
               <Typography variant="body1" sx={{ mr: 2 }}>
-                {q.question}
+                {index + 1}.&nbsp;&nbsp;{q.question}
               </Typography>
 
-              <TextField
-                variant="standard"
-                size="small"
-                key={index}
-                value={q.user_answer || answers[q.id] || ""}
-                disabled={!!q.user_answer}
-                onChange={(e) =>
-                  setAnswers((prev) => ({
-                    ...prev,
-                    [q.id]: e.target.value,
-                  }))
-                }
-                sx={{ mr: 2 }}
-              />
+              <div>
+                <TextField
+                  variant="standard"
+                  size="small"
+                  key={index}
+                  value={q.user_answer || answers[q.id] || ""}
+                  disabled={!!q.user_answer}
+                  onChange={(e) =>
+                    setAnswers((prev) => ({
+                      ...prev,
+                      [q.id]: e.target.value,
+                    }))
+                  }
+                  sx={{ mr: 2 }}
+                />
+              </div>
+
               {q.user_answer && (q.show_result || quiz.is_admin) && (
                 <Box>
                   {q.is_correct ? (
