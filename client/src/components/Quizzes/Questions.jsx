@@ -113,7 +113,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                 }
                 sx={{ mr: 2 }}
               />
-              {(q.show_result || q.is_admin) && (
+              {(q.show_result || quiz.is_admin) && (
                 <Box>
                   {q.is_correct ? (
                     <Box sx={{ color: "var(--bs-teal)" }}>
@@ -125,7 +125,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                       <HighlightOffIcon sx={{ mr: 1 }} />
                       <Typography variant="caption">Wrong Answer</Typography>
 
-                      {q.is_admin &&
+                      {quiz.is_admin &&
                         moment(q.show_answers_at).diff(moment()) < 0 && (
                           <Typography
                             variant="caption"
@@ -138,7 +138,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                   )}
                 </Box>
               )}
-              {q.is_admin && q.correct_answered_wallets && (
+              {quiz.is_admin && q.correct_answered_wallets && (
                 <Tooltip
                   title={"Users who have answered this question correctly"}
                 >

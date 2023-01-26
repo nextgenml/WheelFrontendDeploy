@@ -79,11 +79,12 @@ const getQuestionsByLevel = async (req, res) => {
 
     for (const question of data) {
       if (!is_admin && moment(question.show_answers_at).diff(moment()) > 0) {
-        data.is_correct = undefined;
-        data.show_result = false;
-      } else data.show_result = true;
+        question.is_correct = undefined;
+        question.show_result = false;
+      } else question.show_result = true;
 
-      if (!is_admin) data.answer = undefined;
+      console.log("data.show_result", question.show_result);
+      if (!is_admin) question.answer = undefined;
     }
 
     res.json({
