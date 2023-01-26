@@ -2,7 +2,7 @@
 import { Typography } from "@mui/material";
 import styles from "./Quizzes.module.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import config from "../../config.js";
 import { useAccount } from "wagmi";
 import Box from "@mui/material/Box";
@@ -17,6 +17,7 @@ const Quizzes = () => {
   const [loading, setLoading] = useState(true);
   const [quizData, setQuizData] = useState();
   const [quizzes, setQuizzes] = useState();
+  const [width, setWidth] = useState(window.innerWidth);
 
   const fetchQuizzes = async () => {
     const res1 = await fetch(
@@ -44,6 +45,17 @@ const Quizzes = () => {
     fetchData();
   }, [tabValue]);
 
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowSizeChange);
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
+  const isMobile = width <= 768;
   const renderContent = () => {
     return (
       <>
@@ -59,10 +71,18 @@ const Quizzes = () => {
         </Box>
 
         <TabContext value={tabValue} sx={{ mt: 4 }}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              maxWidth: isMobile ? { xs: 400, md: 480 } : {},
+              bgcolor: "background.paper",
+            }}
+          >
             <TabList
               onChange={(e, newValue) => setTabValue(newValue)}
-              variant="fullWidth"
+              variant={isMobile ? "scrollable" : "fullWidth"}
+              allowScrollButtonsMobile
             >
               {quizzes.quizzes &&
                 quizzes.quizzes.map((quiz, index) => {
