@@ -163,6 +163,7 @@ app.use("/", express.static(path.join(__dirname, "build")));
 app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
 app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
 app.post("/save-quiz-answers", quizController.saveAnswers);
+app.get("/quizzes", quizController.getAllQuizzes);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));

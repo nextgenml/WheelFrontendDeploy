@@ -2,6 +2,18 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const config = require("../config");
 
+const getAllQuizzes = async (walletId) => {
+  const query = `select level, reward, starts_at from quizzes where is_active = 1 order by level asc;`;
+  const quizzes = await runQueryAsync(query, []);
+
+  const query2 = `select distinct qq.quiz_id from quiz_questions qq inner join quiz_submissions qs on qs.question_id = qq.id where wallet_id = ?`;
+  const completedQuizzes = await runQueryAsync(query2, [walletId]);
+
+  return {
+    quizzes,
+    completedQuizzes,
+  };
+};
 const getDeletedQuizSubmissions = async (quizId) => {
   const query = `select qs.question_id, qs.id, qs.answer as user_answer, qq.question from quiz_submissions qs 
                   inner join quiz_questions qq on qq.id = qs.question_id 
@@ -109,4 +121,5 @@ module.exports = {
   correctAnsweredWallets,
   getDeletedQuizSubmissions,
   updateSubmission,
+  getAllQuizzes,
 };

@@ -12,7 +12,7 @@ import styles from "./Quizzes.module.css";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import moment from "moment";
+// import moment from "moment";
 
 const Questions = ({ quiz, walletId, fetchData }) => {
   const quizData = quiz.data;
@@ -45,7 +45,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
     );
     if (res.ok) {
       alert("Quiz Submitted successfully");
-      fetchData();
+      fetchData(true);
     } else {
       alert("Quiz submission failed. Please try again after sometime");
     }

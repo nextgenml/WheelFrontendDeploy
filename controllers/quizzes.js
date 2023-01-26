@@ -146,8 +146,46 @@ const saveAnswers = async (req, res) => {
     });
   }
 };
+
+const getAllQuizzes = async (req, res) => {
+  try {
+    const { wallet_id } = req.query;
+
+    if (!wallet_id)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "wallet is missing",
+      });
+
+    const { quizzes, completedQuizzes } = await quizRepo.getAllQuizzes(
+      wallet_id
+    );
+
+    let totalReward = 0;
+    const completedIds = completedQuizzes.map((x) => x.quiz_id);
+
+    for (const quiz of quizzes)
+      if (
+        !completedIds.includes(quiz.id) &&
+        moment(quiz.starts_at).diff(moment()) < 0
+      )
+        totalReward += quiz.reward;
+
+    res.json({
+      quizzes,
+      total_reward: totalReward,
+    });
+  } catch (error) {
+    logger.error(`error occurred in getAllQuizzes api: ${error}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   uploadQuiz,
   getQuestionsByLevel,
   saveAnswers,
+  getAllQuizzes,
 };
