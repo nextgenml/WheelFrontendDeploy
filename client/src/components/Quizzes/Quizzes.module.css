@@ -24,11 +24,12 @@
   color: black;
 }
 
-/* @media only screen and (max-width: 640px) {
+@media only screen and (max-width: 640px) {
   .question {
     flex-direction: column;
+    align-items: flex-start !important;
   }
   .question > * {
     padding-bottom: 8px;
   }
-} */
+}
