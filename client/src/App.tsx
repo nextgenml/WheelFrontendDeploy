@@ -34,7 +34,7 @@ function App() {
     document.body.style.backgroundColor = blackBgPages.includes(
       location.pathname
     )
-      ? "rgb(10, 7, 20);"
+      ? "black"
       : "white";
   }, [location.pathname]);
 
