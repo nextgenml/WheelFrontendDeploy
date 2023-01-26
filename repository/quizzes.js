@@ -1,6 +1,18 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const config = require("../config");
+
+const getDeletedQuizSubmissions = async (quizId) => {
+  const query = `select qs.question_id, qs.id, qs.answer as user_answer, qq.question from quiz_submissions qs 
+                  inner join quiz_questions qq on qq.id = qs.question_id 
+                  where qq.quiz_id = ?;`;
+  return await runQueryAsync(query, [quizId]);
+};
+
+const updateSubmission = async (id, isCorrect) => {
+  const query = `update quiz_submissions set is_correct = ? where id = ?`;
+  return await runQueryAsync(query, [isCorrect, id]);
+};
 const deleteQuiz = async (level) => {
   const query = `update quizzes set is_active = 0 where level = ?;`;
 
@@ -13,10 +25,12 @@ const deleteQuiz = async (level) => {
   const query1 = `update quiz_questions set is_active = 0 where quiz_id = ?;`;
 
   await runQueryAsync(query1, [quiz_id]);
+
+  return quiz_id;
 };
 
 const createQuiz = async (data) => {
-  const query = `insert into quizzes (level, starts_at, ends_at, show_answers_at, is_active) values(?, ?, ?, ?, ?);`;
+  const query = `insert into quizzes (level, starts_at, ends_at, show_answers_at, is_active, reward) values(?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.level,
@@ -24,6 +38,7 @@ const createQuiz = async (data) => {
     data.ends_at,
     data.show_answers_at,
     1,
+    data.reward,
   ]);
 };
 const createQuizQuestion = async (data) => {
@@ -92,4 +107,6 @@ module.exports = {
   deleteQuiz,
   getQuestionsByLevel,
   correctAnsweredWallets,
+  getDeletedQuizSubmissions,
+  updateSubmission,
 };

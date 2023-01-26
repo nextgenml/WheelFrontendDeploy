@@ -5,6 +5,7 @@ const { readContentsFromCsv } = require("../utils/csv");
 const config = require("../config");
 const { intersectionOfArrays } = require("../utils");
 const moment = require("moment");
+
 const uploadQuiz = async (req, res) => {
   try {
     const { files } = req;
@@ -20,13 +21,14 @@ const uploadQuiz = async (req, res) => {
     const contents = await readContentsFromCsv(csvFile.path);
 
     for (const row of contents) {
-      await quizRepo.deleteQuiz(row.quiz_level);
+      const deletedQuizId = await quizRepo.deleteQuiz(row.quiz_level);
 
       const { insertId } = await quizRepo.createQuiz({
         level: row.quiz_level,
         starts_at: row.starts_at,
         ends_at: row.ends_at,
         show_answers_at: row.show_answers_at,
+        reward: row.reward,
       });
 
       const questions = row.questions.split("||");
@@ -39,6 +41,24 @@ const uploadQuiz = async (req, res) => {
           quiz_id: insertId,
         });
         index += 1;
+      }
+
+      const deletedQuizSubmissions = await quizRepo.getDeletedQuizSubmissions(
+        deletedQuizId
+      );
+
+      for (const sub of deletedQuizSubmissions) {
+        index = 0;
+        for (const question of questions) {
+          if (sub.question.toLowerCase() === question.toLowerCase()) {
+            console.log("question", question, sub);
+            await quizRepo.updateSubmission(
+              sub.id,
+              sub.user_answer.toLowerCase() === answers[index].toLowerCase()
+            );
+          }
+          index += 1;
+        }
       }
     }
     fs.unlink(csvFile.path, () => {});

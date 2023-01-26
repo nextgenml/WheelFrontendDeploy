@@ -92,6 +92,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
               display={"flex"}
               alignItems="center"
               className={styles.question}
+              key={index}
             >
               <Typography variant="subtitle1" sx={{ mr: 2 }}>
                 {index + 1}.
@@ -99,11 +100,12 @@ const Questions = ({ quiz, walletId, fetchData }) => {
               <Typography variant="body1" sx={{ mr: 2 }}>
                 {q.question}
               </Typography>
+
               <TextField
-                id="standard-basic"
                 variant="standard"
                 size="small"
-                value={q.user_answer}
+                key={index}
+                value={q.user_answer || answers[q.id] || ""}
                 disabled={!!q.user_answer}
                 onChange={(e) =>
                   setAnswers((prev) => ({
@@ -113,7 +115,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                 }
                 sx={{ mr: 2 }}
               />
-              {(q.show_result || quiz.is_admin) && (
+              {q.user_answer && (q.show_result || quiz.is_admin) && (
                 <Box>
                   {q.is_correct ? (
                     <Box sx={{ color: "var(--bs-teal)" }}>
@@ -125,7 +127,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                       <HighlightOffIcon sx={{ mr: 1 }} />
                       <Typography variant="caption">Wrong Answer</Typography>
 
-                      {quiz.is_admin &&
+                      {/* {quiz.is_admin &&
                         moment(q.show_answers_at).diff(moment()) < 0 && (
                           <Typography
                             variant="caption"
@@ -133,7 +135,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
                           >
                             Right answer is {q.answer}
                           </Typography>
-                        )}
+                        )} */}
                     </Box>
                   )}
                 </Box>

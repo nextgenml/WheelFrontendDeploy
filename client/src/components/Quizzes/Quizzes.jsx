@@ -64,17 +64,21 @@ const Quizzes = () => {
               onChange={(e, newValue) => setTabValue(newValue)}
               variant="fullWidth"
             >
-              {levels.map((level) => {
+              {levels.map((level, index) => {
                 return (
-                  <Tab label={level.name} value={level.value.toString()} />
+                  <Tab
+                    label={level.name}
+                    value={level.value.toString()}
+                    key={index}
+                  />
                 );
               })}
             </TabList>
           </Box>
 
-          {levels.map((level) => {
+          {levels.map((level, index) => {
             return (
-              <TabPanel value={level.value.toString()}>
+              <TabPanel value={level.value.toString()} key={index}>
                 <Questions
                   quiz={quizData}
                   walletId={address}
