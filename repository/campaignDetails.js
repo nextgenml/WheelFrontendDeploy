@@ -18,7 +18,8 @@ const getDefaultCampaign = async () => {
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 1
                 and cd.is_active = 1 and cd.content_type = 'text'`;
 
-  return await runQueryAsync(query, []);
+  const results = await runQueryAsync(query, []);
+  return results[0];
 };
 
 const getPostedCampaigns = async () => {
@@ -92,4 +93,5 @@ module.exports = {
   saveCampaign,
   saveCampaignDetails,
   canCreateChore,
+  getDefaultCampaign,
 };

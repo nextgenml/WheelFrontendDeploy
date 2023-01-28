@@ -104,15 +104,19 @@ const Campaigns = () => {
       body,
     });
     if (res.ok) {
-      setSuccess("Campaign saved successfully");
+      alert("Campaign saved successfully");
+      // setSuccess("Campaign saved successfully");
       setFormData(initialState);
-      setError("");
+      // setError("");
     } else {
       const error = await res.json();
-      setError(
+      alert(
         error.message || "Something went wrong. Please try again after sometime"
       );
-      setSuccess("");
+      // setError(
+      //   error.message || "Something went wrong. Please try again after sometime"
+      // );
+      // setSuccess("");
     }
   };
 
