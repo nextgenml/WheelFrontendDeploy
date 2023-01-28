@@ -28,11 +28,7 @@ const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
 
-const {
-  getSocialSharingStats,
-  getChoresByType,
-  saveCampaign,
-} = require("./controllers/socialSharing");
+const socialSharingController = require("./controllers/socialSharing");
 const quizController = require("./controllers/quizzes");
 const walletController = require("./controllers/wallet");
 
@@ -155,10 +151,11 @@ app.get("/time-now", (req, res) => {
 });
 
 // social sharing routes
-app.get("/social-sharing-stats", getSocialSharingStats);
-app.get("/social-sharing-chores", getChoresByType);
-app.post("/save-campaign", upload.any(), saveCampaign);
-app.use("/", express.static(path.join(__dirname, "build")));
+app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
+app.get("/social-sharing-chores", socialSharingController.getChoresByType);
+app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
+app.get("/campaigns", socialSharingController.getCampaigns);
+app.post("/update-campaign", socialSharingController.updateCampaign);
 
 // quizzes routes
 app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
@@ -170,6 +167,7 @@ app.get("/quizzes", quizController.getAllQuizzes);
 app.get("/get-wallet-details", walletController.getWalletDetails);
 app.post("/update-alias", walletController.updateAlias);
 
+app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));
 

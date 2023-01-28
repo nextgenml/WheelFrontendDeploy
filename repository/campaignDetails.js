@@ -53,6 +53,25 @@ const saveCampaign = async (data) => {
   ]);
 };
 
+const updateCampaign = async (campaignId, isActive) => {
+  // const query = `update campaigns set client = ?, campaign = ?, start_time = ?, end_time = ?, success_factor = ?, is_default = ? where id = ?`;
+
+  // return await runQueryAsync(query, [
+  //   data.client,
+  //   data.campaign_name,
+  //   moment(data.start_time).startOf("day").format(),
+  //   moment(data.end_time).endOf("day").format(),
+  //   data.success_factor,
+  //   data.default ? 1 : 0,
+  // ]);
+  const query = `update campaigns set is_active = ? where id = ?`;
+
+  await runQueryAsync(query, [isActive, campaignId]);
+
+  const query2 = `update campaign_details set is_active = ? where campaign_id = ?`;
+  await runQueryAsync(query2, [isActive, campaignId]);
+};
+
 const saveCampaignDetails = async (data) => {
   const query = `insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active) values(?, ?, ?, ?, ?, ? ,?, ?);`;
 
@@ -86,6 +105,27 @@ const canCreateChore = async (id, choreType) => {
   return allowedChores >= completedChores;
 };
 
+const getCampaigns = async (walletId) => {
+  const query = `select * from campaigns where wallet_id = ?`;
+
+  return await runQueryAsync(query, [walletId]);
+};
+const getCampaignById = async (campaignId) => {
+  const query = `select * from campaigns where id = ?`;
+
+  const results = await runQueryAsync(query, [campaignId]);
+  const campaign = results[0];
+
+  const query2 = `select * from campaigns  where campaign_id = ?`;
+
+  const details = await runQueryAsync(query2, [campaignId]);
+
+  return {
+    ...campaign,
+    media: details.map((d) => d.media_type),
+    image_urls: details[0].image_urls,
+  };
+};
 module.exports = {
   getActiveCampaigns,
   getPostedCampaigns,
@@ -94,4 +134,7 @@ module.exports = {
   saveCampaignDetails,
   canCreateChore,
   getDefaultCampaign,
+  getCampaigns,
+  getCampaignById,
+  updateCampaign,
 };

@@ -122,8 +122,54 @@ const saveCampaign = async (req, res) => {
   }
 };
 
+const getCampaigns = async (req, res) => {
+  const { walletId } = req.query;
+  if (!walletId)
+    return res.status(400).json({
+      statusCode: 400,
+      message: "wallet is missing",
+    });
+  const campaigns = await campaignRepo.getCampaigns(walletId);
+  res.json({
+    data: campaigns,
+  });
+};
+
+const getCampaignById = async (req, res) => {
+  const { campaignId } = req.query;
+  if (!campaignId)
+    return res.status(400).json({
+      statusCode: 400,
+      message: "campaignId is missing",
+    });
+  const campaign = await campaignRepo.getCampaignById(id);
+  res.json({
+    data: campaign,
+  });
+};
+
+const updateCampaign = async (req, res) => {
+  const { userAction, walletId, campaignId } = req.query;
+
+  if (!walletId || !campaignId || !userAction)
+    return res.status(400).json({
+      statusCode: 400,
+      message: "req data is missing",
+    });
+
+  await campaignRepo.updateCampaign(
+    campaignId,
+    userAction === "disable" ? 0 : 1
+  );
+  res.json({
+    message: "Updated successfully",
+  });
+};
 module.exports = {
   getChoresByType,
   getSocialSharingStats,
   saveCampaign,
+  getCampaigns,
+  getCampaignById,
+  updateCampaign,
 };
