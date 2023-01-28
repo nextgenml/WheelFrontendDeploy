@@ -111,12 +111,11 @@ const Campaigns = () => {
       setSuccess("");
     }
   };
-  console.log("balance", balance);
+
   const renderForm = () => {
     if (
       !balance ||
-      parseInt(balance.formatted) <=
-        config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+      parseInt(balance.formatted) < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
     )
       return (
         <Typography variant="h6" sx={{ mb: 20 }}>
