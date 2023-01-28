@@ -15,13 +15,14 @@ import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
 import { useAccount } from "wagmi";
+import Instructions from "./Instructions";
 
 const SocialSharing = () => {
   const [tabValue, setTabValue] = React.useState("twitter");
   const { isConnected, address } = useAccount();
   const [stats, setStats] = useState();
   const [menuOption, setMenuOption] = useState("new");
-
+  const [walletDetails, setWalletDetails] = useState({});
   const fetchStats = async (tab, menuOption) => {
     const res = await fetch(
       `${
@@ -31,6 +32,19 @@ const SocialSharing = () => {
     const data = await res.json();
     setStats(data);
   };
+
+  const getWalletDetails = async () => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/get-wallet-details?walletId=${address}`
+    );
+    const data = await res.json();
+    setWalletDetails(data);
+  };
+
+  useEffect(() => {
+    getWalletDetails();
+  }, []);
+
   useEffect(() => {
     fetchStats(tabValue, "new");
   }, [tabValue]);
@@ -73,6 +87,12 @@ const SocialSharing = () => {
             <Typography variant="body2" className={styles.earningsText}>
               Today Lost
             </Typography>
+          </Grid>
+          <Grid item md={4} sm={8} textAlign={"right"}>
+            <Instructions
+              generatedAlias={walletDetails.alias}
+              address={address}
+            />
           </Grid>
         </Grid>
 

@@ -34,6 +34,7 @@ const {
   saveCampaign,
 } = require("./controllers/socialSharing");
 const quizController = require("./controllers/quizzes");
+const walletController = require("./controllers/wallet");
 
 const app = express();
 
@@ -164,6 +165,10 @@ app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
 app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
 app.post("/save-quiz-answers", quizController.saveAnswers);
 app.get("/quizzes", quizController.getAllQuizzes);
+
+// wallet routes
+app.get("/get-wallet-details", walletController.getWalletDetails);
+app.post("/update-alias", walletController.updateAlias);
 
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));

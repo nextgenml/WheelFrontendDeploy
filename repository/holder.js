@@ -56,14 +56,31 @@ const updateMediaIds = async (users) => {
 const getById = async (wallet_id) => {
   const query = `select * from holders where wallet_id = ?;`;
 
-  return await runQueryAsync(query, [wallet_id]);
+  const results = await runQueryAsync(query, [wallet_id]);
+  return results[0];
 };
+
+const updateAlias = async (wallet_id, newAlias) => {
+  const query = `update holders set alias = ? where wallet_id = ?;`;
+
+  return await runQueryAsync(query, [newAlias, wallet_id]);
+};
+
+const aliasExists = async (wallet_id, alias) => {
+  const query = `select * from holders where wallet_id != ? and alias = ?;`;
+
+  const results = await runQueryAsync(query, [wallet_id, alias]);
+  return !!results[0];
+};
+
 module.exports = {
   getById,
   createHolder,
   getActiveHolders,
   getHoldersByWalletId,
   updateMediaIds,
+  updateAlias,
+  aliasExists,
 };
 
 const getUniqueName = async (walletId) => {

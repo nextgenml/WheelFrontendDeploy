@@ -2,7 +2,7 @@
 import { Typography } from "@mui/material";
 import styles from "./Quizzes.module.css";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import config from "../../config.js";
 import { useAccount } from "wagmi";
 import Box from "@mui/material/Box";
