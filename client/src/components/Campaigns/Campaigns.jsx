@@ -10,6 +10,9 @@ import {
   Button,
   Typography,
   Alert,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import styles from "./Campaigns.module.css";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -30,6 +33,7 @@ const initialState = {
   start_time: moment().format(),
   end_time: moment().format(),
   content: "",
+  default: false,
 };
 const Campaigns = () => {
   const { isConnected, address } = useAccount();
@@ -240,7 +244,7 @@ const Campaigns = () => {
           </Grid>
           <Grid item md={6} xs={12}>
             <Button variant="contained" component="label">
-              Upload Campaigns images
+              Upload Campaign images
               <input
                 type="file"
                 multiple
@@ -267,7 +271,25 @@ const Campaigns = () => {
             )}
           </Grid>
 
-          <Grid item md={6} xs={12} sx={{ textAlign: "right" }}>
+          <Grid item md={3} xs={12}>
+            {address === config.ADMIN_WALLET && (
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={formData.default}
+                      onChange={(e) =>
+                        onFormDataChange(e.target.checked, "default")
+                      }
+                    />
+                  }
+                  label="Default Campaign"
+                />
+              </FormGroup>
+            )}
+          </Grid>
+
+          <Grid item md={3} xs={12} sx={{ textAlign: "right" }}>
             <Button variant="contained" component="label" onClick={onSubmit}>
               Submit
             </Button>

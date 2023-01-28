@@ -3,6 +3,7 @@ const {
   getPostedCampaigns,
   updateLastCheckedDate,
   canCreateChore,
+  getDefaultCampaign,
 } = require("../../repository/campaignDetails");
 const {
   getActiveHolders,
@@ -46,6 +47,11 @@ const createPostChores = async () => {
           : config.NO_OF_POSTS_PER_DAY;
 
       const randomCampaigns = shuffleArray(newCampaigns).slice(0, noOfPosts);
+
+      if (randomCampaigns.length < config.NO_OF_POSTS_PER_DAY) {
+        const defaultCampaign = await getDefaultCampaign();
+        if (defaultCampaign) randomCampaigns.push(defaultCampaign);
+      }
 
       for (const campaign of randomCampaigns) {
         if (await canCreateChore(campaign.id, "post"))

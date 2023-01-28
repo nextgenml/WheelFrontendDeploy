@@ -62,6 +62,7 @@ const commonConfig = {
       RETWEET: 1000,
     },
   },
+  SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE: 10,
 };
 
 module.exports =

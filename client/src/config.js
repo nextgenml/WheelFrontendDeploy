@@ -20,7 +20,7 @@ const testConfig = {
 };
 
 const commonConfig = {
-  MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 100,
+  MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 0,
 };
 
 export default process.env.NODE_ENV === "production"
