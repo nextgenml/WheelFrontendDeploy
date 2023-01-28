@@ -24,6 +24,7 @@ import moment from "moment";
 import { useAccount } from "wagmi";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { fetchBalance } from "@wagmi/core";
+import CampaignsList from "./CampaignsList";
 
 const initialState = {
   media: [],
@@ -134,7 +135,7 @@ const Campaigns = () => {
     return (
       <>
         <Typography variant="h4" className={styles.heading}>
-          Enter campaign details
+          Enter new campaign details
         </Typography>
         <Grid container spacing={2} className={styles.form}>
           {error && (
@@ -299,6 +300,7 @@ const Campaigns = () => {
             </Button>
           </Grid>
         </Grid>
+        <CampaignsList address={address} />
       </>
     );
   };

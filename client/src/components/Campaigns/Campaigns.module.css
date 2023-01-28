@@ -25,3 +25,8 @@
   text-align: center;
   margin-bottom: 30px !important;
 }
+
+.campaignsTableHeader {
+  text-align: center;
+  padding: 24px;
+}

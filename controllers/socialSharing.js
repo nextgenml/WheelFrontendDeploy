@@ -154,7 +154,7 @@ const updateCampaign = async (req, res) => {
   if (!walletId || !campaignId || !userAction)
     return res.status(400).json({
       statusCode: 400,
-      message: "req data is missing",
+      message: "required data is missing",
     });
 
   await campaignRepo.updateCampaign(

@@ -106,7 +106,7 @@ const canCreateChore = async (id, choreType) => {
 };
 
 const getCampaigns = async (walletId) => {
-  const query = `select * from campaigns where wallet_id = ?`;
+  const query = `select * from campaigns where wallet_id = ? order by id desc`;
 
   return await runQueryAsync(query, [walletId]);
 };
