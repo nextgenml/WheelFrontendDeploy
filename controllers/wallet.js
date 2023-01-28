@@ -27,7 +27,7 @@ const updateAlias = async (req, res) => {
   try {
     const { walletId } = req.query;
     const { newAlias } = req.body;
-    console.log("req.query", req.query, "req.body;", req.body);
+
     if (!walletId || !newAlias)
       return res.status(400).json({
         statusCode: 400,

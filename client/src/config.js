@@ -19,6 +19,10 @@ const testConfig = {
   ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };
 
-export default process.env.REACT_APP_NODE_ENV === "production"
-  ? prodConfig
-  : testConfig;
+const commonConfig = {
+  MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 100,
+};
+
+export default process.env.NODE_ENV === "production"
+  ? { ...prodConfig, ...commonConfig }
+  : { ...testConfig, ...commonConfig };

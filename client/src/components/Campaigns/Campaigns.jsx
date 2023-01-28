@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Grid,
   Select,
@@ -14,11 +15,12 @@ import styles from "./Campaigns.module.css";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import config from "../../config.js";
 import moment from "moment";
 import { useAccount } from "wagmi";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
+import { fetchBalance } from "@wagmi/core";
 
 const initialState = {
   media: [],
@@ -35,6 +37,17 @@ const Campaigns = () => {
   const [formData, setFormData] = useState(initialState);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [balance, setBalance] = useState("");
+
+  const updateBalance = async () => {
+    const balance = await fetchBalance({
+      address: address,
+    });
+    setBalance(balance);
+  };
+  useEffect(() => {
+    if (address) updateBalance();
+  }, [address]);
 
   const onFilesChange = (e) => {
     const tempFiles = e.target.files;
@@ -98,7 +111,19 @@ const Campaigns = () => {
       setSuccess("");
     }
   };
+  console.log("balance", balance);
   const renderForm = () => {
+    if (
+      !balance ||
+      parseInt(balance.formatted) <=
+        config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+    )
+      return (
+        <Typography variant="h6" sx={{ mb: 20 }}>
+          Minimum {config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required
+          to create a campaign
+        </Typography>
+      );
     return (
       <>
         <Typography variant="h4" className={styles.heading}>
