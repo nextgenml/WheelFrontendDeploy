@@ -49,7 +49,7 @@ const saveCampaign = async (data) => {
     data.success_factor,
     1,
     data.wallet_id,
-    data.default ? 1 : 0,
+    data.default === "true" ? 1 : 0,
   ]);
 };
 
@@ -73,7 +73,7 @@ const updateCampaign = async (campaignId, isActive) => {
 };
 
 const saveCampaignDetails = async (data) => {
-  const query = `insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active) values(?, ?, ?, ?, ?, ? ,?, ?);`;
+  const query = `insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaign_id,
@@ -84,6 +84,7 @@ const saveCampaignDetails = async (data) => {
     data.collection_id,
     data.media_type,
     1,
+    data.image_urls,
   ]);
 };
 
@@ -94,6 +95,7 @@ const canCreateChore = async (id, choreType) => {
   const successFactor = campaigns[0] ? campaigns[0].success_factor : "best";
   let allowedChores =
     config.SUCCESS_FACTOR[successFactor.toUpperCase()][choreType.toUpperCase()];
+  console.log("allowedChores", allowedChores, successFactor, choreType);
   allowedChores +=
     (allowedChores * config.SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE) / 100;
   const query2 = await runQueryAsync(
@@ -102,6 +104,12 @@ const canCreateChore = async (id, choreType) => {
   );
   const completedChores = query2[0] ? query2[0].count : 0;
 
+  console.log(
+    "allowedChores",
+    allowedChores,
+    "completedChores",
+    completedChores
+  );
   return allowedChores >= completedChores;
 };
 
