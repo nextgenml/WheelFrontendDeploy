@@ -2,8 +2,8 @@ const { getMediaActions } = require("../../constants/mediaActions");
 const {
   getPrevOtherUserPostIds,
   otherUserPosts,
-  markChoreAsCompleted,
   getMediaPostIds,
+  markOtherChoreAsCompleted,
 } = require("../../repository/chores");
 const {
   getActiveHolders,
@@ -24,10 +24,13 @@ const createOtherChores = async () => {
   try {
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 
+    const campaignStatus = {};
+
     for (const holder of holders) {
       const prevPostIds = await getPrevOtherUserPostIds(holder.wallet_id);
       // console.log("prevPostIds", prevPostIds);
       const userPosts = await otherUserPosts([...prevPostIds, -1]);
+      // console.log("userPosts", userPosts);
 
       const noOfPosts = Math.min(config.NO_OF_POSTS_PER_DAY, userPosts.length);
 
@@ -38,7 +41,10 @@ const createOtherChores = async () => {
         // console.log("post", post.id);
 
         for (const action of actions) {
-          if (await canCreateChore(campaign.id, action))
+          campaignStatus[`${post.campaign_detail_id}_${action}`] ||=
+            await canCreateChore(post.campaign_detail_id, action);
+
+          if (campaignStatus[`${post.campaign_detail_id}_${action}`])
             await createChore({
               campaignDetailsId: post.campaign_detail_id,
               walletId: holder.wallet_id,
@@ -91,19 +97,20 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
               ).toISOString(),
               endTime
             );
-            // console.log(action, mediaUsers);
+
             if (mediaUsers.length) {
               const holdersByWalletId = await getHoldersByWalletId(
                 mediaUsers.map((u) => u.username)
               );
 
               for (const user of mediaUsers) {
-                await markChoreAsCompleted({
+                await markOtherChoreAsCompleted({
                   walletId: holdersByWalletId[user.username],
                   campaignDetailsId: campaign.id,
                   createdAt:
                     user.createdAt || moment().subtract(1, "day").format(),
                   choreType: action,
+                  mediaPostId: row.media_post_id,
                 });
               }
             }

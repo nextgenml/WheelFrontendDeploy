@@ -58,6 +58,19 @@ const createChore = async (data) => {
     data.follow_user || null,
   ]);
 };
+const markOtherChoreAsCompleted = async (data) => {
+  // console.log("markOtherChoreAsCompleted", data);
+
+  const query = `update chores set is_completed = 1 where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ? and media_post_id = ?`;
+
+  return await runQueryAsync(query, [
+    data.walletId,
+    data.campaignDetailsId,
+    data.createdAt,
+    data.choreType,
+    data.mediaPostId,
+  ]);
+};
 
 const markChoreAsCompleted = async (data) => {
   // console.log("markChoreAsCompleted", data);
@@ -254,4 +267,5 @@ module.exports = {
   getTodayEarnings,
   getTodayLost,
   getTodayTotal,
+  markOtherChoreAsCompleted,
 };

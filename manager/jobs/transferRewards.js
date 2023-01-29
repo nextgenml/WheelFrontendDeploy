@@ -15,7 +15,7 @@ const transferRewards = async () => {
   });
 };
 
-transferRewards();
+// transferRewards();
 module.exports = {
   transferRewards,
 };
