@@ -12,9 +12,8 @@ const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { followingUsers } = require("../../utils/mediaClients/twitter");
-const { convert } = require("html-to-text");
 
-const createFollowChores = async (activeCampaignId) => {
+const createFollowChores = async (campaigns) => {
   try {
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 
@@ -27,22 +26,24 @@ const createFollowChores = async (activeCampaignId) => {
       );
 
       const randomFollows = shuffleArray(nextFollows).slice(0, noOfPosts);
-
+      const activeCampaign = shuffleArray(campaigns)[0];
       for (const post of randomFollows) {
-        await createChore({
-          campaignDetailsId: activeCampaignId,
-          walletId: holder.wallet_id,
-          mediaType: "twitter",
-          choreType: "follow",
-          validFrom: moment().add(1, "days").startOf("day").format(),
-          validTo: moment()
-            .add(config.OTHER_CHORE_VALID_DAYS, "days")
-            .endOf("day")
-            .format(),
-          value: config.COST_PER_CHORE,
-          follow_link: post.follow_link,
-          follow_user: post.wallet_id,
-        });
+        if (activeCampaign) {
+          await createChore({
+            campaignDetailsId: activeCampaign.id,
+            walletId: holder.wallet_id,
+            mediaType: "twitter",
+            choreType: "follow",
+            validFrom: moment().add(1, "days").startOf("day").format(),
+            validTo: moment()
+              .add(config.OTHER_CHORE_VALID_DAYS, "days")
+              .endOf("day")
+              .format(),
+            value: config.COST_PER_CHORE,
+            follow_link: post.follow_link,
+            follow_user: post.wallet_id,
+          });
+        }
       }
     }
     logger.info("completed createFollowChores");

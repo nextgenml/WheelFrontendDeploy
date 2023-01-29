@@ -125,7 +125,7 @@ const followingUsers = async (userId) => {
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
 // tweetRepliedUsers("1607679115536072704");
-// followingUsers()
+// followingUsers("1452687837808107520");
 module.exports = {
   searchTweets,
   tweetLikedUsers,

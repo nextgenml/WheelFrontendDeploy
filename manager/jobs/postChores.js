@@ -30,9 +30,8 @@ const { createFollowChores, checkIfFollowComplete } = require("./followChores");
 const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
 
-const createPostChores = async () => {
+const createPostChores = async (campaigns) => {
   try {
-    const campaigns = await getActiveCampaigns();
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 
     for (const holder of holders) {
@@ -153,14 +152,15 @@ rule.minute = minutes;
 const initiateAlgorithm = async () => {
   const endTime = moment().subtract(10, "seconds").toISOString();
   const postedCampaigns = await getPostedCampaigns();
+  const campaigns = await getActiveCampaigns();
 
   await checkIfPostsChoreCompleted(postedCampaigns, endTime);
   await checkIfOtherChoresCompleted(postedCampaigns, endTime);
-  // await checkIfFollowComplete();
+  await checkIfFollowComplete();
 
-  await createPostChores();
+  await createPostChores(campaigns);
   await createOtherChores();
-  // await createFollowChores();
+  await createFollowChores(campaigns);
 
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
