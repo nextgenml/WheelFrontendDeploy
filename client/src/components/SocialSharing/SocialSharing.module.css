@@ -21,7 +21,7 @@
   border-radius: 8px !important;
 }
 .blankIcon {
-  font-size: 300px;
+  font-size: 200px !important;
   color: #83e688;
 }
 .earnings > * {

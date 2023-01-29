@@ -19,7 +19,58 @@ import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { copyImageToClipboard } from "copy-image-clipboard";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import styles from "./SocialSharing.module.css";
-
+import { convert } from "html-to-text";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import { Box } from "@mui/system";
+const getHeading = (mediaType) => {
+  switch (mediaType) {
+    case "twitter":
+      return (
+        <Box display={"flex"} alignItems="center" sx={{ mr: 2 }}>
+          <TwitterIcon sx={{ color: "#00acee", mr: 1 }} />
+          <Typography variant="h5">Twitter</Typography>
+        </Box>
+      );
+    default:
+      return null;
+  }
+};
+const getChoreDesc = (mediaType) => {
+  switch (mediaType) {
+    case "post":
+      return (
+        <Typography variant="body1">
+          - Post this content exactly like shared below
+        </Typography>
+      );
+    case "like":
+      return (
+        <Typography variant="body1">
+          - Click on the link below to like the post
+        </Typography>
+      );
+    case "retweet":
+      return (
+        <Typography variant="body1">
+          - Click on the link below to retweet the post
+        </Typography>
+      );
+    case "comment":
+      return (
+        <Typography variant="body1">
+          - Click on the link below to comment on the post
+        </Typography>
+      );
+    case "follow":
+      return (
+        <Typography variant="body1">
+          - Follow the user in the link below
+        </Typography>
+      );
+    default:
+      return null;
+  }
+};
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
   const fetchStats = async () => {
@@ -49,37 +100,46 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
                 initialHtml={chore.content}
                 readOnly
               />
+              <Button
+                variant="outlined"
+                sx={{ mt: 1 }}
+                onClick={() => {
+                  navigator.clipboard.writeText(convert(chore.content));
+                }}
+              >
+                Copy Text
+              </Button>
             </Grid>
             <Grid item md={6}>
               {chore.image_urls && (
                 <ImageList cols={3} rowHeight={164}>
                   {(chore.image_urls.split(",") || []).map((url, index) => (
-                    <>
+                    <div className={styles.imageItem}>
                       <ImageListItem key={index}>
                         <img
                           src={`${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`}
                           alt={"no_image"}
                           loading="lazy"
                         />
-                        <Button
-                          variant="outlined"
-                          sx={{ mt: 1 }}
-                          onClick={() => {
-                            copyImageToClipboard(
-                              `${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`
-                            )
-                              .then(() => {
-                                console.log("Image Copied");
-                              })
-                              .catch((e) => {
-                                console.log("Error: ", e.message);
-                              });
-                          }}
-                        >
-                          Copy Image
-                        </Button>
                       </ImageListItem>
-                    </>
+                      <Button
+                        variant="outlined"
+                        sx={{ mt: 5 }}
+                        onClick={() => {
+                          copyImageToClipboard(
+                            `${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`
+                          )
+                            .then(() => {
+                              console.log("Image Copied");
+                            })
+                            .catch((e) => {
+                              console.log("Error: ", e.message);
+                            });
+                        }}
+                      >
+                        Copy Image
+                      </Button>
+                    </div>
                   ))}
                 </ImageList>
               )}
@@ -95,28 +155,35 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
         );
       case "comment":
         const suggestions = (chore.comment_suggestions || "").split("||");
-        if (suggestions && suggestions[0])
-          return (
-            <Grid container spacing={2}>
-              <Grid item md={6}>
-                <RichTextEditor
-                  onChange={() => {}}
-                  initialHtml={suggestions[0]}
-                  readOnly
-                />
-              </Grid>
-              {suggestions[1] && (
+        return (
+          <div>
+            {suggestions[0] && (
+              <Grid container spacing={2}>
                 <Grid item md={6}>
                   <RichTextEditor
                     onChange={() => {}}
-                    initialHtml={suggestions[1]}
+                    initialHtml={suggestions[0]}
                     readOnly
                   />
                 </Grid>
-              )}
-            </Grid>
-          );
-        break;
+                {suggestions[1] && (
+                  <Grid item md={6}>
+                    <RichTextEditor
+                      onChange={() => {}}
+                      initialHtml={suggestions[1]}
+                      readOnly
+                    />
+                  </Grid>
+                )}
+              </Grid>
+            )}
+            <Box sx={{ pt: 1 }}>
+              <Link href={chore.link_to_post} target={chore.link_to_post}>
+                Link to Post
+              </Link>
+            </Box>
+          </div>
+        );
       case "follow":
         return (
           <Link href={chore.follow_link} target={chore.follow_link}>
@@ -136,15 +203,13 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
               <ListItem key={index}>
                 <Card sx={{ width: "100%" }}>
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {chore.media_type} - {chore.chore_type}
-                    </Typography>
+                    <Box sx={{ mb: 2 }} display={"flex"} alignItems="center">
+                      {getHeading(chore.media_type)}
+                      {getChoreDesc(chore.chore_type)}
+                    </Box>
+
                     {renderCardBody(chore)}
                   </CardContent>
-                  {/* <CardActions>
-                  <Button size="small">Download Image</Button>
-                  <Button size="small">Like</Button>
-                </CardActions> */}
                 </Card>
               </ListItem>
             );
@@ -153,9 +218,9 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
       );
     else
       return (
-        <div styles={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center" }}>
           <NewspaperIcon className={styles.blankIcon} />
-          <Typography variant="subtitle1">No items present</Typography>
+          <Typography variant="subtitle1">No chores present</Typography>
         </div>
       );
   };
