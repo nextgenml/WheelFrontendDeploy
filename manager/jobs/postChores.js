@@ -53,8 +53,14 @@ const createPostChores = async () => {
         if (defaultCampaign) randomCampaigns.push(defaultCampaign);
       }
 
+      const campaignStatus = {};
       for (const campaign of randomCampaigns) {
-        if (await canCreateChore(campaign.id, "post"))
+        campaignStatus[campaign.id] ||= await canCreateChore(
+          campaign.id,
+          "post"
+        );
+
+        if (campaignStatus[campaign.id])
           await createChore({
             campaignDetailsId: campaign.id,
             walletId: holder.wallet_id,
@@ -128,8 +134,7 @@ const [hours, minutes] = config.CREATE_POST_CHORES_AT;
 rule.hour = hours;
 rule.minute = minutes;
 
-schedule.scheduleJob(rule, async () => {
-  logger.info("started chores process");
+const initiateAlgorithm = async () => {
   const endTime = moment().subtract(10, "seconds").toISOString();
   const postedCampaigns = await getPostedCampaigns();
 
@@ -145,8 +150,12 @@ schedule.scheduleJob(rule, async () => {
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
   }
+};
+schedule.scheduleJob(rule, async () => {
+  logger.info("started chores process");
+  await initiateAlgorithm();
 });
-
+initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));

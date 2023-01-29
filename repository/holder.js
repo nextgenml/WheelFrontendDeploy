@@ -19,7 +19,7 @@ const createHolder = async (walletId, walletBalance) => {
 };
 
 const getActiveHolders = async (walletBalance) => {
-  const query = `select * from holders where wallet_balance >= ?`;
+  const query = `select * from holders where wallet_balance >= ? and is_active = 1`;
 
   return await runQueryAsync(query, [walletBalance]);
 };

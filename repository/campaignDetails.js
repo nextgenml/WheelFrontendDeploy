@@ -6,7 +6,7 @@ const getActiveCampaigns = async () => {
   const query = `select cd.id, cd.media_type from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
-                and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and and c.is_default = 0
+                and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 0
                 and cd.is_active = 1 and cd.content_type = 'text'`;
 
   return await runQueryAsync(query, []);
@@ -97,7 +97,7 @@ const canCreateChore = async (id, choreType) => {
   allowedChores +=
     (allowedChores * config.SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE) / 100;
   const query2 = await runQueryAsync(
-    `select count(id) as count from campaign_details where is_completed = 1 and choreType = ? and campaign_detail_id = ?`,
+    `select count(id) as count from chores where is_completed = 1 and chore_type = ? and campaign_detail_id = ?`,
     [choreType, id]
   );
   const completedChores = query2[0] ? query2[0].count : 0;
