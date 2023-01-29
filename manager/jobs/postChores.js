@@ -140,11 +140,11 @@ const initiateAlgorithm = async () => {
 
   await checkIfPostsChoreCompleted(postedCampaigns, endTime);
   await checkIfOtherChoresCompleted(postedCampaigns, endTime);
-  await checkIfFollowComplete();
+  // await checkIfFollowComplete();
 
   await createPostChores();
   await createOtherChores();
-  await createFollowChores();
+  // await createFollowChores();
 
   await transferRewards();
   for (const campaign of postedCampaigns) {
