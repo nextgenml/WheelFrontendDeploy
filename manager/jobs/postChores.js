@@ -162,10 +162,10 @@ const initiateAlgorithm = async () => {
   await createOtherChores();
   // await createFollowChores();
 
-  await transferRewards();
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
   }
+  await transferRewards();
 };
 schedule.scheduleJob(rule, async () => {
   logger.info("started chores process");
