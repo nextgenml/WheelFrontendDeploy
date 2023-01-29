@@ -119,9 +119,7 @@ const followingUsers = async (userId) => {
   return result;
 };
 
-// searchTweets(
-//   "One of the goals for me this year is to travel to 5 countries.And I know with God, it is popsible."
-// );
+searchTweets("Default campaign with no images");
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
 // tweetRepliedUsers("1607679115536072704");
