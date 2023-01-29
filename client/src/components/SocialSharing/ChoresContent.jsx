@@ -165,6 +165,15 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
                     initialHtml={suggestions[0]}
                     readOnly
                   />
+                  <Button
+                    variant="outlined"
+                    sx={{ mt: 1 }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(convert(suggestions[0]));
+                    }}
+                  >
+                    Copy Text
+                  </Button>
                 </Grid>
                 {suggestions[1] && (
                   <Grid item md={6}>
@@ -173,11 +182,20 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
                       initialHtml={suggestions[1]}
                       readOnly
                     />
+                    <Button
+                      variant="outlined"
+                      sx={{ mt: 1 }}
+                      onClick={() => {
+                        navigator.clipboard.writeText(convert(suggestions[1]));
+                      }}
+                    >
+                      Copy Text
+                    </Button>
                   </Grid>
                 )}
               </Grid>
             )}
-            <Box sx={{ pt: 1 }}>
+            <Box sx={{ pt: 2 }}>
               <Link href={chore.link_to_post} target={chore.link_to_post}>
                 Link to Post
               </Link>
