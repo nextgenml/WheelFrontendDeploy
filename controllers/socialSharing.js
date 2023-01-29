@@ -108,7 +108,7 @@ const saveCampaign = async (req, res) => {
         content_type: "text",
         collection_id,
         media_type: mediaType,
-        image_urls: (files || []).map((x) => x.path.split("/")[0]).join(","),
+        image_urls: (files || []).map((x) => x.path.split("/")[1]).join(","),
       });
     }
     res.json({

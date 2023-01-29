@@ -217,8 +217,8 @@ const Campaigns = () => {
                   disablePast
                   inputFormat="DD/MM/YYYY"
                   renderInput={(params) => <TextField {...params} />}
-                  value={formData.start_date}
-                  onChange={(value) => onFormDataChange(value, "start_date")}
+                  value={formData.start_time}
+                  onChange={(value) => onFormDataChange(value, "start_time")}
                 />
               </Stack>
             </LocalizationProvider>
@@ -231,8 +231,8 @@ const Campaigns = () => {
                   disablePast
                   inputFormat="DD/MM/YYYY"
                   renderInput={(params) => <TextField {...params} />}
-                  value={formData.end_date}
-                  onChange={(value) => onFormDataChange(value, "end_date")}
+                  value={formData.end_time}
+                  onChange={(value) => onFormDataChange(value, "end_time")}
                 />
               </Stack>
             </LocalizationProvider>
