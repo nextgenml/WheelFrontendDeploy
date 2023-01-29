@@ -51,34 +51,38 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
               />
             </Grid>
             <Grid item md={6}>
-              <ImageList cols={3} rowHeight={164}>
-                {(chore.image_urls.split(",") || []).map((url, index) => (
-                  <ImageListItem key={index}>
-                    <img
-                      src={`${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`}
-                      alt={"no_image"}
-                      loading="lazy"
-                    />
-                    <Button
-                      variant="outlined"
-                      sx={{ mt: 1 }}
-                      onClick={() => {
-                        copyImageToClipboard(
-                          `${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`
-                        )
-                          .then(() => {
-                            console.log("Image Copied");
-                          })
-                          .catch((e) => {
-                            console.log("Error: ", e.message);
-                          });
-                      }}
-                    >
-                      Copy Image
-                    </Button>
-                  </ImageListItem>
-                ))}
-              </ImageList>
+              {chore.image_urls && (
+                <ImageList cols={3} rowHeight={164}>
+                  {(chore.image_urls.split(",") || []).map((url, index) => (
+                    <>
+                      <ImageListItem key={index}>
+                        <img
+                          src={`${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`}
+                          alt={"no_image"}
+                          loading="lazy"
+                        />
+                        <Button
+                          variant="outlined"
+                          sx={{ mt: 1 }}
+                          onClick={() => {
+                            copyImageToClipboard(
+                              `${config.API_ENDPOINT}/images/${url}?w=164&h=164&fit=crop&auto=format`
+                            )
+                              .then(() => {
+                                console.log("Image Copied");
+                              })
+                              .catch((e) => {
+                                console.log("Error: ", e.message);
+                              });
+                          }}
+                        >
+                          Copy Image
+                        </Button>
+                      </ImageListItem>
+                    </>
+                  ))}
+                </ImageList>
+              )}
             </Grid>
           </Grid>
         );

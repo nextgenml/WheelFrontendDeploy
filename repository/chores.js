@@ -195,7 +195,7 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
 };
 
 const getTodayChores = async (walletId, mediaType) => {
-  const query = `select c.*, cd.content from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  const query = `select c.*, cd.content, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
