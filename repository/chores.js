@@ -111,7 +111,7 @@ const markFollowChoreAsCompleted = async (data) => {
 };
 
 const getMediaPostIds = async (campaignId) => {
-  const query = `select distinct media_post_id from chores where campaign_detail_id = ? and is_completed = 0 and chore_type != 'post' and valid_to >= NOW() - INTERVAL 1 DAY`;
+  const query = `select distinct media_post_id from chores where campaign_detail_id = ? and is_completed = 0 and chore_type != 'post' and valid_to >= NOW() - INTERVAL 1 DAY and media_post_id is not null`;
 
   return await runQueryAsync(query, [campaignId]);
 };

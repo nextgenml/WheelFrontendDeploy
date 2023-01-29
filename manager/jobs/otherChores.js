@@ -89,7 +89,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
           const mediaPostIds = await getMediaPostIds(campaign.id);
 
           for (const row of mediaPostIds) {
-            // console.log("media_post_id", row);
+            // console.log("media_post_id", row, searchContentFn);
             const mediaUsers = await searchContentFn(
               row.media_post_id,
               moment(
@@ -118,9 +118,9 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
         }
       }
     }
-    logger.info("completed checkIfPostsChoreCompleted process");
+    logger.info("completed checkIfOtherChoresCompleted process");
   } catch (error) {
-    logger.info(`error in checkIfPostsChoreCompleted process: ${error}`);
+    logger.info(`error in checkIfOtherChoresCompleted process: ${error}`);
   }
 };
 

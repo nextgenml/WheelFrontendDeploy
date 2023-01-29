@@ -102,15 +102,9 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
           endTime
         );
 
-        // console.log(
-        //   "postedUsers",
-        //   postedUsers.length,
-        //   postedUsers.filter((p) =>
-        //     ["vivekchandra552", "PuredlaB"].includes(p.username)
-        //   ),
-        //   text
-        // );
         if (postedUsers.length) {
+          // console.log("postedUsers", postedUsers.length, text);
+
           const holdersByWalletId = await getHoldersByWalletId(
             postedUsers.map((u) => u.username)
           );
