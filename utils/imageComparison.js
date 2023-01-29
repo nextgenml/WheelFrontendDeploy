@@ -1,13 +1,13 @@
 const looksSame = require("looks-same");
 const fs = require("fs");
 const Axios = require("axios");
+const path = require("path");
 
 const areTwoImagesSimilar = async (image1Path, image2Url) => {
-  const imageName = image1Path.split("/").at(-1);
-
-  const image2Path = `tmp/images/${imageName}`;
+  const image2Path = path.join(__dirname, "../", "tmp/images/tmp.jpeg");
   await downloadImage(image2Url, image2Path);
 
+  image1Path = path.join(__dirname, "../", `uploads/${image1Path}`);
   const { equal } = await looksSame(image1Path, image2Path);
 
   fs.unlink(image2Path, () => {

@@ -60,7 +60,6 @@ const createChore = async (data) => {
 };
 
 const markChoreAsCompleted = async (data) => {
-  if (!data.walletId) return;
   console.log("markChoreAsCompleted", data);
 
   const existsQuery = `select id from chores where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ?`;
