@@ -28,6 +28,7 @@ const {
 } = require("./otherChores");
 const { createFollowChores, checkIfFollowComplete } = require("./followChores");
 const { transferRewards } = require("./transferRewards");
+const { convert } = require("html-to-text");
 
 const createPostChores = async () => {
   try {
@@ -91,25 +92,40 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
       }
 
       if (searchContentFn) {
+        const text = convert(campaign.content, {
+          wordwrap: 130,
+        });
         const postedUsers = await searchContentFn(
-          campaign.content,
+          text,
           moment(
             campaign.last_checked_date || campaign.start_time
           ).toISOString(),
           endTime
         );
 
-        // console.log("postedUsers", postedUsers);
+        // console.log(
+        //   "postedUsers",
+        //   postedUsers.length,
+        //   postedUsers.filter((p) =>
+        //     ["vivekchandra552", "PuredlaB"].includes(p.username)
+        //   ),
+        //   text
+        // );
         if (postedUsers.length) {
           const holdersByWalletId = await getHoldersByWalletId(
             postedUsers.map((u) => u.username)
           );
 
           await updateMediaIds(postedUsers);
-          const campaignImages = (campaign.image_urls || "").split(",");
-          // console.log("holdersByWalletId", holdersByWalletId);
+          const campaignImages = (campaign.image_urls || "")
+            .split(",")
+            .filter((x) => !!x);
+          // console.log("holdersByWalletId", holdersByWalletId, campaignImages);
           for (const user of postedUsers) {
-            if (await areImagesMatching(campaignImages, user))
+            if (
+              holdersByWalletId[user.username] &&
+              (await areImagesMatching(campaignImages, user))
+            )
               await markChoreAsCompleted({
                 walletId: holdersByWalletId[user.username],
                 campaignDetailsId: campaign.id,

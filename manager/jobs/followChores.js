@@ -12,6 +12,7 @@ const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { followingUsers } = require("../../utils/mediaClients/twitter");
+const { convert } = require("html-to-text");
 
 const createFollowChores = async (activeCampaignId) => {
   try {
@@ -71,7 +72,7 @@ const checkIfFollowComplete = async () => {
   }
 };
 
-checkIfFollowComplete();
+// checkIfFollowComplete();
 module.exports = {
   createFollowChores,
   checkIfFollowComplete,

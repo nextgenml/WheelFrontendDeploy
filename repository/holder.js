@@ -46,7 +46,7 @@ const updateMediaIds = async (users) => {
     const holder = records[0];
     if (holder && holder.twitter_id != user.userId) {
       await runQueryAsync(`update holders set twitter_id =  ? where id = ?;`, [
-        user.username,
+        user.userId,
         holder.id,
       ]);
     }
