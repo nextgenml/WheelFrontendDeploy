@@ -12,9 +12,9 @@ import moment from "moment";
 import { Button, Typography } from "@mui/material";
 import styles from "./Campaigns.module.css";
 
-const headers = ["Name", "Success factor", "Media", "Start Time", "End Time"];
+const headers = ["Name", "Success factor", "Start Time", "End Time"];
 
-export default function CampaignsList({ address }) {
+export default function CampaignsList({ address, count }) {
   const [campaigns, setCampaigns] = React.useState([]);
 
   const fetchData = async () => {
@@ -27,7 +27,7 @@ export default function CampaignsList({ address }) {
 
   React.useEffect(() => {
     fetchData();
-  }, []);
+  }, [count]);
 
   const onUpdate = async (action, campaignId) => {
     const res = await fetch(
@@ -57,7 +57,7 @@ export default function CampaignsList({ address }) {
       </Typography>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
             {headers.map((h) => {
               return <TableCell>{h}</TableCell>;
             })}
@@ -75,7 +75,6 @@ export default function CampaignsList({ address }) {
             >
               <TableCell>{row.campaign}</TableCell>
               <TableCell>{row.success_factor}</TableCell>
-              <TableCell>{row.media}</TableCell>
               <TableCell>
                 {moment(row.start_time).format("YYYY-MM-DD")}
               </TableCell>

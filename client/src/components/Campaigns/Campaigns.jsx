@@ -35,6 +35,7 @@ const initialState = {
   end_time: moment().format(),
   content: "",
   default: false,
+  files: [],
 };
 const Campaigns = () => {
   const { isConnected, address } = useAccount();
@@ -43,7 +44,7 @@ const Campaigns = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [balance, setBalance] = useState("");
-
+  const [count, setCount] = useState(0);
   const updateBalance = async () => {
     const balance = await fetchBalance({
       address: address,
@@ -108,6 +109,7 @@ const Campaigns = () => {
       alert("Campaign saved successfully");
       // setSuccess("Campaign saved successfully");
       setFormData(initialState);
+      setCount((prev) => prev + 1);
       // setError("");
     } else {
       const error = await res.json();
@@ -300,7 +302,7 @@ const Campaigns = () => {
             </Button>
           </Grid>
         </Grid>
-        <CampaignsList address={address} />
+        <CampaignsList address={address} count={count} />
       </>
     );
   };
