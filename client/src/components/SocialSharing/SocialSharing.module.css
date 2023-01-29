@@ -24,3 +24,6 @@
   font-size: 300px;
   color: #83e688;
 }
+.earnings > * {
+  font-size: 30px !important;
+}

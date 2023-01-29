@@ -49,7 +49,7 @@ export default function CampaignsList({ address, count }) {
     console.log("campaigns", campaigns);
     setCampaigns([...campaigns]);
   };
-  console.log("re rendering campaigns", campaigns);
+
   return (
     <TableContainer component={Paper} sx={{ mt: 4 }}>
       <Typography variant="h6" className={styles.campaignsTableHeader}>

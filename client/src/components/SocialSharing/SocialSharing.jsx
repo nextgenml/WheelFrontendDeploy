@@ -3,8 +3,9 @@ import * as React from "react";
 
 import { Grid, Typography } from "@mui/material";
 import styles from "./SocialSharing.module.css";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+
 import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
 import NavBar from "./NavBar";
 import Content from "./ChoresContent";
@@ -16,7 +17,7 @@ import config from "../../config";
 import Loading from "../loading";
 import { useAccount } from "wagmi";
 import Instructions from "./Instructions";
-
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 const SocialSharing = () => {
   const [tabValue, setTabValue] = React.useState("twitter");
   const { isConnected, address } = useAccount();
@@ -56,6 +57,7 @@ const SocialSharing = () => {
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.total}</Typography>
+              <AccountBalanceWalletIcon color="primary" />
             </div>
             <Typography variant="body2" className={styles.earningsText}>
               Total Earnings
@@ -64,7 +66,7 @@ const SocialSharing = () => {
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.today}</Typography>
-              <ArrowUpwardIcon color="success" />
+              <TrendingUpIcon color="success" />
             </div>
             <Typography variant="body2" className={styles.earningsText}>
               Today Earnings
@@ -73,7 +75,7 @@ const SocialSharing = () => {
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.todayMax}</Typography>
-              <RestartAltRoundedIcon color="primary" />
+              <RestartAltRoundedIcon color="warning" />
             </div>
             <Typography variant="body2" className={styles.earningsText}>
               Today Max Earnings
@@ -82,7 +84,7 @@ const SocialSharing = () => {
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.todayLost}</Typography>
-              <ArrowDownwardIcon color="error" />
+              <TrendingDownIcon color="error" />
             </div>
             <Typography variant="body2" className={styles.earningsText}>
               Today Lost
