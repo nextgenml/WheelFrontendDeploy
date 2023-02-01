@@ -4,7 +4,6 @@ import {
   Typography,
   Box,
   List,
-  makeStyles,
   ListItem,
   ListItemText,
   Hidden,
@@ -13,28 +12,42 @@ import {
   SwipeableDrawer,
 } from "@mui/material";
 import { Web3Button } from "@web3modal/react";
-import clsx from "clsx";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useLocation } from "react-router-dom";
-import { BlackBgPages } from "../../App";
 
-const headerLinks = [
-  { link: "", title: "HOME" },
-  { link: "goals", title: "GOALS" },
-  { link: "values", title: "VALUES" },
-  { link: "tokenomics", title: "TOKENOMICS" },
-  { link: "services", title: "SERVICES" },
-  { link: "roadmap", title: "ROADMAP" },
-  { link: "utilities", title: "UTILITIES" },
-  { link: "buy-nextgen", title: "BUY" },
-  { link: "converse_with_ai", title: "CONVERSE WITH AI" },
-];
-
-export default function Header() {
+interface Props {
+  socialSharing: boolean;
+}
+export default function Header(props: Props) {
   const [openDrawer, setState] = useState<boolean>(false);
-  const location = useLocation();
-  const newBg = BlackBgPages.includes(location.pathname)
-  const linkStyle = { fontSize: { sm: "12px", md: "15px", color: newBg ? 'white' : 'black' } };
+
+  const linkStyle = {
+    fontSize: {
+      sm: "12px",
+      md: "15px",
+      color: props.socialSharing ? "black" : "white",
+    },
+  };
+
+  const headerLinks = props.socialSharing
+    ? [
+        { link: "", title: "HOME" },
+        { route: "social-sharing", title: "CHORES" },
+        { route: "campaigns", title: "CAMPAIGNS" },
+        { route: "quizzes", title: "QUIZZES" },
+      ]
+    : [
+        { link: "", title: "HOME" },
+        { link: "goals", title: "GOALS" },
+        { link: "values", title: "VALUES" },
+        { link: "tokenomics", title: "TOKENOMICS" },
+        { link: "services", title: "SERVICES" },
+        { link: "roadmap", title: "ROADMAP" },
+        { link: "utilities", title: "UTILITIES" },
+        { link: "buy-nextgen", title: "BUY" },
+        { link: "converse_with_ai", title: "CONVERSE WITH AI" },
+      ];
+
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
       event &&
@@ -59,7 +72,7 @@ export default function Header() {
         {headerLinks.map((h) => {
           return (
             <a
-              href={`/#${h.link}`}
+              href={h.link ? `/#${h.link}` : `/${h.route}`}
               style={{ textDecoration: "none", whiteSpace: "nowrap" }}
               key={h.title}
             >
@@ -118,15 +131,12 @@ export default function Header() {
           {headerLinks.map((h) => {
             return (
               <a
-                href={`/#${h.link}`}
+                href={h.link ? `/#${h.link}` : `/${h.route}`}
                 rel="noopener noreferrer"
                 key={h.title}
                 style={{ whiteSpace: "nowrap" }}
               >
-                <Typography
-                  className="header-link"
-                  sx={linkStyle}
-                >
+                <Typography className="header-link" sx={linkStyle}>
                   {h.title}
                 </Typography>
               </a>
@@ -142,7 +152,7 @@ export default function Header() {
               style={{
                 fontSize: "38px",
                 cursor: "pointer",
-                color: newBg ? 'white' : 'black'
+                color: props.socialSharing ? "black" : "white",
               }}
             ></MenuIcon>
           </Button>

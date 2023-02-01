@@ -6,7 +6,7 @@ import styles from "./SocialSharing.module.css";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 
-import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
+// import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
 import NavBar from "./NavBar";
 import Content from "./ChoresContent";
 import Box from "@mui/material/Box";
@@ -72,7 +72,7 @@ const SocialSharing = () => {
               Today Earnings
             </Typography>
           </Grid>
-          <Grid item md={2} sm={4}>
+          {/* <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.todayMax}</Typography>
               <RestartAltRoundedIcon color="warning" />
@@ -80,7 +80,7 @@ const SocialSharing = () => {
             <Typography variant="body2" className={styles.earningsText}>
               Today Max Earnings
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid item md={2} sm={4}>
             <div className={styles.earnings}>
               <Typography variant="h6">${stats.todayLost}</Typography>
@@ -90,7 +90,7 @@ const SocialSharing = () => {
               Today Lost
             </Typography>
           </Grid>
-          <Grid item md={4} sm={8} textAlign={"right"}>
+          <Grid item md={6} sm={4} textAlign={"right"}>
             <Instructions
               generatedAlias={walletDetails.alias}
               address={address}

@@ -3,11 +3,17 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import { List, ListItem, TextField, Grid } from "@mui/material";
+import {
+  List,
+  ListItem,
+  TextField,
+  Grid,
+  Typography,
+  Box,
+} from "@mui/material";
 import config from "../../config";
 
 const Instructions = ({ generatedAlias, address }) => {
@@ -15,10 +21,13 @@ const Instructions = ({ generatedAlias, address }) => {
   const [alias, setAlias] = React.useState(generatedAlias || "");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const [randomNumber, setRandomNumber] = React.useState(0);
 
   React.useEffect(() => {
     setAlias(generatedAlias);
+    setRandomNumber(Math.floor(Math.random() * 10));
   }, [generatedAlias]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,17 +45,19 @@ const Instructions = ({ generatedAlias, address }) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ newAlias: alias }),
+        body: JSON.stringify({ newAlias: `${alias}ml${randomNumber}` }),
       }
     );
     if (res.ok) {
       alert("Alias updated successfully");
       handleClose();
+      setAlias(`${alias}ml${randomNumber}`);
     } else {
       const data = await res.json();
       alert(data.message);
     }
   };
+
   return (
     <>
       <Button variant="outlined" onClick={handleClickOpen}>
@@ -71,14 +82,22 @@ const Instructions = ({ generatedAlias, address }) => {
             </ListItem>
             <ListItem sx={{ mt: 3 }}>
               <Grid container spacing={2}>
-                <Grid item md={4}>
+                <Grid item md={2}>
                   Alias
                 </Grid>
-                <TextField
-                  value={alias}
-                  onChange={(e) => setAlias(e.target.value)}
-                  sx={{ height: "12px" }}
-                />
+                <Box>
+                  <TextField
+                    value={alias}
+                    onChange={(e) => setAlias(e.target.value)}
+                    sx={{ height: "12px" }}
+                  />
+                </Box>
+                <Box sx={{ p: 2, display: "flex" }}>
+                  <Typography variant="subtitle2">
+                    Generated Name:&nbsp;&nbsp;
+                  </Typography>
+                  <Typography variant="body2">{`${alias}ml${randomNumber}`}</Typography>
+                </Box>
               </Grid>
             </ListItem>
           </List>

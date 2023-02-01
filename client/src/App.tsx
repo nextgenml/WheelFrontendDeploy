@@ -17,35 +17,27 @@ import Campaigns from "./components/Campaigns/Campaigns";
 import Profile from "./components/Profile/Profile";
 import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
-export const BlackBgPages = [
-  "/",
-  "/spin-wheel",
-  "/claim-distribution",
-  "/spin-wheel",
-];
+import { useEffect, useState } from "react";
+
 function App() {
   const location = useLocation();
+  const [socialSharing, setSocialSharing] = useState(false);
   const blackBgPages = [
     "/",
     "/spin-wheel",
     "/claim-distribution",
     "/spin-wheel",
   ];
-  console.log("location.pathname", location.pathname);
-  useEffect(() => {
-    console.log("setting path color", blackBgPages.includes(location.pathname));
 
-    document.body.style.backgroundColor = blackBgPages.includes(
-      location.pathname
-    )
-      ? "black"
-      : "white";
+  useEffect(() => {
+    const includes = blackBgPages.includes(location.pathname);
+    document.body.style.backgroundColor = includes ? "black" : "white";
+    setSocialSharing(!includes);
   }, [location.pathname]);
 
   return (
     <>
-      <Header />
+      <Header socialSharing={socialSharing} />
       <Routes>
         <Route
           path="/"
