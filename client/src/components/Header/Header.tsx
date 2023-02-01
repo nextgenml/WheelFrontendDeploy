@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import { Web3Button } from "@web3modal/react";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useLocation } from "react-router-dom";
 
 interface Props {
   socialSharing: boolean;

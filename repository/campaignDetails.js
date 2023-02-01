@@ -3,7 +3,7 @@ const moment = require("moment");
 const config = require("../config");
 
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type from campaign_details cd 
+  const query = `select cd.id, cd.media_type, cd.reward from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 0
@@ -12,7 +12,7 @@ const getActiveCampaigns = async () => {
   return await runQueryAsync(query, []);
 };
 const getDefaultCampaign = async () => {
-  const query = `select cd.id, cd.media_type from campaign_details cd 
+  const query = `select cd.id, cd.media_type, cd.reward from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 1
@@ -38,7 +38,7 @@ const updateLastCheckedDate = async (id, endTime) => {
 };
 
 const saveCampaign = async (data) => {
-  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
+  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default, reward) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.client,
@@ -50,6 +50,7 @@ const saveCampaign = async (data) => {
     1,
     data.wallet_id,
     data.default === "true" ? 1 : 0,
+    config.COST_PER_CHORE,
   ]);
 };
 
