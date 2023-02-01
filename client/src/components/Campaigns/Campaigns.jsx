@@ -48,6 +48,7 @@ const Campaigns = () => {
   const updateBalance = async () => {
     const balance = await fetchBalance({
       address: address,
+      token: config.ABC_TOKEN,
     });
     setBalance(balance);
   };
