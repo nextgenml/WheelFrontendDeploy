@@ -18,31 +18,33 @@ const createFollowChores = async (campaigns) => {
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 
     for (const holder of holders) {
-      const nextFollows = await nextFollowUsers(holder.wallet_id, "twitter");
+      if (holder.twitter_id) {
+        const nextFollows = await nextFollowUsers(holder.wallet_id, "twitter");
 
-      const noOfPosts = Math.min(
-        config.NO_OF_POSTS_PER_DAY,
-        nextFollows.length
-      );
+        const noOfPosts = Math.min(
+          config.NO_OF_POSTS_PER_DAY,
+          nextFollows.length
+        );
 
-      const randomFollows = shuffleArray(nextFollows).slice(0, noOfPosts);
-      const activeCampaign = shuffleArray(campaigns)[0];
-      for (const post of randomFollows) {
-        if (activeCampaign) {
-          await createChore({
-            campaignDetailsId: activeCampaign.id,
-            walletId: holder.wallet_id,
-            mediaType: "twitter",
-            choreType: "follow",
-            validFrom: moment().add(1, "days").startOf("day").format(),
-            validTo: moment()
-              .add(config.OTHER_CHORE_VALID_DAYS, "days")
-              .endOf("day")
-              .format(),
-            value: config.COST_PER_CHORE,
-            follow_link: post.follow_link,
-            follow_user: post.wallet_id,
-          });
+        const randomFollows = shuffleArray(nextFollows).slice(0, noOfPosts);
+        const activeCampaign = shuffleArray(campaigns)[0];
+        for (const post of randomFollows) {
+          if (activeCampaign) {
+            await createChore({
+              campaignDetailsId: activeCampaign.id,
+              walletId: holder.wallet_id,
+              mediaType: "twitter",
+              choreType: "follow",
+              validFrom: moment().add(1, "days").startOf("day").format(),
+              validTo: moment()
+                .add(config.OTHER_CHORE_VALID_DAYS, "days")
+                .endOf("day")
+                .format(),
+              value: config.COST_PER_CHORE,
+              follow_link: post.follow_link,
+              follow_user: post.wallet_id,
+            });
+          }
         }
       }
     }
