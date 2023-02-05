@@ -90,14 +90,14 @@ const saveCampaign = async (req, res) => {
 
     const holder = await holderRepo.getById(body.wallet_id);
 
-    if (
-      !holder ||
-      holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
-    )
-      return res.status(400).json({
-        statusCode: 400,
-        message: `Minimum ${config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required to create a campaign`,
-      });
+    // if (
+    //   !holder ||
+    //   holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+    // )
+    //   return res.status(400).json({
+    //     statusCode: 400,
+    //     message: `Minimum ${config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required to create a campaign`,
+    //   });
     const mediaTypes = (body.media || "").split(",");
 
     for (const mediaType of mediaTypes) {
