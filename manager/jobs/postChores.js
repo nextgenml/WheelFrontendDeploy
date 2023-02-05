@@ -29,6 +29,7 @@ const {
 const { createFollowChores, checkIfFollowComplete } = require("./followChores");
 const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
+const { updateWallets } = require("../wallet");
 
 const createPostChores = async (campaigns) => {
   try {
@@ -145,6 +146,7 @@ rule.minute = minutes;
 
 const initiateAlgorithm = async () => {
   const endTime = moment().subtract(10, "seconds").toISOString();
+  await updateWallets(new Date(), 0, false);
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
 
