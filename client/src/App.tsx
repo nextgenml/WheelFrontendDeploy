@@ -56,9 +56,9 @@ function App() {
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/social-sharing" element={<SocialSharing />} />
-        <Route path="/campaigns" element={<Campaigns />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/quizzes" element={<Quizzes />} />
+        <Route path="/user-campaigns" element={<Campaigns />} />
+        <Route path="/user-profile" element={<Profile />} />
+        <Route path="/user-quizzes" element={<Quizzes />} />
       </Routes>
       <Footer />
     </>

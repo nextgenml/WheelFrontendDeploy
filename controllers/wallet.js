@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const holderRepo = require("../repository/holder");
 
 const getWalletDetails = async (req, res) => {
