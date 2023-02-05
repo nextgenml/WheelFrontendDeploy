@@ -13,7 +13,7 @@ const updateWallets = async (date, index, scheduledSpin) => {
   );
   for (const item of new_addresses) {
     const value =
-      parseInt(item[1].toString().substring(0, item[1].length - 15)) || 0; // TO DO: CHANGE DECIMAL HERE (should be 18)
+      parseInt(item[1].toString().substring(0, item[1].length - 18)) || 0;
     await createWallet(item[0], value);
     await createHolder(item[0], value);
   }
