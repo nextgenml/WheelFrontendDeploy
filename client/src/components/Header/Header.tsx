@@ -32,8 +32,8 @@ export default function Header(props: Props) {
     ? [
         { link: "", title: "HOME" },
         { route: "social-sharing", title: "CHORES" },
-        { route: "campaigns", title: "CAMPAIGNS" },
-        { route: "quizzes", title: "QUIZZES" },
+        { route: "user-campaigns", title: "CAMPAIGNS" },
+        { route: "user-quizzes", title: "QUIZZES" },
       ]
     : [
         { link: "", title: "HOME" },
