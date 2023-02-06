@@ -96,7 +96,13 @@ const Instructions = ({ generatedAlias, address }) => {
                   <Typography variant="subtitle2">
                     Generated Name:&nbsp;&nbsp;
                   </Typography>
-                  <Typography variant="body2">{`${alias}ml${randomNumber}`}</Typography>
+
+                  {console.log("generatedAlias", generatedAlias, alias)}
+                  <Typography variant="body2">
+                    {generatedAlias !== alias
+                      ? `${alias}ml${randomNumber}`
+                      : `${alias}`}
+                  </Typography>
                 </Box>
               </Grid>
             </ListItem>

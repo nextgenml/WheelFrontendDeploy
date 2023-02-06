@@ -1,9 +1,5 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
-const {
-  uniqueNamesGenerator,
-  names,
-  starWars,
-} = require("unique-names-generator");
+const { uniqueNamesGenerator, names } = require("unique-names-generator");
 
 const createHolder = async (walletId, walletBalance) => {
   const existsQuery = `select id from holders where wallet_id = ?`;
@@ -91,8 +87,8 @@ const getUniqueName = async (walletId) => {
   while (1) {
     const existsQuery = `select 1 from holders where alias = ?`;
     const randomName = `${uniqueNamesGenerator({
-      dictionaries: [names, starWars],
-    })}_${walletId.substring(walletId.length - 4)}`;
+      dictionaries: [names],
+    })}${walletId.substring(walletId.length - 2)}`;
 
     const existsResults = await runQueryAsync(existsQuery, [randomName]);
 
@@ -100,3 +96,8 @@ const getUniqueName = async (walletId) => {
     if (!existsResults.length) return randomName;
   }
 };
+
+// x = uniqueNamesGenerator({
+//   dictionaries: [names],
+// });
+// console.log(x);
