@@ -13,11 +13,13 @@ import {
 } from "@mui/material";
 import { Web3Button } from "@web3modal/react";
 import MenuIcon from "@mui/icons-material/Menu";
-
+import { useAccount } from "wagmi";
 interface Props {
   socialSharing: boolean;
 }
 export default function Header(props: Props) {
+  const { isConnected } = useAccount();
+
   const [openDrawer, setState] = useState<boolean>(false);
 
   const linkStyle = {
@@ -37,6 +39,9 @@ export default function Header(props: Props) {
       ]
     : [
         { link: "", title: "HOME" },
+        isConnected
+          ? { route: "social-sharing", title: "CHORES" }
+          : { link: "", title: "" },
         { link: "goals", title: "GOALS" },
         { link: "values", title: "VALUES" },
         { link: "tokenomics", title: "TOKENOMICS" },
@@ -68,36 +73,38 @@ export default function Header(props: Props) {
         <img width="150px" src="/logo.png" alt="" />
       </Box>
       <List>
-        {headerLinks.map((h) => {
-          return (
-            <a
-              href={h.link ? `/#${h.link}` : `/${h.route}`}
-              style={{ textDecoration: "none", whiteSpace: "nowrap" }}
-              key={h.title}
-            >
-              <ListItem
-                button
-                style={{
-                  justifyContent: "center",
-                }}
+        {headerLinks
+          .filter((x) => !!x)
+          .map((h) => {
+            return (
+              <a
+                href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                style={{ textDecoration: "none", whiteSpace: "nowrap" }}
+                key={h.title}
               >
-                <ListItemText
-                  primaryTypographyProps={{
-                    sx: {
-                      textTransform: "capitalize",
-                      textAlign: "center",
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      color: "#ffffff",
-                      fontFamily: "Audiowide",
-                    },
+                <ListItem
+                  button
+                  style={{
+                    justifyContent: "center",
                   }}
-                  primary={h.title}
-                />
-              </ListItem>
-            </a>
-          );
-        })}
+                >
+                  <ListItemText
+                    primaryTypographyProps={{
+                      sx: {
+                        textTransform: "capitalize",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        color: "#ffffff",
+                        fontFamily: "Audiowide",
+                      },
+                    }}
+                    primary={h.title}
+                  />
+                </ListItem>
+              </a>
+            );
+          })}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
         <Web3Button />
@@ -127,20 +134,22 @@ export default function Header(props: Props) {
           flexBasis="40%"
           sx={{ mr: 4 }}
         >
-          {headerLinks.map((h) => {
-            return (
-              <a
-                href={h.link ? `/#${h.link}` : `/${h.route}`}
-                rel="noopener noreferrer"
-                key={h.title}
-                style={{ whiteSpace: "nowrap" }}
-              >
-                <Typography className="header-link" sx={linkStyle}>
-                  {h.title}
-                </Typography>
-              </a>
-            );
-          })}
+          {headerLinks
+            .filter((x) => !!x)
+            .map((h) => {
+              return (
+                <a
+                  href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                  rel="noopener noreferrer"
+                  key={h.title}
+                  style={{ whiteSpace: "nowrap" }}
+                >
+                  <Typography className="header-link" sx={linkStyle}>
+                    {h.title}
+                  </Typography>
+                </a>
+              );
+            })}
           <Web3Button />
         </Stack>
       </Hidden>

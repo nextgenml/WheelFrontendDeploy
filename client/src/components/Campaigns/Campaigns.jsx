@@ -27,7 +27,7 @@ import { fetchBalance } from "@wagmi/core";
 import CampaignsList from "./CampaignsList";
 
 const initialState = {
-  media: [],
+  media: ["twitter"],
   client: "",
   campaign_name: "",
   success_factor: "best",
