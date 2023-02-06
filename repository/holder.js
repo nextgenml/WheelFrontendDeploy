@@ -6,7 +6,7 @@ const {
 } = require("unique-names-generator");
 
 const createHolder = async (walletId, walletBalance) => {
-  const existsQuery = `select 1 from holders where wallet_id = ?`;
+  const existsQuery = `select id from holders where wallet_id = ?`;
 
   const existsResults = await runQueryAsync(existsQuery, [walletId]);
 
@@ -15,6 +15,10 @@ const createHolder = async (walletId, walletBalance) => {
     const randomName = await getUniqueName(walletId);
 
     return await runQueryAsync(query, [walletId, walletBalance, randomName]);
+  } else {
+    const query = `update holders set wallet_balance = ? where id = ?`;
+
+    return await runQueryAsync(query, [walletBalance, existsResults[0].id]);
   }
 };
 
