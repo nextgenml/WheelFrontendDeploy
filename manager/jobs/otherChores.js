@@ -19,6 +19,9 @@ const {
   getPostedCampaigns,
   canCreateChore,
 } = require("../../repository/campaignDetails");
+const { convert } = require("html-to-text");
+
+const { chatGptResponse } = require("../../utils/chatgpt");
 
 const createOtherChores = async () => {
   try {
@@ -44,6 +47,10 @@ const createOtherChores = async () => {
           campaignStatus[`${post.campaign_detail_id}_${action}`] ||=
             await canCreateChore(post.campaign_detail_id, action);
 
+          let comments = "";
+
+          if (action === "comment")
+            comments = await generateComments(campaign.content);
           if (campaignStatus[`${post.campaign_detail_id}_${action}`])
             await createChore({
               campaignDetailsId: post.campaign_detail_id,
@@ -59,6 +66,7 @@ const createOtherChores = async () => {
               ref_chore_id: post.id,
               linkToPost: post.link_to_post,
               mediaPostId: post.media_post_id,
+              commentSuggestions: comments,
             });
         }
       }
@@ -124,6 +132,18 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
   }
 };
 
+const generateComments = async (content) => {
+  const text = convert(campaign.content, {
+    wordwrap: 130,
+  });
+  const comment1 = await chatGptResponse(
+    `rewrite the sentence in 20 words - ${text}`
+  );
+  const comment2 = await chatGptResponse(
+    `rewrite the sentence in 20 words - ${text}`
+  );
+  return `${comment1},${comment2}`;
+};
 // createOtherChores();
 // checkIfOtherChoresCompleted();
 module.exports = {

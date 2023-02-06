@@ -41,7 +41,7 @@ const nextFollowUsers = async (walletId, mediaType) => {
 };
 
 const createChore = async (data) => {
-  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?);`;
+  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
@@ -56,6 +56,7 @@ const createChore = async (data) => {
     data.mediaPostId || null,
     data.follow_link || null,
     data.follow_user || null,
+    data.commentSuggestions || null,
   ]);
 };
 const markOtherChoreAsCompleted = async (data) => {
