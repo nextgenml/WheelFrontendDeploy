@@ -1,5 +1,13 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
+
+const getActiveChoresCount = async (campaignId, choreType) => {
+  const query =
+    "select count(1) as count from chores where campaign_detail_id = ? and chore_type = ? and (is_completed = 1 or valid_to > now())";
+  const results = await runQueryAsync(query, [campaignId, choreType]);
+
+  return results?.count || 0;
+};
 const getPreviousCampaignIds = async (walletId) => {
   const query = `select distinct campaign_detail_id from chores where wallet_id = ? and chore_type = 'post'`;
 
@@ -269,4 +277,5 @@ module.exports = {
   getTodayLost,
   getTodayTotal,
   markOtherChoreAsCompleted,
+  getActiveChoresCount,
 };

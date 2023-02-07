@@ -9,12 +9,15 @@ const {
   getActiveHolders,
   getHoldersByWalletId,
   updateMediaIds,
+  nextUserForPost,
+  isEligibleForChore,
 } = require("../../repository/holder");
 const config = require("../../config.js");
 const {
   createChore,
   getPreviousCampaignIds,
   markChoreAsCompleted,
+  getActiveChoresCount,
 } = require("../../repository/chores");
 const moment = require("moment");
 const { shuffleArray } = require("../../utils");
@@ -33,50 +36,45 @@ const { updateWallets } = require("../wallet");
 
 const createPostChores = async (campaigns) => {
   try {
-    const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
+    for (const campaign of campaigns) {
+      const successCriteria =
+        config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
+      let noOfPosts = successCriteria.POST;
 
-    for (const holder of holders) {
-      const prevCampaignIds = await getPreviousCampaignIds(holder.wallet_id);
+      const noOfPostsDone = await getActiveChoresCount(campaign.id, "post");
+      noOfPosts -= noOfPostsDone;
+      const skippedUsers = [-1];
+      while (noOfPosts > 0) {
+        const nextUser = await nextUserForPost(campaign.id, skippedUsers);
 
-      const newCampaigns = campaigns.filter(
-        (c) => !prevCampaignIds.includes(c.id)
-      );
-
-      const noOfPosts =
-        config.NO_OF_POSTS_PER_DAY > newCampaigns.length
-          ? newCampaigns.length
-          : config.NO_OF_POSTS_PER_DAY;
-
-      const randomCampaigns = shuffleArray(newCampaigns).slice(0, noOfPosts);
-
-      if (randomCampaigns.length < config.NO_OF_POSTS_PER_DAY) {
-        const defaultCampaign = await getDefaultCampaign();
-        if (defaultCampaign) randomCampaigns.push(defaultCampaign);
-      }
-
-      const campaignStatus = {};
-      for (const campaign of randomCampaigns) {
-        campaignStatus[campaign.id] ||= await canCreateChore(
-          campaign.id,
-          "post"
-        );
-
-        if (campaignStatus[campaign.id])
-          await createChore({
-            campaignDetailsId: campaign.id,
-            walletId: holder.wallet_id,
-            mediaType: campaign.media_type,
-            choreType: "post",
-            validFrom: moment().add(1, "days").startOf("day").format(),
-            validTo: moment()
-              .add(config.POST_CHORE_VALID_DAYS, "days")
-              .endOf("day")
-              .format(),
-            value: config.COST_PER_CHORE,
-          });
+        if (nextUser) {
+          const isEligible = await isEligibleForChore(
+            nextUser.wallet_id,
+            "post"
+          );
+          if (isEligible) {
+            await createChore({
+              campaignDetailsId: campaign.id,
+              walletId: nextUser.wallet_id,
+              mediaType: campaign.media_type,
+              choreType: "post",
+              validFrom: moment().add(1, "days").startOf("day").format(),
+              validTo: moment()
+                .add(config.POST_CHORE_VALID_DAYS, "days")
+                .endOf("day")
+                .format(),
+              value: config.COST_PER_CHORE,
+            });
+            noOfPosts -= 1;
+          } else {
+            skippedUsers.push(nextUser.wallet_id);
+          }
+        } else {
+          break;
+        }
       }
     }
-    logger.info("completed creating chores");
+    logger.info("completed createPostChores process");
   } catch (error) {
     logger.error(`error in creating chores: ${error}`);
   }

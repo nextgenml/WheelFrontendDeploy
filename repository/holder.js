@@ -1,5 +1,28 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
+const config = require("../config");
+
+const nextUserForPost = async (campaignId, skippedUsers) => {
+  const query = `select distinct h.wallet_id from holders h left join chores c on c.wallet_id = h.wallet_id 
+    and c.campaign_detail_id = ? and c.chore_type = 'post'
+    where c.id is null and h.wallet_balance >= ? and h.is_active = 1 
+    and h.wallet_id not in (?)
+    ORDER BY RAND () limit 1`;
+
+  const results = await runQueryAsync(query, [
+    campaignId,
+    config.MINIMUM_WALLET_BALANCE,
+    skippedUsers,
+  ]);
+  return results[0];
+};
+
+const isEligibleForChore = async (walletId, choreType) => {
+  const query =
+    "select count(1) as count from chores where chore_type = ? and walletId = ? and valid_from >= now()";
+  const results = await runQueryAsync(query, [choreType, walletId]);
+  return (results[0]?.count || 0) < config.NO_OF_POSTS_PER_DAY;
+};
 
 const createHolder = async (walletId, walletBalance) => {
   const existsQuery = `select id from holders where wallet_id = ?`;
@@ -81,6 +104,8 @@ module.exports = {
   updateMediaIds,
   updateAlias,
   aliasExists,
+  nextUserForPost,
+  isEligibleForChore,
 };
 
 const getUniqueName = async (walletId) => {
@@ -92,12 +117,6 @@ const getUniqueName = async (walletId) => {
 
     const existsResults = await runQueryAsync(existsQuery, [randomName]);
 
-    // console.log("randomName", randomName);
     if (!existsResults.length) return randomName;
   }
 };
-
-// x = uniqueNamesGenerator({
-//   dictionaries: [names],
-// });
-// console.log(x);
