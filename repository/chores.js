@@ -16,10 +16,18 @@ const getPreviousCampaignIds = async (walletId) => {
   return results.map((r) => r.campaign_detail_id);
 };
 
-const getPrevOtherUserPostIds = async (walletId) => {
-  const query = `select distinct ref_chore_id from chores where wallet_id = ? and chore_type != 'post'`;
+const getPrevChoreIds = async (walletId, campaignId, choreType) => {
+  const query = `select distinct ref_chore_id from chores where wallet_id = ? and campaign_detail_id = ? and chore_type = ?`;
 
-  const results = await runQueryAsync(query, [walletId]);
+  const results = await runQueryAsync(query, [walletId, campaignId, choreType]);
+
+  return results.map((r) => r.ref_chore_id);
+};
+
+const getCampaignPost = async (campaignId) => {
+  const query = `select * from chores where campaign_detail_id = ? and chore_type = 'post' and media_post_id is not null order by rand () limit 1`;
+
+  const results = await runQueryAsync(query, [campaignId]);
 
   return results.map((r) => r.ref_chore_id);
 };
@@ -31,7 +39,8 @@ const otherUserPosts = async (prevIds) => {
                 and cd.is_active = 1 and cd.content_type = 'text' and c.chore_type = 'post' 
                 and c.id not in (?) and c.media_post_id is not null`;
 
-  return await runQueryAsync(query, [prevIds]);
+  const results = await runQueryAsync(query, [prevIds]);
+  return results[0];
 };
 
 const nextFollowUsers = async (walletId, mediaType) => {
@@ -265,7 +274,7 @@ module.exports = {
   getTodayChoresTotal,
   createChore,
   markChoreAsCompleted,
-  getPrevOtherUserPostIds,
+  getPrevChoreIds,
   otherUserPosts,
   getMediaPostIds,
   nextFollowUsers,
@@ -278,4 +287,5 @@ module.exports = {
   getTodayTotal,
   markOtherChoreAsCompleted,
   getActiveChoresCount,
+  getCampaignPost,
 };

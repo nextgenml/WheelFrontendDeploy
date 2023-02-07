@@ -4,10 +4,15 @@ const {
   otherUserPosts,
   getMediaPostIds,
   markOtherChoreAsCompleted,
+  getActiveChoresCount,
+  getPrevChoreIds,
+  getCampaignPost,
 } = require("../../repository/chores");
 const {
   getActiveHolders,
   getHoldersByWalletId,
+  getNextUserForChore,
+  isEligibleForChore,
 } = require("../../repository/holder");
 const config = require("../../config.js");
 const { createChore } = require("../../repository/chores");
@@ -23,7 +28,67 @@ const { convert } = require("html-to-text");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
 
-const createOtherChores = async () => {
+const createOtherChores = async (campaigns) => {
+  try {
+    for (const campaign of campaigns) {
+      const successCriteria =
+        config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
+
+      const actions = getMediaActions(campaign.media_type);
+
+      for (const action of actions) {
+        let noOfPosts = successCriteria[action.toUpperCase()];
+
+        const noOfPostsDone = await getActiveChoresCount(campaign.id, action);
+        noOfPosts -= noOfPostsDone;
+        const skippedUsers = [-1];
+        while (noOfPosts > 0) {
+          const campaignPost = await getCampaignPost(campaign.id);
+
+          if (!campaignPost) break;
+
+          const nextUser = await getNextUserForChore(campaignPost.id);
+
+          if (nextUser) {
+            const isEligible = await isEligibleForChore(
+              nextUser.wallet_id,
+              action
+            );
+            if (isEligible) {
+              let comments = "";
+
+              if (action === "comment")
+                comments = await generateComments(campaign.content);
+              await createChore({
+                campaignDetailsId: campaignPost.campaign_detail_id,
+                walletId: nextUser.wallet_id,
+                mediaType: campaignPost.media_type,
+                choreType: action,
+                validFrom: moment().add(1, "days").startOf("day").format(),
+                validTo: moment()
+                  .add(config.OTHER_CHORE_VALID_DAYS, "days")
+                  .endOf("day")
+                  .format(),
+                value: config.COST_PER_CHORE,
+                ref_chore_id: campaignPost.id,
+                linkToPost: campaignPost.link_to_post,
+                mediaPostId: campaignPost.media_post_id,
+                commentSuggestions: comments,
+              });
+              noOfPosts -= 1;
+            } else {
+              skippedUsers.push(nextUser.wallet_id);
+            }
+          } else {
+            break;
+          }
+        }
+      }
+    }
+    logger.info("completed createOtherChores");
+  } catch (error) {
+    logger.error(`error in createOtherChores: ${error}`);
+  }
   try {
     const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
 

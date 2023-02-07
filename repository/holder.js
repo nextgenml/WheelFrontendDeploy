@@ -17,6 +17,22 @@ const nextUserForPost = async (campaignId, skippedUsers) => {
   return results[0];
 };
 
+const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
+  const query = `select distinct h.wallet_id from holders h left join chores c on c.wallet_id = h.wallet_id 
+  and c.id = ? and c.chore_type = ?
+  where c.id is null and h.wallet_balance >= ? and h.is_active = 1 
+  and h.wallet_id not in (?)
+  ORDER BY RAND () limit 1`;
+
+  const results = await runQueryAsync(query, [
+    choreId,
+    choreType,
+    skippedUsers,
+  ]);
+
+  return results[0];
+};
+
 const isEligibleForChore = async (walletId, choreType) => {
   const query =
     "select count(1) as count from chores where chore_type = ? and wallet_id = ? and valid_from >= now()";
@@ -106,6 +122,7 @@ module.exports = {
   aliasExists,
   nextUserForPost,
   isEligibleForChore,
+  getNextUserForChore,
 };
 
 const getUniqueName = async (walletId) => {
