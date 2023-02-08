@@ -8,38 +8,12 @@ const getActiveChoresCount = async (campaignId, choreType) => {
 
   return results?.count || 0;
 };
-const getPreviousCampaignIds = async (walletId) => {
-  const query = `select distinct campaign_detail_id from chores where wallet_id = ? and chore_type = 'post'`;
-
-  const results = await runQueryAsync(query, [walletId]);
-
-  return results.map((r) => r.campaign_detail_id);
-};
-
-const getPrevChoreIds = async (walletId, campaignId, choreType) => {
-  const query = `select distinct ref_chore_id from chores where wallet_id = ? and campaign_detail_id = ? and chore_type = ?`;
-
-  const results = await runQueryAsync(query, [walletId, campaignId, choreType]);
-
-  return results.map((r) => r.ref_chore_id);
-};
 
 const getCampaignPost = async (campaignId, skippedCampaigns) => {
   const query = `select * from chores where campaign_detail_id = ? and chore_type = 'post' and media_post_id is not null and id not in (?) order by rand () limit 1`;
 
   const results = await runQueryAsync(query, [campaignId, skippedCampaigns]);
 
-  return results[0];
-};
-
-const otherUserPosts = async (prevIds) => {
-  const query = `select c.* from chores c
-                inner join campaign_details cd on c.campaign_detail_id = cd.id 
-                where cd.start_time <= now() and cd.end_time >= now() 
-                and cd.is_active = 1 and cd.content_type = 'text' and c.chore_type = 'post' 
-                and c.id not in (?) and c.media_post_id is not null`;
-
-  const results = await runQueryAsync(query, [prevIds]);
   return results[0];
 };
 
@@ -270,12 +244,9 @@ module.exports = {
   getOldChores,
   getChoresByType,
   getOldChoresTotal,
-  getPreviousCampaignIds,
   getTodayChoresTotal,
   createChore,
   markChoreAsCompleted,
-  getPrevChoreIds,
-  otherUserPosts,
   getMediaPostIds,
   nextFollowUsers,
   markFollowChoreAsCompleted,
