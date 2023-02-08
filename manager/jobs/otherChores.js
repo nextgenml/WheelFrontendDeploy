@@ -35,7 +35,6 @@ const createOtherChores = async (campaigns) => {
         const skippedUsers = [-1];
         while (noOfPosts > 0) {
           const campaignPost = await getCampaignPost(campaign.id);
-
           if (!campaignPost) break;
 
           const nextUser = await getNextUserForChore(
@@ -43,6 +42,7 @@ const createOtherChores = async (campaigns) => {
             action,
             skippedUsers
           );
+          console.log("nextUser", nextUser);
 
           if (nextUser) {
             const isEligible = await isEligibleForChore(
@@ -139,7 +139,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
 };
 
 const generateComments = async (content) => {
-  const text = convert(campaign.content, {
+  const text = convert(content, {
     wordwrap: 130,
   });
   const comment1 = await chatGptResponse(
