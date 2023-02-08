@@ -2,11 +2,8 @@ const {
   getActiveCampaigns,
   getPostedCampaigns,
   updateLastCheckedDate,
-  canCreateChore,
-  getDefaultCampaign,
 } = require("../../repository/campaignDetails");
 const {
-  getActiveHolders,
   getHoldersByWalletId,
   updateMediaIds,
   nextUserForPost,
@@ -15,7 +12,6 @@ const {
 const config = require("../../config.js");
 const {
   createChore,
-  getPreviousCampaignIds,
   markChoreAsCompleted,
   getActiveChoresCount,
 } = require("../../repository/chores");
@@ -63,7 +59,7 @@ const createPostChores = async (campaigns) => {
                 .add(config.POST_CHORE_VALID_DAYS, "days")
                 .endOf("day")
                 .format(),
-              value: config.COST_PER_CHORE,
+              value: campaign.reward,
             });
             noOfPosts -= 1;
           } else {
@@ -153,7 +149,7 @@ const initiateAlgorithm = async () => {
   await checkIfFollowComplete();
 
   await createPostChores(campaigns);
-  await createOtherChores();
+  await createOtherChores(campaigns);
   await createFollowChores(campaigns);
 
   for (const campaign of postedCampaigns) {
@@ -165,7 +161,7 @@ schedule.scheduleJob(rule, async () => {
   logger.info("started chores process");
   await initiateAlgorithm();
 });
-initiateAlgorithm();
+// initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
