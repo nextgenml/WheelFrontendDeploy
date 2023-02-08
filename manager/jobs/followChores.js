@@ -40,7 +40,7 @@ const createFollowChores = async (campaigns) => {
                 .add(config.OTHER_CHORE_VALID_DAYS, "days")
                 .endOf("day")
                 .format(),
-              value: config.COST_PER_CHORE,
+              value: activeCampaign.reward,
               follow_link: post.follow_link,
               follow_user: post.wallet_id,
             });

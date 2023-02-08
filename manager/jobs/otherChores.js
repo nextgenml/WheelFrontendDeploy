@@ -73,7 +73,7 @@ const createOtherChores = async (campaigns) => {
                   .add(config.OTHER_CHORE_VALID_DAYS, "days")
                   .endOf("day")
                   .format(),
-                value: config.COST_PER_CHORE,
+                value: campaign.reward,
                 ref_chore_id: campaignPost.id,
                 linkToPost: campaignPost.link_to_post,
                 mediaPostId: campaignPost.media_post_id,

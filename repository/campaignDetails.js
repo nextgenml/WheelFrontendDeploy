@@ -3,7 +3,7 @@ const moment = require("moment");
 const config = require("../config");
 
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, c.success_factor from campaign_details cd 
+  const query = `select cd.id, cd.media_type, c.success_factor, c.reward from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 0
@@ -12,7 +12,7 @@ const getActiveCampaigns = async () => {
   return await runQueryAsync(query, []);
 };
 const getDefaultCampaign = async () => {
-  const query = `select cd.id, cd.media_type from campaign_details cd 
+  const query = `select cd.id, cd.media_type, c.reward from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 1
