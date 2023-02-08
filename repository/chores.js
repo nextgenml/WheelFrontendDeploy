@@ -29,7 +29,7 @@ const getCampaignPost = async (campaignId) => {
 
   const results = await runQueryAsync(query, [campaignId]);
 
-  return results.map((r) => r.ref_chore_id);
+  return results[0];
 };
 
 const otherUserPosts = async (prevIds) => {

@@ -1,15 +1,11 @@
 const { getMediaActions } = require("../../constants/mediaActions");
 const {
-  getPrevOtherUserPostIds,
-  otherUserPosts,
   getMediaPostIds,
   markOtherChoreAsCompleted,
   getActiveChoresCount,
-  getPrevChoreIds,
   getCampaignPost,
 } = require("../../repository/chores");
 const {
-  getActiveHolders,
   getHoldersByWalletId,
   getNextUserForChore,
   isEligibleForChore,
@@ -17,13 +13,8 @@ const {
 const config = require("../../config.js");
 const { createChore } = require("../../repository/chores");
 const moment = require("moment");
-const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
-const {
-  getPostedCampaigns,
-  canCreateChore,
-} = require("../../repository/campaignDetails");
 const { convert } = require("html-to-text");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
@@ -47,7 +38,11 @@ const createOtherChores = async (campaigns) => {
 
           if (!campaignPost) break;
 
-          const nextUser = await getNextUserForChore(campaignPost.id);
+          const nextUser = await getNextUserForChore(
+            campaignPost.id,
+            action,
+            skippedUsers
+          );
 
           if (nextUser) {
             const isEligible = await isEligibleForChore(
@@ -89,63 +84,9 @@ const createOtherChores = async (campaigns) => {
   } catch (error) {
     logger.error(`error in createOtherChores: ${error}`);
   }
-  try {
-    const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
-
-    const campaignStatus = {};
-
-    for (const holder of holders) {
-      const prevPostIds = await getPrevOtherUserPostIds(holder.wallet_id);
-      // console.log("prevPostIds", prevPostIds);
-      const userPosts = await otherUserPosts([...prevPostIds, -1]);
-      // console.log("userPosts", userPosts);
-
-      const noOfPosts = Math.min(config.NO_OF_POSTS_PER_DAY, userPosts.length);
-
-      const randomPosts = shuffleArray(userPosts).slice(0, noOfPosts);
-
-      for (const post of randomPosts) {
-        const actions = getMediaActions(post.media_type);
-        // console.log("post", post.id);
-
-        for (const action of actions) {
-          campaignStatus[`${post.campaign_detail_id}_${action}`] ||=
-            await canCreateChore(post.campaign_detail_id, action);
-
-          let comments = "";
-
-          if (action === "comment")
-            comments = await generateComments(campaign.content);
-          if (campaignStatus[`${post.campaign_detail_id}_${action}`])
-            await createChore({
-              campaignDetailsId: post.campaign_detail_id,
-              walletId: holder.wallet_id,
-              mediaType: post.media_type,
-              choreType: action,
-              validFrom: moment().add(1, "days").startOf("day").format(),
-              validTo: moment()
-                .add(config.OTHER_CHORE_VALID_DAYS, "days")
-                .endOf("day")
-                .format(),
-              value: config.COST_PER_CHORE,
-              ref_chore_id: post.id,
-              linkToPost: post.link_to_post,
-              mediaPostId: post.media_post_id,
-              commentSuggestions: comments,
-            });
-        }
-      }
-    }
-    logger.info("completed createOtherChores");
-  } catch (error) {
-    logger.error(`error in createOtherChores: ${error}`);
-  }
 };
 
 const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
-  // postedCampaigns = await getPostedCampaigns();
-  // endTime = moment().subtract(10, "seconds").toISOString();
-
   try {
     for (const campaign of postedCampaigns) {
       const actions = getMediaActions(campaign.media_type);

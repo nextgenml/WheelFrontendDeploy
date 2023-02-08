@@ -19,7 +19,7 @@ const nextUserForPost = async (campaignId, skippedUsers) => {
 
 const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
   const query = `select distinct h.wallet_id from holders h left join chores c on c.wallet_id = h.wallet_id 
-  and c.id = ? and c.chore_type = ?
+  and c.ref_chore_id = ? and c.chore_type = ?
   where c.id is null and h.wallet_balance >= ? and h.is_active = 1 
   and h.wallet_id not in (?)
   ORDER BY RAND () limit 1`;
