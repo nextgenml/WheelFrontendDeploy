@@ -33,8 +33,12 @@ const createOtherChores = async (campaigns) => {
         const noOfPostsDone = await getActiveChoresCount(campaign.id, action);
         noOfPosts -= noOfPostsDone;
         const skippedUsers = [-1];
+        const skippedCampaigns = [-1];
         while (noOfPosts > 0) {
-          const campaignPost = await getCampaignPost(campaign.id);
+          const campaignPost = await getCampaignPost(
+            campaign.id,
+            skippedCampaigns
+          );
           if (!campaignPost) break;
 
           const nextUser = await getNextUserForChore(
@@ -42,7 +46,12 @@ const createOtherChores = async (campaigns) => {
             action,
             skippedUsers
           );
-          console.log("nextUser", nextUser);
+          // console.log(
+          //   "nextUser",
+          //   campaignPost.id,
+          //   skippedUsers,
+          //   nextUser?.wallet_id
+          // );
 
           if (nextUser) {
             const isEligible = await isEligibleForChore(
@@ -75,9 +84,10 @@ const createOtherChores = async (campaigns) => {
               skippedUsers.push(nextUser.wallet_id);
             }
           } else {
-            break;
+            skippedCampaigns.push(campaignPost.id);
           }
         }
+        // console.log("------------------");
       }
     }
     logger.info("completed createOtherChores");

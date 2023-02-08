@@ -24,10 +24,10 @@ const getPrevChoreIds = async (walletId, campaignId, choreType) => {
   return results.map((r) => r.ref_chore_id);
 };
 
-const getCampaignPost = async (campaignId) => {
-  const query = `select * from chores where campaign_detail_id = ? and chore_type = 'post' and media_post_id is not null order by rand () limit 1`;
+const getCampaignPost = async (campaignId, skippedCampaigns) => {
+  const query = `select * from chores where campaign_detail_id = ? and chore_type = 'post' and media_post_id is not null and id not in (?) order by rand () limit 1`;
 
-  const results = await runQueryAsync(query, [campaignId]);
+  const results = await runQueryAsync(query, [campaignId, skippedCampaigns]);
 
   return results[0];
 };
