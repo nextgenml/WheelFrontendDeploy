@@ -5,8 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Grid, Button, Link } from "@mui/material";
-import { Navigate, Route } from 'react-router-dom';
-
+import { Navigate, Route } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 let borderStyle = {
   backgroundColor: "#f57a2f",
@@ -23,7 +23,7 @@ export default function AccordionElement({
   extArticleUrl,
   extVideoUrl,
 }) {
-  const url = `/nxml-blog-chat/${extArticleUrl}`
+  const { isConnected } = useAccount();
   return (
     <Accordion disabled={disableCondition} sx={{ ...borderStyle }}>
       <AccordionSummary
@@ -54,20 +54,24 @@ export default function AccordionElement({
                 alt={title}
                 className="initiative-image"
               />
-              <Link
-                href={extArticleUrl}
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button className="initiative-btn">ARTICLE</Button>
-              </Link>
-              <Link
-                href={extVideoUrl}
-                target="_blank"
-                style={{ textDecoration: "none" }}
-              >
-                <Button className="initiative-btn">VIDEO</Button>
-              </Link>
+              {isConnected && (
+                <>
+                  <Link
+                    href={extArticleUrl}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button className="initiative-btn">ARTICLE</Button>
+                  </Link>
+                  <Link
+                    href={extVideoUrl}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <Button className="initiative-btn">VIDEO</Button>
+                  </Link>
+                </>
+              )}
             </Grid>
           </Grid>
         </Box>
