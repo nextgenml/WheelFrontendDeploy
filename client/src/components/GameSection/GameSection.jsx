@@ -28,7 +28,7 @@ export default function GameSection() {
           }}
           variant="h4"
         >
-          GAME
+          WHEEL
         </Typography>
 
         <Typography
@@ -37,8 +37,7 @@ export default function GameSection() {
             textAlign: "center",
           }}
         >
-          Earn your chance to win Call of duty points, double xp, merch, games,
-          etc by purchasing NEXTGEN ML erc -20 token
+          Earn your chance to win rewards in stable coins by purchasing & holding NEXGEN ML erc -20 token
         </Typography>
 
         <Grid
@@ -66,14 +65,7 @@ export default function GameSection() {
                 textAlign: "justify",
               }}
             >
-              Must purchase minimum 0.01 worth of NEXTGEN ML to qualify. Must
-              hold the token, The longer you hold the more chances you get to
-              WIN. With every purchase, wallet addresses will be monitored and
-              entered into giveaway as long as wallet qualifies. There is no
-              limit to entries. We want to reward our loyal community members
-              with special MODERN WAREFARE II items such as CALL OF DUTY points,
-              double xp, merch, games etc on all gaming platforms PS5, XBOX, PC
-              etc
+              To qualify for extraordinary rewards, you must purchase a minimum of 1 million NEXGEN ML tokens and hold them in your wallet. The longer you hold the tokens, the more chances you have to qualify for a spin to win rewards. Our advanced AI program will pick up wallet addresses from the smart contract and select winners based on the rules, making draws weekly, bi-weekly, monthly, quarterly, semi-annually, and annually. By purchasing NEXGEN ML tokens and holding them long-term, you can secure your spot on the whitelist and access future airdrops and NFTs for various initiatives with unique utilities. So, join the NEXGEN ML community and start reaping the benefits of long-term token holding.
             </Typography>
           </Grid>
           <Grid item xs={12} sm={5}>

@@ -11,7 +11,7 @@ export default function Home() {
       sx={{
         background: `url(${homeimg})`,
         backgroundRepeat: "no-repeat",
-        backgroundSize: { xs: "100% 100%", sm: "50% 80%" },
+        backgroundSize: { xs: "100% 100%", sm: "30% 90%" },
         backgroundPosition: "center right",
       }}
     >
@@ -24,7 +24,7 @@ export default function Home() {
             }}
             variant="h3"
           >
-            NEXTGEN ML TOKEN
+            NEXGEN ML TOKEN
           </Typography>
           <Typography
             color="white"
@@ -35,12 +35,7 @@ export default function Home() {
             fontWeight="bold"
             my={3}
           >
-            We help empower communities to own and monetize data in the
-            decentralized world. Our advanced Blockchain AI solutions help with
-            data automation, leading to new products, new services, tweaks to
-            existing products to make them less costly or more valuable, and an
-            array of other advantages. Ultimately, this will make the token more
-            competitive in the rapidly changing digital landscape. 
+            NEXGEN ML empowers communities with the ownership and monetization of data in a decentralized world through our advanced blockchain AI solutions. Our platform streamlines data automation, unlocking new revenue streams and providing a competitive edge in the rapidly evolving digital landscape. From creating new products and services to improving existing offerings, our solutions will drive growth and innovation. Join us in the journey to secure control and value from your data in the decentralized era. 
           </Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
             <a
@@ -60,7 +55,7 @@ export default function Home() {
                   },
                 }}
               >
-                BUY NEXTGEN
+                BUY NEXGEN
               </Button>
             </a>
 

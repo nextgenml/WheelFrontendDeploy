@@ -4,7 +4,8 @@ const prodConfig = {
   ABC_TOKEN: "0xEE0d7199dF48a603b504fBD76AE85ff4e9F283b1",
   RPC_URL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-  CHAT_BOT_URL: "http://104.248.228.44:3000",
+  //CHAT_BOT_URL: "http://104.248.228.44:3000",
+  CHAT_BOT_URL: "http://localhost:3000",
 };
 
 const testConfig = {
@@ -13,7 +14,8 @@ const testConfig = {
   ABC_TOKEN: "0xEE0d7199dF48a603b504fBD76AE85ff4e9F283b1",
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-  CHAT_BOT_URL: "http://104.248.228.44:3000",
+  //CHAT_BOT_URL: "http://104.248.228.44:3000",
+  CHAT_BOT_URL: "https://nexgenml.com/",
 };
 
 export default process.env.REACT_APP_NODE_ENV === "production"
