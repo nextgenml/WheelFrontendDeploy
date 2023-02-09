@@ -22,12 +22,7 @@ import { useEffect, useState } from "react";
 function App() {
   const location = useLocation();
   const [socialSharing, setSocialSharing] = useState(false);
-  const blackBgPages = [
-    "/",
-    "/spin-wheel",
-    "/claim-distribution",
-    "/spin-wheel",
-  ];
+  const blackBgPages = ["/spin-wheel", "/claim-distribution", "/spin-wheel"];
 
   useEffect(() => {
     const includes = blackBgPages.includes(location.pathname);
@@ -39,7 +34,7 @@ function App() {
     <>
       <Header socialSharing={socialSharing} />
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={
             <Container maxWidth="xl">
@@ -52,10 +47,10 @@ function App() {
               <Community />
             </Container>
           }
-        />
+        /> */}
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
-        <Route path="/social-sharing" element={<SocialSharing />} />
+        <Route path="/" element={<SocialSharing />} />
         <Route path="/user-campaigns" element={<Campaigns />} />
         <Route path="/user-profile" element={<Profile />} />
         <Route path="/user-quizzes" element={<Quizzes />} />
