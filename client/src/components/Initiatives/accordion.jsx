@@ -5,6 +5,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Grid, Button, Link } from "@mui/material";
+import { Navigate, Route } from 'react-router-dom';
+
 
 let borderStyle = {
   backgroundColor: "#f57a2f",
@@ -21,6 +23,7 @@ export default function AccordionElement({
   extArticleUrl,
   extVideoUrl,
 }) {
+  const url = `/nxml-blog-chat/${extArticleUrl}`
   return (
     <Accordion disabled={disableCondition} sx={{ ...borderStyle }}>
       <AccordionSummary

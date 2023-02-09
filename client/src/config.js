@@ -5,6 +5,9 @@ const prodConfig = {
   RPC_URL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
   CHAT_BOT_URL: "http://104.248.228.44:3000",
+  API_ENDPOINT: "http://104.248.228.44:8080",
+  ADMIN_WALLET: "0x8B8EBA8654f00E0F5A93491c3870C09b0e27735D",
+  PAID_AMOUNT: 10
 };
 
 const testConfig = {
@@ -14,6 +17,9 @@ const testConfig = {
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
   CHAT_BOT_URL: "http://104.248.228.44:3000",
+  API_ENDPOINT: "http://localhost:8000",
+  ADMIN_WALLET: "0x8B8EBA8654f00E0F5A93491c3870C09b0e27735D",
+  PAID_AMOUNT: 10
 };
 
 export default process.env.REACT_APP_NODE_ENV === "production"
