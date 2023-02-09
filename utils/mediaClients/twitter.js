@@ -5,16 +5,20 @@ let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 
 const searchTweets = async (search, start_time, end_time) => {
-  // TODO check for pagination
-  const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
-    "tweet.fields": ["conversation_id", "created_at", "attachments"],
-    expansions: ["author_id", "attachments.media_keys"],
-    "user.fields": ["name"],
-    "media.fields": ["url"],
-    max_results: 100,
-    start_time,
-    end_time,
-  });
+  const sanitized = sanitizeTweet(search);
+  console.log("sanitized", sanitized);
+  const jsTweets = await readOnlyClient.v2.search(
+    `"${sanitized}" -is:retweet`,
+    {
+      "tweet.fields": ["conversation_id", "created_at", "attachments"],
+      expansions: ["author_id", "attachments.media_keys"],
+      "user.fields": ["name"],
+      "media.fields": ["url"],
+      max_results: 100,
+      start_time,
+      end_time,
+    }
+  );
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
 
@@ -34,7 +38,7 @@ const searchTweets = async (search, start_time, end_time) => {
     });
   }
 
-  // console.log("result", result);
+  console.log("result", result);
   return result;
 };
 
@@ -50,6 +54,7 @@ const tweetLikedUsers = async (postId, start_time, end_time) => {
       username: user.username,
     });
   }
+
   return result;
 };
 
@@ -119,7 +124,15 @@ const followingUsers = async (userId) => {
   return result;
 };
 
-searchTweets("Default campaign with no images");
+const sanitizeTweet = (tweet) => tweet.replace(/\s\[https\:.*]/gm, "");
+
+const x = `Our very own @KonaBharat [https://twitter.com/KonaBharat] is debuting today with
+the Indian Cricket Team in the ongoing test against Australia. My
+congratulations and best wishes to him.
+The Telugu flag continues to fly high!
+#TeluguPride [https://twitter.com/hashtag/TeluguPride?src=hashtag_click]`;
+
+// searchTweets(x);
 // tweetLikedUsers();
 // retweetedUsers("1607679115536072704");
 // tweetRepliedUsers("1607679115536072704");
@@ -131,4 +144,5 @@ module.exports = {
   tweetRepliedUsers,
   getTwitterActionFunc,
   followingUsers,
+  sanitizeTweet,
 };

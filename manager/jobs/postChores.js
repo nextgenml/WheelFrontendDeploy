@@ -16,7 +16,6 @@ const {
   getActiveChoresCount,
 } = require("../../repository/chores");
 const moment = require("moment");
-const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const schedule = require("node-schedule");
 const { searchTweets } = require("../../utils/mediaClients/twitter");
@@ -96,10 +95,9 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
           ).toISOString(),
           endTime
         );
+        console.log("postedUsers", postedUsers.length);
 
         if (postedUsers.length) {
-          // console.log("postedUsers", postedUsers.length, text);
-
           const holdersByWalletId = await getHoldersByWalletId(
             postedUsers.map((u) => u.username)
           );
@@ -108,7 +106,7 @@ const checkIfPostsChoreCompleted = async (postedCampaigns, endTime) => {
           const campaignImages = (campaign.image_urls || "")
             .split(",")
             .filter((x) => !!x);
-          // console.log("holdersByWalletId", holdersByWalletId, campaignImages);
+          console.log("holdersByWalletId", holdersByWalletId, campaignImages);
           for (const user of postedUsers) {
             if (
               holdersByWalletId[user.username] &&
