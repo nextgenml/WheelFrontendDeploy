@@ -158,7 +158,7 @@ const generateComments = async (content) => {
   const comment2 = await chatGptResponse(
     `rewrite the sentence in 20 words - ${text}`
   );
-  return `${comment1},${comment2}`;
+  return `${comment1}||${comment2}`;
 };
 // createOtherChores();
 // checkIfOtherChoresCompleted();

@@ -5,6 +5,7 @@ const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
 const config = require("../config");
 const logger = require("../logger");
+const { roundTo2Decimals } = require("../utils");
 
 const getSocialSharingStats = async (req, res) => {
   try {
@@ -34,16 +35,16 @@ const getSocialSharingStats = async (req, res) => {
     ]);
 
     res.json({
-      total,
-      today,
-      todayLost,
-      todayMax,
-      newTotal,
-      old,
-      like,
-      retweet,
-      comment,
-      follow,
+      total: roundTo2Decimals(total),
+      today: roundTo2Decimals(today),
+      todayLost: roundTo2Decimals(todayLost),
+      todayMax: roundTo2Decimals(todayMax),
+      newTotal: roundTo2Decimals(newTotal),
+      old: roundTo2Decimals(old),
+      like: roundTo2Decimals(like),
+      retweet: roundTo2Decimals(retweet),
+      comment: roundTo2Decimals(comment),
+      follow: roundTo2Decimals(follow),
     });
   } catch (ex) {
     logger.error(`error occurred in getSocialSharingStats api: ${ex}`);

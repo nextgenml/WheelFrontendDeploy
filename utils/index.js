@@ -83,6 +83,8 @@ const intersectionOfArrays = (lists) => {
   }
   return result;
 };
+
+const roundTo2Decimals = (num) => Math.round(num * 100) / 100;
 module.exports = {
   dateToString,
   stringToDate,
@@ -93,4 +95,5 @@ module.exports = {
   generateRandomNumber,
   shuffleArray,
   intersectionOfArrays,
+  roundTo2Decimals,
 };
