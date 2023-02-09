@@ -25,6 +25,7 @@ import { useAccount } from "wagmi";
 import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { fetchBalance } from "@wagmi/core";
 import CampaignsList from "./CampaignsList";
+import { Textarea } from "@mui/joy";
 
 const initialState = {
   media: ["twitter"],
@@ -244,10 +245,19 @@ const Campaigns = () => {
           <Grid item md={12} xs={12}>
             <InputLabel sx={{ mb: 1 }}>Campaign Content*</InputLabel>
 
-            <RichTextEditor
+            {/* <RichTextEditor
               onChange={(content) => onFormDataChange(content, "content")}
               initialHtml=""
               readOnly={false}
+            /> */}
+
+            <TextField
+              multiline
+              fullWidth
+              rows={4}
+              value={formData.content}
+              onChange={(e) => onFormDataChange(e.target.value, "content")}
+              inputProps={{ maxLength: 280 }}
             />
           </Grid>
           <Grid item md={6} xs={12}>
