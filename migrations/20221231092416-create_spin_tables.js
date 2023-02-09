@@ -3,10 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.sequelize.query(`drop table wallets;`);
-    await queryInterface.sequelize.query(`drop table spins;`);
-    await queryInterface.sequelize.query(`drop table participants;`);
-    await queryInterface.sequelize.query(`drop table scheduled_spins;`);
+    await queryInterface.sequelize.query(`drop table IF EXISTS wallets;`);
+    await queryInterface.sequelize.query(`drop table IF EXISTS spins;`);
+    await queryInterface.sequelize.query(`drop table IF EXISTS participants;`);
+    await queryInterface.sequelize.query(
+      `drop table IF EXISTS scheduled_spins;`
+    );
 
     await queryInterface.sequelize.query(`create table wallets (
       id int primary key auto_increment,
