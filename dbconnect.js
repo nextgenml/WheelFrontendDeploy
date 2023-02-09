@@ -12,6 +12,34 @@ dbConnection.connect(function (err) {
   if (err) {
     return logger.error(`error: ${err.message}`);
   }
+
+  if (process.argv.includes("create_saved_prompts")) {
+    const deleteQuery = "DROP TABLE IF EXISTS saved_prompts;";
+    dbConnection.query(deleteQuery, function (err) {
+      if (err) {
+        logger.info(err.message);
+      } else logger.info("dropped table saved_prompts");
+    });
+    const spins = `create table saved_prompts (
+      id int primary key auto_increment,
+      transactionID varchar(255),
+      wallet_address varchar(255),
+      initiative varchar(255),
+      prompt varchar(255),
+      blog text,
+      link varchar(1000),
+      create_date DATETIME,
+      validated_flag BOOLEAN,
+      paid_amount DOUBLE,
+      paid_flag BOOLEAN)`;
+
+    dbConnection.query(spins, function (err) {
+      if (err) {
+        logger.info("err", err);
+      } else logger.info("created done");
+    });
+  }
+
   //  Warning: Do not uncomment and run the code, this will delete the data in all tables.
   const deleteQuery = "update spins set running = 0;";
   dbConnection.query(deleteQuery, function (err) {
@@ -92,6 +120,7 @@ dbConnection.connect(function (err) {
       } else logger.info("created table spins");
     });
   }
+
   if (process.argv.includes("create_participants")) {
     const deleteQuery = "DROP TABLE IF EXISTS participants;";
     dbConnection.query(deleteQuery, function (err) {

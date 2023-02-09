@@ -16,10 +16,70 @@ const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
 const config = require("./config");
 const logger = require("./logger");
-
+const mysql = require("mysql2");
+const { v4: uuidv4 } = require("uuid");
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
+
+const connection = mysql.createConnection({
+  host: "127.0.0.1",
+  user: "root",
+  password: "password",
+  database: "nextgenml",
+});
+
+app.post("/save-blog-data", async (req, res) => {
+  const data = req.body;
+  const transactionId = uuidv4();
+
+  // Save the data to the database or process it as needed
+  const {
+    wallet_address,
+    initiative,
+    prompt,
+    blog,
+    link,
+    validated_flag,
+    paid_amount,
+    paid_flag,
+  } = req.body;
+
+  if (
+    !wallet_address ||
+    !initiative ||
+    !prompt ||
+    !blog ||
+    !link ||
+    !paid_amount > 0
+  ) {
+    return res.status(400).json({ msg: "All fields are required" });
+  }
+  const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+  // save in DB
+  connection.query(
+    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      transactionId,
+      wallet_address,
+      initiative,
+      prompt,
+      blog,
+      link,
+      create_date,
+      validated_flag,
+      paid_amount,
+      paid_flag,
+    ],
+    (error, results) => {
+      if (error) {
+        return res.status(500).json({ msg: "Internal server error" });
+        // return res.status(500).send(error);
+      }
+      res.status(200).json({ msg: "Data saved successfully" });
+    }
+  );
+});
 
 app.get("/spinner-data", async (req, res) => {
   try {
