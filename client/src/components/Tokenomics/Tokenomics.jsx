@@ -105,7 +105,7 @@ export default function Tokenomics() {
               }}
               variant="h6"
             >
-              Marketing Wallet - 5% (Max Wallet)
+              Marketing Wallet - 1% (Max Wallet)
             </Typography>
           </Box>
         </Grid>
@@ -119,7 +119,7 @@ export default function Tokenomics() {
               }}
               variant="h6"
             >
-              Dev Wallet - 5% (Max Wallet)
+              Development Wallet - 1% (Max Wallet)
             </Typography>
           </Box>
         </Grid>
@@ -139,8 +139,8 @@ export default function Tokenomics() {
             <span style={{ color: "red" }}>***</span> liquidity locked for 5
             years
             <br />
-            <span style={{ color: "red" }}>****</span>All tokens except the
-            reflections in Marketing and Dev wallets are locked for 5 years
+            <span style={{ color: "red" }}>****</span>
+            Reflections earned within Marketing & Development wallets will be periodically sold to meet the expense and needs of the project.
           </Typography>
         </Grid>
       </Grid>
@@ -166,8 +166,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Advanced Intelligence – ABCD monetizes content for content owners
-            and wallet holders by employing advanced AI techniques
+            <b>Advanced Intelligence –</b> NEXGEN ML leverages advanced AI techniques to monetize content for content owners and wallet holders. These techniques include Natural Language Processing (NLP), Machine Learning (ML), Deep Learning, Computer Vision, Predictive Analytics, Reinforcement Learning, Recommender Systems, Sentiment Analysis, Anomaly Detection, and Image Recognition. These technologies are used to analyze and process vast amounts of data, enabling NEXGEN ML to provide personalized and relevant content to users, while also providing valuable insights and generating revenue. By combining cutting-edge AI technologies with blockchain, NEXGEN ML is able to create a secure and efficient platform for content monetization.
           </Typography>
         </li>
         <li>
@@ -178,9 +177,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Independent Platform – ABCD provides an independent platform for
-            businesses & wallet holders who want to create their own branded
-            experiences and make strategic choices.
+            <b>Independent Platform –</b> NEXGEN ML provides businesses and wallet holders with an independent platform that enables them to create their own branded experiences and make strategic choices. The platform offers a range of branded experiences including personalized content and recommendations, branded digital wallets, customizable token economics, customizable marketing campaigns, data-driven insights and analytics, branded NFT offerings, collaborative content creation and distribution, user-generated content management, influencer management, and monetization, and branded data marketplaces. This independence gives businesses and wallet holders the power to control their brand and data and the ability to monetize it in a way that aligns with their goals and strategies.
           </Typography>
         </li>
         <li>
@@ -191,9 +188,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Data Visibility and Insights – Avoid the data black hole. ABCD
-            leverages core tech while maintaining transparency and access to
-            usage data and analytics that can optimize the experience.
+            <b>Data Visibility and Insights –</b> NEXGEN ML provides a solution for businesses and wallet holders who want to avoid the data black hole. The platform leverages advanced technology to offer transparency and insights into data usage and analytics. With top analytics techniques, NEXGEN ML empowers businesses to make informed decisions and optimize the user experience by gaining access to critical usage data and insights. With this platform, businesses can make strategic choices and maintain control over their data while enjoying the benefits of increased visibility and insights.
           </Typography>
         </li>
         <li>
@@ -204,9 +199,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Get to Market Faster – ABCD uses advanced AI and provides a
-            marketplace experience where businesses (buyers) & wallet holders
-            (sellers) can quickly partner and achieve targets.
+            <b>Get to Market Faster –</b> NEXGEN ML provides an advanced AI-powered marketplace experience for businesses and wallet holders to quickly partner and achieve their targets. With a focus on speed and efficiency, NEXGEN ML offers ways for businesses to get to market faster, including leveraging AI technology, providing a user-friendly platform, and promoting collaboration and partnerships. Whether you are a buyer or a seller, NEXGEN ML offers the tools and resources you need to succeed in the digital marketplace. couple of top ways NEXGEN ML will help are AI-powered marketplace, Streamlined partnerships and negotiations, Seamless product and service delivery, Automated pricing and negotiation tools, Efficient payment and settlement processes, Customizable branding and marketing materials, Access to a large network of buyers and sellers, Robust analytics and data insights, Transparent and secure transactions, Ongoing support and resources to help maximize success.
           </Typography>
         </li>
         <li>
@@ -217,10 +210,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Monetization Vision – ABCD is actively building monetization
-            opportunities across the ecosystem across various initiatives and
-            helping businesses & wallet holders unlock new revenue streams
-            through advanced AI concepts.
+            <b>Monetization Vision –</b> NEXGEN ML is offering various AI and blockchain-based services to help businesses and wallet holders unlock new revenue streams. One example is personalized advertising, where AI algorithms analyze customer data and target them with personalized ads, resulting in higher conversion rates and increased revenue. Another service is AI-powered content creation and distribution, using machine learning to predict what type of content will perform well and automating the distribution process. NEXGEN ML also provides AI-powered e-commerce services, optimizing pricing and product recommendations to drive sales. Additionally, the platform offers AI-powered market research and insights, providing businesses with data-driven insights to inform decision making and drive growth. These are just a few of the many AI concepts NEXGEN ML is using to help businesses and wallet holders unlock new revenue streams.
           </Typography>
         </li>
       </ul>
@@ -246,8 +236,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Advanced Intelligence – ABCD monetizes content for content owners
-            and wallet holders by employing advanced AI techniques
+            Phase 1 – Launch socials - Telegram, Twitter, Facebook, Youtube, Launch Quiz, Launch Blog 
           </Typography>
         </li>
         <li>
@@ -258,9 +247,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Independent Platform – ABCD provides an independent platform for
-            businesses & wallet holders who want to create their own branded
-            experiences and make strategic choices.
+            Phase 2 - Publish Whitepaper for NEXGEN ML, Launch AI utlity 1, Launch AI Utility 2   
           </Typography>
         </li>
         <li>
@@ -271,9 +258,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Data Visibility and Insights – Avoid the data black hole. ABCD
-            leverages core tech while maintaining transparency and access to
-            usage data and analytics that can optimize the experience.
+            Phase 3 - Launch Automated AI - Blockchain SPIN Wheel 
           </Typography>
         </li>
         <li>
@@ -284,9 +269,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Get to Market Faster – ABCD uses advanced AI and provides a
-            marketplace experience where businesses (buyers) & wallet holders
-            (sellers) can quickly partner and achieve targets.
+            Phase 4 - List on coin market cap & coin gecko, Launch Initiatve 1 
           </Typography>
         </li>
         <li>
@@ -297,10 +280,7 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Monetization Vision – ABCD is actively building monetization
-            opportunities across the ecosystem across various initiatives and
-            helping businesses & wallet holders unlock new revenue streams
-            through advanced AI concepts.
+            Phase 5 - Launch Initiative 5
           </Typography>
         </li>
       </ul>
@@ -314,7 +294,7 @@ export default function Tokenomics() {
         variant="h4"
         mt={4}
       >
-        How will your ABCD bring utilities for holders?
+        How will NEXGEN ML bring utilities for holders?
       </Typography>
       <ul>
         <li>
@@ -326,63 +306,9 @@ export default function Tokenomics() {
               mt: 2,
             }}
           >
-            Advanced Intelligence – ABCD monetizes content for content owners
-            and wallet holders by employing advanced AI techniques
+            NEXGEN ML provides unique and innovative utility options for its token holders that have never been seen before within the decentralized world. For example, the platform might offer access to exclusive services or products that can only be obtained through holding NEXGEN ML tokens. Additionally, the platform might incentivize certain actions within the ecosystem through the issuance of tokens. The goal is to provide token holders with a range of benefits that go beyond what is typically offered in traditional decentralized ecosystems. By doing so, NEXGEN ML aims to add value to its token holders and create a thriving and dynamic community. Below are a few 
           </Typography>
-        </li>
-        <li>
-          <Typography
-            color="white"
-            sx={{
-              textAlign: "left",
-              mt: 2,
-            }}
-          >
-            Independent Platform – ABCD provides an independent platform for
-            businesses & wallet holders who want to create their own branded
-            experiences and make strategic choices.
-          </Typography>
-        </li>
-        <li>
-          <Typography
-            color="white"
-            sx={{
-              textAlign: "left",
-              mt: 2,
-            }}
-          >
-            Data Visibility and Insights – Avoid the data black hole. ABCD
-            leverages core tech while maintaining transparency and access to
-            usage data and analytics that can optimize the experience.
-          </Typography>
-        </li>
-        <li>
-          <Typography
-            color="white"
-            sx={{
-              textAlign: "left",
-              mt: 2,
-            }}
-          >
-            Get to Market Faster – ABCD uses advanced AI and provides a
-            marketplace experience where businesses (buyers) & wallet holders
-            (sellers) can quickly partner and achieve targets.
-          </Typography>
-        </li>
-        <li>
-          <Typography
-            color="white"
-            sx={{
-              textAlign: "left",
-              mt: 2,
-            }}
-          >
-            Monetization Vision – ABCD is actively building monetization
-            opportunities across the ecosystem across various initiatives and
-            helping businesses & wallet holders unlock new revenue streams
-            through advanced AI concepts.
-          </Typography>
-        </li>
+        </li>        
       </ul>
     </Box>
   );

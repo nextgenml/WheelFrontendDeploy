@@ -17,7 +17,7 @@ export default function BuyNextGen() {
         }}
         variant="h4"
       >
-        BUY NEXTGEN ML
+        BUY NEXGEN ML
       </Typography>
 
       <Grid container mt={4} spacing={3}>

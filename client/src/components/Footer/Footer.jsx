@@ -63,7 +63,7 @@ const Footer = () => {
               <Typography
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
               >
-                Buy NEXTGEN
+                Buy NEXGEN ML
               </Typography>
             </a>
           </Box>
@@ -115,7 +115,7 @@ const Footer = () => {
               color: "white",
             }}
           >
-            © 2022 NEXTGEN ML ECOSYSTEM. All Rights Reserved.
+            © 2022 NEXGEN ML ECOSYSTEM. All Rights Reserved.
           </Typography>
         </Box>
         <Box mt="20px">
@@ -130,29 +130,28 @@ const Footer = () => {
             Disclaimer: The information provided on this website does not
             constitute investment advice, financial advice, trading advice or
             any other form of advice and you should not treat the content of the
-            website as such. The NEXTGEN ML team does not recommend buying,
+            website as such. The NEXGEN ML team does not recommend buying,
             selling or holding any cryptocurrency. Please conduct your own
             research and consult your financial advisor before making any
-            investment decisions. By purchasing the WB token you also agree that
-            the team presents the <br /> token "as is" and is not obligated to
-            provide any support or service. At CashBull Protocol we are
-            committed to developing a GAMEFI that generates benefits for our
-            community, integrating the best of a DEFI with an interactive game
+            investment decisions. By purchasing the token you also agree that
+            the team presents the token "as is" and is not obligated to
+            provide any support or service. At NEXGEN ML we are
+            committed to developing utilities that generates benefits for our
+            community, integrating the best of a DEFI with an interactive features
             that makes you live new experiences and at the same time earn
-            profits while having fun. We expect this value to be reflected in
+            rewards while having fun. We expect this value to be reflected in
             the value of the tokens; however, we cannot guarantee the growth of
             token prices, as there are many factors that we do not control as
             the project and the market move forward. But we are doing our best
-            to be as successful as possible. Therefore, the CashBull ecosystem
+            to be as successful as possible. Therefore, the NEXGEN ML ecosystem
             team is committed to the entire project as a whole, but disclaims
-            any exogenous liability that happens to the project. The project is
-            100% decentralized, done by and for the community. The community
+            any exogenous liability that happens to the project. The core aspects of the project is
+            decentralized, done by and for the community. The community
             will decide the welfare and improvements to be made to the project.
             The Dao voting system will be implemented as soon as the entire
-            project is deployed. Although NEXTGEN ML WB is an experimental token
+            project is deployed. Although NEXGEN ML is an experimental token
             for social experiments and is not a digital currency, the team
-            strongly recommends that U.S. persons do not purchase it because the
-            team cannot guarantee compliance with U.S. regulations. Always be
+            strongly recommends that U.S. persons do DYOR - Do your own research before purchasing for any U.S. regulations. Always be
             sure to comply with local laws and regulations before making any
             purchases.
           </Typography>
