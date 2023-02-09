@@ -76,7 +76,7 @@ const Initiative = ({ prompt, index }) => {
   async function onSubmitClick() {
     // send post request to save data in database
     if (isChecked && !iscopyDisable && link && isValidUrl(link)) {
-      const url = `${config.CHAT_BOT_URL}/save-data`;
+      const url = `${config.API_ENDPOINT}/save-blog-data`;
       let response = await fetch(url, {
         headers: {
           accept: "*/*",
@@ -90,7 +90,7 @@ const Initiative = ({ prompt, index }) => {
           blog: result,
           link,
           validated_flag: isvalidatedFlag ? true : null,
-          paid_amount: 10,
+          paid_amount: config.PAID_AMOUNT,
           paid_flag: ispaidFlag ? true : null,
         }),
         method: "POST",
