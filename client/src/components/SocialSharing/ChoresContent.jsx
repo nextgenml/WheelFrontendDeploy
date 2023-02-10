@@ -16,11 +16,11 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
-import RichTextEditor from "../RichTextEditor/RichTextEditor";
+// import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { copyImageToClipboard } from "copy-image-clipboard";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import styles from "./SocialSharing.module.css";
-import { convert } from "html-to-text";
+// import { convert } from "html-to-text";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { Box } from "@mui/system";
 const getHeading = (mediaType) => {
