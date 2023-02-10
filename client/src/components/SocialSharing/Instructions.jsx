@@ -22,11 +22,11 @@ const Instructions = ({ generatedAlias, address }) => {
   const [alias, setAlias] = React.useState(generatedAlias || "");
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-  const [randomNumber, setRandomNumber] = React.useState(0);
+  // const [randomNumber, setRandomNumber] = React.useState(0);
 
   React.useEffect(() => {
     setAlias(generatedAlias);
-    setRandomNumber(Math.floor(Math.random() * 10));
+    // setRandomNumber(Math.floor(Math.random() * 10));
   }, [generatedAlias]);
 
   const handleClickOpen = () => {
@@ -46,13 +46,13 @@ const Instructions = ({ generatedAlias, address }) => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ newAlias: `${alias}ml${randomNumber}` }),
+        body: JSON.stringify({ newAlias: `${alias}` }),
       }
     );
     if (res.ok) {
       alert("Alias updated successfully");
       handleClose();
-      setAlias(`${alias}ml${randomNumber}`);
+      setAlias(`${alias}`);
     } else {
       const data = await res.json();
       alert(data.message);
@@ -187,18 +187,6 @@ const Instructions = ({ generatedAlias, address }) => {
                     onChange={(e) => setAlias(e.target.value)}
                     sx={{ height: "12px" }}
                   />
-                </Box>
-                <Box sx={{ p: 2, display: "flex" }}>
-                  <Typography variant="subtitle2">
-                    Generated Name:&nbsp;&nbsp;
-                  </Typography>
-
-                  {console.log("generatedAlias", generatedAlias, alias)}
-                  <Typography variant="body2">
-                    {generatedAlias !== alias
-                      ? `${alias}ml${randomNumber}`
-                      : `${alias}`}
-                  </Typography>
                 </Box>
               </Grid>
             </ListItem>
