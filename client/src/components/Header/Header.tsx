@@ -33,7 +33,7 @@ export default function Header(props: Props) {
   const headerLinks = props.socialSharing
     ? [
         { link: "", title: "HOME" },
-        { route: "social-sharing", title: "CHORES" },
+        { route: "", title: "CHORES" },
         { route: "user-campaigns", title: "CAMPAIGNS" },
         { route: "user-quizzes", title: "QUIZZES" },
       ]
