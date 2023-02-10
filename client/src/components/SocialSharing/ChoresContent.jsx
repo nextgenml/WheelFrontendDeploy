@@ -6,6 +6,7 @@ import {
   ImageList,
   Grid,
   Link,
+  TextField,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 // import CardActions from "@mui/material/CardActions";
@@ -95,16 +96,23 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
         return (
           <Grid container spacing={2}>
             <Grid item md={6}>
-              <RichTextEditor
+              {/* <RichTextEditor
                 onChange={() => {}}
                 initialHtml={chore.content}
                 readOnly
+              /> */}
+              <TextField
+                multiline
+                fullWidth
+                rows={4}
+                disabled
+                value={chore.content}
               />
               <Button
                 variant="outlined"
                 sx={{ mt: 1 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(convert(chore.content));
+                  navigator.clipboard.writeText(chore.content);
                 }}
               >
                 Copy Text
@@ -160,16 +168,23 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
             {suggestions[0] && (
               <Grid container spacing={2}>
                 <Grid item md={6}>
-                  <RichTextEditor
+                  {/* <RichTextEditor
                     onChange={() => {}}
                     initialHtml={suggestions[0]}
                     readOnly
+                  /> */}
+                  <TextField
+                    multiline
+                    fullWidth
+                    rows={4}
+                    disabled
+                    value={suggestions[0]}
                   />
                   <Button
                     variant="outlined"
                     sx={{ mt: 1 }}
                     onClick={() => {
-                      navigator.clipboard.writeText(convert(suggestions[0]));
+                      navigator.clipboard.writeText(suggestions[0]);
                     }}
                   >
                     Copy Text
@@ -177,16 +192,23 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
                 </Grid>
                 {suggestions[1] && (
                   <Grid item md={6}>
-                    <RichTextEditor
+                    {/* <RichTextEditor
                       onChange={() => {}}
                       initialHtml={suggestions[1]}
                       readOnly
+                    /> */}
+                    <TextField
+                      multiline
+                      fullWidth
+                      rows={4}
+                      disabled
+                      value={suggestions[1]}
                     />
                     <Button
                       variant="outlined"
                       sx={{ mt: 1 }}
                       onClick={() => {
-                        navigator.clipboard.writeText(convert(suggestions[1]));
+                        navigator.clipboard.writeText(suggestions[1]);
                       }}
                     >
                       Copy Text
