@@ -68,11 +68,14 @@ const createOtherChores = async (campaigns) => {
                 walletId: nextUser.wallet_id,
                 mediaType: campaignPost.media_type,
                 choreType: action,
-                validFrom: moment().add(1, "days").startOf("day").format(),
+                validFrom: moment()
+                  .add(1, "days")
+                  .startOf("day")
+                  .format("YYYY-MM-DDTHH:mm:ss"),
                 validTo: moment()
                   .add(config.OTHER_CHORE_VALID_DAYS, "days")
                   .endOf("day")
-                  .format(),
+                  .format("YYYY-MM-DDTHH:mm:ss"),
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
                 linkToPost: campaignPost.link_to_post,
@@ -132,7 +135,8 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                   walletId: holdersByWalletId[user.username],
                   campaignDetailsId: campaign.id,
                   createdAt:
-                    user.createdAt || moment().subtract(1, "day").format(),
+                    user.createdAt ||
+                    moment().subtract(1, "day").format("YYYY-MM-DDTHH:mm:ss"),
                   choreType: action,
                   mediaPostId: row.media_post_id,
                 });

@@ -7,7 +7,7 @@ const getAllSpins = async () => {
 };
 
 const updateLaunchDate = async (id) => {
-  const dateFormatted = moment().format();
+  const dateFormatted = moment().format("YYYY-MM-DDTHH:mm:ss");
   const query = "update scheduled_spins set prev_launch_date = ? where id = ?;";
   return await runQueryAsync(query, [dateFormatted, id]);
 };

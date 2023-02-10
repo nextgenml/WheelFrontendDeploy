@@ -17,7 +17,7 @@ const markAsWinner = async (id, rank, prize) => {
 
 const createParticipant = async (wallet_id, value, nextSpin) => {
   spin_day = moment().format("YYYY-MM-DD");
-  currDateFormat = moment().format();
+  currDateFormat = moment().format("YYYY-MM-DDTHH:mm:ss");
   const query = `insert into participants (wallet_id, value, spin_no, type, spin_at, spin_day) values(?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
@@ -37,8 +37,8 @@ const getParticipants = async (
   spin,
   authenticated
 ) => {
-  start = moment(start).startOf("day").format();
-  end = moment(end).endOf("day").format();
+  start = moment(start).startOf("day").format("YYYY-MM-DDTHH:mm:ss");
+  end = moment(end).endOf("day").format("YYYY-MM-DDTHH:mm:ss");
 
   const resultTypeQuery = resultType === "winners" ? "is_winner = 1 and " : "";
   const spinTypeQuery = spinType ? "and type = ? " : "";
@@ -87,8 +87,8 @@ const getParticipantsOfSpin = async (spin, walletAddress) => {
 };
 
 const getWinners = async (from, to, type, walletAddress) => {
-  start = moment(from).startOf("day").format();
-  end = moment(to).endOf("day").format();
+  start = moment(from).startOf("day").format("YYYY-MM-DDTHH:mm:ss");
+  end = moment(to).endOf("day").format("YYYY-MM-DDTHH:mm:ss");
   const query = `select * from participants where is_winner = 1 and spin_day >= ? and spin_day <= ? and type = ? order by spin_no, winning_rank asc`;
 
   let records = await runQueryAsync(query, [from, to, type]);

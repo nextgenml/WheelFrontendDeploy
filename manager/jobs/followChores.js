@@ -35,11 +35,14 @@ const createFollowChores = async (campaigns) => {
               walletId: holder.wallet_id,
               mediaType: "twitter",
               choreType: "follow",
-              validFrom: moment().add(1, "days").startOf("day").format(),
+              validFrom: moment()
+                .add(1, "days")
+                .startOf("day")
+                .format("YYYY-MM-DDTHH:mm:ss"),
               validTo: moment()
                 .add(config.OTHER_CHORE_VALID_DAYS, "days")
                 .endOf("day")
-                .format(),
+                .format("YYYY-MM-DDTHH:mm:ss"),
               value: activeCampaign.reward,
               follow_link: post.follow_link,
               follow_user: post.wallet_id,

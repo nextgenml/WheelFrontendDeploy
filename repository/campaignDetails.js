@@ -34,7 +34,10 @@ const getPostedCampaigns = async () => {
 const updateLastCheckedDate = async (id, endTime) => {
   const query = `update campaign_details set last_checked_date = ? where id = ?`;
 
-  return await runQueryAsync(query, [moment(endTime).format(), id]);
+  return await runQueryAsync(query, [
+    moment(endTime).format("YYYY-MM-DDTHH:mm:ss"),
+    id,
+  ]);
 };
 
 const saveCampaign = async (data) => {
@@ -43,8 +46,8 @@ const saveCampaign = async (data) => {
   return await runQueryAsync(query, [
     data.client,
     data.campaign_name,
-    moment(data.start_time).startOf("day").format(),
-    moment(data.end_time).endOf("day").format(),
+    moment(data.start_time).startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment(data.end_time).endOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     1,
     data.success_factor,
     1,
@@ -80,8 +83,8 @@ const saveCampaignDetails = async (data) => {
     data.campaign_id,
     data.content || "",
     data.content_type,
-    moment(data.start_time).startOf("day").format(),
-    moment(data.end_time).endOf("day").format(),
+    moment(data.start_time).startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment(data.end_time).endOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     data.collection_id,
     data.media_type,
     1,

@@ -53,11 +53,14 @@ const createPostChores = async (campaigns) => {
               walletId: nextUser.wallet_id,
               mediaType: campaign.media_type,
               choreType: "post",
-              validFrom: moment().add(1, "days").startOf("day").format(),
+              validFrom: moment()
+                .add(1, "days")
+                .startOf("day")
+                .format("YYYY-MM-DDTHH:mm:ss"),
               validTo: moment()
                 .add(config.POST_CHORE_VALID_DAYS, "days")
                 .endOf("day")
-                .format(),
+                .format("YYYY-MM-DDTHH:mm:ss"),
               value: campaign.reward,
             });
             noOfPosts -= 1;

@@ -132,7 +132,7 @@ const getTodayEarnings = async (walletId) => {
   const query = `select sum(value) as sum from chores where is_paid = 1 and valid_from >= ? and wallet_id = ?`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
   ]);
 
@@ -142,7 +142,7 @@ const getTodayLost = async (walletId) => {
   const query = `select sum(value) as sum from chores where is_paid = 0 and valid_from >= ? and wallet_id = ?`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
   ]);
 
@@ -152,7 +152,7 @@ const getTodayTotal = async (walletId) => {
   const query = `select sum(value) as sum from chores where valid_from >= ? and wallet_id = ?`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
   ]);
 
@@ -163,8 +163,8 @@ const getTodayChoresTotal = async (walletId, mediaType) => {
   const query = `select sum(value) as sum from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
-    moment().format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
     mediaType,
   ]);
@@ -175,8 +175,8 @@ const getOldChoresTotal = async (walletId, mediaType) => {
   const query = `select sum(value) as sum from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
-    moment().format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
     mediaType,
   ]);
@@ -191,7 +191,7 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
     walletId,
     mediaType,
     choreType,
-    moment().format(),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
   ]);
 
   return results[0].sum || 0;
@@ -202,10 +202,10 @@ const getTodayChores = async (walletId, mediaType) => {
   where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
     mediaType,
-    moment().format(),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
   ]);
 
   return results;
@@ -215,8 +215,8 @@ const getOldChores = async (walletId, mediaType) => {
   where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0`;
 
   const results = await runQueryAsync(query, [
-    moment().startOf("day").format(),
-    moment().format(),
+    moment().startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
     walletId,
     mediaType,
   ]);
@@ -232,7 +232,7 @@ const getChoresByType = async (walletId, mediaType, choreType) => {
     walletId,
     mediaType,
     choreType,
-    moment().format(),
+    moment().format("YYYY-MM-DDTHH:mm:ss"),
   ]);
 
   return results;
