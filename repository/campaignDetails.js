@@ -118,11 +118,20 @@ const canCreateChore = async (id, choreType) => {
   return allowedChores >= completedChores;
 };
 
-const getCampaigns = async (walletId) => {
-  const query = `select * from campaigns where wallet_id = ? order by id desc`;
+const getCampaigns = async (walletId, search, pageSize, offset) => {
+  let query =
+    "select * from campaigns where wallet_id = ? and (1 = ? or client like '%?%' or campaign like '%?%') order by id desc limit ? offset ?;";
 
-  return await runQueryAsync(query, [walletId]);
+  return await runQueryAsync(query, [
+    walletId,
+    search ? 0 : 1,
+    search,
+    search,
+    pageSize,
+    offset,
+  ]);
 };
+
 const getCampaignById = async (campaignId) => {
   const query = `select * from campaigns where id = ?`;
 

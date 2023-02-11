@@ -12,7 +12,13 @@ import moment from "moment";
 import { Button, Typography } from "@mui/material";
 import styles from "./Campaigns.module.css";
 
-const headers = ["Name", "Success factor", "Start Time", "End Time"];
+const headers = [
+  "Client Name",
+  "Campaign Name",
+  "Strategy",
+  "Start Time",
+  "End Time",
+];
 
 export default function CampaignsList({ address, count }) {
   const [campaigns, setCampaigns] = React.useState([]);
@@ -73,6 +79,7 @@ export default function CampaignsList({ address, count }) {
                 backgroundColor: row.is_active ? "" : "#FFCCCB",
               }}
             >
+              <TableCell>{row.client}</TableCell>
               <TableCell>{row.campaign}</TableCell>
               <TableCell>{row.success_factor}</TableCell>
               <TableCell>

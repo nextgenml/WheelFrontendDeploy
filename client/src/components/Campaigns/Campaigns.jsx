@@ -177,9 +177,9 @@ const Campaigns = () => {
 
           <Grid item md={6} xs={12}>
             <FormControl fullWidth>
-              <InputLabel>Success factor*</InputLabel>
+              <InputLabel>Strategy*</InputLabel>
               <Select
-                label={"Success factor*"}
+                label={"Strategy*"}
                 value={formData.success_factor}
                 onChange={(e) =>
                   onFormDataChange(e.target.value, "success_factor")

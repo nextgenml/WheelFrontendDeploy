@@ -124,16 +124,28 @@ const saveCampaign = async (req, res) => {
 };
 
 const getCampaigns = async (req, res) => {
-  const { walletId } = req.query;
-  if (!walletId)
-    return res.status(400).json({
-      statusCode: 400,
-      message: "wallet is missing",
+  try {
+    const { walletId, search, pageNo, pageSize } = req.query;
+    if (!walletId)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "wallet is missing",
+      });
+    const campaigns = await campaignRepo.getCampaigns(
+      walletId,
+      search,
+      pageSize || 10,
+      (pageSize || 10) * (pageNo || 0)
+    );
+    res.json({
+      data: campaigns,
     });
-  const campaigns = await campaignRepo.getCampaigns(walletId);
-  res.json({
-    data: campaigns,
-  });
+  } catch (error) {
+    return res.status(400).json({
+      statusCode: 500,
+      message: error,
+    });
+  }
 };
 
 const getCampaignById = async (req, res) => {
