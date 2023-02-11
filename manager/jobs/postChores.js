@@ -162,7 +162,7 @@ schedule.scheduleJob(rule, async () => {
   logger.info("started chores process");
   await initiateAlgorithm();
 });
-// initiateAlgorithm();
+initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
