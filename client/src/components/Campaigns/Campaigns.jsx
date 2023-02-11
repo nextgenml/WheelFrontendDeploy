@@ -22,10 +22,8 @@ import { useEffect, useState } from "react";
 import config from "../../config.js";
 import moment from "moment";
 import { useAccount } from "wagmi";
-import RichTextEditor from "../RichTextEditor/RichTextEditor";
 import { fetchBalance } from "@wagmi/core";
 import CampaignsList from "./CampaignsList";
-import { Textarea } from "@mui/joy";
 
 const initialState = {
   media: ["twitter"],
@@ -43,7 +41,7 @@ const Campaigns = () => {
 
   const [formData, setFormData] = useState(initialState);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [success, _] = useState("");
   const [balance, setBalance] = useState("");
   const [count, setCount] = useState(0);
   const updateBalance = async () => {
