@@ -28,6 +28,7 @@ const { createFollowChores, checkIfFollowComplete } = require("./followChores");
 const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
 const { updateWallets } = require("../wallet");
+const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 
 const createPostChores = async (campaigns) => {
   try {
@@ -56,11 +57,11 @@ const createPostChores = async (campaigns) => {
               validFrom: moment()
                 .add(1, "days")
                 .startOf("day")
-                .format("YYYY-MM-DDTHH:mm:ss"),
+                .format(DATE_TIME_FORMAT),
               validTo: moment()
                 .add(config.POST_CHORE_VALID_DAYS, "days")
                 .endOf("day")
-                .format("YYYY-MM-DDTHH:mm:ss"),
+                .format(DATE_TIME_FORMAT),
               value: campaign.reward,
             });
             noOfPosts -= 1;

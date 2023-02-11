@@ -12,6 +12,7 @@ const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { followingUsers } = require("../../utils/mediaClients/twitter");
+const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 
 const createFollowChores = async (campaigns) => {
   try {
@@ -38,11 +39,11 @@ const createFollowChores = async (campaigns) => {
               validFrom: moment()
                 .add(1, "days")
                 .startOf("day")
-                .format("YYYY-MM-DDTHH:mm:ss"),
+                .format(DATE_TIME_FORMAT),
               validTo: moment()
                 .add(config.OTHER_CHORE_VALID_DAYS, "days")
                 .endOf("day")
-                .format("YYYY-MM-DDTHH:mm:ss"),
+                .format(DATE_TIME_FORMAT),
               value: activeCampaign.reward,
               follow_link: post.follow_link,
               follow_user: post.wallet_id,

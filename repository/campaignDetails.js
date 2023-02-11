@@ -1,6 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const config = require("../config");
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
 const getActiveCampaigns = async () => {
   const query = `select cd.id, cd.media_type, c.success_factor, c.reward from campaign_details cd 
@@ -35,7 +36,7 @@ const updateLastCheckedDate = async (id, endTime) => {
   const query = `update campaign_details set last_checked_date = ? where id = ?`;
 
   return await runQueryAsync(query, [
-    moment(endTime).format("YYYY-MM-DDTHH:mm:ss"),
+    moment(endTime).format(DATE_TIME_FORMAT),
     id,
   ]);
 };
@@ -46,8 +47,8 @@ const saveCampaign = async (data) => {
   return await runQueryAsync(query, [
     data.client,
     data.campaign_name,
-    moment(data.start_time).startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
-    moment(data.end_time).endOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment(data.start_time).startOf("day").format(DATE_TIME_FORMAT),
+    moment(data.end_time).endOf("day").format(DATE_TIME_FORMAT),
     1,
     data.success_factor,
     1,
@@ -83,8 +84,8 @@ const saveCampaignDetails = async (data) => {
     data.campaign_id,
     data.content || "",
     data.content_type,
-    moment(data.start_time).startOf("day").format("YYYY-MM-DDTHH:mm:ss"),
-    moment(data.end_time).endOf("day").format("YYYY-MM-DDTHH:mm:ss"),
+    moment(data.start_time).startOf("day").format(DATE_TIME_FORMAT),
+    moment(data.end_time).endOf("day").format(DATE_TIME_FORMAT),
     data.collection_id,
     data.media_type,
     1,

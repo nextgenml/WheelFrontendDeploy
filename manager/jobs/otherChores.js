@@ -18,6 +18,7 @@ const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
 const { convert } = require("html-to-text");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
+const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 
 const createOtherChores = async (campaigns) => {
   try {
@@ -71,11 +72,11 @@ const createOtherChores = async (campaigns) => {
                 validFrom: moment()
                   .add(1, "days")
                   .startOf("day")
-                  .format("YYYY-MM-DDTHH:mm:ss"),
+                  .format(DATE_TIME_FORMAT),
                 validTo: moment()
                   .add(config.OTHER_CHORE_VALID_DAYS, "days")
                   .endOf("day")
-                  .format("YYYY-MM-DDTHH:mm:ss"),
+                  .format(DATE_TIME_FORMAT),
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
                 linkToPost: campaignPost.link_to_post,
@@ -136,7 +137,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                   campaignDetailsId: campaign.id,
                   createdAt:
                     user.createdAt ||
-                    moment().subtract(1, "day").format("YYYY-MM-DDTHH:mm:ss"),
+                    moment().subtract(1, "day").format(DATE_TIME_FORMAT),
                   choreType: action,
                   mediaPostId: row.media_post_id,
                 });
