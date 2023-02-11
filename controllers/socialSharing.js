@@ -131,14 +131,15 @@ const getCampaigns = async (req, res) => {
         statusCode: 400,
         message: "wallet is missing",
       });
-    const campaigns = await campaignRepo.getCampaigns(
+    const data = await campaignRepo.getCampaigns(
       walletId,
       search,
-      pageSize || 10,
-      (pageSize || 10) * (pageNo || 0)
+      parseInt(pageSize) || 10,
+      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
     );
     res.json({
-      data: campaigns,
+      data: data.campaigns,
+      total_count: data.count,
     });
   } catch (error) {
     return res.status(400).json({

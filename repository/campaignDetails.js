@@ -120,16 +120,25 @@ const canCreateChore = async (id, choreType) => {
 
 const getCampaigns = async (walletId, search, pageSize, offset) => {
   let query =
-    "select * from campaigns where wallet_id = ? and (1 = ? or client like '%?%' or campaign like '%?%') order by id desc limit ? offset ?;";
+    "select * from campaigns where wallet_id = ? and (1 = ? or client like ? or campaign like ?) order by id desc limit ? offset ?;";
 
-  return await runQueryAsync(query, [
+  const campaigns = await runQueryAsync(query, [
     walletId,
     search ? 0 : 1,
-    search,
-    search,
+    `%${search}%`,
+    `%${search}%`,
     pageSize,
     offset,
   ]);
+
+  query = "select count(1) as count from campaigns where wallet_id = ?;";
+
+  const count = await runQueryAsync(query, [walletId]);
+
+  return {
+    campaigns,
+    count: count[0].count,
+  };
 };
 
 const getCampaignById = async (campaignId) => {
