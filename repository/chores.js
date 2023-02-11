@@ -92,6 +92,8 @@ const markChoreAsCompleted = async (data) => {
 
       return await runQueryAsync(query, [chore.id]);
     }
+  } else {
+    console.log("result not found", data);
   }
 };
 

@@ -157,10 +157,10 @@ const generateComments = async (content) => {
     wordwrap: 130,
   });
   const comment1 = await chatGptResponse(
-    `rewrite the sentence in 20 words - ${text}`
+    `rewrite the sentence in 256 characters - ${text}`
   );
   const comment2 = await chatGptResponse(
-    `rewrite the sentence in 20 words - ${text}`
+    `rewrite the sentence in 256 words - ${text}`
   );
   return `${comment1}||${comment2}`;
 };
