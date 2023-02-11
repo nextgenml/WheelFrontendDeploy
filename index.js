@@ -16,7 +16,7 @@ const { getRunningSpin } = require("./repository/spin.js");
 const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
 const config = require("./config");
 const logger = require("./logger");
-const mysql = require("mysql2");
+const mysql = require("mysql");
 const { v4: uuidv4 } = require("uuid");
 const app = express();
 
@@ -29,7 +29,7 @@ const connection = mysql.createConnection({
   database: "nextgenml",
 });
 
-app.put('/update-blog-data', async (req, res) => {
+app.put("/update-blog-data", async (req, res) => {
   let { validatedFlag, paidFlag, transactionID } = req.body;
   if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
     return res.status(400).json({ msg: "Invalid data" });
@@ -38,26 +38,31 @@ app.put('/update-blog-data', async (req, res) => {
 
   updateRecords = () => {
     return new Promise((resolve, reject) => {
-      connection.query(`UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `, async (error, elements) => {
-        if (error) {
-          // return reject(error);
-          console.log(error);
-          return res.status(500).json({ msg: "Internal server error" });
+      connection.query(
+        `UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `,
+        async (error, elements) => {
+          if (error) {
+            // return reject(error);
+            console.log(error);
+            return res.status(500).json({ msg: "Internal server error" });
+          }
+          return resolve(elements);
         }
-        return resolve(elements);
-      });
+      );
     });
   };
 
   response = await updateRecords();
-  return res.status(200).json({ msg: 'Data updated successfully' });
+  return res.status(200).json({ msg: "Data updated successfully" });
 });
 
-app.get('/get-blog-data', async (req, res) => {
-  console.log('IM HERE')
+app.get("/get-blog-data", async (req, res) => {
+  console.log("IM HERE");
   const pageSize = 10;
   let offset;
-  const searchWalletAdd = req.query.searchWalletAdd ? req.query.searchWalletAdd : '';
+  const searchWalletAdd = req.query.searchWalletAdd
+    ? req.query.searchWalletAdd
+    : "";
   var totalResult, results;
 
   if (req.query.offset >= 0) {
@@ -68,32 +73,64 @@ app.get('/get-blog-data', async (req, res) => {
 
   totalRecords = () => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT count(*) from saved_prompts`, async (error, elements) => {
-        if (error) {
-          // return reject(error);
-          return res.status(500).json({ msg: "Internal server error" });
+      connection.query(
+        `SELECT count(*) from saved_prompts`,
+        async (error, elements) => {
+          if (error) {
+            // return reject(error);
+            return res.status(500).json({ msg: "Internal server error" });
+          }
+          return resolve(elements);
         }
-        return resolve(elements);
-      });
+      );
     });
   };
 
   totalResult = await totalRecords();
-  totalResult = totalResult[0]['count(*)'];
+  totalResult = totalResult[0]["count(*)"];
 
   SelectSearchElements = () => {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * from saved_prompts WHERE wallet_address='${searchWalletAdd}' ORDER BY create_date DESC, wallet_address DESC`, async (error, elements) => {
-        if (error) {
-          // return reject(error);
-          return res.status(500).json({ msg: "Internal server error" });
+      connection.query(
+        `SELECT * from saved_prompts WHERE wallet_address='${searchWalletAdd}' ORDER BY create_date DESC, wallet_address DESC`,
+        async (error, elements) => {
+          if (error) {
+            // return reject(error);
+            return res.status(500).json({ msg: "Internal server error" });
+          }
+          return resolve(elements);
         }
-        return resolve(elements);
-      });
+      );
     });
   };
-});
 
+  if (searchWalletAdd) {
+    results = await SelectSearchElements(searchWalletAdd);
+    console.log(results);
+    totalResult = results ? results.length : 0;
+  }
+
+  SelectAllElements = () => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * from saved_prompts ORDER BY create_date DESC, wallet_address DESC LIMIT ${pageSize} OFFSET ${offset}`,
+        async (error, elements) => {
+          if (error) {
+            // return reject(error);
+            return res.status(500).json({ msg: "Internal server error" });
+          }
+          return resolve(elements);
+        }
+      );
+    });
+  };
+
+  if (pageSize && offset && !searchWalletAdd) {
+    results = await SelectAllElements();
+  }
+
+  return res.status(200).json({ totalResult, data: results });
+});
 
 app.post("/save-blog-data", async (req, res) => {
   const data = req.body;
@@ -139,8 +176,8 @@ app.post("/save-blog-data", async (req, res) => {
     ],
     (error, results) => {
       if (error) {
-        console.log('query error')
-        console.log(error)
+        console.log("query error");
+        console.log(error);
         return res.status(500).json({ msg: "Internal server error" });
         // return res.status(500).send(error);
       }
