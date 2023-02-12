@@ -127,7 +127,7 @@ const Footer = () => {
               color: "white",
             }}
           >
-            Disclaimer: The information provided on this website does not
+Disclaimer: The information provided on this website does not
             constitute investment advice, financial advice, trading advice or
             any other form of advice and you should not treat the content of the
             website as such. The NEXGEN ML team does not recommend buying,
