@@ -5,18 +5,19 @@ const {
 const {
   getActiveHolders,
   getHoldersByWalletId,
+  getActiveMediaHolders,
 } = require("../../repository/holder");
 const config = require("../../config.js");
-const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { followingUsers } = require("../../utils/mediaClients/twitter");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+const { createChore } = require("../../repository/chores");
 
 const createFollowChores = async (campaigns) => {
   try {
-    const holders = await getActiveHolders(config.MINIMUM_WALLET_BALANCE);
+    const holders = await getActiveMediaHolders(config.MINIMUM_WALLET_BALANCE);
 
     for (const holder of holders) {
       if (holder.twitter_id) {

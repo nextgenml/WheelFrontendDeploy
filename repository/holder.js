@@ -60,6 +60,12 @@ const getActiveHolders = async (walletBalance) => {
   return await runQueryAsync(query, [walletBalance]);
 };
 
+const getActiveMediaHolders = async (walletBalance) => {
+  const query = `select * from holders where wallet_balance >= ? and is_active = 1 and twitter_id is not null;`;
+
+  return await runQueryAsync(query, [walletBalance]);
+};
+
 const getHoldersByWalletId = async (userNames) => {
   const query = `select alias, wallet_id from holders where alias in (?) and is_active = 1`;
 
@@ -120,6 +126,7 @@ module.exports = {
   nextUserForPost,
   isEligibleForChore,
   getNextUserForChore,
+  getActiveMediaHolders,
 };
 
 const getUniqueName = async (walletId) => {
