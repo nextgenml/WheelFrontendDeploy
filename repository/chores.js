@@ -33,7 +33,7 @@ const nextFollowUsers = async (walletId, mediaType) => {
 };
 
 const createChore = async (data) => {
-  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?);`;
+  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions, completed_by_user) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
@@ -49,6 +49,7 @@ const createChore = async (data) => {
     data.follow_link || null,
     data.follow_user || null,
     data.commentSuggestions || null,
+    0,
   ]);
 };
 const markOtherChoreAsCompleted = async (data) => {
@@ -200,48 +201,63 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
   return results[0].sum || 0;
 };
 
-const getTodayChores = async (walletId, mediaType) => {
+const getTodayChores = async (walletId, mediaType, filter) => {
   const query = `select c.*, cd.content, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?`;
+  where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?
+  and (completed_by_user = ? or 1 = ?);`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
     walletId,
     mediaType,
     moment().format(DATE_TIME_FORMAT),
+    filter === "completed" ? 1 : 0,
+    filter === "all" ? 1 : 0,
   ]);
 
   return results;
 };
-const getOldChores = async (walletId, mediaType) => {
+const getOldChores = async (walletId, mediaType, filter) => {
   const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0`;
+  where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 
+  and (completed_by_user = ? or 1 = ?);`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
     moment().format(DATE_TIME_FORMAT),
     walletId,
     mediaType,
+    filter === "completed" ? 1 : 0,
+    filter === "all" ? 1 : 0,
   ]);
 
   return results;
 };
 
-const getChoresByType = async (walletId, mediaType, choreType) => {
+const getChoresByType = async (walletId, mediaType, choreType, filter) => {
   const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0`;
+  where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 
+  and (completed_by_user = ? or 1 = ?);`;
 
   const results = await runQueryAsync(query, [
     walletId,
     mediaType,
     choreType,
     moment().format(DATE_TIME_FORMAT),
+    filter === "completed" ? 1 : 0,
+    filter === "all" ? 1 : 0,
   ]);
 
   return results;
 };
 
+const markChoreAsCompletedByUser = async (walletId, choreId) => {
+  const query = `update chores set completed_by_user = 1 where id  = ? and wallet_id = ?;`;
+
+  return await runQueryAsync(query, [choreId, walletId]);
+};
 module.exports = {
+  markChoreAsCompletedByUser,
   getTodayChores,
   getTotalByChore,
   getOldChores,

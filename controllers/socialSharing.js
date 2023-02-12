@@ -57,17 +57,22 @@ const getSocialSharingStats = async (req, res) => {
 
 const getChoresByType = async (req, res) => {
   try {
-    const { mediaType, walletId, type } = req.query;
+    const { mediaType, walletId, type, filter } = req.query;
     let data = [];
     switch (type) {
       case "new":
-        data = await choresRepo.getTodayChores(walletId, mediaType);
+        data = await choresRepo.getTodayChores(walletId, mediaType, filter);
         break;
       case "old":
-        data = await choresRepo.getOldChores(walletId, mediaType);
+        data = await choresRepo.getOldChores(walletId, mediaType, filter);
         break;
       default:
-        data = await choresRepo.getChoresByType(walletId, mediaType, type);
+        data = await choresRepo.getChoresByType(
+          walletId,
+          mediaType,
+          type,
+          filter
+        );
         break;
     }
 
@@ -164,13 +169,11 @@ const getCampaignById = async (req, res) => {
 
 const updateCampaign = async (req, res) => {
   const { userAction, walletId, campaignId } = req.query;
-
   if (!walletId || !campaignId || !userAction)
     return res.status(400).json({
       statusCode: 400,
       message: "required data is missing",
     });
-
   await campaignRepo.updateCampaign(
     campaignId,
     userAction === "disable" ? 0 : 1
@@ -179,11 +182,34 @@ const updateCampaign = async (req, res) => {
     message: "Updated successfully",
   });
 };
+const markChoreAsCompletedByUser = async (req, res) => {
+  try {
+    const { walletId, choreId } = req.query;
+
+    if (!walletId)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "wallet data is missing",
+      });
+
+    await choresRepo.markChoreAsCompletedByUser(walletId, choreId);
+    res.json({
+      message: "Updated successfully",
+    });
+  } catch (error) {
+    logger.error(`error in markChoreAsCompletedByUser: ${error}`);
+    return res.status(400).json({
+      statusCode: 500,
+      message: error,
+    });
+  }
+};
 module.exports = {
   getChoresByType,
   getSocialSharingStats,
   saveCampaign,
   getCampaigns,
   getCampaignById,
+  markChoreAsCompletedByUser,
   updateCampaign,
 };

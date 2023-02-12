@@ -7,6 +7,11 @@ import {
   Grid,
   Link,
   TextField,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 // import CardActions from "@mui/material/CardActions";
@@ -23,6 +28,7 @@ import styles from "./SocialSharing.module.css";
 // import { convert } from "html-to-text";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { Box } from "@mui/system";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 const getHeading = (mediaType) => {
   switch (mediaType) {
     case "twitter":
@@ -74,11 +80,12 @@ const getChoreDesc = (mediaType) => {
 };
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
+  const [filter, setFilter] = useState("todo");
   const fetchStats = async () => {
     const res = await fetch(
       `${
         config.API_ENDPOINT
-      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}`,
+      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}`,
       {
         method: "GET",
       }
@@ -88,8 +95,22 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
   };
   useEffect(() => {
     fetchStats();
-  }, [menuOption]);
+  }, [menuOption, filter]);
 
+  const markAsDone = async (choreId) => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/mark-chore-as-done?walletId=${walletId}&choreId=${choreId}`,
+      {
+        method: "POST",
+      }
+    );
+
+    if (res.ok) {
+      const chore = chores.filter((c) => c.id === choreId)[0];
+      chore.completed_by_user = 1;
+      setChores([...chores]);
+    } else alert("Something went wrong. Please try later");
+  };
   const renderCardBody = (chore) => {
     switch (chore.chore_type) {
       case "post":
@@ -237,24 +258,42 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
   const renderContent = () => {
     if (chores.length)
       return (
-        <List>
-          {chores.map((chore, index) => {
-            return (
-              <ListItem key={index}>
-                <Card sx={{ width: "100%" }}>
-                  <CardContent>
-                    <Box sx={{ mb: 2 }} display={"flex"} alignItems="center">
-                      {getHeading(chore.media_type)}
-                      {getChoreDesc(chore.chore_type)}
-                    </Box>
+        <>
+          <List>
+            {chores.map((chore, index) => {
+              return (
+                <ListItem key={index}>
+                  <Card sx={{ width: "100%" }}>
+                    <CardContent>
+                      <Box sx={{ mb: 2 }} display={"flex"} alignItems="center">
+                        {getHeading(chore.media_type)}
+                        {getChoreDesc(chore.chore_type)}
+                        <Button
+                          variant="outlined"
+                          sx={{ ml: "auto" }}
+                          disabled={chore.completed_by_user === 1}
+                          onClick={() => markAsDone(chore.id)}
+                        >
+                          {chore.completed_by_user
+                            ? "Completed"
+                            : "Mark as done"}
+                        </Button>
+                        {chore.completed_by_user === 1 && (
+                          <CheckCircleOutlineIcon
+                            sx={{ ml: 1 }}
+                            color="success"
+                          />
+                        )}
+                      </Box>
 
-                    {renderCardBody(chore)}
-                  </CardContent>
-                </Card>
-              </ListItem>
-            );
-          })}
-        </List>
+                      {renderCardBody(chore)}
+                    </CardContent>
+                  </Card>
+                </ListItem>
+              );
+            })}
+          </List>
+        </>
       );
     else
       return (
@@ -264,6 +303,28 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
         </div>
       );
   };
-  return chores ? renderContent() : <Loading loading />;
+  return chores ? (
+    <>
+      <FormControl sx={{ ml: 2 }}>
+        <FormLabel>Chores</FormLabel>
+        <RadioGroup
+          row
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <FormControlLabel value="todo" control={<Radio />} label="To Do" />
+          <FormControlLabel
+            value="completed"
+            control={<Radio />}
+            label="Completed"
+          />
+          <FormControlLabel value="all" control={<Radio />} label="All" />
+        </RadioGroup>
+      </FormControl>
+      {renderContent()}
+    </>
+  ) : (
+    <Loading loading />
+  );
 };
 export default ChoresContent;
