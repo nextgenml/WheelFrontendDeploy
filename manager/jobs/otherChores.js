@@ -15,7 +15,6 @@ const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const logger = require("../../logger");
 const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
-const { convert } = require("html-to-text");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
@@ -63,7 +62,11 @@ const createOtherChores = async (campaigns) => {
               let comments = "";
 
               if (action === "comment")
-                comments = await generateComments(campaign.content);
+                try {
+                  comments = await generateComments(campaign.content);
+                } catch (error) {
+                  continue;
+                }
               await createChore({
                 campaignDetailsId: campaignPost.campaign_detail_id,
                 walletId: nextUser.wallet_id,
@@ -154,15 +157,15 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
 };
 
 const generateComments = async (content) => {
-  const text = convert(content, {
-    wordwrap: 130,
-  });
+  const text = content;
   const comment1 = await chatGptResponse(
-    `rewrite the sentence in 256 characters - ${text}`
+    `rewrite the next sentence in 256 characters. ${text}`
   );
+  console.log("comment1", comment1);
   const comment2 = await chatGptResponse(
-    `rewrite the sentence in 256 words - ${text}`
+    `rewrite the next sentence in 256 words. ${text}`
   );
+  console.log("comment2", comment2);
   return `${comment1}||${comment2}`;
 };
 // createOtherChores();

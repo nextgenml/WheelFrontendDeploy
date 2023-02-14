@@ -157,6 +157,7 @@ const initiateAlgorithm = async () => {
   for (const campaign of postedCampaigns) {
     await updateLastCheckedDate(campaign.id, endTime);
   }
+  console.log("updated last checked date");
   await transferRewards();
 };
 schedule.scheduleJob(rule, async () => {
