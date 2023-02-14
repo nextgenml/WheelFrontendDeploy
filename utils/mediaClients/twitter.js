@@ -5,20 +5,16 @@ let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 
 const searchTweets = async (search, start_time, end_time) => {
-  const sanitized = sanitizeTweet(search);
-  console.log("sanitized", sanitized);
-  const jsTweets = await readOnlyClient.v2.search(
-    `"${sanitized}" -is:retweet`,
-    {
-      "tweet.fields": ["conversation_id", "created_at", "attachments"],
-      expansions: ["author_id", "attachments.media_keys"],
-      "user.fields": ["name"],
-      "media.fields": ["url"],
-      max_results: 100,
-      start_time,
-      end_time,
-    }
-  );
+  console.log("searching in twitter", search);
+  const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
+    "tweet.fields": ["conversation_id", "created_at", "attachments"],
+    expansions: ["author_id", "attachments.media_keys"],
+    "user.fields": ["name"],
+    "media.fields": ["url"],
+    max_results: 100,
+    start_time,
+    end_time,
+  });
 
   const includes = new TwitterV2IncludesHelper(jsTweets);
 
@@ -126,11 +122,13 @@ const followingUsers = async (userId) => {
 
 const sanitizeTweet = (tweet) => tweet.replace(/\s\[https\:.*]/gm, "");
 
-const x = `Our very own @KonaBharat [https://twitter.com/KonaBharat] is debuting today with
-the Indian Cricket Team in the ongoing test against Australia. My
-congratulations and best wishes to him.
-The Telugu flag continues to fly high!
-#TeluguPride [https://twitter.com/hashtag/TeluguPride?src=hashtag_click]`;
+const x = `I know you havent forgotten about $LIT!! We're going to be dropping our whitepaper soon! plus our first ever video teaser of #LITSWAP in action will b released feb. 21st! 
+
+SAY GOODBYE TO PERCENTAGE BASED FEES AND TAXES!!! 
+
+TRADE P2P SAFE & SECURELY! 
+
+ONE LOW FEE! THATS $LIT!`;
 
 // searchTweets(x);
 // tweetLikedUsers();

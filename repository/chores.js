@@ -25,7 +25,7 @@ const nextFollowUsers = async (walletId, mediaType) => {
                   select distinct follow_user from chores where wallet_id = ? 
                   and chore_type = 'follow' and media_type = ? and follow_user is not null
                   )
-                  and chore_type = 'post' and media_type = ? 
+                  and chore_type = 'post' and media_type = ? and follow_link is not null
                   and wallet_id != ?;
                 `;
 
