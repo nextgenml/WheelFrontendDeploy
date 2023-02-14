@@ -78,7 +78,7 @@ const updateCampaign = async (campaignId, isActive) => {
 };
 
 const saveCampaignDetails = async (data) => {
-  const query = `insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
+  const query = `SET NAMES utf8mb4; insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaign_id,

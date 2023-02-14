@@ -112,10 +112,7 @@ const Campaigns = () => {
       setCount((prev) => prev + 1);
       // setError("");
     } else {
-      const error = await res.json();
-      alert(
-        error.message || "Something went wrong. Please try again after sometime"
-      );
+      alert("Something went wrong. Please try again after sometime");
       // setError(
       //   error.message || "Something went wrong. Please try again after sometime"
       // );

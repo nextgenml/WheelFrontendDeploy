@@ -9,6 +9,7 @@ let dbConnection = mysql.createConnection({
   user: config.username,
   password: config.password,
   database: config.database,
+  multipleStatements: true,
 });
 
 dbConnection.connect(function (err) {
