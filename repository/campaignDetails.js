@@ -57,18 +57,12 @@ const saveCampaign = async (data) => {
     config.COST_PER_CHORE,
   ]);
 };
+const deleteCampaign = async (campaignId) => {
+  const query = `delete from campaigns where id = ?`;
 
+  await runQueryAsync(query, [campaignId]);
+};
 const updateCampaign = async (campaignId, isActive) => {
-  // const query = `update campaigns set client = ?, campaign = ?, start_time = ?, end_time = ?, success_factor = ?, is_default = ? where id = ?`;
-
-  // return await runQueryAsync(query, [
-  //   data.client,
-  //   data.campaign_name,
-  //   moment(data.start_time).startOf("day").format(),
-  //   moment(data.end_time).endOf("day").format(),
-  //   data.success_factor,
-  //   data.default ? 1 : 0,
-  // ]);
   const query = `update campaigns set is_active = ? where id = ?`;
 
   await runQueryAsync(query, [isActive, campaignId]);
@@ -168,4 +162,5 @@ module.exports = {
   getCampaigns,
   getCampaignById,
   updateCampaign,
+  deleteCampaign,
 };

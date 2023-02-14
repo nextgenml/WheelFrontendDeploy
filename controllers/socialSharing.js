@@ -89,21 +89,11 @@ const getChoresByType = async (req, res) => {
 };
 
 const saveCampaign = async (req, res) => {
+  let insertId = -1;
   try {
     const { body, files } = req;
 
-    const { insertId } = await campaignRepo.saveCampaign(body);
-
-    const holder = await holderRepo.getById(body.wallet_id);
-
-    // if (
-    //   !holder ||
-    //   holder.wallet_balance < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
-    // )
-    //   return res.status(400).json({
-    //     statusCode: 400,
-    //     message: `Minimum ${config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required to create a campaign`,
-    //   });
+    insertId = (await campaignRepo.saveCampaign(body)).insertId;
     const mediaTypes = (body.media || "").split(",");
 
     for (const mediaType of mediaTypes) {
@@ -121,6 +111,7 @@ const saveCampaign = async (req, res) => {
       message: "done",
     });
   } catch (error) {
+    await campaignRepo.deleteCampaign(insertId);
     return res.status(400).json({
       statusCode: 400,
       message: error,
