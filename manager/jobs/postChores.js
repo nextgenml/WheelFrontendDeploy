@@ -155,7 +155,8 @@ const initiateAlgorithm = async () => {
   await createFollowChores(campaigns);
 
   for (const campaign of postedCampaigns) {
-    await updateLastCheckedDate(campaign.id, endTime);
+    if (!process.argv.includes("reset"))
+      await updateLastCheckedDate(campaign.id, endTime);
   }
   console.log("updated last checked date");
   await transferRewards();
@@ -164,6 +165,7 @@ schedule.scheduleJob(rule, async () => {
   logger.info("started chores process");
   await initiateAlgorithm();
 });
+
 initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
