@@ -18,6 +18,9 @@ import {
   OutlinedInput,
   InputAdornment,
   debounce,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import styles from "./Campaigns.module.css";
 import SearchIcon from "@mui/icons-material/Search";
@@ -28,6 +31,8 @@ const headers = [
   "Strategy",
   "Start Time",
   "End Time",
+  "",
+  "",
 ];
 
 export default function CampaignsList({ address, count }) {
@@ -66,15 +71,15 @@ export default function CampaignsList({ address, count }) {
     []
   );
 
-  const onUpdate = async (action, campaignId) => {
+  const onUpdate = async (action, isRecursive, campaignId) => {
     const res = await fetch(
-      `${config.API_ENDPOINT}/update-campaign?walletId=${address}&userAction=${action}&campaignId=${campaignId}`,
+      `${config.API_ENDPOINT}/update-campaign?walletId=${address}&userAction=${action}&campaignId=${campaignId}&isRecursive=${isRecursive}`,
       {
         method: "POST",
       }
     );
     if (res.ok) {
-      alert(action === "disable" ? "Campaign disabled" : "Campaign enabled");
+      alert("Campaign saved");
     } else {
       const error = await res.json();
       alert(
@@ -83,7 +88,7 @@ export default function CampaignsList({ address, count }) {
     }
     const currentCampaign = campaigns.filter((p) => p.id === campaignId)[0];
     currentCampaign.is_active = action === "disable" ? 0 : 1;
-    console.log("campaigns", campaigns);
+    currentCampaign.is_recursive_algo = isRecursive;
     setCampaigns([...campaigns]);
   };
 
@@ -114,7 +119,6 @@ export default function CampaignsList({ address, count }) {
               {headers.map((h) => {
                 return <TableCell>{h}</TableCell>;
               })}
-              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -136,16 +140,41 @@ export default function CampaignsList({ address, count }) {
                   {moment(row.end_time).format("YYYY-MM-DD")}
                 </TableCell>
                 <TableCell>
+                  {address === config.ADMIN_WALLET && (
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={row.is_recursive_algo}
+                            onChange={(e) =>
+                              onUpdate(
+                                row.is_active ? "enable" : "disable",
+                                e.target.checked,
+                                row.id
+                              )
+                            }
+                          />
+                        }
+                        label="Recursive Algo"
+                      />
+                    </FormGroup>
+                  )}
+                </TableCell>
+                <TableCell>
                   {row.is_active ? (
                     <Button
                       color="error"
-                      onClick={() => onUpdate("disable", row.id)}
+                      onClick={() =>
+                        onUpdate("disable", row.is_recursive_algo, row.id)
+                      }
                     >
                       Disable
                     </Button>
                   ) : (
                     <Button
-                      onClick={() => onUpdate("enable", row.id)}
+                      onClick={() =>
+                        onUpdate("enable", row.is_recursive_algo, row.id)
+                      }
                       color="success"
                     >
                       Enable

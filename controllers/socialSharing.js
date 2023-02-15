@@ -159,7 +159,7 @@ const getCampaignById = async (req, res) => {
 };
 
 const updateCampaign = async (req, res) => {
-  const { userAction, walletId, campaignId } = req.query;
+  const { userAction, walletId, campaignId, isRecursive } = req.query;
   if (!walletId || !campaignId || !userAction)
     return res.status(400).json({
       statusCode: 400,
@@ -167,7 +167,8 @@ const updateCampaign = async (req, res) => {
     });
   await campaignRepo.updateCampaign(
     campaignId,
-    userAction === "disable" ? 0 : 1
+    userAction === "disable" ? 0 : 1,
+    isRecursive
   );
   res.json({
     message: "Updated successfully",
