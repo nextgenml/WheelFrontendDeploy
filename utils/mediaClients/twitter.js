@@ -57,22 +57,14 @@ const tweetLikedUsers = async (postId, start_time, end_time) => {
 const retweetedUsers = async (postId, start_time, end_time) => {
   const users = await readOnlyClient.v2.tweetRetweetedBy(postId, {
     "tweet.fields": ["text", "created_at"],
-    expansions: ["pinned_tweet_id"],
     asPaginator: true,
     max_results: 100,
   });
 
-  const includes = new TwitterV2IncludesHelper(users);
   const result = [];
   for await (const user of users) {
-    const tweet = includes.pinnedTweet(user);
-    // console.log("user", user, tweet);
     result.push({
       username: user.username,
-      createdAt: tweet.created_at,
-      postId: tweet.id,
-      postLink: `https://twitter.com/${user.username}/status/${tweet.id}`,
-      postContent: tweet.text,
     });
   }
   // console.log("result", result);
@@ -150,8 +142,8 @@ const sanitizeTweet = (tweet) => tweet.replace(/\s\[https\:.*]/gm, "");
 
 // searchTweets(x);
 // tweetLikedUsers();
-retweetedUsers("1607679115536072704");
-// tweetRepliedUsers("1625406022289600512");
+// retweetedUsers("1626089401788022784");
+// tweetRepliedUsers("1626089401788022784");
 // followingUsers("1452687837808107520");
 module.exports = {
   searchTweets,

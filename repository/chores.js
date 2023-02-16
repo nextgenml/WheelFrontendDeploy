@@ -37,7 +37,7 @@ const nextFollowUsers = async (walletId, mediaType) => {
 };
 
 const createChore = async (data) => {
-  const query = `SET NAMES utf8mb4; insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions, completed_by_user, content) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);`;
+  const query = `SET NAMES utf8mb4; insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions, completed_by_user, content) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
