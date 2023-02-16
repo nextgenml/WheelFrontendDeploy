@@ -63,6 +63,7 @@ const createPostChores = async (campaigns) => {
                 .endOf("day")
                 .format(DATE_TIME_FORMAT),
               value: campaign.reward,
+              content: campaign.content,
             });
             noOfPosts -= 1;
           } else {
@@ -151,7 +152,7 @@ const initiateAlgorithm = async () => {
   await checkIfFollowComplete();
 
   await createPostChores(campaigns);
-  await createOtherChores(campaigns);
+  await createOtherChores(campaigns, "post");
   await createFollowChores(campaigns);
 
   for (const campaign of postedCampaigns) {

@@ -4,7 +4,8 @@ const config = require("../config");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, c.success_factor, c.reward from campaign_details cd 
+  const query = `select cd.id, cd.media_type, cd.content, c.success_factor, c.reward, c.is_recursive_algo 
+                from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 0
@@ -24,7 +25,7 @@ const getDefaultCampaign = async () => {
 };
 
 const getPostedCampaigns = async () => {
-  const query = `select cd.* from campaign_details cd 
+  const query = `select cd.*, c.is_recursive_algo from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where (cd.last_checked_date is null or cd.end_time > cd.last_checked_date) 
                 and c.is_active = 1 and cd.is_active = 1 and cd.content_type = 'text'`;
@@ -62,10 +63,14 @@ const deleteCampaign = async (campaignId) => {
 
   await runQueryAsync(query, [campaignId]);
 };
-const updateCampaign = async (campaignId, isActive) => {
-  const query = `update campaigns set is_active = ? where id = ?`;
+const updateCampaign = async (campaignId, isActive, isRecursive) => {
+  const query = `update campaigns set is_active = ?, is_recursive_algo = ? where id = ?`;
 
-  await runQueryAsync(query, [isActive, campaignId]);
+  await runQueryAsync(query, [
+    isActive,
+    isRecursive === "true" ? 1 : 0,
+    campaignId,
+  ]);
 
   const query2 = `update campaign_details set is_active = ? where campaign_id = ?`;
   await runQueryAsync(query2, [isActive, campaignId]);
@@ -103,20 +108,15 @@ const canCreateChore = async (id, choreType) => {
   );
   const completedChores = query2[0] ? query2[0].count : 0;
 
-  console.log(
-    "allowedChores",
-    allowedChores,
-    "completedChores",
-    completedChores
-  );
   return allowedChores >= completedChores;
 };
 
 const getCampaigns = async (walletId, search, pageSize, offset) => {
   let query =
-    "select * from campaigns where wallet_id = ? and (1 = ? or client like ? or campaign like ?) order by id desc limit ? offset ?;";
+    "select * from campaigns where (1 = ? or wallet_id = ?) and (1 = ? or client like ? or campaign like ?) order by id desc limit ? offset ?;";
 
   const campaigns = await runQueryAsync(query, [
+    config.ADMIN_WALLET === walletId ? 1 : 0,
     walletId,
     search ? 0 : 1,
     `%${search}%`,

@@ -10,10 +10,14 @@ const getActiveChoresCount = async (campaignId, choreType) => {
   return results?.count || 0;
 };
 
-const getCampaignPost = async (campaignId, skippedCampaigns) => {
-  const query = `select * from chores where campaign_detail_id = ? and chore_type = 'post' and media_post_id is not null and id not in (?) order by rand () limit 1`;
+const getCampaignPost = async (campaignId, skippedCampaigns, choreType) => {
+  const query = `select * from chores where campaign_detail_id = ? and chore_type = ? and media_post_id is not null and id not in (?) order by rand () limit 1`;
 
-  const results = await runQueryAsync(query, [campaignId, skippedCampaigns]);
+  const results = await runQueryAsync(query, [
+    campaignId,
+    choreType,
+    skippedCampaigns,
+  ]);
 
   return results[0];
 };
@@ -33,7 +37,7 @@ const nextFollowUsers = async (walletId, mediaType) => {
 };
 
 const createChore = async (data) => {
-  const query = `insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions, completed_by_user) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);`;
+  const query = `SET NAMES utf8mb4; insert into chores (campaign_detail_id, wallet_id, media_type, chore_type, valid_from, valid_to, value, ref_chore_id, link_to_post, media_post_id, follow_link, follow_user, comment_suggestions, completed_by_user, content) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaignDetailsId,
@@ -50,14 +54,16 @@ const createChore = async (data) => {
     data.follow_user || null,
     data.commentSuggestions || null,
     0,
+    data.content,
   ]);
 };
 const markOtherChoreAsCompleted = async (data) => {
   // console.log("markOtherChoreAsCompleted", data);
 
-  const query = `update chores set is_completed = 1 where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ? and media_post_id = ?`;
+  const query = `update chores set is_completed = 1, link_to_post = ? where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ? and media_post_id = ?`;
 
   return await runQueryAsync(query, [
+    data.linkToPost,
     data.walletId,
     data.campaignDetailsId,
     data.createdAt,
@@ -202,7 +208,7 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
 };
 
 const getTodayChores = async (walletId, mediaType, filter) => {
-  const query = `select c.*, cd.content, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?
   and (completed_by_user = ? or 1 = ?) order by c.id desc`;
 
@@ -218,7 +224,7 @@ const getTodayChores = async (walletId, mediaType, filter) => {
   return results;
 };
 const getOldChores = async (walletId, mediaType, filter) => {
-  const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 
   and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
 
@@ -235,7 +241,7 @@ const getOldChores = async (walletId, mediaType, filter) => {
 };
 
 const getChoresByType = async (walletId, mediaType, choreType, filter) => {
-  const query = `select * from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
+  const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 
   and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
 

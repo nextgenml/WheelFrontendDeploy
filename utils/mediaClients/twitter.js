@@ -5,7 +5,7 @@ let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 
 const searchTweets = async (search, start_time, end_time) => {
-  console.log("searching in twitter", search);
+  console.log("searching in twitter", `"${search}" -is:retweet`);
   const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
     "tweet.fields": ["conversation_id", "created_at", "attachments"],
     expansions: ["author_id", "attachments.media_keys"],
@@ -56,16 +56,26 @@ const tweetLikedUsers = async (postId, start_time, end_time) => {
 
 const retweetedUsers = async (postId, start_time, end_time) => {
   const users = await readOnlyClient.v2.tweetRetweetedBy(postId, {
+    "tweet.fields": ["text", "created_at"],
+    expansions: ["pinned_tweet_id"],
     asPaginator: true,
     max_results: 100,
   });
 
+  const includes = new TwitterV2IncludesHelper(users);
   const result = [];
   for await (const user of users) {
+    const tweet = includes.pinnedTweet(user);
+    // console.log("user", user, tweet);
     result.push({
       username: user.username,
+      createdAt: tweet.created_at,
+      postId: tweet.id,
+      postLink: `https://twitter.com/${user.username}/status/${tweet.id}`,
+      postContent: tweet.text,
     });
   }
+  // console.log("result", result);
   return result;
 };
 
@@ -83,11 +93,14 @@ const tweetRepliedUsers = async (postId, start_time, end_time) => {
 
   const result = [];
   for await (const tweet of jsTweets) {
-    const data = includes.author(tweet);
-    // console.log("result", data, tweet);
+    const author = includes.author(tweet);
+    // console.log("result", author, tweet);
     result.push({
-      username: data.username,
+      username: author.username,
       createdAt: tweet.created_at,
+      postId: tweet.id,
+      postLink: `https://twitter.com/${author.username}/status/${tweet.id}`,
+      postContent: tweet.text,
     });
   }
   // console.log("result", result);
@@ -122,18 +135,23 @@ const followingUsers = async (userId) => {
 
 const sanitizeTweet = (tweet) => tweet.replace(/\s\[https\:.*]/gm, "");
 
-const x = `I know you havent forgotten about $LIT!! We're going to be dropping our whitepaper soon! plus our first ever video teaser of #LITSWAP in action will b released feb. 21st! 
+// const x = `Someone call the fire department!
+// 🚒👨‍🚒 our supply is #alwaysburning.
 
-SAY GOODBYE TO PERCENTAGE BASED FEES AND TAXES!!! 
+// 230 out of 420 sextillion tokens incinerated forever 🔥
 
-TRADE P2P SAFE & SECURELY! 
+// http://Shibadoge.com for more details.
 
-ONE LOW FEE! THATS $LIT!`;
+// Stay up-to-date 💬
+// https://t.me/ShibaDoge_Labs
+
+// Missed #Shiba? Missed #Doge?
+// Don't miss #ShibaDoge!`;
 
 // searchTweets(x);
 // tweetLikedUsers();
-// retweetedUsers("1607679115536072704");
-// tweetRepliedUsers("1607679115536072704");
+retweetedUsers("1607679115536072704");
+// tweetRepliedUsers("1625406022289600512");
 // followingUsers("1452687837808107520");
 module.exports = {
   searchTweets,

@@ -19,7 +19,11 @@ const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
 const { chatGptResponse } = require("../../utils/chatgpt");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 
-const createOtherChores = async (campaigns) => {
+const createOtherChores = async (
+  campaigns,
+  sourceChoreType,
+  mediaPostId = null
+) => {
   try {
     for (const campaign of campaigns) {
       const successCriteria =
@@ -37,7 +41,8 @@ const createOtherChores = async (campaigns) => {
         while (noOfPosts > 0) {
           const campaignPost = await getCampaignPost(
             campaign.id,
-            skippedCampaigns
+            skippedCampaigns,
+            sourceChoreType
           );
           if (!campaignPost) break;
 
@@ -46,12 +51,6 @@ const createOtherChores = async (campaigns) => {
             action,
             skippedUsers
           );
-          // console.log(
-          //   "nextUser",
-          //   campaignPost.id,
-          //   skippedUsers,
-          //   nextUser?.wallet_id
-          // );
 
           if (nextUser) {
             const isEligible = await isEligibleForChore(
@@ -83,8 +82,9 @@ const createOtherChores = async (campaigns) => {
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
                 linkToPost: campaignPost.link_to_post,
-                mediaPostId: campaignPost.media_post_id,
+                mediaPostId: mediaPostId || campaignPost.media_post_id,
                 commentSuggestions: comments,
+                content: campaign.content,
               });
               noOfPosts -= 1;
             } else {
@@ -143,7 +143,22 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                     moment().subtract(1, "day").format(DATE_TIME_FORMAT),
                   choreType: action,
                   mediaPostId: row.media_post_id,
+                  linkToPost: user.postLink,
                 });
+
+                console.log("is_recursive_algo", is_recursive_algo, action);
+                if (
+                  campaign.is_recursive_algo &&
+                  (action === "comment" || action === "retweet")
+                )
+                  await createOtherChores([
+                    {
+                      ...campaign,
+                      content: user.postContent,
+                    },
+                    action,
+                    user.postId,
+                  ]);
               }
             }
           }
