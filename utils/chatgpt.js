@@ -9,7 +9,7 @@ const chatGptResponse = async (query) => {
   );
 
   let data = res.data;
-  console.log("got response from result", data.result);
+  // console.log("got response from result", data.result);
 
   return data.result;
 };

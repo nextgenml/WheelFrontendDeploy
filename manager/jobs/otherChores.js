@@ -26,6 +26,7 @@ const createOtherChores = async (
 ) => {
   try {
     for (const campaign of campaigns) {
+      console.log("campaign------", campaign);
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
 
@@ -146,19 +147,18 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                   linkToPost: user.postLink,
                 });
 
-                console.log("is_recursive_algo", is_recursive_algo, action);
-                if (
-                  campaign.is_recursive_algo &&
-                  (action === "comment" || action === "retweet")
-                )
-                  await createOtherChores([
-                    {
-                      ...campaign,
-                      content: user.postContent,
-                    },
+                // console.log("is_recursive_algo", campaign, action);
+                if (campaign.is_recursive_algo && action === "comment")
+                  await createOtherChores(
+                    [
+                      {
+                        ...campaign,
+                        content: user.postContent,
+                      },
+                    ],
                     action,
-                    user.postId,
-                  ]);
+                    user.postId
+                  );
               }
             }
           }
@@ -178,7 +178,7 @@ const generateComments = async (content) => {
   );
   console.log("comment1", comment1);
   const comment2 = await chatGptResponse(
-    `rewrite the next sentence in 256 words. ${text}`
+    `rewrite the next sentence in 256 characters. ${text}`
   );
   console.log("comment2", comment2);
   return `${comment1}||${comment2}`;

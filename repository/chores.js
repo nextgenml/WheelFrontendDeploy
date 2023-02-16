@@ -11,7 +11,7 @@ const getActiveChoresCount = async (campaignId, choreType) => {
 };
 
 const getCampaignPost = async (campaignId, skippedCampaigns, choreType) => {
-  const query = `select * from chores where campaign_detail_id = ? and chore_type = ? and media_post_id is not null and id not in (?) order by rand () limit 1`;
+  const query = `select * from chores where campaign_detail_id = ? and chore_type = ? and is_completed = 1 and media_post_id is not null and id not in (?) order by rand () limit 1`;
 
   const results = await runQueryAsync(query, [
     campaignId,
@@ -66,7 +66,7 @@ const markOtherChoreAsCompleted = async (data) => {
     data.linkToPost,
     data.walletId,
     data.campaignDetailsId,
-    data.createdAt,
+    moment(data.createdAt).format(DATE_TIME_FORMAT),
     data.choreType,
     data.mediaPostId,
   ]);
