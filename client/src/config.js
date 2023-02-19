@@ -4,7 +4,7 @@
 //  ABC_TOKEN: "0xEE0d7199dF48a603b504fBD76AE85ff4e9F283b1",
 //  RPC_URL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
 //  WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-//  CHAT_BOT_URL: "http://104.248.228.44:3000",
+//  CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
 //  ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 //};
 
@@ -14,7 +14,7 @@ const prodConfig = {
   ABC_TOKEN: "0x06C28f861Fc4b31b5D2C8CAD880468aEec266F31",
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-  CHAT_BOT_URL: "http://104.248.228.44:3000",
+  CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
   API_ENDPOINT: "http://104.248.228.44:8001",
   ADMIN_WALLET: "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
 };
@@ -24,7 +24,7 @@ const testConfig = {
   ABC_TOKEN: "0x06C28f861Fc4b31b5D2C8CAD880468aEec266F31",
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
-  CHAT_BOT_URL: "http://104.248.228.44:3000",
+  CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
   API_ENDPOINT: "http://localhost:8000",
   ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };

@@ -81,6 +81,7 @@ const getChoreDesc = (mediaType) => {
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
   const [filter, setFilter] = useState("todo");
+  const [commentById, setCommentById] = useState({});
   const fetchStats = async () => {
     const res = await fetch(
       `${
@@ -110,6 +111,38 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
       chore.completed_by_user = 1;
       setChores([...chores]);
     } else alert("Something went wrong. Please try later");
+  };
+  const generateComment = async (chore) => {
+    setCommentById((prev) => ({
+      ...prev,
+      [chore.id]: {
+        ...prev[chore.id],
+        loading: true,
+      },
+    }));
+    const res = await fetch(`${config.CHAT_BOT_URL}/collections`, {
+      method: "POST",
+      body: JSON.stringify({
+        msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      setCommentById((prev) => ({
+        ...prev,
+        [chore.id]: {
+          loading: false,
+          data: data.result,
+        },
+      }));
+    } else {
+      alert("Something went wrong. Please try again after sometime");
+    }
   };
   const renderCardBody = (chore) => {
     switch (chore.chore_type) {
@@ -183,61 +216,45 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
           </Link>
         );
       case "comment":
-        const suggestions = (chore.comment_suggestions || "").split("||");
         return (
           <div>
-            {suggestions[0] && (
-              <Grid container spacing={2}>
-                <Grid item md={6}>
-                  {/* <RichTextEditor
+            <Grid container spacing={2}>
+              <Grid item md={6}>
+                {/* <RichTextEditor
                     onChange={() => {}}
                     initialHtml={suggestions[0]}
                     readOnly
                   /> */}
-                  <TextField
-                    multiline
-                    fullWidth
-                    rows={4}
-                    disabled
-                    value={suggestions[0]}
-                  />
-                  <Button
-                    variant="outlined"
-                    sx={{ mt: 1 }}
-                    onClick={() => {
-                      navigator.clipboard.writeText(suggestions[0]);
-                    }}
-                  >
-                    Copy Text
-                  </Button>
-                </Grid>
-                {suggestions[1] && (
-                  <Grid item md={6}>
-                    {/* <RichTextEditor
-                      onChange={() => {}}
-                      initialHtml={suggestions[1]}
-                      readOnly
-                    /> */}
-                    <TextField
-                      multiline
-                      fullWidth
-                      rows={4}
-                      disabled
-                      value={suggestions[1]}
-                    />
-                    <Button
-                      variant="outlined"
-                      sx={{ mt: 1 }}
-                      onClick={() => {
-                        navigator.clipboard.writeText(suggestions[1]);
-                      }}
-                    >
-                      Copy Text
-                    </Button>
-                  </Grid>
-                )}
+                <TextField
+                  multiline
+                  fullWidth
+                  rows={4}
+                  disabled
+                  value={commentById[chore.id]?.data || ""}
+                />
+                <Button
+                  variant="outlined"
+                  sx={{ mt: 1 }}
+                  onClick={() => generateComment(chore)}
+                  disabled={commentById[chore.id]?.loading}
+                >
+                  {commentById[chore.id]?.loading
+                    ? "Generating....."
+                    : "Generate Comment"}
+                </Button>
+                <Button
+                  variant="outlined"
+                  sx={{ mt: 1, ml: 2 }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      commentById[chore.id]?.data || ""
+                    );
+                  }}
+                >
+                  Copy Text
+                </Button>
               </Grid>
-            )}
+            </Grid>
             <Box sx={{ pt: 2 }}>
               <Link href={chore.link_to_post} target={chore.link_to_post}>
                 Link to Post

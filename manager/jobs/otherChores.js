@@ -61,12 +61,6 @@ const createOtherChores = async (
             if (isEligible) {
               let comments = "";
 
-              if (action === "comment")
-                try {
-                  comments = await generateComments(campaign.content);
-                } catch (error) {
-                  continue;
-                }
               await createChore({
                 campaignDetailsId: campaignPost.campaign_detail_id,
                 walletId: nextUser.wallet_id,
