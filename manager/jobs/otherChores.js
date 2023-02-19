@@ -34,9 +34,12 @@ const createOtherChores = async (
 
       for (const action of actions) {
         let noOfPosts = successCriteria[action.toUpperCase()];
+        const activeChoresCount = await getActiveChoresCount(
+          campaign.id,
+          action
+        );
 
-        const noOfPostsDone = await getActiveChoresCount(campaign.id, action);
-        noOfPosts -= noOfPostsDone;
+        noOfPosts -= activeChoresCount;
         const skippedUsers = [-1];
         const skippedCampaigns = [-1];
         while (noOfPosts > 0) {
@@ -114,7 +117,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
           const mediaPostIds = await getMediaPostIds(campaign.id);
 
           for (const row of mediaPostIds) {
-            // console.log("media_post_id", row, searchContentFn);
+            // console.log("checking for", action);
             const mediaUsers = await searchContentFn(
               row.media_post_id,
               moment(

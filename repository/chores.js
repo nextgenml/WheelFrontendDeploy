@@ -7,7 +7,7 @@ const getActiveChoresCount = async (campaignId, choreType) => {
     "select count(1) as count from chores where campaign_detail_id = ? and chore_type = ? and (is_completed = 1 or valid_to > now())";
   const results = await runQueryAsync(query, [campaignId, choreType]);
 
-  return results?.count || 0;
+  return results[0]?.count || 0;
 };
 
 const getCampaignPost = async (campaignId, skippedCampaigns, choreType) => {
