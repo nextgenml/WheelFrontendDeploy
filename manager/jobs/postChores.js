@@ -49,19 +49,19 @@ const createPostChores = async (campaigns) => {
             "post"
           );
           if (isEligible) {
+            const startTime = moment();
+            const endTime = moment(startTime).add(
+              config.POST_CHORE_VALID_DAYS,
+              "days"
+            );
+
             await createChore({
               campaignDetailsId: campaign.id,
               walletId: nextUser.wallet_id,
               mediaType: campaign.media_type,
               choreType: "post",
-              validFrom: moment()
-                .add(1, "days")
-                .startOf("day")
-                .format(DATE_TIME_FORMAT),
-              validTo: moment()
-                .add(config.POST_CHORE_VALID_DAYS, "days")
-                .endOf("day")
-                .format(DATE_TIME_FORMAT),
+              validFrom: startTime.format(DATE_TIME_FORMAT),
+              validTo: endTime.format(DATE_TIME_FORMAT),
               value: campaign.reward,
               content: campaign.content,
             });

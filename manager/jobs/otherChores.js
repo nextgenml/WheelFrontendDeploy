@@ -26,7 +26,7 @@ const createOtherChores = async (
 ) => {
   try {
     for (const campaign of campaigns) {
-      console.log("campaign------", campaign);
+      // console.log("campaign------", campaign);
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
 
@@ -61,19 +61,18 @@ const createOtherChores = async (
             if (isEligible) {
               let comments = "";
 
+              const startTime = moment();
+              const endTime = moment(startTime).add(
+                config.OTHER_CHORE_VALID_DAYS,
+                "days"
+              );
               await createChore({
                 campaignDetailsId: campaignPost.campaign_detail_id,
                 walletId: nextUser.wallet_id,
                 mediaType: campaignPost.media_type,
                 choreType: action,
-                validFrom: moment()
-                  .add(1, "days")
-                  .startOf("day")
-                  .format(DATE_TIME_FORMAT),
-                validTo: moment()
-                  .add(config.OTHER_CHORE_VALID_DAYS, "days")
-                  .endOf("day")
-                  .format(DATE_TIME_FORMAT),
+                validFrom: startTime.format(DATE_TIME_FORMAT),
+                validTo: endTime.format(DATE_TIME_FORMAT),
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
                 linkToPost: campaignPost.link_to_post,

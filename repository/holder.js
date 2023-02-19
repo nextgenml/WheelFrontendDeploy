@@ -32,7 +32,7 @@ const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
 
 const isEligibleForChore = async (walletId, choreType) => {
   const query =
-    "select count(1) as count from chores where chore_type = ? and wallet_id = ? and valid_from >= now()";
+    "select count(1) as count from chores where chore_type = ? and wallet_id = ? and valid_from >= DATE_SUB(NOW(), INTERVAL 2 HOUR)";
   const results = await runQueryAsync(query, [choreType, walletId]);
   return (results[0]?.count || 0) < config.NO_OF_POSTS_PER_DAY;
 };
