@@ -8,6 +8,7 @@ const readOnlyClient = twitterClient.readOnly;
 
 const searchTweets = async (search, start_time, end_time) => {
   try {
+    search = sanitizeTweet(search);
     console.log("searching in twitter", `"${search}" -is:retweet`);
     const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
       "tweet.fields": ["conversation_id", "created_at", "attachments"],
@@ -166,21 +167,25 @@ const followingUsers = async (userId) => {
   return result;
 };
 
-const sanitizeTweet = (tweet) => tweet.replace(/\s\[https\:.*]/gm, "");
+const sanitizeTweet = (tweet) =>
+  tweet.replace(/\b(http|https)?(:|::)\/\/\S+/gi, "");
+
+// const x = `Trying out link test 2`;
 
 // const x = `Someone call the fire department!
 // 🚒👨‍🚒 our supply is #alwaysburning.
 
 // 230 out of 420 sextillion tokens incinerated forever 🔥
 
-// http://Shibadoge.com for more details.
+// https://Shibadoge.com for more details.
 
 // Stay up-to-date 💬
-// https://t.me/ShibaDoge_Labs
+// http:://t.me/ShibaDoge_Labs
 
 // Missed #Shiba? Missed #Doge?
 // Don't miss #ShibaDoge!`;
 
+// console.log(x.match(/\b(http|https)?(:|::)\/\/\S+/gi));
 // searchTweets(x);
 // tweetLikedUsers("1624067874276126721");
 // console.log(x);
@@ -194,5 +199,4 @@ module.exports = {
   tweetRepliedUsers,
   getTwitterActionFunc,
   followingUsers,
-  sanitizeTweet,
 };
