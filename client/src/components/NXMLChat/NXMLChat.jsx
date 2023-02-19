@@ -62,7 +62,7 @@ const Initiative = ({ prompt, index }) => {
   useEffect(() => {
     if (isChecked) {
       setResult("populating blog");
-      get_gpt_data(`Write a blog post about ${prompt}`);
+      get_gpt_data(`Write a blog post about ${prompt}.`);
     }
   }, [isChecked]);
 
@@ -236,7 +236,9 @@ const BlogForm = () => {
       body: JSON.stringify({ msg: input }),
       method: "POST",
     });
-    setPrompts(process_data(await response.json()));
+    let data = process_data(await response.json());
+    // add footer
+    setPrompts(data);
   }
 
   async function get_user_data(offset) {
