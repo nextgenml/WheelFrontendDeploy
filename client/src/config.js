@@ -15,7 +15,7 @@ const prodConfig = {
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   WALLET_ADDRESS: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
   CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
-  API_ENDPOINT: "http://104.248.228.44:8001",
+  API_ENDPOINT: "https://test.nexgenml.com",
   ADMIN_WALLET: "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
 };
 const testConfig = {
