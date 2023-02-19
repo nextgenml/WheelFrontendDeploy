@@ -1,6 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const config = require("../config");
 
 const getActiveChoresCount = async (campaignId, choreType) => {
   const query =
@@ -119,9 +120,9 @@ const getMediaPostIds = async (campaignId) => {
 };
 
 const unPaidChores = async () => {
-  const query = `select wallet_id, sum(value) as value, GROUP_CONCAT(id) as ids from chores where is_completed = 1 and is_paid != 1 group by wallet_id;`;
+  const query = `select wallet_id, sum(value) as value, GROUP_CONCAT(id) as ids from chores where is_completed = 1 and is_paid != 1 group by wallet_id having value > ?;`;
 
-  return await runQueryAsync(query, []);
+  return await runQueryAsync(query, [config.MIN_AMOUNT_TO_PAY_IN_GO]);
 };
 
 const markChoresAsPaid = async (ids) => {

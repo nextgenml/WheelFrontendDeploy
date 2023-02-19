@@ -120,27 +120,32 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
         loading: true,
       },
     }));
-    const res = await fetch(`${config.CHAT_BOT_URL}/collections`, {
-      method: "POST",
-      body: JSON.stringify({
-        msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
-      }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
 
-    if (res.ok) {
-      const data = await res.json();
-      setCommentById((prev) => ({
-        ...prev,
-        [chore.id]: {
-          loading: false,
-          data: data.result,
+    try {
+      const res = await fetch(`${config.CHAT_BOT_URL}/collections`, {
+        method: "POST",
+        body: JSON.stringify({
+          msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
+        }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-      }));
-    } else {
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setCommentById((prev) => ({
+          ...prev,
+          [chore.id]: {
+            loading: false,
+            data: data.result,
+          },
+        }));
+      } else {
+        alert("Something went wrong. Please try again after sometime");
+      }
+    } catch (error) {
       alert("Something went wrong. Please try again after sometime");
     }
   };
