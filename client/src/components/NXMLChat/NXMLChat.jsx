@@ -22,7 +22,7 @@ const Initiative = ({ prompt, index }) => {
   const notify = (msg, toastType) => {
     if (toastType == "success") {
       toast.success(msg);
-    } else if (toastType == "info") {
+    } else if (toastType === "info") {
       toast.info(msg);
     } else {
       toast.error(msg);
@@ -41,7 +41,10 @@ const Initiative = ({ prompt, index }) => {
       method: "POST",
     });
     let res = await response.json();
-    setResult(res.result);
+    setResult(
+      res.result +
+        `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
+    );
     setiscopyDisable(false);
   }
 
@@ -345,7 +348,12 @@ const BlogForm = () => {
         <div className="d-flex justify-content-center">
           <div
             className="spinner-border"
-            style={{ width: "3rem", height: "3rem" }}
+            style={{
+              width: "3rem",
+              height: "3rem",
+              color: "white",
+              marginBottom: "16px",
+            }}
             role="status"
           ></div>
         </div>

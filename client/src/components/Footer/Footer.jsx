@@ -22,7 +22,7 @@ const Footer = () => {
           }}
         >
           <Box mt="10px">
-            <a href="#home" style={{ textDecoration: "none" }}>
+            <a href="/" style={{ textDecoration: "none" }}>
               <img src="/logo.png" alt="" width="200px" />
             </a>
           </Box>
@@ -71,7 +71,7 @@ const Footer = () => {
               </Typography>
             </a>
           </Box> */}
-          <Box mt="10px">
+          {/* <Box mt="10px">
             <a href="#" target="_blank" style={{ textDecoration: "none" }}>
               <Typography
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
@@ -88,8 +88,8 @@ const Footer = () => {
                 Community
               </Typography>
             </a>
-          </Box>
-          <Box mt="10px">
+          </Box> */}
+          {/* <Box mt="10px">
             <Typography
               sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
             >
@@ -105,7 +105,7 @@ const Footer = () => {
             >
               E-Mail:
             </Typography>
-          </Box>
+          </Box> */}
         </Box>
         <Container maxWidth="md">
           <Box sx={{ border: "2px solid #242424" }}></Box>
