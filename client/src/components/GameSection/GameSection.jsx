@@ -19,7 +19,7 @@ let borderStyle = {
 export default function GameSection() {
   return (
     <Container maxWidth="lg">
-      <Box sx={borderStyle} borderRadius="10px" p={2} my={10} height="100%">
+      {/* <Box sx={borderStyle} borderRadius="10px" p={2} my={10} height="100%">
         <Typography
           color="#3B7AAA"
           sx={{
@@ -107,7 +107,7 @@ export default function GameSection() {
             </Stack>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
     </Container>
   );
 }

@@ -40,14 +40,14 @@ function App() {
               <Features />
               <Tokenomics />
               <Initiatives />
-              <BuyNextGen />
+              {/* <BuyNextGen /> */}
               <ConverseWithAI />
               <Community />
             </Container>
           }
         />
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
-        <Route path="/spin-wheel" element={<SpinAndWin />} />
+        {/* <Route path="/spin-wheel" element={<SpinAndWin />} /> */}
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
       </Routes>
       <Footer />

@@ -61,15 +61,15 @@ export default function AccordionElement({
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
-                    <Button className="initiative-btn">ARTICLE</Button>
+                    <Button className="initiative-btn">BLOG</Button>
                   </Link>
-                  <Link
+                  {/* <Link
                     href={extVideoUrl}
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
                     <Button className="initiative-btn">VIDEO</Button>
-                  </Link>
+                  </Link> */}
                 </>
               )}
             </Grid>

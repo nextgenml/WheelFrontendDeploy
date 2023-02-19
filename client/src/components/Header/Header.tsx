@@ -17,15 +17,16 @@ import clsx from "clsx";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const linkStyle = { fontSize: { sm: "12px", md: "15px" } };
+//// { link: "buy-nextgen", title: "BUY" },
+// { link: "roadmap", title: "ROADMAP" },
+//{ link: "tokenomics", title: "TOKENOMICS" },
+
 const headerLinks = [
   { link: "", title: "HOME" },
   { link: "goals", title: "GOALS" },
   { link: "values", title: "VALUES" },
-  { link: "tokenomics", title: "TOKENOMICS" },
   { link: "services", title: "SERVICES" },
-  { link: "roadmap", title: "ROADMAP" },
   { link: "utilities", title: "UTILITIES" },
-  { link: "buy-nextgen", title: "BUY" },
   { link: "converse_with_ai", title: "CONVERSE WITH AI" },
 ];
 

@@ -35,10 +35,17 @@ export default function Home() {
             fontWeight="bold"
             my={3}
           >
-            NEXGEN ML empowers communities with the ownership and monetization of data in a decentralized world through our advanced blockchain AI solutions. Our platform streamlines data automation, unlocking new revenue streams and providing a competitive edge in the rapidly evolving digital landscape. From creating new products and services to improving existing offerings, our solutions will drive growth and innovation. Join us in the journey to secure control and value from your data in the decentralized era. 
+            NEXGEN ML empowers communities with the ownership and monetization
+            of data in a decentralized world through our advanced blockchain AI
+            solutions. Our platform streamlines data automation, unlocking new
+            revenue streams and providing a competitive edge in the rapidly
+            evolving digital landscape. From creating new products and services
+            to improving existing offerings, our solutions will drive growth and
+            innovation. Join us in the journey to secure control and value from
+            your data in the decentralized era. 
           </Typography>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <a
+            {/* <a
               href="#buy-nextgen"
               rel="noopener noreferrer"
               style={{ textDecoration: "none" }}
@@ -57,9 +64,9 @@ export default function Home() {
               >
                 BUY NEXGEN
               </Button>
-            </a>
+            </a> */}
 
-            <Button
+            {/* <Button
               sx={{
                 bgcolor: "#2E87E5",
                 color: "white",
@@ -79,7 +86,7 @@ export default function Home() {
               }}
             >
               LAUNCH WHEEL
-            </Button>
+            </Button> */}
           </Stack>
         </Grid>
       </Grid>
