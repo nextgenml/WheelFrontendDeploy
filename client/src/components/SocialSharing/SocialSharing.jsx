@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 
-import { Grid, Typography } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import styles from "./SocialSharing.module.css";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -18,6 +18,7 @@ import Loading from "../loading";
 import { useAccount } from "wagmi";
 import Instructions from "./Instructions";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import RedeemIcon from "@mui/icons-material/Redeem";
 const SocialSharing = () => {
   const [tabValue, setTabValue] = React.useState("twitter");
   const { isConnected, address } = useAccount();
@@ -55,40 +56,104 @@ const SocialSharing = () => {
       <div>
         <Grid className={styles.topBar} container spacing={2}>
           <Grid item md={2} sm={4}>
-            <div className={styles.earnings}>
-              <Typography variant="h6">${stats.total}</Typography>
-              <AccountBalanceWalletIcon color="primary" />
-            </div>
-            <Typography variant="body2" className={styles.earningsText}>
-              Total Earnings
-            </Typography>
+            <Card elevation={1} sx={{ p: 2 }}>
+              <Typography variant="h6" className={styles.earningsText}>
+                Overall Earnings
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={"space-around"}
+                sx={{ mt: 2 }}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <Typography variant="h6">${stats.totalPaid}</Typography>
+                  <AccountBalanceWalletIcon
+                    color="success"
+                    fontSize="small"
+                    sx={{ ml: 0.5 }}
+                  />
+                </Box>
+                <Box display="flex" alignItems={"center"}>
+                  <Typography variant="h6">${stats.totalUnpaid}</Typography>
+                  <RedeemIcon
+                    color="warning"
+                    fontSize="small"
+                    sx={{ ml: 0.5 }}
+                  />
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent={"space-around"}>
+                <Typography variant="caption" color="var(--bs-indigo)">
+                  Paid
+                </Typography>
+                <Typography variant="caption" color="var(--bs-indigo)">
+                  Unpaid
+                </Typography>
+              </Box>
+            </Card>
           </Grid>
           <Grid item md={2} sm={4}>
-            <div className={styles.earnings}>
-              <Typography variant="h6">${stats.today}</Typography>
-              <TrendingUpIcon color="success" />
-            </div>
-            <Typography variant="body2" className={styles.earningsText}>
-              Today Earnings
-            </Typography>
+            <Card elevation={1} sx={{ p: 2 }}>
+              <Typography variant="h6" className={styles.earningsText}>
+                Today Earnings
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={"space-around"}
+                sx={{ mt: 2 }}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <Typography variant="h6">${stats.todayPaid}</Typography>
+                  <AccountBalanceWalletIcon
+                    color="success"
+                    fontSize="small"
+                    sx={{ ml: 0.5 }}
+                  />
+                </Box>
+                <Box display="flex" alignItems={"center"}>
+                  <Typography variant="h6">${stats.todayUnpaid}</Typography>
+                  <RedeemIcon
+                    color="warning"
+                    fontSize="small"
+                    sx={{ ml: 0.5 }}
+                  />
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent={"space-around"}>
+                <Typography variant="caption" color="var(--bs-indigo)">
+                  Paid
+                </Typography>
+                <Typography variant="caption" color="var(--bs-indigo)">
+                  Unpaid
+                </Typography>
+              </Box>
+            </Card>
           </Grid>
-          {/* <Grid item md={2} sm={4}>
-            <div className={styles.earnings}>
-              <Typography variant="h6">${stats.todayMax}</Typography>
-              <RestartAltRoundedIcon color="warning" />
-            </div>
-            <Typography variant="body2" className={styles.earningsText}>
-              Today Max Earnings
-            </Typography>
-          </Grid> */}
           <Grid item md={2} sm={4}>
-            <div className={styles.earnings}>
-              <Typography variant="h6">${stats.todayLost}</Typography>
-              <TrendingDownIcon color="error" />
-            </div>
-            <Typography variant="body2" className={styles.earningsText}>
-              Today Lost
-            </Typography>
+            <Card elevation={1} sx={{ p: 2 }}>
+              <Typography variant="h6" className={styles.earningsText}>
+                Today Potential
+              </Typography>
+              <Box
+                display="flex"
+                justifyContent={"space-around"}
+                sx={{ mt: 2 }}
+              >
+                <Box display="flex" alignItems={"center"}>
+                  <Typography variant="h6">${stats.todayPaid}</Typography>
+                  <TrendingDownIcon
+                    color="error"
+                    fontSize="small"
+                    sx={{ ml: 0.5 }}
+                  />
+                </Box>
+              </Box>
+              <Box display="flex" justifyContent={"space-around"}>
+                <Typography variant="caption" color="var(--bs-indigo)">
+                  Available work
+                </Typography>
+              </Box>
+            </Card>
           </Grid>
           <Grid item md={6} sm={4} textAlign={"right"}>
             <Instructions

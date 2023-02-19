@@ -14,7 +14,9 @@
   font-size: 1.2rem;
 }
 .earningsText {
-  color: #f37904;
+  color: grey;
+  font-size: 1rem !important;
+  text-align: center;
 }
 .selectedListItem {
   background-color: #f3c7c7 !important;

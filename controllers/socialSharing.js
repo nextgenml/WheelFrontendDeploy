@@ -1,9 +1,7 @@
 const choresRepo = require("../repository/chores");
 
-const holderRepo = require("../repository/holder");
 const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
-const config = require("../config");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
 
@@ -12,8 +10,10 @@ const getSocialSharingStats = async (req, res) => {
     const { mediaType, walletId } = req.query;
 
     const [
-      total,
-      today,
+      totalUnpaid,
+      totalPaid,
+      todayUnpaid,
+      todayPaid,
       todayLost,
       todayMax,
       newTotal,
@@ -22,21 +22,25 @@ const getSocialSharingStats = async (req, res) => {
       retweet,
       comment,
       follow,
-    ] = await Promise.all([
-      choresRepo.getTotalEarnings(walletId),
-      choresRepo.getTodayEarnings(walletId),
-      choresRepo.getTodayTotal(walletId),
-      choresRepo.getTodayTotal(walletId),
-      choresRepo.getTodayChoresTotal(walletId, mediaType),
-      choresRepo.getOldChoresTotal(walletId, mediaType),
-      ...["like", "retweet", "comment", "follow"].map((chore) =>
-        choresRepo.getTotalByChore(walletId, mediaType, chore)
-      ),
-    ]);
+    ] = (
+      await Promise.all([
+        choresRepo.getTotalEarnings(walletId),
+        choresRepo.getTodayEarnings(walletId),
+        choresRepo.getTodayLost(walletId),
+        choresRepo.getTodayTotal(walletId),
+        choresRepo.getTodayChoresTotal(walletId, mediaType),
+        choresRepo.getOldChoresTotal(walletId, mediaType),
+        ...["like", "retweet", "comment", "follow"].map((chore) =>
+          choresRepo.getTotalByChore(walletId, mediaType, chore)
+        ),
+      ])
+    ).flat();
 
     res.json({
-      total: roundTo2Decimals(total),
-      today: roundTo2Decimals(today),
+      totalUnpaid: roundTo2Decimals(totalUnpaid),
+      totalPaid: roundTo2Decimals(totalPaid),
+      todayUnpaid: roundTo2Decimals(todayUnpaid),
+      todayPaid: roundTo2Decimals(todayPaid),
       todayLost: roundTo2Decimals(todayLost),
       todayMax: roundTo2Decimals(todayMax),
       newTotal: roundTo2Decimals(newTotal),

@@ -41,7 +41,6 @@ const Campaigns = () => {
 
   const [formData, setFormData] = useState(initialState);
   const [error, setError] = useState("");
-  const [success, _] = useState("");
   const [balance, setBalance] = useState("");
   const [count, setCount] = useState(0);
   const updateBalance = async () => {
@@ -140,11 +139,6 @@ const Campaigns = () => {
           {error && (
             <Grid item md={12} xs={12}>
               <Alert severity="error">{error}</Alert>
-            </Grid>
-          )}
-          {success && (
-            <Grid item md={12} xs={12}>
-              <Alert severity="success">{success}</Alert>
             </Grid>
           )}
           <Grid item md={6} xs={12}>

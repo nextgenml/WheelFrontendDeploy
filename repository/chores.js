@@ -132,21 +132,27 @@ const markChoresAsPaid = async (ids) => {
 
 // stats for top bar money stats
 const getTotalEarnings = async (walletId) => {
-  const query = `select sum(value) as sum from chores where is_paid = 1 and wallet_id = ?`;
+  const query = `select is_paid, sum(value) as sum from chores where is_completed = 1 and wallet_id = ? group by is_paid`;
 
   const results = await runQueryAsync(query, [walletId]);
 
-  return results[0].sum || 0;
+  return [
+    results.filter((r) => r.is_paid === 0)[0]?.sum || 0,
+    results.filter((r) => r.is_paid === 1)[0]?.sum || 0,
+  ];
 };
 const getTodayEarnings = async (walletId) => {
-  const query = `select sum(value) as sum from chores where is_paid = 1 and valid_from >= ? and wallet_id = ?`;
+  const query = `select is_paid, sum(value) as sum from chores where is_completed = 1 and valid_from >= ? and wallet_id = ? group by is_paid`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
     walletId,
   ]);
 
-  return results[0].sum || 0;
+  return [
+    results.filter((r) => r.is_paid === 0)[0]?.sum || 0,
+    results.filter((r) => r.is_paid === 1)[0]?.sum || 0,
+  ];
 };
 const getTodayLost = async (walletId) => {
   const query = `select sum(value) as sum from chores where is_paid = 0 and valid_from >= ? and wallet_id = ?`;
