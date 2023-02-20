@@ -156,7 +156,7 @@ const getTodayEarnings = async (walletId) => {
   ];
 };
 const getTodayLost = async (walletId) => {
-  const query = `select sum(value) as sum from chores where is_paid = 0 and valid_from >= ? and wallet_id = ?`;
+  const query = `select sum(value) as sum from chores where is_completed = 0 and is_paid = 0 and valid_from >= ? and wallet_id = ?`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),

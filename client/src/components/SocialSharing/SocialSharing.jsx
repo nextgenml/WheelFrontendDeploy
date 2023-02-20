@@ -140,7 +140,7 @@ const SocialSharing = () => {
                 sx={{ mt: 2 }}
               >
                 <Box display="flex" alignItems={"center"}>
-                  <Typography variant="h6">${stats.todayPaid}</Typography>
+                  <Typography variant="h6">${stats.todayLost}</Typography>
                   <TrendingDownIcon
                     color="error"
                     fontSize="small"
