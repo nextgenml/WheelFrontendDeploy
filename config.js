@@ -53,16 +53,16 @@ const commonConfig = {
   MIN_AMOUNT_TO_PAY_IN_GO: 50,
   SUCCESS_FACTOR: {
     BEST: {
-      POST: 100,
-      LIKE: 2500,
-      COMMENT: 1000,
-      RETWEET: 1000,
+      POST: 10000,
+      LIKE: 25000,
+      COMMENT: 10000,
+      RETWEET: 10000,
     },
     BETTER: {
-      POST: 100,
-      LIKE: 2500,
-      COMMENT: 1000,
-      RETWEET: 1000,
+      POST: 5000,
+      LIKE: 12500,
+      COMMENT: 5000,
+      RETWEET: 5000,
     },
     GOOD: {
       POST: 100,
@@ -71,6 +71,7 @@ const commonConfig = {
       RETWEET: 1000,
     },
   },
+  // above and beyond
   SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE: 10,
 };
 
