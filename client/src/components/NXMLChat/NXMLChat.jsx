@@ -40,12 +40,16 @@ const Initiative = ({ prompt, index }) => {
       body: JSON.stringify({ msg: input }),
       method: "POST",
     });
-    let res = await response.json();
-    setResult(
-      res.result +
-        `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
-    );
-    setiscopyDisable(false);
+    if (response.ok) {
+      let res = await response.json();
+      setResult(
+        res.result +
+          `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
+      );
+      setiscopyDisable(false);
+    } else {
+      notify("Something went wrong. Please try again later", "error");
+    }
   }
 
   // link validation
@@ -103,7 +107,7 @@ const Initiative = ({ prompt, index }) => {
 
       let res = await response.text();
       let data = JSON.parse(res);
-      if (response.status == "200") {
+      if (response.status === "200") {
         notify(data.msg, "success");
       } else {
         notify(data.msg, "danger");
@@ -239,9 +243,13 @@ const BlogForm = () => {
       body: JSON.stringify({ msg: input }),
       method: "POST",
     });
-    let data = process_data(await response.json());
-    // add footer
-    setPrompts(data);
+    if (response.ok) {
+      let data = process_data(await response.json());
+      // add footer
+      setPrompts(data);
+    } else {
+      notify("Something went wrong. Please try again later", "error");
+    }
   }
 
   async function get_user_data(offset) {
@@ -257,14 +265,18 @@ const BlogForm = () => {
       method: "GET",
     });
 
-    const result = await response.json();
-    setUserData(result?.data ? result.data : 0);
-    settotalCount(result?.totalResult ? result.totalResult : 0);
-    setpageCount(
-      (result.totalResult ? result.totalResult : 0) < pageSize
-        ? 1
-        : Math.ceil(result.totalResult / pageSize)
-    );
+    if (response.ok) {
+      const result = await response.json();
+      setUserData(result?.data ? result.data : 0);
+      settotalCount(result?.totalResult ? result.totalResult : 0);
+      setpageCount(
+        (result.totalResult ? result.totalResult : 0) < pageSize
+          ? 1
+          : Math.ceil(result.totalResult / pageSize)
+      );
+    } else {
+      notify("Something went wrong. Please try again later", "error");
+    }
   }
 
   async function updateflagData(transactionID, vf, pf) {
