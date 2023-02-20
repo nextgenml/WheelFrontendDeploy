@@ -60,12 +60,12 @@ const processPrizes = async (winners) => {
       );
   }
 };
-let addressArray = [
-  "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
-  "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
-  "0x69CB26CD741AAe7Ad48aE57835448E5DE2dD77d6",
-  "",
-];
+// let addressArray = [
+//   "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
+//   "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
+//   "0x69CB26CD741AAe7Ad48aE57835448E5DE2dD77d6",
+//   "",
+// ];
 
 // const startTransfer = async () => {
 //   logger.info("starting");

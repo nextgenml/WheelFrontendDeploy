@@ -18,42 +18,42 @@ const config = require("./config");
 const logger = require("./logger");
 const mysql = require("mysql");
 const { v4: uuidv4 } = require("uuid");
+const { dbConnection } = require("./dbconnect");
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
-const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  user: "root",
-  password: "password",
-  database: "nextgenml",
-});
+const connection = dbConnection;
 
 app.put("/update-blog-data", async (req, res) => {
-  let { validatedFlag, paidFlag, transactionID } = req.body;
-  if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
-    return res.status(400).json({ msg: "Invalid data" });
-  }
-  let response;
+  try {
+    let { validatedFlag, paidFlag, transactionID } = req.body;
+    if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
+      return res.status(400).json({ msg: "Invalid data" });
+    }
+    let response;
 
-  updateRecords = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            console.log(error);
-            return res.status(500).json({ msg: "Internal server error" });
+    updateRecords = () => {
+      return new Promise((resolve, reject) => {
+        connection.query(
+          `UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `,
+          async (error, elements) => {
+            if (error) {
+              // return reject(error);
+              console.log(error);
+              return res.status(500).json({ msg: "Internal server error" });
+            }
+            return resolve(elements);
           }
-          return resolve(elements);
-        }
-      );
-    });
-  };
+        );
+      });
+    };
 
-  response = await updateRecords();
-  return res.status(200).json({ msg: "Data updated successfully" });
+    response = await updateRecords();
+    return res.status(200).json({ msg: "Data updated successfully" });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
 });
 
 app.get("/get-blog-data", async (req, res) => {

@@ -65,7 +65,7 @@ const nextSpinDetails = async (type) => {
   }
 };
 
-nextSpinDetails();
+// nextSpinDetails();
 module.exports = {
   nextSpinDetails,
 };
