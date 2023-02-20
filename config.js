@@ -39,12 +39,18 @@ const commonConfig = {
   FETCH_HOURS: [3, 9, 15, 21],
   FETCH_MINUTE: 0,
   MINIMUM_WALLET_BALANCE: 100,
-  NO_OF_POSTS_PER_DAY: 10,
-  COST_PER_CHORE: 1,
+
+  // chores
+  NO_OF_POSTS_PER_DAY: 650,
+  COST_PER_CHORE: 0.007,
   POST_CHORE_VALID_DAYS: 1,
   OTHER_CHORE_VALID_DAYS: 3,
+
+  // scheduling the chores algorithm
   CREATE_POST_CHORES_AT: [1, 23],
-  MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN: 100,
+
+  // Mininum earning from chores for a payout
+  MIN_AMOUNT_TO_PAY_IN_GO: 50,
   SUCCESS_FACTOR: {
     BEST: {
       POST: 100,
