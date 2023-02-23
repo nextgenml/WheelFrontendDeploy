@@ -216,7 +216,7 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
 
 const getTodayChores = async (walletId, mediaType, filter) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ?
+  where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ? and cd.is_active = 1 
   and (completed_by_user = ? or 1 = ?) order by c.id desc`;
 
   const results = await runQueryAsync(query, [
@@ -232,7 +232,7 @@ const getTodayChores = async (walletId, mediaType, filter) => {
 };
 const getOldChores = async (walletId, mediaType, filter) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 
+  where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and cd.is_active = 1 
   and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
 
   const results = await runQueryAsync(query, [
@@ -249,7 +249,7 @@ const getOldChores = async (walletId, mediaType, filter) => {
 
 const getChoresByType = async (walletId, mediaType, choreType, filter) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
-  where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 
+  where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 and cd.is_active = 1 
   and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
 
   const results = await runQueryAsync(query, [
