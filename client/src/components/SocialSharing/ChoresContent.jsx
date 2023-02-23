@@ -235,6 +235,7 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
                   fullWidth
                   rows={4}
                   disabled
+                  placeholder="Click on Generate button below to populate comment"
                   value={commentById[chore.id]?.data || ""}
                 />
                 <Button
