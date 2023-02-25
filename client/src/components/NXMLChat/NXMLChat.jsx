@@ -59,7 +59,7 @@ const Initiative = ({ prompt, index }) => {
         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
         "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
         "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
+	"(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
         "(\\#[-a-z\\d_]*)?$",
       "i"
     ); // validate fragment locator
@@ -69,7 +69,8 @@ const Initiative = ({ prompt, index }) => {
   useEffect(() => {
     if (isChecked) {
       setResult("populating blog");
-      get_gpt_data(`Write a blog post about ${prompt}.`);
+      const complete_prompt = `Write a ${Math.floor(Math.random() * (600 - 400 + 1) + 400)} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telgram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt.`
+      get_gpt_data(complete_prompt);
     }
   }, [isChecked]);
 
