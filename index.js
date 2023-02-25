@@ -19,6 +19,7 @@ const logger = require("./logger");
 const mysql = require("mysql");
 const { v4: uuidv4 } = require("uuid");
 const { dbConnection } = require("./dbconnect");
+const { runQueryAsync } = require("./utils/spinwheelUtil");
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
@@ -159,6 +160,16 @@ app.post("/save-blog-data", async (req, res) => {
     return res.status(400).json({ msg: "All fields are required" });
   }
   const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+  const results = await runQueryAsync(
+    "select 1 from saved_prompts where wallet_address = ? and prompt = ?",
+    [wallet_address, prompt]
+  );
+  if (results.length) {
+    return res
+      .status(500)
+      .json({ msg: "Record already saved. You cannot save again" });
+  }
   // save in DB
   connection.query(
     `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
