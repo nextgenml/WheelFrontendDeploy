@@ -1,11 +1,12 @@
 let mysql = require("mysql");
 const logger = require("./logger");
+const config = require("./config");
 
 let dbConnection = null;
 
 function handleDisconnect() {
   dbConnection = mysql.createConnection({
-    host: "127.0.0.1",
+    host: config.DB_HOST,
     user: "root",
     password: "password",
     database: "nextgenml",

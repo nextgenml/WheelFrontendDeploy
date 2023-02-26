@@ -17,6 +17,7 @@ const prodConfig = {
     "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
   RPC_URL: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   DISABLE_LOGS: true,
+  DB_HOST: 'prod-mysql',
 };
 
 const testConfig = {
@@ -32,6 +33,7 @@ const testConfig = {
     "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   DISABLE_LOGS: false,
+  DB_HOST: '127.0.0.1',
 };
 
 module.exports =
