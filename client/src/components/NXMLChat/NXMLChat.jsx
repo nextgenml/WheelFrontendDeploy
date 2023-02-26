@@ -9,6 +9,7 @@ import config from "../../config";
 import ReactPaginate from "react-paginate";
 
 const Initiative = ({ prompt, index }) => {
+  const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(false);
   const [isvalidatedFlag, setIsvalidatedFlag] = useState(null);
@@ -94,7 +95,7 @@ const Initiative = ({ prompt, index }) => {
         },
         body: JSON.stringify({
           wallet_address: address,
-          initiative: "social media",
+          initiative,
           prompt,
           blog: result,
           link,
@@ -331,7 +332,7 @@ const BlogForm = () => {
     console.log("LOOK HERE");
     console.log(address);
     console.log(userRole);
-    if (userRole == config.ADMIN_WALLET_1) {
+    if (userRole === config.ADMIN_WALLET_1) {
       get_user_data(offset);
     }
     // console.log(userData);
@@ -375,7 +376,7 @@ const BlogForm = () => {
         ))
       )}
 
-      {userRole == "Admin" && (
+      {address === config.ADMIN_WALLET_1 && (
         <>
           <div className="p-2 col-md-12 col-lg-12">
             <h4 className="text-center">Blog Data</h4>
