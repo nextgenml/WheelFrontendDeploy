@@ -208,7 +208,8 @@ const BlogForm = () => {
   const [WalletAdd, setWalletAdd] = useState();
   const [offset, setoffset] = useState(0);
   const [pageCount, setpageCount] = useState(0);
-  const [pageSize, setpageSize] = useState(10);
+  const pageSize = 10;
+  const [pageNo, setPageNo] = useState(0);
   const [totalCount, settotalCount] = useState(0);
   const [isSubmit, setisSubmit] = useState(true);
   let reset = 0;
@@ -316,6 +317,7 @@ const BlogForm = () => {
   }
 
   const handlePageClick = (event) => {
+    setPageNo(event.selected);
     const newOffset = (event.selected * 10) % totalCount;
     setoffset(newOffset);
     get_user_data(newOffset);
@@ -441,7 +443,7 @@ const BlogForm = () => {
                     {userData?.map((user, index) => {
                       return (
                         <tr key={index}>
-                          <th scope="row">{index + 1}</th>
+                          <th scope="row">{pageNo * pageSize + index + 1}</th>
                           <td>{user.wallet_address}</td>
                           <td>{user.initiative}</td>
                           <td>{user.prompt}</td>
