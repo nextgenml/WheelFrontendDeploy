@@ -85,7 +85,7 @@ export default function Initiatives() {
         subTitle="Blockchain and AI are transforming the way we think about security, enabling us to identify and respond to threats more effectively. By using AI to analyze data from various sources and identify patterns that may indicate the presence of a threat, we can take proactive measures to prevent them. Meanwhile, blockchain can be used to securely store and share security-related data, enabling greater collaboration between security professionals and improving the effectiveness of response efforts. In addition, blockchain can be used to create verifiable digital identities and secure access control systems, improving the security of online transactions and systems. By using these technologies, we can create a more secure and resilient society that is better equipped to deal with the challenges of the modern world. In addition, users can monetize their data through the creation of unique digital assets that can be bought and sold on the blockchain."
         imageUrl="/security.png"
         extVideoUrl="https://www.google.com"
-        extArticleUrl="https://www.google.com"
+        extArticleUrl="/nxml-blog-chat/security"
         // disableCondition={
         //   +moment(launchDate).add(1080, "days").format("x") >
         //   +moment().format("x")
