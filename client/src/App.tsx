@@ -25,26 +25,22 @@ import NXMLChat from "./components/NXMLChat/NXMLChat";
 // import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Promotions from "./components/Promotions/Promotions";
 
 function App() {
   const location = useLocation();
   const [socialSharing, setSocialSharing] = useState(false);
-  const blackBgPages = [
-    "/",
-    "/spin-wheel",
-    "/claim-distribution",
-    "/spin-wheel",
-  ];
+  const whiteBgPages = ["/promotions"];
 
   useEffect(() => {
-    const includes = blackBgPages.includes(location.pathname) || true;
-    document.body.style.backgroundColor = includes ? "black" : "white";
-    setSocialSharing(!includes);
+    const includes = whiteBgPages.includes(location.pathname);
+    document.body.style.backgroundColor = includes ? "white" : "black";
+    setSocialSharing(includes);
   }, [location.pathname]);
 
   return (
     <>
-      <Header socialSharing={socialSharing} />
+      <Header socialSharing={false} whiteBg={socialSharing} />
       <Routes>
         <Route
           path="/"
@@ -63,6 +59,7 @@ function App() {
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} /> */}
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
+        <Route path="/promotions" element={<Promotions />} />
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/" element={<SocialSharing />} />
         <Route path="/user-campaigns" element={<Campaigns />} />

@@ -2,6 +2,7 @@ const { dbConnection } = require("../dbconnect");
 const sha256 = require("js-sha256");
 
 const moment = require("moment");
+const logger = require("../logger");
 const groupByDate = function (xs, key) {
   return xs.reduce(function (rv, x) {
     formatted_key = moment(x[key]).format("YYYY-MM-DD");
@@ -41,6 +42,7 @@ const executeQueryAsync = (query) =>
 const runQueryAsync = (query, args) =>
   new Promise((resolve, reject) => {
     dbConnection.query(query, args, (error, elements) => {
+      // logger.info(`running query: ${query}`);
       if (error) {
         return reject(error);
       }

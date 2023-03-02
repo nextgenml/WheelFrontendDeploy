@@ -22,6 +22,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
+      blogs_limit: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       eth_amount: {
         type: Sequelize.FLOAT,
         allowNull: false,

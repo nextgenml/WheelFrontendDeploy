@@ -1,11 +1,14 @@
 const config = require("../config");
+const logger = require("../logger");
 const promotionsRepo = require("../repository/promotions");
 
 const savePromotionRequest = async (req, res) => {
+  console.log("req.body", req.body);
   try {
     if (
       !req.body.payer_wallet_id ||
       !req.body.receiver_wallet_id ||
+      !req.body.blogs_limit ||
       !req.body.eth_amount ||
       !req.body.overall_promotions_limit
     )
@@ -15,7 +18,11 @@ const savePromotionRequest = async (req, res) => {
       });
 
     await promotionsRepo.savePromotion(req.body);
+    return res.status(200).json({
+      message: "Saved successfully",
+    });
   } catch (error) {
+    console.log("error", error);
     logger.error(`error occurred in savePromotionRequest api: ${error}`);
     res.status(400).json({
       statusCode: 400,
@@ -25,18 +32,21 @@ const savePromotionRequest = async (req, res) => {
 };
 const approvePromotionRequest = async (req, res) => {
   try {
-    if (!req.body.request_id || !req.body.status)
+    if (!req.body.requestId || !req.body.status)
       return res.status(400).json({
         statusCode: 400,
         message: "Insufficient data",
       });
 
-    if (req.wallet_id !== config.ADMIN_WALLET)
+    if (req.body.walletId !== config.ADMIN_WALLET)
       return res.status(401).json({
         statusCode: 401,
         message: "Unauthorized",
       });
     await promotionsRepo.updatePromotion(req.body);
+    return res.status(200).json({
+      message: "Saved successfully",
+    });
   } catch (error) {
     logger.error(`error occurred in approvePromotionRequest api: ${error}`);
     res.status(400).json({
@@ -47,12 +57,21 @@ const approvePromotionRequest = async (req, res) => {
 };
 const getAppliedRequests = async (req, res) => {
   try {
-    if (!req.wallet_id)
+    const { walletId, pageNo, pageSize } = req.query;
+
+    if (!walletId)
       return res.status(401).json({
         statusCode: 401,
         message: "Unauthorized",
       });
-    await promotionsRepo.updatePromotion(req.body);
+    const data = await promotionsRepo.getAppliedPromotions(
+      walletId,
+      parseInt(pageSize) || 10,
+      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
+    );
+    return res.status(200).json({
+      data,
+    });
   } catch (error) {
     logger.error(`error occurred in approvePromotionRequest api: ${error}`);
     res.status(400).json({
@@ -70,13 +89,16 @@ const getAppliedRequestsAdmin = async (req, res) => {
         statusCode: 401,
         message: "Unauthorized",
       });
-    await promotionsRepo.getAppliedPromotionsAdmin(
-      req.body,
+    const [data, total_count] = await promotionsRepo.getAppliedPromotionsAdmin(
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
     );
+    return res.status(200).json({
+      data,
+      total_count,
+    });
   } catch (error) {
-    logger.error(`error occurred in approvePromotionRequest api: ${error}`);
+    logger.error(`error occurred in getAppliedRequestsAdmin api: ${error}`);
     res.status(400).json({
       statusCode: 400,
       message: error,

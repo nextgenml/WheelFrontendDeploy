@@ -16,6 +16,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useAccount } from "wagmi";
 interface Props {
   socialSharing: boolean;
+  whiteBg: boolean;
 }
 export default function Header(props: Props) {
   const { isConnected } = useAccount();
@@ -26,14 +27,13 @@ export default function Header(props: Props) {
     fontSize: {
       sm: "12px",
       md: "15px",
-      color: props.socialSharing ? "black" : "white",
+      color: props.socialSharing || props.whiteBg ? "black" : "white",
     },
   };
 
-
-//// { link: "buy-nextgen", title: "BUY" },
-// { link: "roadmap", title: "ROADMAP" },
-//{ link: "tokenomics", title: "TOKENOMICS" },
+  //// { link: "buy-nextgen", title: "BUY" },
+  // { link: "roadmap", title: "ROADMAP" },
+  //{ link: "tokenomics", title: "TOKENOMICS" },
 
   const headerLinks = props.socialSharing
     ? [
@@ -43,12 +43,12 @@ export default function Header(props: Props) {
         { route: "user-quizzes", title: "QUIZZES" },
       ]
     : [
-      { link: "", title: "HOME" },
-      { link: "goals", title: "GOALS" },
-      { link: "values", title: "VALUES" },
-      { link: "services", title: "SERVICES" },
-      { link: "utilities", title: "UTILITIES" },
-      { link: "converse_with_ai", title: "CONVERSE WITH AI" },
+        { link: "", title: "HOME" },
+        { link: "goals", title: "GOALS" },
+        { link: "values", title: "VALUES" },
+        { link: "services", title: "SERVICES" },
+        { link: "utilities", title: "UTILITIES" },
+        { link: "converse_with_ai", title: "CONVERSE WITH AI" },
       ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {
@@ -159,7 +159,7 @@ export default function Header(props: Props) {
               style={{
                 fontSize: "38px",
                 cursor: "pointer",
-                color: props.socialSharing ? "black" : "white",
+                color: props.socialSharing || props.whiteBg ? "black" : "white",
               }}
             ></MenuIcon>
           </Button>
