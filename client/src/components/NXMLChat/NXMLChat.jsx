@@ -8,6 +8,7 @@ import { useAccount } from "wagmi";
 import config from "../../config";
 import ReactPaginate from "react-paginate";
 import Initiative from "./SaveInitiative";
+import { useSearchParams } from "react-router-dom";
 
 const BlogForm = () => {
   const { address } = useAccount();
@@ -20,6 +21,9 @@ const BlogForm = () => {
   const [pageNo, setPageNo] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isSubmit, setIsSubmit] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
+
   let reset = 0;
 
   // Toast alert
@@ -134,9 +138,11 @@ const BlogForm = () => {
   let userRole = address;
   useEffect(() => {
     // Make the API call to the endpoint to get the prompts and update the state
+    console.log("searchParams", searchParams);
     if (prompts.length === 0) {
       get_gpt_data(
-        "List 10 ways in which social media will be improved by blockchain"
+        searchParams.get("context") ||
+          "List 10 ways in which social media will be improved by blockchain"
       );
     }
     console.log("LOOK HERE");

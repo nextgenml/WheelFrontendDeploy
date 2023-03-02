@@ -131,6 +131,7 @@ const SaveInitiative = ({ prompt, index }) => {
               type="checkbox"
               onClick={() => setIsChecked(!isChecked)}
             />
+            <label>&nbsp;&nbsp;Generate Blog</label>
           </div>
           <div className="col-sm-12">
             <textarea
@@ -149,7 +150,7 @@ const SaveInitiative = ({ prompt, index }) => {
                   type="checkbox"
                   onClick={() => setIsValidatedFlag(!isValidatedFlag)}
                 />
-                <label>Validate Flag</label>
+                <label>&nbsp;&nbsp;Validate Flag</label>
               </div>
               <div className="col-sm-12">
                 <input
@@ -157,7 +158,7 @@ const SaveInitiative = ({ prompt, index }) => {
                   type="checkbox"
                   onClick={() => setPaidFlag(!isPaidFlag)}
                 />
-                <label>Paid Flag</label>
+                <label>&nbsp;&nbsp;Paid Flag</label>
               </div>
             </>
           )}
