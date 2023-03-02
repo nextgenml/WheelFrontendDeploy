@@ -8,7 +8,7 @@ import { useAccount } from "wagmi";
 import config from "../../config";
 import ReactPaginate from "react-paginate";
 import Initiative from "./SaveInitiative";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 const BlogForm = () => {
   const { address } = useAccount();
@@ -23,6 +23,7 @@ const BlogForm = () => {
   const [isSubmit, setIsSubmit] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [searchParams, _] = useSearchParams();
+  const { initiative } = useParams();
 
   let reset = 0;
 
@@ -39,9 +40,7 @@ const BlogForm = () => {
 
   function process_data(data) {
     if (data.result) {
-      console.log(data);
       const split_data = data.result.split("\n");
-      console.log(split_data);
       return split_data.filter((p) => p.match(/^\d/));
     }
   }
@@ -138,16 +137,21 @@ const BlogForm = () => {
   let userRole = address;
   useEffect(() => {
     // Make the API call to the endpoint to get the prompts and update the state
-    console.log("searchParams", searchParams);
     if (prompts.length === 0) {
-      get_gpt_data(
-        searchParams.get("context") ||
-          "List 10 ways in which social media will be improved by blockchain"
-      );
+      const queryPrompts = (searchParams.get("prompts") || "")
+        .split("||")
+        .filter((x) => !!x);
+      console.log("queryPrompts", queryPrompts);
+      if (Array.isArray(queryPrompts) && queryPrompts.length) {
+        console.log("setting prompts");
+        setPrompts(queryPrompts);
+      } else {
+        get_gpt_data(
+          searchParams.get("context") ||
+            `List 10 ways in which ${initiative} will be improved by blockchain`
+        );
+      }
     }
-    console.log("LOOK HERE");
-    console.log(address);
-    console.log(userRole);
     if (userRole === config.ADMIN_WALLET_1) {
       get_user_data(offset);
     }
