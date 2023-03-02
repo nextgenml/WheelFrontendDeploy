@@ -27,7 +27,6 @@ const testConfig = {
   CHAT_BOT_URL: "https://chatbot.nexgenml.com",
   ADMIN_WALLET_1: "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
   PAID_AMOUNT: 10,
-  CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
   API_ENDPOINT: "http://localhost:8000",
   ADMIN_WALLET: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };
