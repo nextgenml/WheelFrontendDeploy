@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import config from "../../config";
 
-const Initiative = ({ prompt, index }) => {
+const SaveInitiative = ({ prompt, index }) => {
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(false);
@@ -200,4 +200,4 @@ const Initiative = ({ prompt, index }) => {
     </div>
   );
 };
-export default Initiative;
+export default SaveInitiative;

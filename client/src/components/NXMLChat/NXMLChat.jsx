@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAccount } from "wagmi";
 import config from "../../config";
 import ReactPaginate from "react-paginate";
-import Initiative from "./Initiative";
+import Initiative from "./SaveInitiative";
 
 const BlogForm = () => {
   const { address } = useAccount();
@@ -108,7 +108,7 @@ const BlogForm = () => {
 
     let result = await response.json();
     // console.log(result);
-    if (response.status === 200) {
+    if (response.ok) {
       notify(result.msg, "success");
     } else {
       notify(result.msg, "danger");

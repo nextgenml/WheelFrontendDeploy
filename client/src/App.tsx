@@ -4,7 +4,7 @@
 // import "react-toastify/dist/ReactToastify.css";
 // import SpinAndWin from "./SpinAndWin";
 //import { Routes, Route } from "react-router-dom";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Container } from "@mui/material";
 import Home from "./components/Home/Home";
 import Features from "./components/Features/Features";
