@@ -18,7 +18,6 @@ const savePromotion = async (data) => {
 const updatePromotionAdmin = async (data) => {
   const query = `update promotion_requests set status = ?, mark_as_done_by_admin = ?, reason = ? where id = ?;`;
 
-  console.log("data.reason", data.reason);
   return await runQueryAsync(query, [
     data.status,
     data.status === "accepted" ? 1 : 0,
@@ -26,14 +25,24 @@ const updatePromotionAdmin = async (data) => {
     data.requestId,
   ]);
 };
+const updatePromotion = async (id, wallet_id) => {
+  const query = `update promotion_requests set mark_as_done_by_user = ? where id = ? and payer_wallet_id = ?;`;
+
+  return await runQueryAsync(query, [1, id, wallet_id]);
+};
 const getAppliedPromotions = async (walletId, pageSize, offset) => {
   const query = `select * from promotion_requests where payer_wallet_id = ? order by id desc limit ? offset ?;`;
 
-  return await runQueryAsync(query, [walletId, pageSize, offset]);
+  const data = await runQueryAsync(query, [walletId, pageSize, offset]);
+
+  const query1 = `select count(1) as count from promotion_requests where payer_wallet_id = ?`;
+  const count = await runQueryAsync(query1, [walletId]);
+
+  return [data, count[0].count];
 };
 
 const getAppliedPromotionsAdmin = async (pageSize, offset) => {
-  const query = `select * from promotion_requests where status = 'requested' order by id desc limit ? offset ?;`;
+  const query = `select * from promotion_requests where status = 'requested' and mark_as_done_by_user = 1 order by id desc limit ? offset ?;`;
 
   const data = await runQueryAsync(query, [pageSize, offset]);
 
@@ -48,4 +57,5 @@ module.exports = {
   updatePromotionAdmin,
   getAppliedPromotions,
   getAppliedPromotionsAdmin,
+  updatePromotion,
 };

@@ -103,6 +103,28 @@ export default function PromotionsList({ address, count }) {
     setSelectedReason("");
   };
 
+  const onUserUpdate = async (requestId) => {
+    const res = await fetch(`${config.API_ENDPOINT}/mark-promotion-done-user`, {
+      method: "POST",
+      body: JSON.stringify({
+        walletId: address,
+        requestId,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      alert("Saved successfully");
+    } else {
+      const error = await res.json();
+      alert(
+        error.message || "Something went wrong. Please try again after sometime"
+      );
+    }
+    fetchData();
+  };
+
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
       <TableContainer component={Paper} sx={{ p: 2 }}>
@@ -158,23 +180,23 @@ export default function PromotionsList({ address, count }) {
                     </TableCell>
                   </>
                 ) : (
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={row.is_recursive_algo}
-                          onChange={(e) =>
-                            onUpdate(
-                              row.is_active ? "enable" : "disable",
-                              e.target.checked,
-                              row.id
-                            )
+                  <>
+                    <TableCell>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              disabled={row.mark_as_done_by_user}
+                              checked={!!row.mark_as_done_by_user}
+                              onChange={(e) => onUserUpdate(row.id)}
+                            />
                           }
+                          label="Paid"
                         />
-                      }
-                      label="Recursive Algo"
-                    />
-                  </FormGroup>
+                      </FormGroup>
+                    </TableCell>
+                    <TableCell></TableCell>
+                  </>
                 )}
               </TableRow>
             ))}
