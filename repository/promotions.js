@@ -15,9 +15,10 @@ const savePromotion = async (data) => {
   ]);
 };
 
-const updatePromotion = async (data) => {
+const updatePromotionAdmin = async (data) => {
   const query = `update promotion_requests set status = ?, mark_as_done_by_admin = ?, reason = ? where id = ?;`;
 
+  console.log("data.reason", data.reason);
   return await runQueryAsync(query, [
     data.status,
     data.status === "accepted" ? 1 : 0,
@@ -44,7 +45,7 @@ const getAppliedPromotionsAdmin = async (pageSize, offset) => {
 
 module.exports = {
   savePromotion,
-  updatePromotion,
+  updatePromotionAdmin,
   getAppliedPromotions,
   getAppliedPromotionsAdmin,
 };

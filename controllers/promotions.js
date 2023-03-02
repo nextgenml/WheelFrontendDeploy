@@ -3,7 +3,6 @@ const logger = require("../logger");
 const promotionsRepo = require("../repository/promotions");
 
 const savePromotionRequest = async (req, res) => {
-  console.log("req.body", req.body);
   try {
     if (
       !req.body.payer_wallet_id ||
@@ -43,7 +42,8 @@ const approvePromotionRequest = async (req, res) => {
         statusCode: 401,
         message: "Unauthorized",
       });
-    await promotionsRepo.updatePromotion(req.body);
+    console.log("req.body", req.body);
+    await promotionsRepo.updatePromotionAdmin(req.body);
     return res.status(200).json({
       message: "Saved successfully",
     });
