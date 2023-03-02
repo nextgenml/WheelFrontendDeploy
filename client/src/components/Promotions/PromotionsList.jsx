@@ -31,6 +31,7 @@ const headers = [
   "Status",
   "Reason",
   "",
+  "",
 ];
 
 export default function PromotionsList({ address, count }) {
@@ -85,7 +86,7 @@ export default function PromotionsList({ address, count }) {
       },
     });
     if (res.ok) {
-      alert("Campaign saved");
+      alert("Saved successfully");
     } else {
       const error = await res.json();
       alert(
@@ -99,6 +100,7 @@ export default function PromotionsList({ address, count }) {
     fetchData();
     setAnchorEl(null);
     setSelectedRow({});
+    setSelectedReason("");
   };
 
   return (
@@ -131,8 +133,8 @@ export default function PromotionsList({ address, count }) {
                 <TableCell>{row.status}</TableCell>
                 <TableCell>{row.reason}</TableCell>
                 {address === config.ADMIN_WALLET ? (
-                  <TableCell>
-                    {row.status === "requested" ? (
+                  <>
+                    <TableCell>
                       <Button
                         color="success"
                         onClick={(e) => {
@@ -142,17 +144,19 @@ export default function PromotionsList({ address, count }) {
                       >
                         Approve
                       </Button>
-                    ) : (
+                    </TableCell>
+                    <TableCell>
                       <Button
-                        onClick={() =>
-                          onUpdate("rejected", row.is_recursive_algo, row.id)
-                        }
+                        onClick={(e) => {
+                          setSelectedRow({ id: row.id, action: "rejected" });
+                          setAnchorEl(e.currentTarget);
+                        }}
                         color="error"
                       >
                         Reject
                       </Button>
-                    )}
-                  </TableCell>
+                    </TableCell>
+                  </>
                 ) : (
                   <FormGroup>
                     <FormControlLabel
