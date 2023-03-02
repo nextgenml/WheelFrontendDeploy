@@ -35,6 +35,7 @@ const { runQueryAsync } = require("./utils/spinwheelUtil");
 const socialSharingController = require("./controllers/socialSharing");
 const quizController = require("./controllers/quizzes");
 const walletController = require("./controllers/wallet");
+const promotionsController = require("./controllers/promotions");
 
 const app = express();
 
@@ -326,6 +327,12 @@ app.get("/spin-participants", async (req, res) => {
 app.get("/time-now", (req, res) => {
   res.send(new Date());
 });
+
+// blog routes
+app.post("/save-promotion", promotionsController.savePromotionRequest);
+app.post("/approve-promotion", promotionsController.approvePromotionRequest);
+app.get("/promotions", promotionsController.getAppliedRequests);
+app.get("/promotions-admin", promotionsController.getAppliedRequestsAdmin);
 
 // social sharing routes
 app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
