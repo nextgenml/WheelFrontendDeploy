@@ -136,26 +136,19 @@ const BlogForm = () => {
 
   let userRole = address;
   useEffect(() => {
-    // Make the API call to the endpoint to get the prompts and update the state
-    if (prompts.length === 0) {
+    if (!prompts.length) {
       const queryPrompts = (searchParams.get("prompts") || "")
         .split("||")
         .filter((x) => !!x);
-      console.log("queryPrompts", queryPrompts);
-      if (Array.isArray(queryPrompts) && queryPrompts.length) {
-        console.log("setting prompts");
+      if (Array.isArray(queryPrompts) && queryPrompts.length)
         setPrompts(queryPrompts);
-      } else {
+      else
         get_gpt_data(
           searchParams.get("context") ||
             `List 10 ways in which ${initiative} will be improved by blockchain`
         );
-      }
     }
-    if (userRole === config.ADMIN_WALLET_1) {
-      get_user_data(offset);
-    }
-    // console.log(userData);
+    if (userRole === config.ADMIN_WALLET_1) get_user_data(offset);
   }, []);
 
   useEffect(() => {
