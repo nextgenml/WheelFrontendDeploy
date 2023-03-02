@@ -47,12 +47,12 @@ const distributeReward = async (address, amount) => {
   }
 };
 
-const processPrizes = async (winners) => {
+const processPrizes = async (winners, callback) => {
   for (const item of winners) {
     logger.info(`transfer to ${item.walletId}, reward: ${item.prize}`);
     const success = await distributeReward(item.walletId, item.prize);
     if (success) {
-      await markWinnerAsPaid(item.id);
+      await callback(item.id);
       logger.info(`processPrizes reward distribution: completed: ${item.id}`);
     } else
       logger.error(

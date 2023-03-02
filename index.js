@@ -3,8 +3,19 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const moment = require("moment");
-require("./manager/spinwheelManager");
-require("./manager/walletManager");
+require("./manager/spinwheel");
+require("./manager/wallet");
+const multer = require("multer");
+const { static } = require("express");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
+  },
+});
+var upload = multer({ storage: storage });
 
 const {
   getParticipants,
@@ -13,13 +24,18 @@ const {
   getSpinParticipants,
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
-const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
+const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
 const mysql = require("mysql");
 const { v4: uuidv4 } = require("uuid");
 const { dbConnection } = require("./dbconnect");
 const { runQueryAsync } = require("./utils/spinwheelUtil");
+
+const socialSharingController = require("./controllers/socialSharing");
+const quizController = require("./controllers/quizzes");
+const walletController = require("./controllers/wallet");
+
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
@@ -311,9 +327,30 @@ app.get("/time-now", (req, res) => {
   res.send(new Date());
 });
 
-app.use("/", express.static(path.join(__dirname, "build")));
+// social sharing routes
+app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
+app.get("/social-sharing-chores", socialSharingController.getChoresByType);
+app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
+app.get("/campaigns", socialSharingController.getCampaigns);
+app.post("/update-campaign", socialSharingController.updateCampaign);
+app.post(
+  "/mark-chore-as-done",
+  socialSharingController.markChoreAsCompletedByUser
+);
 
+// quizzes routes
+app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
+app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
+app.post("/save-quiz-answers", quizController.saveAnswers);
+app.get("/quizzes", quizController.getAllQuizzes);
+
+// wallet routes
+app.get("/get-wallet-details", walletController.getWalletDetails);
+app.post("/update-alias", walletController.updateAlias);
+
+app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
+app.use("/images/", static("./uploads/"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));

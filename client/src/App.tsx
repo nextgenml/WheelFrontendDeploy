@@ -13,24 +13,34 @@ import Tokenomics from "./components/Tokenomics/Tokenomics";
 import BuyNextGen from "./components/Buy NextGen/BuyNextGen";
 import Community from "./components/Community/Community";
 import Footer from "./components/Footer/Footer";
-import Utilities from "./components/Utilities/Utilities";
-import Giveaway from "./components/Giveaway/Giveaway";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
 import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
 import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import NXMLChat from "./components/NXMLChat/NXMLChat";
-import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
+import SocialSharing from "./components/SocialSharing/SocialSharing";
+import Campaigns from "./components/Campaigns/Campaigns";
+import Profile from "./components/Profile/Profile";
+import Quizzes from "./components/Quizzes/Quizzes";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function App() {
-  const { isConnected } = useAccount();
-  const navigate = useNavigate();
+  const location = useLocation();
+  const [socialSharing, setSocialSharing] = useState(false);
+  const blackBgPages = ["/spin-wheel", "/claim-distribution", "/spin-wheel"];
+
+  useEffect(() => {
+    const includes = blackBgPages.includes(location.pathname);
+    document.body.style.backgroundColor = includes ? "black" : "white";
+    setSocialSharing(!includes);
+  }, [location.pathname]);
+
   return (
     <>
-      <Header />
+      <Header socialSharing={socialSharing} />
       <Routes>
         <Route
           path="/"
@@ -49,6 +59,11 @@ function App() {
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} /> */}
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
+        <Route path="/spin-wheel" element={<SpinAndWin />} />
+        <Route path="/" element={<SocialSharing />} />
+        <Route path="/user-campaigns" element={<Campaigns />} />
+        <Route path="/user-profile" element={<Profile />} />
+        <Route path="/user-quizzes" element={<Quizzes />} />
       </Routes>
       <Footer />
     </>

@@ -40,6 +40,51 @@ const generateRandomString = (length) => {
   return result;
 };
 
+const shuffleArray = (array) => {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+};
+
+const intersectionOfArrays = (lists) => {
+  var result = [];
+
+  for (var i = 0; i < lists.length; i++) {
+    var currentList = lists[i];
+    for (var y = 0; y < currentList.length; y++) {
+      var currentValue = currentList[y];
+      if (result.indexOf(currentValue) === -1) {
+        var existsInAll = true;
+        for (var x = 0; x < lists.length; x++) {
+          if (lists[x].indexOf(currentValue) === -1) {
+            existsInAll = false;
+            break;
+          }
+        }
+        if (existsInAll) {
+          result.push(currentValue);
+        }
+      }
+    }
+  }
+  return result;
+};
+
+const roundTo2Decimals = (num) => Math.round(num * 100) / 100;
 module.exports = {
   dateToString,
   stringToDate,
@@ -48,4 +93,7 @@ module.exports = {
   timer,
   generateRandomString,
   generateRandomNumber,
+  shuffleArray,
+  intersectionOfArrays,
+  roundTo2Decimals,
 };
