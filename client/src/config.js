@@ -17,6 +17,7 @@ const prodConfig = {
   CHAT_BOT_URL: "https://backend.chatbot.nexgenml.com",
   API_ENDPOINT: "https://test.nexgenml.com",
   ADMIN_WALLET: "0x0030B1331Dce886e332Ac1f3ed17d3018C542114",
+  ADMIN_WALLET_1: "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
 };
 const testConfig = {
   AIR_DROP_ADDRESS: "0x3097e4ae7190633959a6f106AcAa465B56748396",

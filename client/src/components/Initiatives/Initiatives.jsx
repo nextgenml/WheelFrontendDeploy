@@ -3,6 +3,7 @@ import React from "react";
 import AccordionElement from "./accordion";
 import NXMLChat from "../NXMLChat/NXMLChat";
 import { Redirect } from "react-router-dom";
+import CustomizeBlogs from "../CustomizeBlogs/CustomizeBlogs";
 
 const launchDate = "2022-12-18 12:00:00";
 export default function Initiatives() {
@@ -150,6 +151,7 @@ export default function Initiatives() {
           +moment(launchDate).add(0, "days").format("x") > +moment().format("x")
         }
       />
+      <CustomizeBlogs />
     </>
   );
 }
