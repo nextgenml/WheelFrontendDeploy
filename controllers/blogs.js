@@ -9,29 +9,16 @@ const connection = dbConnection;
 
 const updateBlogData = async (req, res) => {
   try {
-    let { validatedFlag, paidFlag, transactionID } = req.body;
+    let { validatedFlag, paidFlag, transactionID, promoted } = req.body;
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
       return res.status(400).json({ msg: "Invalid data" });
     }
-    let response;
 
-    updateRecords = () => {
-      return new Promise((resolve, reject) => {
-        connection.query(
-          `UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `,
-          async (error, elements) => {
-            if (error) {
-              // return reject(error);
-              console.log(error);
-              return res.status(500).json({ msg: "Internal server error" });
-            }
-            return resolve(elements);
-          }
-        );
-      });
-    };
+    await runQueryAsync(
+      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ? WHERE transactionID = ?`,
+      [validatedFlag, paidFlag, promoted, transactionID]
+    );
 
-    response = await updateRecords();
     return res.status(200).json({ msg: "Data updated successfully" });
   } catch (error) {
     logger.error(`updateBlogData error: ${error}`);
@@ -41,7 +28,6 @@ const updateBlogData = async (req, res) => {
 
 const getCustomBlogs = async (req, res) => {
   try {
-    console.log("req.query", req.query);
     const { walletId, pageSize, pageNo, search } = req.query;
 
     if (!walletId) return res.status(400).json({ msg: "Invalid data" });

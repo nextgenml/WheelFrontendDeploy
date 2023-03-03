@@ -95,11 +95,12 @@ const BlogForm = () => {
     }
   }
 
-  async function updateFlagData(transactionID, vf, pf) {
+  async function updateFlagData(transactionID, vf, pf, promoted) {
     let data = {
       transactionID: transactionID,
       validatedFlag: vf,
       paidFlag: pf,
+      promoted,
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
     let response = await fetch(url, {
@@ -121,12 +122,8 @@ const BlogForm = () => {
     }
   }
 
-  async function updateData(flagType, user, index) {
-    if (flagType === "vf") {
-      updateFlagData(user.transactionID, !user.validated_flag, user.paid_flag);
-    } else {
-      updateFlagData(user.transactionID, user.validated_flag, !user.paid_flag);
-    }
+  async function updateData(user, paid, validated, promoted) {
+    await updateFlagData(user.transactionID, paid, validated, promoted);
     get_user_data(offset);
   }
 
@@ -138,8 +135,9 @@ const BlogForm = () => {
   };
 
   let userRole = address;
-  const fetchBlogs =
-    userRole === config.ADMIN_WALLET_1 || initiative === "blog-customization";
+  const isAdmin = userRole === config.ADMIN_WALLET_1;
+  const isCustom = initiative === "blog-customization";
+
   useEffect(() => {
     if (!prompts.length) {
       const queryPrompts = (searchParams.get("prompts") || "")
@@ -153,7 +151,7 @@ const BlogForm = () => {
             `List 10 ways in which ${initiative} will be improved by blockchain`
         );
     }
-    if (fetchBlogs) get_user_data(offset);
+    if (isAdmin || isCustom) get_user_data(offset);
   }, []);
 
   useEffect(() => {
@@ -194,48 +192,47 @@ const BlogForm = () => {
         ))
       )}
 
-      {fetchBlogs && (
+      {(isCustom || isAdmin) && (
         <>
           <div className="p-2 col-md-12 col-lg-12">
             <h4 className="text-center" style={{ color: "white" }}>
               Blog Data
             </h4>
-            {address === config.ADMIN_WALLET_1 &&
-              initiative !== "blog-customization" && (
-                <form>
-                  <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="search"
-                      placeholder="search wallet"
-                      value={walletAdd}
-                      onChange={(e) => setWalletAdd(e.target.value)}
-                    />
-                  </div>
-                  <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
-                    <button
-                      type="button"
-                      disabled={isSubmit}
-                      style={{ marginRight: 5 }}
-                      className="btn btn-primary"
-                      onClick={onSubmit}
-                    >
-                      Submit
-                    </button>
-                    <input
-                      type="reset"
-                      className="btn btn-primary"
-                      disabled={isSubmit}
-                      onClick={() => {
-                        setWalletAdd("");
-                        resetData();
-                      }}
-                      value="Reset"
-                    />
-                  </div>
-                </form>
-              )}
+            {isAdmin && (
+              <form>
+                <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="search"
+                    placeholder="search wallet"
+                    value={walletAdd}
+                    onChange={(e) => setWalletAdd(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
+                  <button
+                    type="button"
+                    disabled={isSubmit}
+                    style={{ marginRight: 5 }}
+                    className="btn btn-primary"
+                    onClick={onSubmit}
+                  >
+                    Submit
+                  </button>
+                  <input
+                    type="reset"
+                    className="btn btn-primary"
+                    disabled={isSubmit}
+                    onClick={() => {
+                      setWalletAdd("");
+                      resetData();
+                    }}
+                    value="Reset"
+                  />
+                </div>
+              </form>
+            )}
             {userData === 0 ? (
               <div className="d-flex justify-content-center">
                 {/* <div className="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
@@ -254,9 +251,14 @@ const BlogForm = () => {
                       <th scope="col">Blog</th>
                       <th scope="col">Link</th>
                       <th scope="col">Create Date</th>
-                      <th scope="col">Validated Flag</th>
                       <th scope="col">Paid Amount</th>
-                      <th scope="col">Paid Flag</th>
+                      {isCustom && <th scope="col">Promote blog</th>}
+                      {isAdmin && (
+                        <>
+                          <th scope="col">Validated Flag</th>
+                          <th scope="col">Paid Flag</th>
+                        </>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -270,30 +272,67 @@ const BlogForm = () => {
                           <td>{user.blog}</td>
                           <td>{user.link}</td>
                           <td>{user.create_date}</td>
-                          <td className="text-center">
-                            <div className="form-check form-switch">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                role="switch"
-                                checked={user.validated_flag}
-                                onChange={() => updateData("vf", user, index)}
-                              />
-                            </div>
-                          </td>
                           <td>{user.paid_amount}</td>
-                          <td className="text-center">
-                            {/* <label onClick={() => updateData("pf", user, index)}>{user.paid_flag ? "TRUE" : "FALSE"}</label> */}
-                            <div className="form-check form-switch">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                role="switch"
-                                checked={user.paid_flag}
-                                onChange={() => updateData("pf", user, index)}
-                              />
-                            </div>
-                          </td>
+                          {isCustom && (
+                            <td className="text-center">
+                              <div className="form-check form-switch">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  role="switch"
+                                  checked={user.promoted}
+                                  onChange={(e) =>
+                                    updateData(
+                                      user,
+                                      user.paid_flag,
+                                      user.validated_flag,
+                                      e.target.checked
+                                    )
+                                  }
+                                />
+                              </div>
+                            </td>
+                          )}
+                          {isAdmin && (
+                            <>
+                              <td className="text-center">
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={user.validated_flag}
+                                    onChange={(e) =>
+                                      updateData(
+                                        user,
+                                        user.paid_flag,
+                                        e.target.checked,
+                                        user.promoted
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                              <td className="text-center">
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={user.paid_flag}
+                                    onChange={(e) =>
+                                      updateData(
+                                        user,
+                                        e.target.checked,
+                                        user.validated_flag,
+                                        user.promoted
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                            </>
+                          )}
                         </tr>
                       );
                     })}
