@@ -136,6 +136,7 @@ const saveBlogData = async (req, res) => {
   ) {
     return res.status(400).json({ msg: "All fields are required" });
   }
+  // Blogs limit validation
   if (initiative === "blog-customization") {
     const [valid, message] = await promotionsRepo.isEligibleForBlogs(
       wallet_address
@@ -143,6 +144,7 @@ const saveBlogData = async (req, res) => {
     if (!valid) return res.status(401).json({ msg: message });
   }
 
+  // Stop same prompt being saved
   const results = await runQueryAsync(
     "select 1 from saved_prompts where wallet_address = ? and prompt = ?",
     [wallet_address, prompt]
@@ -154,8 +156,6 @@ const saveBlogData = async (req, res) => {
   }
 
   const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-  // save in DB
   connection.query(
     `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
