@@ -14,7 +14,7 @@ const BlogForm = () => {
   const { address } = useAccount();
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
-  const [WalletAdd, setWalletAdd] = useState();
+  const [walletAdd, setWalletAdd] = useState();
   const [offset, setOffset] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const pageSize = 10;
@@ -66,9 +66,12 @@ const BlogForm = () => {
   }
 
   async function get_user_data(offset) {
-    const url = `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
-      reset || WalletAdd === undefined ? "" : WalletAdd
-    }&offset=${offset}`;
+    const url =
+      initiative === "blog-customization"
+        ? `${config.API_ENDPOINT}/get-custom-blogs?pageNo=${pageNo}&pageSize=${pageSize}&walletId=${address}`
+        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
+            reset || !walletAdd ? "" : walletAdd
+          }&offset=${offset}&walletId=${address}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -135,6 +138,8 @@ const BlogForm = () => {
   };
 
   let userRole = address;
+  const fetchBlogs =
+    userRole === config.ADMIN_WALLET_1 || initiative === "blog-customization";
   useEffect(() => {
     if (!prompts.length) {
       const queryPrompts = (searchParams.get("prompts") || "")
@@ -148,14 +153,14 @@ const BlogForm = () => {
             `List 10 ways in which ${initiative} will be improved by blockchain`
         );
     }
-    if (userRole === config.ADMIN_WALLET_1) get_user_data(offset);
+    if (fetchBlogs) get_user_data(offset);
   }, []);
 
   useEffect(() => {
-    if (WalletAdd) {
+    if (walletAdd) {
       setIsSubmit(false);
     }
-  }, [WalletAdd]);
+  }, [walletAdd]);
 
   function onSubmit() {
     get_user_data(offset);
@@ -189,44 +194,48 @@ const BlogForm = () => {
         ))
       )}
 
-      {address === config.ADMIN_WALLET_1 && (
+      {fetchBlogs && (
         <>
           <div className="p-2 col-md-12 col-lg-12">
-            <h4 className="text-center">Blog Data</h4>
-            <form>
-              {/* <div class="row"> */}
-              <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="search"
-                  placeholder="search wallet"
-                  value={WalletAdd}
-                  onChange={(e) => setWalletAdd(e.target.value)}
-                />
-              </div>
-              <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
-                <button
-                  type="button"
-                  disabled={isSubmit}
-                  style={{ marginRight: 5 }}
-                  className="btn btn-primary"
-                  onClick={onSubmit}
-                >
-                  Submit
-                </button>
-                <input
-                  type="reset"
-                  className="btn btn-primary"
-                  disabled={isSubmit}
-                  onClick={() => {
-                    setWalletAdd("");
-                    resetData();
-                  }}
-                  value="Reset"
-                />
-              </div>
-            </form>
+            <h4 className="text-center" style={{ color: "white" }}>
+              Blog Data
+            </h4>
+            {address === config.ADMIN_WALLET_1 &&
+              initiative !== "blog-customization" && (
+                <form>
+                  <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="search"
+                      placeholder="search wallet"
+                      value={walletAdd}
+                      onChange={(e) => setWalletAdd(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
+                    <button
+                      type="button"
+                      disabled={isSubmit}
+                      style={{ marginRight: 5 }}
+                      className="btn btn-primary"
+                      onClick={onSubmit}
+                    >
+                      Submit
+                    </button>
+                    <input
+                      type="reset"
+                      className="btn btn-primary"
+                      disabled={isSubmit}
+                      onClick={() => {
+                        setWalletAdd("");
+                        resetData();
+                      }}
+                      value="Reset"
+                    />
+                  </div>
+                </form>
+              )}
             {userData === 0 ? (
               <div className="d-flex justify-content-center">
                 {/* <div className="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">

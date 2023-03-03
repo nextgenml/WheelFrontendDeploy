@@ -26,5 +26,3 @@ yarn-error.log*
 
 /logs/*.log
 logs/app.log
-
-config.env

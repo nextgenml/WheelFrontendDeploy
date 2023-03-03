@@ -1,5 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
+const config = require("../config");
 const { dbConnection } = require("../dbconnect");
+const logger = require("../logger");
+const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const connection = dbConnection;
@@ -31,6 +34,28 @@ const updateBlogData = async (req, res) => {
     response = await updateRecords();
     return res.status(200).json({ msg: "Data updated successfully" });
   } catch (error) {
+    logger.error(`updateBlogData error: ${error}`);
+    return res.status(500).json({ msg: error });
+  }
+};
+
+const getCustomBlogs = async (req, res) => {
+  try {
+    console.log("req.query", req.query);
+    const { walletId, pageSize, pageNo, search } = req.query;
+
+    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
+
+    const results = await blogsRepo.getCustomBlogs(
+      walletId,
+      walletId === config.ADMIN_WALLET,
+      search,
+      parseInt(pageSize) || 10,
+      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
+    );
+    return res.json({ data: results });
+  } catch (error) {
+    logger.error(`getCustomBlogs error: ${error}`);
     return res.status(500).json({ msg: error });
   }
 };
@@ -43,7 +68,7 @@ const getBlogData = async (req, res) => {
     : "";
   var totalResult, results;
 
-  if (req.query.offset >= 0) {
+  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET) {
     offset = req.query.offset;
   } else {
     return res.status(400).json({ msg: "Invalid data" });
@@ -172,8 +197,7 @@ const saveBlogData = async (req, res) => {
     ],
     (error, results) => {
       if (error) {
-        console.log("query error");
-        console.log(error);
+        logger.error(`saveBlogData error: ${error}`);
         return res.status(500).json({ msg: "Internal server error" });
         // return res.status(500).send(error);
       }
@@ -185,4 +209,5 @@ module.exports = {
   updateBlogData,
   getBlogData,
   saveBlogData,
+  getCustomBlogs,
 };
