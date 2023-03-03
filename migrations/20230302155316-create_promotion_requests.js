@@ -33,9 +33,6 @@ module.exports = {
       mark_as_done_by_user: {
         type: Sequelize.BOOLEAN,
       },
-      mark_as_done_by_admin: {
-        type: Sequelize.BOOLEAN,
-      },
       status: {
         type: Sequelize.STRING(255),
         allowNull: false,

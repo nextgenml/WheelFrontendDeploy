@@ -1,5 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const { dbConnection } = require("../dbconnect");
+const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const connection = dbConnection;
 
@@ -135,7 +136,12 @@ const saveBlogData = async (req, res) => {
   ) {
     return res.status(400).json({ msg: "All fields are required" });
   }
-  const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+  if (initiative === "blog-customization") {
+    const [valid, message] = await promotionsRepo.isEligibleForBlogs(
+      wallet_address
+    );
+    if (!valid) return res.status(401).json({ msg: message });
+  }
 
   const results = await runQueryAsync(
     "select 1 from saved_prompts where wallet_address = ? and prompt = ?",
@@ -143,9 +149,12 @@ const saveBlogData = async (req, res) => {
   );
   if (results.length) {
     return res
-      .status(500)
+      .status(400)
       .json({ msg: "Record already saved. You cannot save again" });
   }
+
+  const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
+
   // save in DB
   connection.query(
     `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
