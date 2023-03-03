@@ -41,7 +41,7 @@ app.put("/update-blog-data", async (req, res) => {
           async (error, elements) => {
             if (error) {
               // return reject(error);
-              console.log(error);
+              logger.error(`error in update-blog-data: ${error}`);
               return res.status(500).json({ msg: "Internal server error" });
             }
             return resolve(elements);
@@ -187,8 +187,7 @@ app.post("/save-blog-data", async (req, res) => {
     ],
     (error, results) => {
       if (error) {
-        console.log("query error");
-        console.log(error);
+        logger.error(`error in save-blog-data: ${error} `);
         return res.status(500).json({ msg: "Internal server error" });
         // return res.status(500).send(error);
       }
