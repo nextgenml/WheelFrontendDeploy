@@ -43,7 +43,7 @@ export default function Community() {
             flexWrap: { lg: "nowrap", md: "wrap" },
           }}
         >
-          <a href="#" target="_blank">
+          <a href="https://t.me/+JMGorMX41tM2NGIx" target="_blank">
             <IconButton>
               <TelegramIcon
                 sx={{
@@ -53,7 +53,7 @@ export default function Community() {
               />
             </IconButton>
           </a>
-          <a href="#" target="_blank">
+          <a href="https://twitter.com/nextgen_ml" target="_blank">
             <IconButton>
               <TwitterIcon
                 sx={{
