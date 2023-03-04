@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import config from "../../config";
+import { updateBlogCount } from "../../Utils/Blog";
 
 const SaveInitiative = ({
   prompt,
@@ -14,6 +15,8 @@ const SaveInitiative = ({
   isPromote,
   promotedWallet,
   promotedId,
+  getUserData,
+  getBlogStats,
 }) => {
   const { initiative } = useParams();
   const { address } = useAccount();
@@ -57,6 +60,10 @@ const SaveInitiative = ({
               `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
       );
       setIsCopyDisable(false);
+      if (isCustom) {
+        await updateBlogCount(address);
+        getBlogStats();
+      }
     } else {
       notify("Something went wrong. Please try again later", "error");
     }
@@ -101,8 +108,7 @@ const SaveInitiative = ({
     // send post request to save data in database
     if (
       ((isChecked && !isCopyDisable) || isPromote) &&
-      link &&
-      isValidUrl(link)
+      (!link || isValidUrl(link))
     ) {
       const url = `${config.API_ENDPOINT}/save-blog-data`;
       let response = await fetch(url, {
@@ -130,6 +136,7 @@ const SaveInitiative = ({
       let data = JSON.parse(res);
       if (response.ok) {
         notify(data.msg, "success");
+        if (getUserData) getUserData();
       } else {
         notify(data.msg, "danger");
       }

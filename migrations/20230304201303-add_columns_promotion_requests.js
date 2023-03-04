@@ -3,11 +3,10 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.addColumn(
-      "promotion_requests",
-      "used",
-      Sequelize.INTEGER
-    );
+    await queryInterface.addColumn("promotion_requests", "used", {
+      type: Sequelize.INTEGER,
+      defaultValue: 0,
+    });
   },
 
   async down(queryInterface) {

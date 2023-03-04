@@ -226,6 +226,8 @@ const BlogForm = () => {
           prompt={prompt}
           index={index}
           isCustom={isCustom}
+          getUserData={get_user_data}
+          getBlogStats={getBlogStats}
         />
       ));
   };

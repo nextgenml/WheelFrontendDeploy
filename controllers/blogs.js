@@ -193,14 +193,7 @@ const saveBlogData = async (req, res) => {
     promotedId,
   } = req.body;
 
-  if (
-    !wallet_address ||
-    !initiative ||
-    !prompt ||
-    !blog ||
-    !link ||
-    !paid_amount > 0
-  ) {
+  if (!wallet_address || !initiative || !prompt || !blog) {
     return res.status(400).json({ msg: "All fields are required" });
   }
   // Blogs limit validation

@@ -2,6 +2,19 @@ const config = require("../config");
 const logger = require("../logger");
 const promotionsRepo = require("../repository/promotions");
 
+const updateBlogCount = async (req, res) => {
+  try {
+    if (!req.body.walletId)
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Unauthorized",
+      });
+    await promotionsRepo.updateBlogCount(req.body.walletId);
+    return res.status(200).json({
+      message: "done",
+    });
+  } catch (error) {}
+};
 const savePromotionRequest = async (req, res) => {
   try {
     if (
@@ -158,4 +171,5 @@ module.exports = {
   getAppliedRequests,
   getAppliedRequestsAdmin,
   markAsDoneByUser,
+  updateBlogCount,
 };

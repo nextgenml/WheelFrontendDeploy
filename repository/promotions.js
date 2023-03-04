@@ -58,27 +58,34 @@ const getAppliedPromotionsAdmin = async (pageSize, offset) => {
 };
 
 const blogStats = async (walletId) => {
-  const query = `select sum(blogs_limit) as count from promotion_requests where payer_wallet_id = ? and status = 'approved';`;
+  const query = `select sum(blogs_limit) as blogs_limit, sum(used) as used from promotion_requests where payer_wallet_id = ? and status = 'approved';`;
 
   const data = await runQueryAsync(query, [walletId]);
-  const totalCount = data[0].count;
+  const record = data[0];
+  const isValid = record.blogs_limit > record.used;
 
+  return [
+    isValid,
+    isValid ? "" : "Unauthorized. Please check you have blogs limit",
+    record.blogs_limit,
+    record.used || 0,
+  ];
   // console.log("totalCount", totalCount);
-  if (totalCount <= 0)
-    return [false, "Unauthorized. Please apply for promotions first", 0, 0];
-  const query1 = `select count(1) as count from saved_prompts where wallet_address = ? and initiative = ?`;
-  const data1 = await runQueryAsync(query1, [walletId, "blog-customization"]);
-  const usedCount = data1[0].count;
+  // if (totalCount <= 0)
+  //   return [false, "Unauthorized. Please apply for promotions first", 0, 0];
+  // const query1 = `select count(1) as count from saved_prompts where wallet_address = ? and initiative = ?`;
+  // const data1 = await runQueryAsync(query1, [walletId, "blog-customization"]);
+  // const usedCount = data1[0].count;
 
-  // console.log("usedCount", usedCount);
-  if (usedCount >= totalCount)
-    return [
-      false,
-      "Unauthorized. You are exhausted the limit",
-      totalCount,
-      usedCount,
-    ];
-  return [true, "", totalCount, usedCount];
+  // // console.log("usedCount", usedCount);
+  // if (usedCount >= totalCount)
+  //   return [
+  //     false,
+  //     "Unauthorized. You are exhausted the limit",
+  //     totalCount,
+  //     usedCount,
+  //   ];
+  // return [true, "", totalCount, usedCount];
 };
 
 const promotionStats = async (walletId) => {
@@ -103,6 +110,12 @@ const promotionStats = async (walletId) => {
       usedCount,
     ];
   return [true, "", totalCount, usedCount];
+};
+
+const updateBlogCount = async (walletId) => {
+  const query =
+    "update promotion_requests set used = used + 1 where payer_wallet_id = ? and status = 'approved' ";
+  return await runQueryAsync(query, [walletId]);
 };
 
 const eligibleWallets = async (walletId) => {
@@ -141,4 +154,5 @@ module.exports = {
   updatePromotion,
   blogStats,
   promotionStats,
+  updateBlogCount,
 };
