@@ -476,7 +476,13 @@ const BlogForm = () => {
         />
       )}
       {showBlog && (
-        <ShowBlog currentRow={showBlog} onClose={() => setShowBlog(null)} />
+        <ShowBlog
+          currentRow={showBlog}
+          onClose={() => {
+            setShowBlog(null);
+            get_user_data(offset);
+          }}
+        />
       )}
     </Box>
   );

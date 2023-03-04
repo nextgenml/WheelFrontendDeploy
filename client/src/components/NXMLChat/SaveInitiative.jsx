@@ -163,6 +163,7 @@ const SaveInitiative = ({
               readOnly={true}
               value={isPromote ? content : result}
               style={{ height: "100px" }}
+              disabled={isPromote}
             ></textarea>
           </div>
           {address === config.ADMIN_WALLET_1 && (
