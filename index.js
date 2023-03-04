@@ -164,6 +164,7 @@ app.get("/promotions", promotionsController.getAppliedRequests);
 app.get("/promotions-admin", promotionsController.getAppliedRequestsAdmin);
 app.post("/mark-promotion-done-user", promotionsController.markAsDoneByUser);
 app.get("/get-custom-blogs", blogsController.getCustomBlogs);
+app.get("/promoted-blogs", blogsController.getPromotedBlogs);
 
 // social sharing routes
 app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);

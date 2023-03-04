@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require("uuid");
 const config = require("../config");
 const { dbConnection } = require("../dbconnect");
 const logger = require("../logger");
+const blogsManager = require("../manager/blogs");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
@@ -32,16 +33,30 @@ const getCustomBlogs = async (req, res) => {
 
     if (!walletId) return res.status(400).json({ msg: "Invalid data" });
 
-    const results = await blogsRepo.getCustomBlogs(
+    const [totalResult, data] = await blogsRepo.getCustomBlogs(
       walletId,
       walletId === config.ADMIN_WALLET,
       search,
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
     );
-    return res.json({ data: results });
+    return res.json({ data, totalResult });
   } catch (error) {
     logger.error(`getCustomBlogs error: ${error}`);
+    return res.status(500).json({ msg: error });
+  }
+};
+
+const getPromotedBlogs = async (req, res) => {
+  try {
+    console.log("reached jere");
+    const { walletId } = req.query;
+
+    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
+    const [data, total] = await blogsManager.getPromotedBlogs(walletId);
+    return res.json({ data, total });
+  } catch (error) {
+    logger.error(`getPromotedBlogs error: ${error}`);
     return res.status(500).json({ msg: error });
   }
 };
@@ -135,6 +150,8 @@ const saveBlogData = async (req, res) => {
     validated_flag,
     paid_amount,
     paid_flag,
+    promotedWallet,
+    promotedId,
   } = req.body;
 
   if (
@@ -168,7 +185,7 @@ const saveBlogData = async (req, res) => {
 
   const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
   connection.query(
-    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       transactionId,
       wallet_address,
@@ -180,6 +197,8 @@ const saveBlogData = async (req, res) => {
       validated_flag,
       paid_amount,
       paid_flag,
+      promotedWallet,
+      promotedId,
     ],
     (error, results) => {
       if (error) {
@@ -196,4 +215,5 @@ module.exports = {
   getBlogData,
   saveBlogData,
   getCustomBlogs,
+  getPromotedBlogs,
 };

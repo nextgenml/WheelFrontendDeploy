@@ -8,7 +8,13 @@ import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import config from "../../config";
 
-const SaveInitiative = ({ prompt }) => {
+const SaveInitiative = ({
+  prompt,
+  content,
+  isPromote,
+  promotedWallet,
+  promotedId,
+}) => {
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(false);
@@ -85,7 +91,11 @@ const SaveInitiative = ({ prompt }) => {
 
   async function onSubmitClick() {
     // send post request to save data in database
-    if (isChecked && !isCopyDisable && link && isValidUrl(link)) {
+    if (
+      ((isChecked && !isCopyDisable) || isPromote) &&
+      link &&
+      isValidUrl(link)
+    ) {
       const url = `${config.API_ENDPOINT}/save-blog-data`;
       let response = await fetch(url, {
         headers: {
@@ -97,11 +107,13 @@ const SaveInitiative = ({ prompt }) => {
           wallet_address: address,
           initiative,
           prompt,
-          blog: result,
+          blog: isPromote ? content : result,
           link,
           validated_flag: isValidatedFlag ? true : null,
           paid_amount: config.PAID_AMOUNT,
           paid_flag: isPaidFlag ? true : null,
+          promotedWallet,
+          promotedId,
         }),
         method: "POST",
       });
@@ -125,20 +137,23 @@ const SaveInitiative = ({ prompt }) => {
           <div className="col-sm-12">
             <span>{prompt}</span>
           </div>
-          <div className="col-sm-12">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onClick={() => setIsChecked(!isChecked)}
-            />
-            <label>&nbsp;&nbsp;Generate Blog</label>
-          </div>
+          {!isPromote && (
+            <div className="col-sm-12">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                onClick={() => setIsChecked(!isChecked)}
+              />
+              <label>&nbsp;&nbsp;Generate Blog</label>
+            </div>
+          )}
+
           <div className="col-sm-12">
             <textarea
               className="form-control"
               placeholder="Blog Content"
               readOnly={true}
-              value={result}
+              value={isPromote ? content : result}
               style={{ height: "100px" }}
             ></textarea>
           </div>
@@ -166,7 +181,7 @@ const SaveInitiative = ({ prompt }) => {
             <button
               type="button"
               className="btn btn-success"
-              disabled={isCopyDisable}
+              disabled={!isPromote && isCopyDisable}
               onClick={() => {
                 navigator.clipboard.writeText(result);
                 notify("Copied", "info");
@@ -188,7 +203,7 @@ const SaveInitiative = ({ prompt }) => {
           <div className="col-sm-12">
             <button
               type="button"
-              disabled={isSubmit}
+              disabled={!isPromote && isSubmit}
               className="btn btn-primary"
               onClick={onSubmitClick}
             >

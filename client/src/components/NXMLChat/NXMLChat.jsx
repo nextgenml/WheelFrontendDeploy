@@ -26,6 +26,7 @@ const BlogForm = () => {
   const [searchParams, _] = useSearchParams();
   const { initiative } = useParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
+  const [promotedBlogsCount, setPromotedBlogsCount] = useState(0);
   let reset = 0;
 
   // Toast alert
@@ -141,11 +142,12 @@ const BlogForm = () => {
 
   const getPromotionBlogs = async () => {
     const res = await fetch(
-      `${config.API_ENDPOINT}/get-promoted-blogs/walletId=${address}`
+      `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
     );
     if (res.ok) {
-      const { data } = await res.json();
+      const { data, total } = await res.json();
       setPromotedBlogs(data);
+      setPromotedBlogsCount(total);
     } else {
       notify("Something went wrong. Please try later", "danger");
     }
@@ -185,31 +187,53 @@ const BlogForm = () => {
     get_user_data(offset);
   }
 
+  const renderPrompts = () => {
+    if (isPromote)
+      return promotedBlogs.map((blog, index) => (
+        <Initiative
+          key={index}
+          prompt={blog.prompt}
+          content={blog.blog}
+          isPromote={isPromote}
+          promotedWallet={blog.wallet_address}
+          promotedId={blog.id}
+        />
+      ));
+    else
+      return prompts.map((prompt, index) => (
+        <Initiative key={index} prompt={prompt} index={index} />
+      ));
+  };
+  const finalPrompts = isPromote ? promotedBlogs : prompts;
   if (!isConnected)
     return (
       <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
         Please connect your wallet
       </Typography>
     );
+  if (!finalPrompts || !Array.isArray(finalPrompts))
+    return (
+      <div className="d-flex justify-content-center">
+        <div
+          className="spinner-border"
+          style={{
+            width: "3rem",
+            height: "3rem",
+            color: "white",
+            marginBottom: "16px",
+          }}
+          role="status"
+        ></div>
+      </div>
+    );
   return (
     <div>
-      {prompts && Array.isArray(prompts) ? (
-        prompts.map((prompt, index) => (
-          <Initiative key={index} prompt={prompt} index={index} />
-        ))
+      {finalPrompts.length > 0 ? (
+        renderPrompts()
       ) : (
-        <div className="d-flex justify-content-center">
-          <div
-            className="spinner-border"
-            style={{
-              width: "3rem",
-              height: "3rem",
-              color: "white",
-              marginBottom: "16px",
-            }}
-            role="status"
-          ></div>
-        </div>
+        <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+          No blogs for now. Please check back later
+        </Typography>
       )}
 
       {(isCustom || isAdmin) && (
@@ -255,8 +279,6 @@ const BlogForm = () => {
             )}
             {userData === 0 ? (
               <div className="d-flex justify-content-center">
-                {/* <div className="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
-      </div> */}
                 <label className="text-center">No Data Found</label>
               </div>
             ) : (
