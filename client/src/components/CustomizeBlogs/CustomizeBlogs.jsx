@@ -21,8 +21,6 @@ export default function CustomizeBlogs() {
       value: null,
     },
   ]);
-  useEffect(() => checkEligibility(), [isConnected]);
-  if (!isConnected) return null;
 
   const checkEligibility = async () => {
     const res = await fetch(
@@ -33,6 +31,12 @@ export default function CustomizeBlogs() {
       setEligible(isEligible);
     }
   };
+
+  useEffect(() => {
+    if (isConnected) checkEligibility();
+  }, [isConnected]);
+  if (!isConnected) return null;
+
   const handleAddMore = () => {
     setPrompts((prev) => [
       ...prev,

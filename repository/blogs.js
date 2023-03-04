@@ -36,14 +36,14 @@ const getPromotedBlogs = async (promotedWallets, walletId) => {
   console.log("promotedIds", promotedIds);
 
   const query =
-    "select * from saved_prompts where wallet_address in (?) and initiative = ? and (promoted is null or promoted = 0) and id not in (?) limit 10";
+    "select * from saved_prompts where wallet_address in (?) and initiative = ? and promoted = 1 and id not in (?) limit 10";
   const data = await runQueryAsync(query, [
     promotedWallets,
     "blog-customization",
     promotedIds,
   ]);
   const query1 =
-    "select count(1) as count from saved_prompts where wallet_address in (?) and initiative = ? and (promoted is null or promoted = 0) and id not in (?)";
+    "select count(1) as count from saved_prompts where wallet_address in (?) and initiative = ? and promoted = 1 and id not in (?)";
   const data1 = await runQueryAsync(query1, [
     promotedWallets,
     "blog-customization",
