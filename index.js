@@ -160,7 +160,7 @@ app.get("/time-now", (req, res) => {
 // blog routes
 app.post("/save-promotion", promotionsController.savePromotionRequest);
 app.post("/approve-promotion", promotionsController.approvePromotionRequest);
-app.get("/promotions", promotionsController.getAppliedRequests);
+app.get("/get-promotions", promotionsController.getAppliedRequests);
 app.get("/promotions-admin", promotionsController.getAppliedRequestsAdmin);
 app.post("/mark-promotion-done-user", promotionsController.markAsDoneByUser);
 app.get("/get-custom-blogs", blogsController.getCustomBlogs);

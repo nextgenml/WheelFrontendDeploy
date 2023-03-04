@@ -49,7 +49,7 @@ export default function PromotionsList({ address, count }) {
     if (config.ADMIN_WALLET === address)
       url = `${config.API_ENDPOINT}/promotions-admin?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
     else
-      url = `${config.API_ENDPOINT}/promotions?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
+      url = `${config.API_ENDPOINT}/get-promotions?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
     const res1 = await fetch(url);
     if (res1.ok) {
       const data = await res1.json();
