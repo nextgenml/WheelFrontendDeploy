@@ -214,14 +214,19 @@ const BlogForm = () => {
           key={index}
           prompt={blog.prompt}
           content={blog.blog}
-          isPromote={isPromote}
+          isPromote
           promotedWallet={blog.wallet_address}
           promotedId={blog.id}
         />
       ));
     else
       return prompts.map((prompt, index) => (
-        <Initiative key={index} prompt={prompt} index={index} />
+        <Initiative
+          key={index}
+          prompt={prompt}
+          index={index}
+          isCustom={isCustom}
+        />
       ));
   };
   const finalPrompts = isPromote ? promotedBlogs : prompts;
@@ -336,7 +341,8 @@ const BlogForm = () => {
                       {isCustom && <th scope="col">View Stats</th>}
                       <th scope="col">Link</th>
                       <th scope="col">Create Date</th>
-                      <th scope="col">Paid Amount</th>
+
+                      {!isCustom && <th scope="col">Paid Amount</th>}
                       {isCustom && <th scope="col">Promote blog</th>}
                       {isAdmin && (
                         <>
@@ -374,7 +380,7 @@ const BlogForm = () => {
                           )}
                           <td>{user.link}</td>
                           <td>{user.create_date}</td>
-                          <td>{user.paid_amount}</td>
+                          {!isCustom && <td>{user.paid_amount}</td>}
                           {isCustom && (
                             <td className="text-center">
                               <div className="form-check form-switch">

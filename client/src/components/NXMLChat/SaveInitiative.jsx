@@ -212,7 +212,7 @@ const SaveInitiative = ({
           <div className="col-sm-12">
             <button
               type="button"
-              disabled={!isPromote && isSubmit}
+              disabled={!isPromote && !isCustom && isSubmit}
               className="btn btn-primary"
               onClick={onSubmitClick}
             >
