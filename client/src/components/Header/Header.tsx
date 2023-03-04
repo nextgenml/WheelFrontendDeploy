@@ -34,6 +34,7 @@ export default function Header(props: Props) {
   //// { link: "buy-nextgen", title: "BUY" },
   // { link: "roadmap", title: "ROADMAP" },
   //{ link: "tokenomics", title: "TOKENOMICS" },
+  // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
 
   const headerLinks = props.socialSharing
     ? [
@@ -48,7 +49,6 @@ export default function Header(props: Props) {
         { link: "values", title: "VALUES" },
         { link: "services", title: "SERVICES" },
         { link: "utilities", title: "UTILITIES" },
-        { link: "converse_with_ai", title: "CONVERSE WITH AI" },
       ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {

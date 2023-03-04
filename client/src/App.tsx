@@ -51,7 +51,7 @@ function App() {
               <Tokenomics />
               <Initiatives />
               {/* <BuyNextGen /> */}
-              <ConverseWithAI />
+              {/* <ConverseWithAI /> */}
               <Community />
             </Container>
           }
