@@ -12,6 +12,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Box, Typography, Link } from "@mui/material";
 import BlogStats from "./BlogStats";
 import ShowBlog from "./ShowBlog";
+import { updateBlogCount } from "../../Utils/Blog";
 
 const BlogForm = () => {
   const { address, isConnected } = useAccount();
@@ -64,6 +65,10 @@ const BlogForm = () => {
       method: "POST",
     });
     if (response.ok) {
+      if (isCustom) {
+        await updateBlogCount(address);
+        getBlogStats();
+      }
       let data = process_data(await response.json());
       setPrompts(data);
     } else {
