@@ -9,10 +9,11 @@ import config from "../../config";
 import ReactPaginate from "react-paginate";
 import Initiative from "./SaveInitiative";
 import { useParams, useSearchParams } from "react-router-dom";
+import { Typography } from "@mui/material";
 
 const BlogForm = () => {
-  const { address } = useAccount();
-  const [prompts, setPrompts] = useState([]);
+  const { address, isConnected } = useAccount();
+  const [prompts, setPrompts] = useState();
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
   const [offset, setOffset] = useState(0);
@@ -24,7 +25,7 @@ const BlogForm = () => {
   // eslint-disable-next-line no-unused-vars
   const [searchParams, _] = useSearchParams();
   const { initiative } = useParams();
-
+  const [promotedBlogs, setPromotedBlogs] = useState([]);
   let reset = 0;
 
   // Toast alert
@@ -58,7 +59,6 @@ const BlogForm = () => {
     });
     if (response.ok) {
       let data = process_data(await response.json());
-      // add footer
       setPrompts(data);
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -137,20 +137,36 @@ const BlogForm = () => {
   let userRole = address;
   const isAdmin = userRole === config.ADMIN_WALLET_1;
   const isCustom = initiative === "blog-customization";
+  const isPromote = initiative === "promote-blogs";
 
-  useEffect(() => {
-    if (!prompts.length) {
-      const queryPrompts = (searchParams.get("prompts") || "")
-        .split("||")
-        .filter((x) => !!x);
-      if (Array.isArray(queryPrompts) && queryPrompts.length)
-        setPrompts(queryPrompts);
-      else
-        get_gpt_data(
-          searchParams.get("context") ||
-            `List 10 ways in which ${initiative} will be improved by blockchain`
-        );
+  const getPromotionBlogs = async () => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/get-promoted-blogs/walletId=${address}`
+    );
+    if (res.ok) {
+      const { data } = await res.json();
+      setPromotedBlogs(data);
+    } else {
+      notify("Something went wrong. Please try later", "danger");
     }
+  };
+  useEffect(() => {
+    if (isPromote) {
+      getPromotionBlogs();
+      return;
+    }
+
+    const queryPrompts = (searchParams.get("prompts") || "")
+      .split("||")
+      .filter((x) => !!x);
+    if (Array.isArray(queryPrompts) && queryPrompts.length)
+      setPrompts(queryPrompts);
+    else
+      get_gpt_data(
+        searchParams.get("context") ||
+          `List 10 ways in which ${initiative} will be improved by blockchain`
+      );
+
     if (isAdmin || isCustom) get_user_data(offset);
   }, []);
 
@@ -169,11 +185,19 @@ const BlogForm = () => {
     get_user_data(offset);
   }
 
+  if (!isConnected)
+    return (
+      <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+        Please connect your wallet
+      </Typography>
+    );
   return (
     <div>
-      {prompts === undefined ? (
-        <div className="d-flex justify-content-center">Loading...</div>
-      ) : prompts.length === 0 ? (
+      {prompts && Array.isArray(prompts) ? (
+        prompts.map((prompt, index) => (
+          <Initiative key={index} prompt={prompt} index={index} />
+        ))
+      ) : (
         <div className="d-flex justify-content-center">
           <div
             className="spinner-border"
@@ -186,10 +210,6 @@ const BlogForm = () => {
             role="status"
           ></div>
         </div>
-      ) : (
-        prompts.map((prompt, index) => (
-          <Initiative key={index} prompt={prompt} index={index} />
-        ))
       )}
 
       {(isCustom || isAdmin) && (
