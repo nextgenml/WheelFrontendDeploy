@@ -2,7 +2,7 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 
 const getBlogStats = async (walletId, blogId) => {
   const query =
-    "select link, create_date from saved_prompts where wallet_address = ? and id = ? order by create_date desc";
+    "select link, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
   return await runQueryAsync(query, [walletId, blogId]);
 };
 
