@@ -103,12 +103,13 @@ export default function PromotionsList({ address, count }) {
     setSelectedReason("");
   };
 
-  const onUserUpdate = async (requestId) => {
+  const onUserUpdate = async (requestId, paid) => {
     const res = await fetch(`${config.API_ENDPOINT}/mark-promotion-done-user`, {
       method: "POST",
       body: JSON.stringify({
         walletId: address,
         requestId,
+        paid,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -186,9 +187,11 @@ export default function PromotionsList({ address, count }) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              disabled={row.mark_as_done_by_user}
+                              disabled={row.status === "approved"}
                               checked={!!row.mark_as_done_by_user}
-                              onChange={(e) => onUserUpdate(row.id)}
+                              onChange={(e) =>
+                                onUserUpdate(row.id, e.target.checked)
+                              }
                             />
                           }
                           label="Paid"

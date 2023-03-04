@@ -161,19 +161,24 @@ const BlogForm = () => {
       getPromotionBlogs();
       return;
     }
+    if (isAdmin || isCustom) get_user_data(offset);
+
+    const view = searchParams.get("view") === "1";
+    if (view) {
+      setPrompts([]);
+      return;
+    }
 
     const queryPrompts = (searchParams.get("prompts") || "")
       .split("||")
       .filter((x) => !!x);
     if (Array.isArray(queryPrompts) && queryPrompts.length)
-      setPrompts(queryPrompts);
+      setPrompts(queryPrompts.filter((x) => !!x));
     else
       get_gpt_data(
         searchParams.get("context") ||
           `List 10 ways in which ${initiative} will be improved by blockchain`
       );
-
-    if (isAdmin || isCustom) get_user_data(offset);
   }, []);
 
   useEffect(() => {
@@ -236,7 +241,7 @@ const BlogForm = () => {
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
-          No blogs for promotion now. Please check after sometime
+          No blogs to display
         </Typography>
       )}
 

@@ -19,10 +19,10 @@ const updatePromotionAdmin = async (data) => {
 
   return await runQueryAsync(query, [data.status, data.reason, data.requestId]);
 };
-const updatePromotion = async (id, wallet_id) => {
+const updatePromotion = async (id, wallet_id, paid) => {
   const query = `update promotion_requests set mark_as_done_by_user = ? where id = ? and payer_wallet_id = ?;`;
 
-  return await runQueryAsync(query, [1, id, wallet_id]);
+  return await runQueryAsync(query, [paid, id, wallet_id]);
 };
 const getAppliedPromotions = async (walletId, pageSize, offset) => {
   const query = `select * from promotion_requests where payer_wallet_id = ? order by id desc limit ? offset ?;`;

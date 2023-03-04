@@ -139,8 +139,8 @@ export default function CustomizeBlogs() {
             </Grid>
           </Box>
         )}
-        <Grid container sx={{ mt: 2 }}>
-          <Grid item md={12}>
+        <Grid container sx={{ mt: 6 }}>
+          <Grid item md={2}>
             <Button
               variant="contained"
               component="label"
@@ -149,6 +149,29 @@ export default function CustomizeBlogs() {
               }
             >
               Promote Blogs
+            </Button>
+          </Grid>
+          <Grid item md={2}>
+            <Button
+              variant="contained"
+              component="label"
+              onClick={() => window.open(`/promotions`, "_blank")}
+            >
+              Promotion Requests
+            </Button>
+          </Grid>
+          <Grid item md={2}>
+            <Button
+              variant="contained"
+              component="label"
+              onClick={() =>
+                window.open(
+                  `/nxml-blog-chat/blog-customization?view=1`,
+                  "_blank"
+                )
+              }
+            >
+              View Customized Blogs
             </Button>
           </Grid>
         </Grid>

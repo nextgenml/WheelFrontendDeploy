@@ -62,7 +62,11 @@ const markAsDoneByUser = async (req, res) => {
         message: "Insufficient data",
       });
 
-    await promotionsRepo.updatePromotion(req.body.requestId, req.body.walletId);
+    await promotionsRepo.updatePromotion(
+      req.body.requestId,
+      req.body.walletId,
+      req.body.paid
+    );
     return res.status(200).json({
       message: "Saved successfully",
     });
