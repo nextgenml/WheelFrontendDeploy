@@ -232,7 +232,7 @@ const BlogForm = () => {
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
-          No blogs for now. Please check back later
+          No blogs for promotion now. Please check back later
         </Typography>
       )}
 
