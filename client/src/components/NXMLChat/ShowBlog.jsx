@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 function ShowBlog({ onClose, blog }) {
   return (

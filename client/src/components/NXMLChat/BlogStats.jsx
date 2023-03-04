@@ -21,17 +21,18 @@ function BlogStats({ onClose, blogId, address }) {
   }, [blogId]);
   return (
     <Dialog onClose={() => onClose()} open>
-      <DialogTitle>Blog Stats</DialogTitle>
+      <DialogTitle>Blog Promotions (Total - {stats.length} )</DialogTitle>
       <Grid container spacing={2} sx={{ p: 2 }}>
-        {stats.map((stat) => (
+        {stats.map((stat, index) => (
           <>
+            <Grid item md={6}>
+              <b>{index + 1}.</b> &nbsp;&nbsp;
+              {moment(stat.create_date).format("YYYY-MM-DD HH:mm")}
+            </Grid>
             <Grid item md={6}>
               <Link href={stat.link} target="_blank">
                 {stat.link}
               </Link>
-            </Grid>
-            <Grid item md={6}>
-              {moment(stat.create_date).format("YYYY-MM-DD HH:mm")}
             </Grid>
           </>
         ))}
