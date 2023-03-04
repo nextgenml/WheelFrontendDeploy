@@ -15,6 +15,7 @@ export default function CustomizeBlogs() {
   const { isConnected, address } = useAccount();
   const [context, setContext] = useState(null);
   const [eligible, setEligible] = useState(false);
+  const [blogStats, setBlogStats] = useState({});
   const [prompts, setPrompts] = useState([
     {
       id: 1,
@@ -33,7 +34,10 @@ export default function CustomizeBlogs() {
   };
 
   useEffect(() => {
-    if (isConnected) checkEligibility();
+    if (isConnected) {
+      checkEligibility();
+      getBlogStats();
+    }
   }, [isConnected]);
   if (!isConnected) return null;
 
@@ -55,6 +59,16 @@ export default function CustomizeBlogs() {
     }
   };
 
+  const getBlogStats = async () => {
+    if (eligible) {
+      const res1 = await fetch(
+        `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
+      );
+      const data = await res1.json();
+      setBlogStats(data);
+    }
+  };
+
   return (
     <Accordion className={styles.main}>
       <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}>
@@ -65,6 +79,12 @@ export default function CustomizeBlogs() {
       <AccordionDetails>
         {eligible && (
           <Box>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Paid Plan for blogs - {blogStats.totalCountB}
+              <br />
+              Completed blogs - {blogStats.usedCountB}
+              <br />
+            </Typography>
             <Grid container spacing={2}>
               <Grid item md={6}>
                 <Grid container spacing={2}>
