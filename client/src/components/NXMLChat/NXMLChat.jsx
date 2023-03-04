@@ -262,20 +262,23 @@ const BlogForm = () => {
             <h4 className="text-center" style={{ color: "white" }}>
               Blog Data
             </h4>
-            <Typography
-              variant="body2"
-              className="text-center"
-              sx={{ color: "white", mb: 2 }}
-            >
-              Paid Plan for promotions - {blogStats.totalCountP}
-              <br />
-              Completed Promotions - {blogStats.usedCountP}
-              <br />
-              Paid Plan for blogs - {blogStats.totalCountB}
-              <br />
-              Completed blogs - {blogStats.usedCountB}
-              <br />
-            </Typography>
+            {isCustom && (
+              <Typography
+                variant="body2"
+                className="text-center"
+                sx={{ color: "white", mb: 2 }}
+              >
+                Paid Plan for promotions - {blogStats.totalCountP}
+                <br />
+                Completed Promotions - {blogStats.usedCountP}
+                <br />
+                Paid Plan for blogs - {blogStats.totalCountB}
+                <br />
+                Completed blogs - {blogStats.usedCountB}
+                <br />
+              </Typography>
+            )}
+
             {isAdmin && (
               <form>
                 <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
