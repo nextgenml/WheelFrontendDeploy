@@ -47,6 +47,21 @@ const getCustomBlogs = async (req, res) => {
   }
 };
 
+const getBlogStats = async (req, res) => {
+  try {
+    const { walletId, blogId } = req.query;
+
+    if (!walletId || !blogId)
+      return res.status(400).json({ msg: "Invalid data" });
+
+    const data = await blogsRepo.getBlogStats(walletId, blogId);
+    return res.json({ data });
+  } catch (error) {
+    logger.error(`getCustomBlogs error: ${error}`);
+    return res.status(500).json({ msg: error });
+  }
+};
+
 const getPromotedBlogs = async (req, res) => {
   try {
     console.log("reached jere");
@@ -216,4 +231,5 @@ module.exports = {
   saveBlogData,
   getCustomBlogs,
   getPromotedBlogs,
+  getBlogStats,
 };

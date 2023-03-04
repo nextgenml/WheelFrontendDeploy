@@ -9,7 +9,9 @@ import config from "../../config";
 import ReactPaginate from "react-paginate";
 import Initiative from "./SaveInitiative";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
+import BlogStats from "./BlogStats";
+import ShowBlog from "./ShowBlog";
 
 const BlogForm = () => {
   const { address, isConnected } = useAccount();
@@ -27,6 +29,8 @@ const BlogForm = () => {
   const { initiative } = useParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
   const [promotedBlogsCount, setPromotedBlogsCount] = useState(0);
+  const [openStatsId, setOpenStatsId] = useState(0);
+  const [showBlog, setShowBlog] = useState(null);
   let reset = 0;
 
   // Toast alert
@@ -227,7 +231,7 @@ const BlogForm = () => {
       </div>
     );
   return (
-    <div>
+    <Box sx={{ p: 3 }}>
       {finalPrompts.length > 0 ? (
         renderPrompts()
       ) : (
@@ -291,6 +295,7 @@ const BlogForm = () => {
                       <th scope="col">Initiative</th>
                       <th scope="col">Promot</th>
                       <th scope="col">Blog</th>
+                      {isCustom && <th scope="col">View Stats</th>}
                       <th scope="col">Link</th>
                       <th scope="col">Create Date</th>
                       <th scope="col">Paid Amount</th>
@@ -311,7 +316,19 @@ const BlogForm = () => {
                           <td>{user.wallet_address}</td>
                           <td>{user.initiative}</td>
                           <td>{user.prompt}</td>
-                          <td>{user.blog}</td>
+                          <td>
+                            {user.blog.slice(0, 10)}....
+                            <Link onClick={() => setShowBlog(user.blog)}>
+                              View Blog
+                            </Link>
+                          </td>
+                          {isCustom && (
+                            <td>
+                              <Link onClick={() => setOpenStatsId(user.id)}>
+                                View Stats
+                              </Link>
+                            </td>
+                          )}
                           <td>{user.link}</td>
                           <td>{user.create_date}</td>
                           <td>{user.paid_amount}</td>
@@ -407,7 +424,18 @@ const BlogForm = () => {
           <ToastContainer />
         </>
       )}
-    </div>
+
+      {openStatsId > 0 && (
+        <BlogStats
+          blogId={openStatsId}
+          onClose={() => setOpenStatsId(0)}
+          address={address}
+        />
+      )}
+      {showBlog && (
+        <ShowBlog blog={showBlog} onClose={() => setShowBlog(null)} />
+      )}
+    </Box>
   );
 };
 
