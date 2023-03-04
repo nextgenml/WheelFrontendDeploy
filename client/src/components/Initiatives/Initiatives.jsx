@@ -1,8 +1,5 @@
 import moment from "moment";
-import React from "react";
 import AccordionElement from "./accordion";
-import NXMLChat from "../NXMLChat/NXMLChat";
-import { Redirect } from "react-router-dom";
 import CustomizeBlogs from "../CustomizeBlogs/CustomizeBlogs";
 
 const launchDate = "2022-12-18 12:00:00";

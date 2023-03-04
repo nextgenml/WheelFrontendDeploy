@@ -48,28 +48,43 @@ export default function CustomizeBlogs() {
         <Box>
           <Grid container spacing={2}>
             <Grid item md={6}>
-              <TextField
-                variant="outlined"
-                label="Enter blog context to generate prompts"
-                placeholder="List 10 ways in which technology can be improved"
-                fullWidth
-                value={context}
-                sx={{ mb: 2 }}
-                onChange={(e) => setContext(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                component="label"
-                disabled={!context}
-                onClick={() =>
-                  window.open(
-                    `/nxml-blog-chat/blog-customization?context=${context}`,
-                    "_blank"
-                  )
-                }
-              >
-                Generate
-              </Button>
+              <Grid container spacing={2}>
+                <Grid item md={12}>
+                  <TextField
+                    variant="outlined"
+                    label="Enter blog context to generate prompts"
+                    placeholder="List 10 ways in which technology can be improved"
+                    fullWidth
+                    value={context}
+                    sx={{ mb: 2 }}
+                    onChange={(e) => setContext(e.target.value)}
+                  />
+                  <Button
+                    variant="contained"
+                    component="label"
+                    disabled={!context}
+                    onClick={() =>
+                      window.open(
+                        `/nxml-blog-chat/blog-customization?context=${context}`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    Generate
+                  </Button>
+                </Grid>
+                <Grid item md={12}>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    onClick={() =>
+                      window.open(`/nxml-blog-chat/promote-blogs`, "_blank")
+                    }
+                  >
+                    Promote Blogs
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item md={6}>
               <Grid container spacing={2}>
