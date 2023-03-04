@@ -126,7 +126,29 @@ const getAppliedRequestsAdmin = async (req, res) => {
   }
 };
 
+const eligibleForCustomBlogs = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    if (!walletId)
+      return res.status(401).json({
+        statusCode: 401,
+        message: "Unauthorized",
+      });
+    const [isEligible, _] = await promotionsRepo.isEligibleForBlogs(walletId);
+    return res.status(200).json({
+      isEligible,
+    });
+  } catch (error) {
+    logger.error(`error occurred in eligibleForPromotion api: ${error}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
+  eligibleForCustomBlogs,
   savePromotionRequest,
   approvePromotionRequest,
   getAppliedRequests,
