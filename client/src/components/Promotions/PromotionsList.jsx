@@ -32,6 +32,7 @@ const headers = [
   "Reason",
   "",
   "",
+  "",
 ];
 
 export default function PromotionsList({ address, count }) {
@@ -159,6 +160,17 @@ export default function PromotionsList({ address, count }) {
                   <>
                     <TableCell>
                       <Button
+                        color="primary"
+                        onClick={(e) => {
+                          setSelectedRow({ id: row.id, action: "comment" });
+                          setAnchorEl(e.currentTarget);
+                        }}
+                      >
+                        Comment
+                      </Button>
+                    </TableCell>
+                    <TableCell>
+                      <Button
                         color="success"
                         onClick={(e) => {
                           setSelectedRow({ id: row.id, action: "approved" });
@@ -187,7 +199,7 @@ export default function PromotionsList({ address, count }) {
                         <FormControlLabel
                           control={
                             <Checkbox
-                              disabled={row.status === "approved"}
+                              disabled={row.status !== "requested"}
                               checked={!!row.mark_as_done_by_user}
                               onChange={(e) =>
                                 onUserUpdate(row.id, e.target.checked)
@@ -230,7 +242,11 @@ export default function PromotionsList({ address, count }) {
                     onUpdate(selectedRow.action, selectedReason, selectedRow.id)
                   }
                 >
-                  {selectedRow.action === "approved" ? "approve" : "reject"}
+                  {selectedRow.action === "approved"
+                    ? "approve"
+                    : selectedRow.action === "comment"
+                    ? "Comment"
+                    : "reject"}
                 </Button>
               </Box>
             </Menu>

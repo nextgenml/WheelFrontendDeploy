@@ -15,9 +15,20 @@ const savePromotion = async (data) => {
 };
 
 const updatePromotionAdmin = async (data) => {
-  const query = `update promotion_requests set status = ?, reason = ? where id = ?;`;
+  console.log("data.status", data.status);
+  if (data.status === "comment") {
+    const query = `update promotion_requests set reason = ? where id = ?;`;
 
-  return await runQueryAsync(query, [data.status, data.reason, data.requestId]);
+    return await runQueryAsync(query, [data.reason, data.requestId]);
+  } else {
+    const query = `update promotion_requests set status = ?, reason = ? where id = ?;`;
+
+    return await runQueryAsync(query, [
+      data.status,
+      data.reason,
+      data.requestId,
+    ]);
+  }
 };
 const updatePromotion = async (id, wallet_id, paid) => {
   const query = `update promotion_requests set mark_as_done_by_user = ? where id = ? and payer_wallet_id = ?;`;

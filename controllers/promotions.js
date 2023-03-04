@@ -71,7 +71,7 @@ const markAsDoneByUser = async (req, res) => {
       message: "Saved successfully",
     });
   } catch (error) {
-    logger.error(`error occurred in approvePromotionRequest api: ${error}`);
+    logger.error(`error occurred in markAsDoneByUser api: ${error}`);
     res.status(400).json({
       statusCode: 400,
       message: error,
