@@ -138,7 +138,7 @@ const eligibleForCustomBlogs = async (req, res) => {
         statusCode: 401,
         message: "Unauthorized",
       });
-    const [isEligible, _] = await promotionsRepo.isEligibleForBlogs(walletId);
+    const [isEligible, _, __, ___] = await promotionsRepo.blogStats(walletId);
     return res.status(200).json({
       isEligible,
     });

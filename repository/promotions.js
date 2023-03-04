@@ -57,7 +57,7 @@ const getAppliedPromotionsAdmin = async (pageSize, offset) => {
   return [data, count[0].count];
 };
 
-const isEligibleForBlogs = async (walletId) => {
+const blogStats = async (walletId) => {
   const query = `select sum(blogs_limit) as count from promotion_requests where payer_wallet_id = ? and status = 'approved';`;
 
   const data = await runQueryAsync(query, [walletId]);
@@ -65,15 +65,44 @@ const isEligibleForBlogs = async (walletId) => {
 
   // console.log("totalCount", totalCount);
   if (totalCount <= 0)
-    return [false, "Unauthorized. Please apply for promotions first"];
+    return [false, "Unauthorized. Please apply for promotions first", 0, 0];
   const query1 = `select count(1) as count from saved_prompts where wallet_address = ? and initiative = ?`;
   const data1 = await runQueryAsync(query1, [walletId, "blog-customization"]);
   const usedCount = data1[0].count;
 
   // console.log("usedCount", usedCount);
   if (usedCount >= totalCount)
-    return [false, "Unauthorized. You are exhausted the limit"];
-  return [true, ""];
+    return [
+      false,
+      "Unauthorized. You are exhausted the limit",
+      totalCount,
+      usedCount,
+    ];
+  return [true, "", totalCount, usedCount];
+};
+
+const promotionStats = async (walletId) => {
+  const query = `select sum(overall_promotions_limit) as count from promotion_requests where payer_wallet_id = ? and status = 'approved';`;
+
+  const data = await runQueryAsync(query, [walletId]);
+  const totalCount = data[0].count;
+
+  // console.log("totalCount", totalCount);
+  if (totalCount <= 0)
+    return [false, "Unauthorized. Please apply for promotions first", 0, 0];
+  const query1 = `select count(1) as count from saved_prompts where promoted_wallet = ? and initiative = ?`;
+  const data1 = await runQueryAsync(query1, [walletId, "promote-blogs"]);
+  const usedCount = data1[0].count;
+
+  // console.log("usedCount", usedCount);
+  if (usedCount >= totalCount)
+    return [
+      false,
+      "Unauthorized. You are exhausted the limit",
+      totalCount,
+      usedCount,
+    ];
+  return [true, "", totalCount, usedCount];
 };
 
 const eligibleWallets = async (walletId) => {
@@ -110,5 +139,6 @@ module.exports = {
   getAppliedPromotions,
   getAppliedPromotionsAdmin,
   updatePromotion,
-  isEligibleForBlogs,
+  blogStats,
+  promotionStats,
 };

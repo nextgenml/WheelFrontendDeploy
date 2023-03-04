@@ -8,6 +8,24 @@ const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const connection = dbConnection;
 
+const getUserBlogStats = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+
+    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
+
+    const [_, __, totalCountB, usedCountB] = await promotionsRepo.blogStats(
+      walletId
+    );
+    const [___, ____, totalCountP, usedCountP] =
+      await promotionsRepo.promotionStats(walletId);
+    return res.json({ totalCountB, usedCountB, totalCountP, usedCountP });
+  } catch (error) {
+    logger.error(`getCustomBlogs error: ${error}`);
+    return res.status(500).json({ msg: error });
+  }
+};
+
 const updateBlogData = async (req, res) => {
   try {
     let { validatedFlag, paidFlag, transactionID, promoted, blog } = req.body;
@@ -187,7 +205,7 @@ const saveBlogData = async (req, res) => {
   }
   // Blogs limit validation
   if (initiative === "blog-customization") {
-    const [valid, message] = await promotionsRepo.isEligibleForBlogs(
+    const [valid, message, _, __] = await promotionsRepo.blogStats(
       wallet_address
     );
     if (!valid) return res.status(401).json({ msg: message });
@@ -238,4 +256,5 @@ module.exports = {
   getCustomBlogs,
   getPromotedBlogs,
   getBlogStats,
+  getUserBlogStats,
 };

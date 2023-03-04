@@ -31,6 +31,7 @@ const BlogForm = () => {
   const [promotedBlogsCount, setPromotedBlogsCount] = useState(0);
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
+  const [blogStats, setBlogStats] = useState({});
   let reset = 0;
 
   // Toast alert
@@ -143,6 +144,15 @@ const BlogForm = () => {
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
 
+  const getBlogStats = async () => {
+    if (isCustom) {
+      const res1 = await fetch(
+        `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
+      );
+      const data = await res1.json();
+      setBlogStats(data);
+    }
+  };
   const getPromotionBlogs = async () => {
     const res = await fetch(
       `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
@@ -156,6 +166,7 @@ const BlogForm = () => {
     }
   };
   useEffect(() => {
+    getBlogStats();
     if (isPromote) {
       getPromotionBlogs();
       return;
@@ -251,6 +262,20 @@ const BlogForm = () => {
             <h4 className="text-center" style={{ color: "white" }}>
               Blog Data
             </h4>
+            <Typography
+              variant="body2"
+              className="text-center"
+              sx={{ color: "white", mb: 2 }}
+            >
+              Paid Plan for promotions - {blogStats.totalCountP}
+              <br />
+              Completed Promotions - {blogStats.usedCountP}
+              <br />
+              Paid Plan for blogs - {blogStats.totalCountB}
+              <br />
+              Completed blogs - {blogStats.usedCountB}
+              <br />
+            </Typography>
             {isAdmin && (
               <form>
                 <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">

@@ -166,6 +166,7 @@ app.post("/mark-promotion-done-user", promotionsController.markAsDoneByUser);
 app.get("/get-custom-blogs", blogsController.getCustomBlogs);
 app.get("/promoted-blogs", blogsController.getPromotedBlogs);
 app.get("/promoted-blog-stats", blogsController.getBlogStats);
+app.get("/blog-stats", blogsController.getUserBlogStats);
 app.get(
   "/custom-blogs-eligibility",
   promotionsController.eligibleForCustomBlogs
