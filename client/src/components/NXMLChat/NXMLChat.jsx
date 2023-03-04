@@ -333,7 +333,7 @@ const BlogForm = () => {
                           <td>{user.prompt}</td>
                           <td>
                             {user.blog.slice(0, 10)}....
-                            <Link onClick={() => setShowBlog(user.blog)}>
+                            <Link onClick={() => setShowBlog(user)}>
                               View Blog
                             </Link>
                           </td>
@@ -448,7 +448,7 @@ const BlogForm = () => {
         />
       )}
       {showBlog && (
-        <ShowBlog blog={showBlog} onClose={() => setShowBlog(null)} />
+        <ShowBlog currentRow={showBlog} onClose={() => setShowBlog(null)} />
       )}
     </Box>
   );

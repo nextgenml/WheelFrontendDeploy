@@ -10,15 +10,21 @@ const connection = dbConnection;
 
 const updateBlogData = async (req, res) => {
   try {
-    let { validatedFlag, paidFlag, transactionID, promoted } = req.body;
+    let { validatedFlag, paidFlag, transactionID, promoted, blog } = req.body;
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
       return res.status(400).json({ msg: "Invalid data" });
     }
 
-    await runQueryAsync(
-      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ? WHERE transactionID = ?`,
-      [validatedFlag, paidFlag, promoted, transactionID]
-    );
+    if (blog) {
+      await runQueryAsync(
+        `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ?, blog = ? WHERE transactionID = ?`,
+        [validatedFlag, paidFlag, promoted, blog, transactionID]
+      );
+    } else
+      await runQueryAsync(
+        `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ? WHERE transactionID = ?`,
+        [validatedFlag, paidFlag, promoted, transactionID]
+      );
 
     return res.status(200).json({ msg: "Data updated successfully" });
   } catch (error) {
