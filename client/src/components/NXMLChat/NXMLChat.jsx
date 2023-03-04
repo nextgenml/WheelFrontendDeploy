@@ -51,8 +51,8 @@ const BlogForm = () => {
     }
   }
 
-  async function get_gpt_data(input) {
-    const url = "https://backend.chatbot.nexgenml.com/collections";
+  async function get_gpt_data(input, raw) {
+    const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -119,7 +119,6 @@ const BlogForm = () => {
     });
 
     let result = await response.json();
-    // console.log(result);
     if (response.ok) {
       notify(result.msg, "success");
     } else {
@@ -177,7 +176,8 @@ const BlogForm = () => {
     else
       get_gpt_data(
         searchParams.get("context") ||
-          `List 10 ways in which ${initiative} will be improved by blockchain`
+          `List 10 ways in which ${initiative} will be improved by blockchain`,
+        !!searchParams.get("context")
       );
   }, []);
 

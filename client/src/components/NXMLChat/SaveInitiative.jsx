@@ -73,9 +73,15 @@ const SaveInitiative = ({
   useEffect(() => {
     if (isChecked) {
       setResult("populating blog");
-      const complete_prompt = `Write a ${Math.floor(
-        Math.random() * (600 - 400 + 1) + 400
-      )} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telgram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt.`;
+      const complete_prompt =
+        initiative === "blog-customization"
+          ? `Write a ${Math.floor(
+              Math.random() * (600 - 400 + 1) + 400
+            )} word blog about ${prompt}`
+          : `Write a ${Math.floor(
+              Math.random() * (600 - 400 + 1) + 400
+            )} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telgram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt.`;
+
       get_gpt_data(complete_prompt);
     }
   }, [isChecked]);
