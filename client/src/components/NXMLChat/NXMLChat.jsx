@@ -291,8 +291,13 @@ const BlogForm = () => {
                   <thead className="table-primary">
                     <tr>
                       <th scope="col">SR NO.</th>
-                      <th scope="col">Wallet Address</th>
-                      <th scope="col">Initiative</th>
+                      {!isCustom && (
+                        <>
+                          <th scope="col">Wallet Address</th>
+                          <th scope="col">Initiative</th>
+                        </>
+                      )}
+
                       <th scope="col">Promot</th>
                       <th scope="col">Blog</th>
                       {isCustom && <th scope="col">View Stats</th>}
@@ -313,8 +318,13 @@ const BlogForm = () => {
                       return (
                         <tr key={index}>
                           <th scope="row">{pageNo * pageSize + index + 1}</th>
-                          <td>{user.wallet_address}</td>
-                          <td>{user.initiative}</td>
+                          {!isCustom && (
+                            <>
+                              <td>{user.wallet_address}</td>
+                              <td>{user.initiative}</td>
+                            </>
+                          )}
+
                           <td>{user.prompt}</td>
                           <td>
                             {user.blog.slice(0, 10)}....
