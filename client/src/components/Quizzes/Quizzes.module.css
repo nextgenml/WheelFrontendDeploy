@@ -1,0 +1,35 @@
+.main {
+  padding: 16px;
+}
+.tabPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.question {
+  padding: 16px 0;
+}
+.question > * {
+  margin-right: 16px;
+}
+.submitQuiz {
+  margin-top: 24px;
+  float: right;
+}
+.copyIcon {
+  cursor: pointer;
+}
+.rightAnswer {
+  margin-left: 8px !important;
+  color: black;
+}
+
+@media only screen and (max-width: 640px) {
+  .question {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+  .question > * {
+    padding-bottom: 8px;
+  }
+}

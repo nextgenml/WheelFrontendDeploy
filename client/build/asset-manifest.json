@@ -1,7 +1,12 @@
 {
   "files": {
+<<<<<<< HEAD
     "main.css": "/static/css/main.e6593e3b.css",
     "main.js": "/static/js/main.45ed3304.js",
+=======
+    "main.css": "/static/css/main.ac959797.css",
+    "main.js": "/static/js/main.75721abb.js",
+>>>>>>> twitter-chores-integration
     "static/js/64.ba8a5e95.chunk.js": "/static/js/64.ba8a5e95.chunk.js",
     "static/js/563.86059638.chunk.js": "/static/js/563.86059638.chunk.js",
     "static/js/942.a3aae9b0.chunk.js": "/static/js/942.a3aae9b0.chunk.js",
@@ -13,14 +18,24 @@
     "static/media/audiowide-latin-400-normal.woff2": "/static/media/audiowide-latin-400-normal.56cbe5a59cb6a30c3f06.woff2",
     "static/media/audiowide-latin-ext-400-normal.woff2": "/static/media/audiowide-latin-ext-400-normal.f4b1d860ffbc7c54d90c.woff2",
     "index.html": "/index.html",
+<<<<<<< HEAD
     "main.e6593e3b.css.map": "/static/css/main.e6593e3b.css.map",
     "main.45ed3304.js.map": "/static/js/main.45ed3304.js.map",
+=======
+    "main.ac959797.css.map": "/static/css/main.ac959797.css.map",
+    "main.75721abb.js.map": "/static/js/main.75721abb.js.map",
+>>>>>>> twitter-chores-integration
     "64.ba8a5e95.chunk.js.map": "/static/js/64.ba8a5e95.chunk.js.map",
     "419.4b35ddfa.chunk.js.map": "/static/js/419.4b35ddfa.chunk.js.map",
     "48.cccbf9d0.chunk.js.map": "/static/js/48.cccbf9d0.chunk.js.map"
   },
   "entrypoints": [
+<<<<<<< HEAD
     "static/css/main.e6593e3b.css",
     "static/js/main.45ed3304.js"
+=======
+    "static/css/main.ac959797.css",
+    "static/js/main.75721abb.js"
+>>>>>>> twitter-chores-integration
   ]
 }

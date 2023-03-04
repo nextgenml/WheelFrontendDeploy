@@ -3,8 +3,19 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const moment = require("moment");
-require("./manager/spinwheelManager");
-require("./manager/walletManager");
+require("./manager/spinwheel");
+require("./manager/wallet");
+const multer = require("multer");
+const { static } = require("express");
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); //Appending extension
+  },
+});
+var upload = multer({ storage: storage });
 
 const {
   getParticipants,
@@ -13,188 +24,24 @@ const {
   getSpinParticipants,
 } = require("./repository/spinwheel");
 const { getRunningSpin } = require("./repository/spin.js");
-const { nextSpinDetails } = require("./manager/scheduledSpinsManager.js");
+const { nextSpinDetails } = require("./manager/scheduledSpins.js");
 const config = require("./config");
 const logger = require("./logger");
-const mysql = require("mysql");
-const { v4: uuidv4 } = require("uuid");
-const { dbConnection } = require("./dbconnect");
-const { runQueryAsync } = require("./utils/spinwheelUtil");
+const socialSharingController = require("./controllers/socialSharing");
+const quizController = require("./controllers/quizzes");
+const walletController = require("./controllers/wallet");
+const promotionsController = require("./controllers/promotions");
+const blogsController = require("./controllers/blogs");
+
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
-const connection = dbConnection;
+app.put("/update-blog-data", blogsController.updateBlogData);
 
-app.put("/update-blog-data", async (req, res) => {
-  try {
-    let { validatedFlag, paidFlag, transactionID } = req.body;
-    if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
-      return res.status(400).json({ msg: "Invalid data" });
-    }
-    let response;
+app.get("/get-blog-data", blogsController.getBlogData);
 
-    updateRecords = () => {
-      return new Promise((resolve, reject) => {
-        connection.query(
-          `UPDATE saved_prompts SET validated_flag = ${validatedFlag}, paid_flag = ${paidFlag} WHERE transactionID = '${transactionID}' `,
-          async (error, elements) => {
-            if (error) {
-              // return reject(error);
-              logger.error(`error in update-blog-data: ${error}`);
-              return res.status(500).json({ msg: "Internal server error" });
-            }
-            return resolve(elements);
-          }
-        );
-      });
-    };
-
-    response = await updateRecords();
-    return res.status(200).json({ msg: "Data updated successfully" });
-  } catch (error) {
-    return res.status(500).json({ msg: error });
-  }
-});
-
-app.get("/get-blog-data", async (req, res) => {
-  console.log("IM HERE");
-  const pageSize = 10;
-  let offset;
-  const searchWalletAdd = req.query.searchWalletAdd
-    ? req.query.searchWalletAdd
-    : "";
-  var totalResult, results;
-
-  if (req.query.offset >= 0) {
-    offset = req.query.offset;
-  } else {
-    return res.status(400).json({ msg: "Invalid data" });
-  }
-
-  totalRecords = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT count(*) from saved_prompts`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
-    });
-  };
-
-  totalResult = await totalRecords();
-  totalResult = totalResult[0]["count(*)"];
-
-  SelectSearchElements = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * from saved_prompts WHERE wallet_address='${searchWalletAdd}' ORDER BY create_date DESC, wallet_address DESC`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
-    });
-  };
-
-  if (searchWalletAdd) {
-    results = await SelectSearchElements(searchWalletAdd);
-    console.log(results);
-    totalResult = results ? results.length : 0;
-  }
-
-  SelectAllElements = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * from saved_prompts ORDER BY create_date DESC, wallet_address DESC LIMIT ${pageSize} OFFSET ${offset}`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
-    });
-  };
-
-  if (pageSize && offset && !searchWalletAdd) {
-    results = await SelectAllElements();
-  }
-
-  return res.status(200).json({ totalResult, data: results });
-});
-
-app.post("/save-blog-data", async (req, res) => {
-  const data = req.body;
-  const transactionId = uuidv4();
-
-  // Save the data to the database or process it as needed
-  const {
-    wallet_address,
-    initiative,
-    prompt,
-    blog,
-    link,
-    validated_flag,
-    paid_amount,
-    paid_flag,
-  } = req.body;
-
-  if (
-    !wallet_address ||
-    !initiative ||
-    !prompt ||
-    !blog ||
-    !link ||
-    !paid_amount > 0
-  ) {
-    return res.status(400).json({ msg: "All fields are required" });
-  }
-  const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-  const results = await runQueryAsync(
-    "select 1 from saved_prompts where wallet_address = ? and prompt = ?",
-    [wallet_address, prompt]
-  );
-  if (results.length) {
-    return res
-      .status(500)
-      .json({ msg: "Record already saved. You cannot save again" });
-  }
-  // save in DB
-  connection.query(
-    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      transactionId,
-      wallet_address,
-      initiative,
-      prompt,
-      blog,
-      link,
-      create_date,
-      validated_flag,
-      paid_amount,
-      paid_flag,
-    ],
-    (error, results) => {
-      if (error) {
-        logger.error(`error in save-blog-data: ${error} `);
-        return res.status(500).json({ msg: "Internal server error" });
-        // return res.status(500).send(error);
-      }
-      res.status(200).json({ msg: "Data saved successfully" });
-    }
-  );
-});
+app.post("/save-blog-data", blogsController.saveBlogData);
 
 app.get("/spinner-data", async (req, res) => {
   try {
@@ -310,9 +157,45 @@ app.get("/time-now", (req, res) => {
   res.send(new Date());
 });
 
-app.use("/", express.static(path.join(__dirname, "build")));
+// blog routes
+app.post("/save-promotion", promotionsController.savePromotionRequest);
+app.post("/approve-promotion", promotionsController.approvePromotionRequest);
+app.get("/promotions", promotionsController.getAppliedRequests);
+app.get("/promotions-admin", promotionsController.getAppliedRequestsAdmin);
+app.post("/mark-promotion-done-user", promotionsController.markAsDoneByUser);
+app.get("/get-custom-blogs", blogsController.getCustomBlogs);
+app.get("/promoted-blogs", blogsController.getPromotedBlogs);
+app.get("/promoted-blog-stats", blogsController.getBlogStats);
+app.get("/blog-stats", blogsController.getUserBlogStats);
+app.get(
+  "/custom-blogs-eligibility",
+  promotionsController.eligibleForCustomBlogs
+);
 
+// social sharing routes
+app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
+app.get("/social-sharing-chores", socialSharingController.getChoresByType);
+app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
+app.get("/campaigns", socialSharingController.getCampaigns);
+app.post("/update-campaign", socialSharingController.updateCampaign);
+app.post(
+  "/mark-chore-as-done",
+  socialSharingController.markChoreAsCompletedByUser
+);
+
+// quizzes routes
+app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
+app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
+app.post("/save-quiz-answers", quizController.saveAnswers);
+app.get("/quizzes", quizController.getAllQuizzes);
+
+// wallet routes
+app.get("/get-wallet-details", walletController.getWalletDetails);
+app.post("/update-alias", walletController.updateAlias);
+
+app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
+app.use("/images/", static("./uploads/"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));

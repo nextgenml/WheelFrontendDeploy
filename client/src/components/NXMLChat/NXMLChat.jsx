@@ -1,27 +1,42 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import config from "../../config";
 import ReactPaginate from "react-paginate";
+import Initiative from "./SaveInitiative";
+import { useParams, useSearchParams } from "react-router-dom";
+import { Box, Typography, Link } from "@mui/material";
+import BlogStats from "./BlogStats";
+import ShowBlog from "./ShowBlog";
 
-const Initiative = ({ prompt, index }) => {
+const BlogForm = () => {
+  const { address, isConnected } = useAccount();
+  const [prompts, setPrompts] = useState();
+  const [userData, setUserData] = useState([]);
+  const [walletAdd, setWalletAdd] = useState();
+  const [offset, setOffset] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const pageSize = 10;
+  const [pageNo, setPageNo] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isSubmit, setIsSubmit] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
   const { initiative } = useParams();
-  const { address } = useAccount();
-  const [isChecked, setIsChecked] = useState(false);
-  const [isvalidatedFlag, setIsvalidatedFlag] = useState(null);
-  const [ispaidFlag, setpaidFlag] = useState(null);
-  const [result, setResult] = useState("");
-  const [link, setLink] = useState("");
-  const [iscopyDisable, setiscopyDisable] = useState(true);
-  const [isSubmit, setisSubmit] = useState(true);
+  const [promotedBlogs, setPromotedBlogs] = useState([]);
+  const [promotedBlogsCount, setPromotedBlogsCount] = useState(0);
+  const [openStatsId, setOpenStatsId] = useState(0);
+  const [showBlog, setShowBlog] = useState(null);
+  const [blogStats, setBlogStats] = useState({});
+  let reset = 0;
 
   // Toast alert
   const notify = (msg, toastType) => {
-    if (toastType == "success") {
+    if (toastType === "success") {
       toast.success(msg);
     } else if (toastType === "info") {
       toast.info(msg);
@@ -30,212 +45,15 @@ const Initiative = ({ prompt, index }) => {
     }
   };
 
-  async function get_gpt_data(input) {
-    const url = "https://backend.chatbot.nexgenml.com/collections";
-    let response = await fetch(url, {
-      headers: {
-        accept: "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ msg: input }),
-      method: "POST",
-    });
-    if (response.ok) {
-      let res = await response.json();
-      setResult(
-        res.result +
-          `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
-      );
-      setiscopyDisable(false);
-    } else {
-      notify("Something went wrong. Please try again later", "error");
-    }
-  }
-
-  // link validation
-  const isValidUrl = (urlString) => {
-    let url;
-    try {
-      url = new URL(urlString);
-    } catch (_) {
-      return false;
-    }
-    return url.protocol === "http:" || url.protocol === "https:";
-  };
-
-  useEffect(() => {
-    if (isChecked) {
-      setResult("populating blog");
-      const complete_prompt = `Write a ${Math.floor(
-        Math.random() * (600 - 400 + 1) + 400
-      )} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telgram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt.`;
-      get_gpt_data(complete_prompt);
-    }
-  }, [isChecked]);
-
-  // Check value empty
-  useEffect(() => {
-    if (isChecked && !iscopyDisable && link && isValidUrl(link)) {
-      setisSubmit(false);
-    } else {
-      setisSubmit(true);
-    }
-  }, [iscopyDisable, link]);
-
-  async function onSubmitClick() {
-    // send post request to save data in database
-    if (isChecked && !iscopyDisable && link && isValidUrl(link)) {
-      const url = `${config.API_ENDPOINT}/save-blog-data`;
-      let response = await fetch(url, {
-        headers: {
-          accept: "*/*",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          wallet_address: address,
-          initiative,
-          prompt,
-          blog: result,
-          link,
-          validated_flag: isvalidatedFlag ? true : null,
-          paid_amount: config.PAID_AMOUNT,
-          paid_flag: ispaidFlag ? true : null,
-        }),
-        method: "POST",
-      });
-
-      let res = await response.text();
-      let data = JSON.parse(res);
-      if (response.status === "200") {
-        notify(data.msg, "success");
-      } else {
-        notify(data.msg, "danger");
-      }
-    } else {
-      notify("Please provide valid data", "danger");
-    }
-  }
-
-  return (
-    <div className="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
-      <form style={{ color: "white" }}>
-        <div className="row g-3 m-3">
-          <div className="col-sm-12">
-            <span>{prompt}</span>
-          </div>
-          <div className="col-sm-12">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              onClick={() => setIsChecked(!isChecked)}
-            />
-          </div>
-          <div className="col-sm-12">
-            <textarea
-              className="form-control"
-              placeholder="Blog Content"
-              readOnly={true}
-              value={result}
-              style={{ height: "100px" }}
-            ></textarea>
-          </div>
-          {address === config.ADMIN_WALLET_1 && (
-            <>
-              <div className="col-sm-12">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  onClick={() => setIsvalidatedFlag(!isvalidatedFlag)}
-                />
-                <label>Validate Flag</label>
-              </div>
-              <div className="col-sm-12">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  onClick={() => setpaidFlag(!ispaidFlag)}
-                />
-                <label>Paid Flag</label>
-              </div>
-            </>
-          )}
-          <div className="col-sm-12">
-            <button
-              type="button"
-              className="btn btn-success"
-              disabled={iscopyDisable}
-              onClick={() => {
-                navigator.clipboard.writeText(result);
-                notify("Copied", "info");
-              }}
-            >
-              Copy
-            </button>
-          </div>
-          <div className="col-sm-12">
-            <input
-              type="url"
-              className="form-control"
-              id="link"
-              placeholder="https://www.google.com"
-              value={link}
-              onChange={(e) => setLink(e.target.value)}
-            />
-          </div>
-          <div className="col-sm-12">
-            <button
-              type="button"
-              disabled={isSubmit}
-              className="btn btn-primary"
-              onClick={onSubmitClick}
-            >
-              Submit
-            </button>
-          </div>
-        </div>
-        <ToastContainer />
-      </form>
-    </div>
-  );
-};
-
-const BlogForm = () => {
-  const { address } = useAccount();
-  const [prompts, setPrompts] = useState([]);
-  const [userData, setUserData] = useState([]);
-  const [WalletAdd, setWalletAdd] = useState();
-  const [offset, setoffset] = useState(0);
-  const [pageCount, setpageCount] = useState(0);
-  const pageSize = 10;
-  const [pageNo, setPageNo] = useState(0);
-  const [totalCount, settotalCount] = useState(0);
-  const [isSubmit, setisSubmit] = useState(true);
-  let reset = 0;
-
-  // Toast alert
-  const notify = (msg, toastType) => {
-    if (toastType == "success") {
-      toast.success(msg);
-    } else if (toastType == "info") {
-      toast.info(msg);
-    } else {
-      toast.error(msg);
-    }
-  };
-
   function process_data(data) {
     if (data.result) {
-      console.log(data);
       const split_data = data.result.split("\n");
-      console.log(split_data);
       return split_data.filter((p) => p.match(/^\d/));
     }
   }
 
-  async function get_gpt_data(input) {
-    const url = "https://backend.chatbot.nexgenml.com/collections";
+  async function get_gpt_data(input, raw) {
+    const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -247,7 +65,6 @@ const BlogForm = () => {
     });
     if (response.ok) {
       let data = process_data(await response.json());
-      // add footer
       setPrompts(data);
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -255,9 +72,12 @@ const BlogForm = () => {
   }
 
   async function get_user_data(offset) {
-    const url = `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
-      reset || WalletAdd == undefined ? "" : WalletAdd
-    }&offset=${offset}`;
+    const url =
+      initiative === "blog-customization"
+        ? `${config.API_ENDPOINT}/get-custom-blogs?pageNo=${pageNo}&pageSize=${pageSize}&walletId=${address}`
+        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
+            reset || !walletAdd ? "" : walletAdd
+          }&offset=${offset}&walletId=${address}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -270,8 +90,8 @@ const BlogForm = () => {
     if (response.ok) {
       const result = await response.json();
       setUserData(result?.data ? result.data : 0);
-      settotalCount(result?.totalResult ? result.totalResult : 0);
-      setpageCount(
+      setTotalCount(result?.totalResult ? result.totalResult : 0);
+      setPageCount(
         (result.totalResult ? result.totalResult : 0) < pageSize
           ? 1
           : Math.ceil(result.totalResult / pageSize)
@@ -281,11 +101,12 @@ const BlogForm = () => {
     }
   }
 
-  async function updateflagData(transactionID, vf, pf) {
+  async function updateFlagData(transactionID, vf, pf, promoted) {
     let data = {
       transactionID: transactionID,
       validatedFlag: vf,
       paidFlag: pf,
+      promoted,
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
     let response = await fetch(url, {
@@ -299,52 +120,83 @@ const BlogForm = () => {
     });
 
     let result = await response.json();
-    // console.log(result);
-    if (response.status == 200) {
+    if (response.ok) {
       notify(result.msg, "success");
     } else {
       notify(result.msg, "danger");
     }
   }
 
-  async function updateData(flagType, user, index) {
-    if (flagType == "vf") {
-      updateflagData(user.transactionID, !user.validated_flag, user.paid_flag);
-    } else {
-      updateflagData(user.transactionID, user.validated_flag, !user.paid_flag);
-    }
+  async function updateData(user, paid, validated, promoted) {
+    await updateFlagData(user.transactionID, paid, validated, promoted);
     get_user_data(offset);
   }
 
   const handlePageClick = (event) => {
     setPageNo(event.selected);
     const newOffset = (event.selected * 10) % totalCount;
-    setoffset(newOffset);
+    setOffset(newOffset);
     get_user_data(newOffset);
   };
 
   let userRole = address;
-  useEffect(() => {
-    // Make the API call to the endpoint to get the prompts and update the state
-    if (prompts.length === 0) {
-      get_gpt_data(
-        "List 10 ways in which social media will be improved by blockchain"
+  const isAdmin = userRole === config.ADMIN_WALLET_1;
+  const isCustom = initiative === "blog-customization";
+  const isPromote = initiative === "promote-blogs";
+
+  const getBlogStats = async () => {
+    if (isCustom) {
+      const res1 = await fetch(
+        `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
       );
+      const data = await res1.json();
+      setBlogStats(data);
     }
-    console.log("LOOK HERE");
-    console.log(address);
-    console.log(userRole);
-    if (userRole === config.ADMIN_WALLET_1) {
-      get_user_data(offset);
+  };
+  const getPromotionBlogs = async () => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
+    );
+    if (res.ok) {
+      const { data, total } = await res.json();
+      setPromotedBlogs(data);
+      setPromotedBlogsCount(total);
+    } else {
+      notify("Something went wrong. Please try later", "danger");
     }
-    // console.log(userData);
+  };
+  useEffect(() => {
+    getBlogStats();
+    if (isPromote) {
+      getPromotionBlogs();
+      return;
+    }
+    if (isAdmin || isCustom) get_user_data(offset);
+
+    const view = searchParams.get("view") === "1";
+    if (view) {
+      setPrompts([]);
+      return;
+    }
+
+    const queryPrompts = (searchParams.get("prompts") || "")
+      .split("||")
+      .filter((x) => !!x);
+    if (Array.isArray(queryPrompts) && queryPrompts.length)
+      setPrompts(queryPrompts.filter((x) => !!x));
+    else
+      get_gpt_data(
+        searchParams.get("context") ||
+          `List 10 ways in which ${initiative} will be improved by blockchain`,
+        !!searchParams.get("context")
+      );
   }, []);
 
   useEffect(() => {
-    if (WalletAdd) {
-      setisSubmit(false);
+    if (walletAdd) {
+      setIsSubmit(false);
     }
-  }, [WalletAdd]);
+  }, [walletAdd]);
 
   function onSubmit() {
     get_user_data(offset);
@@ -355,71 +207,115 @@ const BlogForm = () => {
     get_user_data(offset);
   }
 
+  const renderPrompts = () => {
+    if (isPromote)
+      return promotedBlogs.map((blog, index) => (
+        <Initiative
+          key={index}
+          prompt={blog.prompt}
+          content={blog.blog}
+          isPromote={isPromote}
+          promotedWallet={blog.wallet_address}
+          promotedId={blog.id}
+        />
+      ));
+    else
+      return prompts.map((prompt, index) => (
+        <Initiative key={index} prompt={prompt} index={index} />
+      ));
+  };
+  const finalPrompts = isPromote ? promotedBlogs : prompts;
+  if (!isConnected)
+    return (
+      <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+        Please connect your wallet
+      </Typography>
+    );
+  if (!finalPrompts || !Array.isArray(finalPrompts))
+    return (
+      <div className="d-flex justify-content-center">
+        <div
+          className="spinner-border"
+          style={{
+            width: "3rem",
+            height: "3rem",
+            color: "white",
+            marginBottom: "16px",
+          }}
+          role="status"
+        ></div>
+      </div>
+    );
   return (
-    <div>
-      {prompts == undefined ? (
-        <div className="d-flex justify-content-center">Loading...</div>
-      ) : prompts.length === 0 ? (
-        <div className="d-flex justify-content-center">
-          <div
-            className="spinner-border"
-            style={{
-              width: "3rem",
-              height: "3rem",
-              color: "white",
-              marginBottom: "16px",
-            }}
-            role="status"
-          ></div>
-        </div>
+    <Box sx={{ p: 3 }}>
+      {finalPrompts.length > 0 ? (
+        renderPrompts()
       ) : (
-        prompts.map((prompt, index) => (
-          <Initiative key={index} prompt={prompt} index={index} />
-        ))
+        <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+          No blogs to display
+        </Typography>
       )}
 
-      {address === config.ADMIN_WALLET_1 && (
+      {(isCustom || isAdmin) && (
         <>
           <div className="p-2 col-md-12 col-lg-12">
-            <h4 className="text-center">Blog Data</h4>
-            <form>
-              {/* <div class="row"> */}
-              <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="search"
-                  placeholder="search wallet"
-                  value={WalletAdd}
-                  onChange={(e) => setWalletAdd(e.target.value)}
-                />
-              </div>
-              <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
-                <button
-                  type="button"
-                  disabled={isSubmit}
-                  style={{ marginRight: 5 }}
-                  className="btn btn-primary"
-                  onClick={onSubmit}
-                >
-                  Submit
-                </button>
-                <input
-                  type="reset"
-                  className="btn btn-primary"
-                  disabled={isSubmit}
-                  onClick={() => {
-                    setWalletAdd("");
-                    resetData();
-                  }}
-                  value="Reset"
-                />
-              </div>
-            </form>
-            {userData == 0 ? (
+            <h4 className="text-center" style={{ color: "white" }}>
+              Blog Data
+            </h4>
+            {isCustom && (
+              <Typography
+                variant="body2"
+                className="text-center"
+                sx={{ color: "white", mb: 2 }}
+              >
+                Paid Plan for promotions - {blogStats.totalCountP}
+                <br />
+                Completed Promotions - {blogStats.usedCountP}
+                <br />
+                Paid Plan for blogs - {blogStats.totalCountB}
+                <br />
+                Completed blogs - {blogStats.usedCountB}
+                <br />
+              </Typography>
+            )}
+
+            {isAdmin && (
+              <form>
+                <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="search"
+                    placeholder="search wallet"
+                    value={walletAdd}
+                    onChange={(e) => setWalletAdd(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-4 offset-md-4 col-lg-4 offset-lg-4 mb-2 mt-2">
+                  <button
+                    type="button"
+                    disabled={isSubmit}
+                    style={{ marginRight: 5 }}
+                    className="btn btn-primary"
+                    onClick={onSubmit}
+                  >
+                    Submit
+                  </button>
+                  <input
+                    type="reset"
+                    className="btn btn-primary"
+                    disabled={isSubmit}
+                    onClick={() => {
+                      setWalletAdd("");
+                      resetData();
+                    }}
+                    value="Reset"
+                  />
+                </div>
+              </form>
+            )}
+            {userData === 0 ? (
               <div className="d-flex justify-content-center">
-                {/* <div className="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
-      </div> */}
                 <label className="text-center">No Data Found</label>
               </div>
             ) : (
@@ -428,15 +324,26 @@ const BlogForm = () => {
                   <thead className="table-primary">
                     <tr>
                       <th scope="col">SR NO.</th>
-                      <th scope="col">Wallet Address</th>
-                      <th scope="col">Initiative</th>
+                      {!isCustom && (
+                        <>
+                          <th scope="col">Wallet Address</th>
+                          <th scope="col">Initiative</th>
+                        </>
+                      )}
+
                       <th scope="col">Promot</th>
                       <th scope="col">Blog</th>
+                      {isCustom && <th scope="col">View Stats</th>}
                       <th scope="col">Link</th>
                       <th scope="col">Create Date</th>
-                      <th scope="col">Validated Flag</th>
                       <th scope="col">Paid Amount</th>
-                      <th scope="col">Paid Flag</th>
+                      {isCustom && <th scope="col">Promote blog</th>}
+                      {isAdmin && (
+                        <>
+                          <th scope="col">Validated Flag</th>
+                          <th scope="col">Paid Flag</th>
+                        </>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -444,36 +351,90 @@ const BlogForm = () => {
                       return (
                         <tr key={index}>
                           <th scope="row">{pageNo * pageSize + index + 1}</th>
-                          <td>{user.wallet_address}</td>
-                          <td>{user.initiative}</td>
+                          {!isCustom && (
+                            <>
+                              <td>{user.wallet_address}</td>
+                              <td>{user.initiative}</td>
+                            </>
+                          )}
+
                           <td>{user.prompt}</td>
-                          <td>{user.blog}</td>
+                          <td>
+                            {user.blog.slice(0, 10)}....
+                            <Link onClick={() => setShowBlog(user)}>
+                              View Blog
+                            </Link>
+                          </td>
+                          {isCustom && (
+                            <td>
+                              <Link onClick={() => setOpenStatsId(user.id)}>
+                                View Stats
+                              </Link>
+                            </td>
+                          )}
                           <td>{user.link}</td>
                           <td>{user.create_date}</td>
-                          <td className="text-center">
-                            <div className="form-check form-switch">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                role="switch"
-                                checked={user.validated_flag}
-                                onChange={() => updateData("vf", user, index)}
-                              />
-                            </div>
-                          </td>
                           <td>{user.paid_amount}</td>
-                          <td className="text-center">
-                            {/* <label onClick={() => updateData("pf", user, index)}>{user.paid_flag ? "TRUE" : "FALSE"}</label> */}
-                            <div className="form-check form-switch">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                role="switch"
-                                checked={user.paid_flag}
-                                onChange={() => updateData("pf", user, index)}
-                              />
-                            </div>
-                          </td>
+                          {isCustom && (
+                            <td className="text-center">
+                              <div className="form-check form-switch">
+                                <input
+                                  className="form-check-input"
+                                  type="checkbox"
+                                  role="switch"
+                                  checked={user.promoted}
+                                  onChange={(e) =>
+                                    updateData(
+                                      user,
+                                      user.paid_flag,
+                                      user.validated_flag,
+                                      e.target.checked
+                                    )
+                                  }
+                                />
+                              </div>
+                            </td>
+                          )}
+                          {isAdmin && (
+                            <>
+                              <td className="text-center">
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={user.validated_flag}
+                                    onChange={(e) =>
+                                      updateData(
+                                        user,
+                                        user.paid_flag,
+                                        e.target.checked,
+                                        user.promoted
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                              <td className="text-center">
+                                <div className="form-check form-switch">
+                                  <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    role="switch"
+                                    checked={user.paid_flag}
+                                    onChange={(e) =>
+                                      updateData(
+                                        user,
+                                        e.target.checked,
+                                        user.validated_flag,
+                                        user.promoted
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </td>
+                            </>
+                          )}
                         </tr>
                       );
                     })}
@@ -506,7 +467,18 @@ const BlogForm = () => {
           <ToastContainer />
         </>
       )}
-    </div>
+
+      {openStatsId > 0 && (
+        <BlogStats
+          blogId={openStatsId}
+          onClose={() => setOpenStatsId(0)}
+          address={address}
+        />
+      )}
+      {showBlog && (
+        <ShowBlog currentRow={showBlog} onClose={() => setShowBlog(null)} />
+      )}
+    </Box>
   );
 };
 

@@ -1,0 +1,31 @@
+.main {
+  padding: 16px;
+  background-color: white;
+}
+.topBar {
+  display: flex;
+}
+.earnings {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+.navList span {
+  font-size: 1.2rem;
+}
+.earningsText {
+  color: grey;
+  font-size: 1rem !important;
+  text-align: center;
+}
+.selectedListItem {
+  background-color: #f3c7c7 !important;
+  border-radius: 8px !important;
+}
+.blankIcon {
+  font-size: 200px !important;
+  color: #83e688;
+}
+.earnings > * {
+  font-size: 30px !important;
+}

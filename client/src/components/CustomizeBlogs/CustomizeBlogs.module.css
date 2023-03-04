@@ -1,0 +1,19 @@
+.main {
+  background-color: #a3f2eb !important;
+  border-radius: 10px !important;
+  margin: 24px 0 !important;
+}
+.heading {
+  font-family: Audiowide;
+}
+.initiativeSection {
+  margin: 0px 100px;
+  background-color: #894b10;
+  padding: 50px;
+  border: 2px solid #802600;
+  border-radius: 8px;
+}
+.addMore {
+  cursor: pointer;
+  color: var(--bs-primary);
+}

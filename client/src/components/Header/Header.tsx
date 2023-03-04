@@ -4,7 +4,6 @@ import {
   Typography,
   Box,
   List,
-  makeStyles,
   ListItem,
   ListItemText,
   Hidden,
@@ -13,25 +12,44 @@ import {
   SwipeableDrawer,
 } from "@mui/material";
 import { Web3Button } from "@web3modal/react";
-import clsx from "clsx";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useAccount } from "wagmi";
+interface Props {
+  socialSharing: boolean;
+  whiteBg: boolean;
+}
+export default function Header(props: Props) {
+  const { isConnected } = useAccount();
 
-const linkStyle = { fontSize: { sm: "12px", md: "15px" } };
-//// { link: "buy-nextgen", title: "BUY" },
-// { link: "roadmap", title: "ROADMAP" },
-//{ link: "tokenomics", title: "TOKENOMICS" },
-
-const headerLinks = [
-  { link: "", title: "HOME" },
-  { link: "goals", title: "GOALS" },
-  { link: "values", title: "VALUES" },
-  { link: "services", title: "SERVICES" },
-  { link: "utilities", title: "UTILITIES" },
-  { link: "converse_with_ai", title: "CONVERSE WITH AI" },
-];
-
-export default function Header() {
   const [openDrawer, setState] = useState<boolean>(false);
+
+  const linkStyle = {
+    fontSize: {
+      sm: "12px",
+      md: "15px",
+      color: props.socialSharing || props.whiteBg ? "black" : "white",
+    },
+  };
+
+  //// { link: "buy-nextgen", title: "BUY" },
+  // { link: "roadmap", title: "ROADMAP" },
+  //{ link: "tokenomics", title: "TOKENOMICS" },
+  // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
+
+  const headerLinks = props.socialSharing
+    ? [
+        { link: "", title: "HOME" },
+        { route: "", title: "CHORES" },
+        { route: "user-campaigns", title: "CAMPAIGNS" },
+        { route: "user-quizzes", title: "QUIZZES" },
+      ]
+    : [
+        { link: "", title: "HOME" },
+        { link: "goals", title: "GOALS" },
+        { link: "values", title: "VALUES" },
+        { link: "services", title: "SERVICES" },
+        { link: "utilities", title: "UTILITIES" },
+      ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
@@ -54,36 +72,38 @@ export default function Header() {
         <img width="150px" src="/logo.png" alt="" />
       </Box>
       <List>
-        {headerLinks.map((h) => {
-          return (
-            <a
-              href={`/#${h.link}`}
-              style={{ textDecoration: "none", whiteSpace: "nowrap" }}
-              key={h.title}
-            >
-              <ListItem
-                button
-                style={{
-                  justifyContent: "center",
-                }}
+        {headerLinks
+          .filter((x) => !!x)
+          .map((h) => {
+            return (
+              <a
+                href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                style={{ textDecoration: "none", whiteSpace: "nowrap" }}
+                key={h.title}
               >
-                <ListItemText
-                  primaryTypographyProps={{
-                    sx: {
-                      textTransform: "capitalize",
-                      textAlign: "center",
-                      textDecoration: "none",
-                      cursor: "pointer",
-                      color: "#ffffff",
-                      fontFamily: "Audiowide",
-                    },
+                <ListItem
+                  button
+                  style={{
+                    justifyContent: "center",
                   }}
-                  primary={h.title}
-                />
-              </ListItem>
-            </a>
-          );
-        })}
+                >
+                  <ListItemText
+                    primaryTypographyProps={{
+                      sx: {
+                        textTransform: "capitalize",
+                        textAlign: "center",
+                        textDecoration: "none",
+                        cursor: "pointer",
+                        color: "#ffffff",
+                        fontFamily: "Audiowide",
+                      },
+                    }}
+                    primary={h.title}
+                  />
+                </ListItem>
+              </a>
+            );
+          })}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
         <Web3Button />
@@ -113,24 +133,22 @@ export default function Header() {
           flexBasis="40%"
           sx={{ mr: 4 }}
         >
-          {headerLinks.map((h) => {
-            return (
-              <a
-                href={`/#${h.link}`}
-                rel="noopener noreferrer"
-                key={h.title}
-                style={{ whiteSpace: "nowrap" }}
-              >
-                <Typography
-                  className="header-link"
-                  color="white"
-                  sx={linkStyle}
+          {headerLinks
+            .filter((x) => !!x)
+            .map((h) => {
+              return (
+                <a
+                  href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                  rel="noopener noreferrer"
+                  key={h.title}
+                  style={{ whiteSpace: "nowrap" }}
                 >
-                  {h.title}
-                </Typography>
-              </a>
-            );
-          })}
+                  <Typography className="header-link" sx={linkStyle}>
+                    {h.title}
+                  </Typography>
+                </a>
+              );
+            })}
           <Web3Button />
         </Stack>
       </Hidden>
@@ -141,7 +159,7 @@ export default function Header() {
               style={{
                 fontSize: "38px",
                 cursor: "pointer",
-                color: "white",
+                color: props.socialSharing || props.whiteBg ? "black" : "white",
               }}
             ></MenuIcon>
           </Button>

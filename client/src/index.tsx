@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { WagmiConfig } from "wagmi";
@@ -8,12 +7,11 @@ import { chains, client, walletConnectProjectId } from "./wagmi";
 import "@fontsource/audiowide";
 import { EthereumClient } from "@web3modal/ethereum";
 import { BrowserRouter } from "react-router-dom";
+import { render } from "react-dom";
 
 const ethereumClient = new EthereumClient(client, chains);
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-root.render(
+
+render(
   <React.StrictMode>
     <BrowserRouter>
       <WagmiConfig client={client}>
@@ -24,5 +22,6 @@ root.render(
         />
       </WagmiConfig>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById("root")
 );

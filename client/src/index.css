@@ -8,7 +8,6 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(10, 7, 20) !important;
 }
 
 code {
@@ -99,7 +98,6 @@ html {
   }
 }
 .header-link {
-  color: white !important;
   font-family: Audiowide !important;
   text-decoration: none !important;
 }

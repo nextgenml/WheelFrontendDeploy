@@ -5,7 +5,6 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Grid, Button, Link } from "@mui/material";
-import { Navigate, Route } from "react-router-dom";
 import { useAccount } from "wagmi";
 
 let borderStyle = {
