@@ -110,12 +110,12 @@ const eligibleWallets = async (walletId) => {
     "select payer_wallet_id, sum(overall_promotions_limit) as count from promotion_requests where payer_wallet_id != ? group by payer_wallet_id",
     [walletId]
   );
-  console.log("eligibleCount", eligibleCount);
+  // console.log("eligibleCount", eligibleCount);
   const promotedCount = await runQueryAsync(
     "select promoted_wallet, count(1) as count  from saved_prompts where initiative = 'promote-blogs' and promoted_wallet != ? group by promoted_wallet",
     [walletId]
   );
-  console.log("promotedCount", promotedCount);
+  // console.log("promotedCount", promotedCount);
   const result = [];
   for (var e of eligibleCount) {
     var found = false;
@@ -126,7 +126,7 @@ const eligibleWallets = async (walletId) => {
           found = true;
           break;
         }
-    console.log("e.payer_wallet_id", e);
+    // console.log("e.payer_wallet_id", e);
     if (!found) result.push(e.payer_wallet_id);
   }
   console.log("result", result);
