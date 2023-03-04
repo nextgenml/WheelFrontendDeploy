@@ -54,7 +54,7 @@ const getBlogStats = async (req, res) => {
     if (!walletId || !blogId)
       return res.status(400).json({ msg: "Invalid data" });
 
-    const data = await blogsRepo.getBlogStats(walletId, blogId);
+    const data = await blogsRepo.getBlogStats(blogId);
     return res.json({ data });
   } catch (error) {
     logger.error(`getCustomBlogs error: ${error}`);
