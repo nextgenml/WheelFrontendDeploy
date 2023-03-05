@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import {
   Stack,
   Typography,
@@ -14,15 +15,35 @@ import {
 import { Web3Button } from "@web3modal/react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAccount } from "wagmi";
+import config from "../../config";
+import TimeSpentCounter from "../../Utils/TimeSpentCounter";
+// @ts-ignore
+import styles from "./Header.module.css";
+
 interface Props {
   socialSharing: boolean;
   whiteBg: boolean;
 }
 export default function Header(props: Props) {
-  const { isConnected } = useAccount();
-
+  const { isConnected, address } = useAccount();
+  const [blogDate, setBlogDate] = useState<string | null>(null);
   const [openDrawer, setState] = useState<boolean>(false);
 
+  const fetchData = async () => {
+    const res = await fetch(
+      `${config.API_ENDPOINT}/first-blog-at?walletId=${address}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    setBlogDate(data.createdAt);
+  };
+  useEffect(() => {
+    fetchData();
+  }, [isConnected]);
   const linkStyle = {
     fontSize: {
       sm: "12px",
@@ -35,7 +56,6 @@ export default function Header(props: Props) {
   // { link: "roadmap", title: "ROADMAP" },
   //{ link: "tokenomics", title: "TOKENOMICS" },
   // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
-
   const headerLinks = props.socialSharing
     ? [
         { link: "", title: "HOME" },
@@ -124,6 +144,14 @@ export default function Header(props: Props) {
       >
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
+      {blogDate && (
+        <Box display="flex">
+          <Typography className={styles.mintingText}>
+            Minting Started:
+          </Typography>
+          <TimeSpentCounter timestamp={blogDate} />
+        </Box>
+      )}
       <Hidden smDown>
         <Stack
           direction="row"

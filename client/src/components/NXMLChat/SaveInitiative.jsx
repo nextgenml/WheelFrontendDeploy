@@ -136,7 +136,7 @@ const SaveInitiative = ({
       let data = JSON.parse(res);
       if (response.ok) {
         notify(data.msg, "success");
-        if (getUserData) getUserData();
+        if (isCustom && getUserData) getUserData();
       } else {
         notify(data.msg, "danger");
       }
