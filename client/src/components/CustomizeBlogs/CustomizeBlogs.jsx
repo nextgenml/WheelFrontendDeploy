@@ -32,11 +32,13 @@ export default function CustomizeBlogs() {
       setEligible(isEligible);
     }
   };
+  useEffect(() => {
+    getBlogStats();
+  }, [eligible]);
 
   useEffect(() => {
     if (isConnected) {
       checkEligibility();
-      getBlogStats();
     }
   }, [isConnected]);
   if (!isConnected) return null;
@@ -104,7 +106,7 @@ export default function CustomizeBlogs() {
                       disabled={!context}
                       onClick={() =>
                         window.open(
-                          `/nxml-blog-chat/blog-customization?context=${context}`,
+                          `/nxml-blog-chat/blog-customization?context=list 10 ways ${context}`,
                           "_blank"
                         )
                       }
