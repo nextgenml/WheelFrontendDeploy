@@ -3,7 +3,7 @@ import { Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-const TimeSpentCounter = ({ timestamp }) => {
+const TimeSpentCounter = ({ timestamp, className }) => {
   const [seconds, setSeconds] = useState(
     moment().diff(moment(timestamp), "seconds")
   );
@@ -20,7 +20,7 @@ const TimeSpentCounter = ({ timestamp }) => {
       if (intervalFunc) clearInterval(intervalFunc);
     };
   }, []);
-  return <Typography sx={{ color: "white" }}>{seconds}</Typography>;
+  return <Typography className={className}>{seconds}</Typography>;
 };
 
 export default TimeSpentCounter;

@@ -52,6 +52,20 @@ export default function Header(props: Props) {
     },
   };
 
+  const renderBlogTimer = () => {
+    if (blogDate)
+      return (
+        <Box display="flex" alignItems={"center"}>
+          <Typography className={styles.mintingText}>
+            Minting Started:
+          </Typography>
+          <TimeSpentCounter
+            timestamp={blogDate}
+            className={styles.mintingText}
+          />
+        </Box>
+      );
+  };
   //// { link: "buy-nextgen", title: "BUY" },
   // { link: "roadmap", title: "ROADMAP" },
   //{ link: "tokenomics", title: "TOKENOMICS" },
@@ -91,6 +105,7 @@ export default function Header(props: Props) {
       <Box mt={-20} display="flex" justifyContent="center">
         <img width="150px" src="/logo.png" alt="" />
       </Box>
+      {renderBlogTimer()}
       <List>
         {headerLinks
           .filter((x) => !!x)
@@ -144,14 +159,7 @@ export default function Header(props: Props) {
       >
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
-      {blogDate && (
-        <Box display="flex">
-          <Typography className={styles.mintingText}>
-            Minting Started:
-          </Typography>
-          <TimeSpentCounter timestamp={blogDate} />
-        </Box>
-      )}
+      {renderBlogTimer()}
       <Hidden smDown>
         <Stack
           direction="row"
