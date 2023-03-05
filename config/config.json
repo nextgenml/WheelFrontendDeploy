@@ -3,14 +3,14 @@
     "username": "root",
     "password": "password",
     "database": "nextgenml",
-    "host": "127.0.0.1",
+    "host": "prod-mysql",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "password": "password",
+    "database": "nextgenml",
+    "host": "prod-mysql",
     "dialect": "mysql"
   }
 }
