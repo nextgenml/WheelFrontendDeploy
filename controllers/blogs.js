@@ -8,6 +8,19 @@ const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const connection = dbConnection;
 
+const firstBlogAt = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+
+    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
+
+    const data = await blogsRepo.firstBlogAt(walletId);
+    return res.json({ createdAt: data[0]?.create_date });
+  } catch (error) {
+    logger.error(`firstBlogAt error: ${error}`);
+    return res.status(500).json({ msg: error });
+  }
+};
 const getUserBlogStats = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -250,4 +263,5 @@ module.exports = {
   getPromotedBlogs,
   getBlogStats,
   getUserBlogStats,
+  firstBlogAt,
 };

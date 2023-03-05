@@ -1,5 +1,10 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 
+const firstBlogAt = async (walletId) => {
+  const query =
+    "select create_date from saved_prompts where wallet_address = ? order by create_date asc limit 1";
+  return await runQueryAsync(query, [walletId]);
+};
 const getBlogStats = async (blogId) => {
   const query =
     "select link, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
@@ -61,4 +66,5 @@ module.exports = {
   getCustomBlogs,
   getPromotedBlogs,
   getBlogStats,
+  firstBlogAt,
 };
