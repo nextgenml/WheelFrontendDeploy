@@ -32,6 +32,17 @@ export default function CustomizeBlogs() {
       setEligible(isEligible);
     }
   };
+
+  const getBlogStats = async () => {
+    if (eligible) {
+      const res1 = await fetch(
+        `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
+      );
+      const data = await res1.json();
+      setBlogStats(data);
+    }
+  };
+
   useEffect(() => {
     getBlogStats();
   }, [eligible]);
@@ -58,16 +69,6 @@ export default function CustomizeBlogs() {
     if (prompt) {
       prompt.value = event.target.value;
       setPrompts([...prompts]);
-    }
-  };
-
-  const getBlogStats = async () => {
-    if (eligible) {
-      const res1 = await fetch(
-        `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
-      );
-      const data = await res1.json();
-      setBlogStats(data);
     }
   };
 
