@@ -54,11 +54,12 @@ const SaveInitiative = ({
     if (response.ok) {
       let res = await response.json();
       setResult(
-        isCustom
+        (isCustom
           ? res.result
           : res.result +
-              `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
-      ).trim();
+            `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
+        ).trim()
+      );
       setIsCopyDisable(false);
       if (isCustom) {
         await updateBlogCount(address);
@@ -144,7 +145,6 @@ const SaveInitiative = ({
       notify("Please provide valid data", "danger");
     }
   }
-
   return (
     <div className="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
       <form style={{ color: "white" }}>
