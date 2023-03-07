@@ -57,7 +57,7 @@ export default function Header(props: Props) {
       return (
         <Box display="flex" alignItems={"center"}>
           <Typography className={styles.mintingText}>
-            Minting Started:
+            Point Reward:
           </Typography>
           <TimeSpentCounter
             timestamp={blogDate}
