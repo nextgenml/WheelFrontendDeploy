@@ -7,7 +7,7 @@ const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const connection = dbConnection;
-
+const moment = require("moment");
 const firstBlogAt = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -15,7 +15,11 @@ const firstBlogAt = async (req, res) => {
     if (!walletId) return res.status(400).json({ msg: "Invalid data" });
 
     const data = await blogsRepo.firstBlogAt(walletId);
-    return res.json({ createdAt: data[0]?.create_date });
+    return res.json({
+      createdAt: data[0]?.create_date
+        ? moment(data[0]?.create_date).add(5, "hours").add(30, "minutes")
+        : null,
+    });
   } catch (error) {
     logger.error(`firstBlogAt error: ${error}`);
     return res.status(500).json({ msg: error });
