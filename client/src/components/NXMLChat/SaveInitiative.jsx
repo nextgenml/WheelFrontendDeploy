@@ -107,6 +107,15 @@ const SaveInitiative = ({
 
   async function onSubmitClick() {
     // send post request to save data in database
+    const finalContent = isPromote ? content : result;
+    if (finalContent && finalContent.length > 60000) {
+      notify(
+        `Blog cannot be more than 60000 characters, please remove extra ${
+          finalContent.length - 60000
+        } characters`
+      );
+      return;
+    }
     if (
       ((isChecked && !isCopyDisable) || isPromote) &&
       (!link || isValidUrl(link))
@@ -122,7 +131,7 @@ const SaveInitiative = ({
           wallet_address: address,
           initiative,
           prompt,
-          blog: isPromote ? content : result,
+          blog: finalContent,
           link,
           validated_flag: isValidatedFlag ? true : null,
           paid_amount: config.PAID_AMOUNT,
@@ -167,7 +176,8 @@ const SaveInitiative = ({
             <textarea
               className="form-control"
               placeholder="Blog Content"
-              readOnly={true}
+              readOnly={isPromote}
+              onChange={(e) => setResult(e.target.value)}
               value={isPromote ? content : result}
               style={{ height: "100px" }}
               disabled={isPromote}
