@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const TimeSpentCounter = ({ timestamp, className }) => {
   const [seconds, setSeconds] = useState(
-    moment().diff(moment(timestamp), "seconds")
+    moment().diff(moment.utc(timestamp), "seconds")
   );
 
   let intervalFunc = null;
