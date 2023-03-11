@@ -122,7 +122,7 @@ come join NextGen ML and explore various tools where user owns data and monetize
                           {row.rank}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
-                          ${row.prize}
+                          eth {row.prize}
                         </td>
                       </tr>
                     );
