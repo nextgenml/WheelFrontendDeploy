@@ -15,7 +15,7 @@ const distributeReward = async (address, amount) => {
     // Receiver Address which receives Ether
     let receiverAddress = address;
     // Ether amount to send
-    let amountInEther = amount;
+    let amountInEther = amount.toString();
     // Create a transaction object
     let tx = {
       to: receiverAddress,
