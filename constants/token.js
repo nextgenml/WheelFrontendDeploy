@@ -1,5 +1,5 @@
-export const NEXGENML = "Nexgenml";
-export const SHIBA = "Shiba";
-export const DOGELON = "Dogelon";
-export const FLOKI = "Floki";
-export const VOLT = "Volt";
+export const NEXGENML = "NEXGEN";
+export const SHIBA = "SHIB";
+export const DOGELON = "ELON";
+export const FLOKI = "FLOKI";
+export const VOLT = "VOLT";
