@@ -19,6 +19,10 @@ Congratulations !!
 Wallet - ${row.wallet_id} Amount - $${row.prize}
 
 come join NextGen ML and explore various tools where user owns data and monetizes data on their terms
+
+Website: https://www.nexgenml.io
+Twitter: https://twitter.com/nextgen_ml
+Telgram: https://t.me/+JMGorMX41tM2NGIx
 `;
   };
   return (
@@ -122,7 +126,7 @@ come join NextGen ML and explore various tools where user owns data and monetize
                           {row.rank}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
-                          ${row.prize}
+                          eth {row.prize}
                         </td>
                       </tr>
                     );

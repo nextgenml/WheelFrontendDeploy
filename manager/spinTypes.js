@@ -96,7 +96,7 @@ const getNextAdhocSpin = (spin) => {
   const [hours, minutes] = parseDateTime(spin.run_at);
 
   const [day, month, year] = parseDateTime(spin.spin_day);
-  const nextSpinTime = moment();
+  const nextSpinTime = moment().utc();
   nextSpinTime.set("year", year);
   nextSpinTime.set("month", month - 1);
   nextSpinTime.set("date", day);

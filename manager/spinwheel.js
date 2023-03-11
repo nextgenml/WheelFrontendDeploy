@@ -11,8 +11,8 @@ const moment = require("moment");
 const { updateLaunchDate } = require("../repository/scheduledSpin.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
-const { processPrizes } = require("./rewardTransfer.js");
 const logger = require("../logger.js");
+const { processPrizesV1 } = require("./rewardTransferV1.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -111,7 +111,7 @@ const createParticipants = async (nextSpin) => {
       nextSpin.spinNo += 1;
       page += currParticipants.length > size ? 2 : 1;
     }
-    await processPrizes(winners, async (id) => await markWinnerAsPaid(id));
+    await processPrizesV1(winners, async (id) => await markWinnerAsPaid(id));
     logger.info(`spin completed for a type: ${nextSpin.type}`);
   } catch (error) {
     logger.error(
@@ -129,7 +129,7 @@ const processWinners = async (group, nextSpin) => {
       const rIndex = generateRandomNumber(group.length);
       const winner = group[rIndex];
       const prize = nextSpin.winnerPrizes[index - 1];
-      logger.info(`winner: ${winner.id}, prize: ${prize}, ${index}`);
+      logger.info(`winner: ${winner.id}, prize: ${prize}, rank: ${index}`);
       await markAsWinner(winner.id, index, prize);
       winners.push({
         id: winner.id,
