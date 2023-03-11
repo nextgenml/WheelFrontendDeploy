@@ -143,7 +143,7 @@ rule.minute = minutes;
 
 const initiateAlgorithm = async () => {
   const endTime = moment().subtract(10, "seconds").toISOString();
-  await updateWallets(new Date(), 0, false);
+  await updateWallets(new Date());
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
 
