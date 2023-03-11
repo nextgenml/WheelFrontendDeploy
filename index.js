@@ -76,14 +76,17 @@ app.get("/spinner-data", async (req, res) => {
         );
       }
       const nextSpin = await nextSpinDetails();
+
       data = {
         participants,
         winners,
-        end_time: nextSpin.nextSpinAt.add(10, "seconds").format(),
+        end_time: nextSpin
+          ? nextSpin.nextSpinAt.add(10, "seconds").format()
+          : null,
         no_of_winners,
         spin_delay,
         prev_spin_type: lastScheduledSpin?.type,
-        next_spin_type: nextSpin.type,
+        next_spin_type: nextSpin?.type,
       };
     }
     logger.info(JSON.stringify(data));

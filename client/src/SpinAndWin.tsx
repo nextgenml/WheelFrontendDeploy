@@ -44,7 +44,7 @@ export default function SpinAndWin() {
   const [showEnd, setShowEnd] = useState(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [typeValue, setTypeValue] = useState("daily");
+  const [typeValue, setTypeValue] = useState("adhoc");
   const [spinTypes, setSpinTypes] = useState({
     prev_spin_type: "",
     next_spin_type: "",
@@ -188,7 +188,7 @@ export default function SpinAndWin() {
                   items={wheel_items}
                 />
                 <div className="spin-wheel-title">
-                  {spinTypes.prev_spin_type.toUpperCase()} SPIN
+                  {spinTypes.prev_spin_type?.toUpperCase()} SPIN
                 </div>
               </div>
             ) : (

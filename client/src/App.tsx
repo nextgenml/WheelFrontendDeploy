@@ -2,7 +2,7 @@
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import 'bootstrap/dist/js/bootstrap.bundle.min';
 // import "react-toastify/dist/ReactToastify.css";
-// import SpinAndWin from "./SpinAndWin";
+import SpinAndWin from "./SpinAndWin";
 //import { Routes, Route } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import { Container } from "@mui/material";
@@ -57,7 +57,7 @@ function App() {
           }
         />
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
-        {/* <Route path="/spin-wheel" element={<SpinAndWin />} /> */}
+        <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
         <Route path="/promotions" element={<Promotions />} />
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} />

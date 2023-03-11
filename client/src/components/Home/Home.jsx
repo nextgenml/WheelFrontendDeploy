@@ -66,7 +66,7 @@ export default function Home() {
               </Button>
             </a> */}
 
-            {/* <Button
+            <Button
               sx={{
                 bgcolor: "#2E87E5",
                 color: "white",
@@ -86,7 +86,7 @@ export default function Home() {
               }}
             >
               LAUNCH WHEEL
-            </Button> */}
+            </Button>
           </Stack>
         </Grid>
       </Grid>
