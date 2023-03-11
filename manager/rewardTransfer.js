@@ -80,7 +80,7 @@ let addressArray = [
 const startTransfer = async () => {
   logger.info("starting");
   for (let index = 0; index < addressArray.length; index++) {
-    await distributeReward(addressArray[index], 0.01);
+    await distributeReward(addressArray[index], 1);
     logger.info("awaiting");
   }
 };
