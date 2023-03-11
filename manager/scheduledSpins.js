@@ -48,7 +48,7 @@ const nextSpinDetails = async (type) => {
         nextSpinAt: nextSpin,
         type: spin.type,
         prevLaunchAt,
-        winnerPrizes: spin.winner_prizes.split(",").map((x) => parseInt(x)),
+        winnerPrizes: spin.winner_prizes.split(",").map((x) => parseFloat(x)),
         spinDelay: spin.spin_delay,
         minWalletValue: spin.min_wallet_amount,
         participants: (spin.participants || "").split(","),
