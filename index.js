@@ -45,7 +45,7 @@ app.post("/save-blog-data", blogsController.saveBlogData);
 
 app.get("/spinner-data", async (req, res) => {
   try {
-    let current_time = moment().format();
+    let current_time = moment().utc().format();
     const [runningSpin, scheduledSpin] = await getRunningSpin(true);
     let data, participants, winners;
     const { walletAddress } = req.query;
