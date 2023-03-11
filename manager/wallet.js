@@ -1,4 +1,5 @@
 const config = require("../config.js");
+const { NEXGENML } = require("../constants/token.js");
 const logger = require("../logger.js");
 const { createHolder } = require("../repository/holder.js");
 const { createWallet } = require("../repository/wallet.js");
@@ -14,7 +15,7 @@ const updateWallets = async (date) => {
   for (const item of new_addresses) {
     const value =
       parseInt(item[1].toString().substring(0, item[1].length - 18)) || 0;
-    await createWallet(item[0], value);
+    await createWallet(item[0], value, NEXGENML);
     await createHolder(item[0], value);
   }
 };

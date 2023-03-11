@@ -1,0 +1,91 @@
+const fs = require("fs").promises;
+const Web3 = require("web3");
+const path = require("path");
+const config = require("../config.js");
+const logger = require("../logger");
+
+Number.prototype.toFixedSpecial = function (n) {
+  var str = this.toFixed(n);
+  if (str.indexOf("e+") === -1) return str;
+
+  str = str
+    .replace(".", "")
+    .split("e+")
+    .reduce(function (p, b) {
+      return p + Array(b - p.length + 2).join(0);
+    });
+
+  if (n > 0) str += "." + Array(n + 1).join(0);
+
+  return str;
+};
+
+const groupWallets = (events) => {
+  const dic = {};
+  for (const ev of events) {
+    if (dic[ev.returnValues.to]) {
+      dic[ev.returnValues.to] = (
+        parseFloat(dic[ev.returnValues.to]) + parseFloat(ev.returnValues.value)
+      ).toFixedSpecial(0);
+    } else {
+      dic[ev.returnValues.to] = parseFloat(
+        ev.returnValues.value
+      ).toFixedSpecial(0);
+    }
+  }
+  return Object.keys(dic)
+    .map((k) => [k, dic[k]])
+    .sort((a, b) => b[1] - a[1]);
+};
+
+const readFile = async (filename) => {
+  const data = await fs.readFile(filename);
+  return data.toString();
+};
+
+const getContract = async (contractAddress, contractAbi) => {
+  w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
+  const filePath = path.join(__dirname, "assets", contractAbi);
+
+  const fileContent = await readFile(filePath);
+  return new w3.eth.Contract(JSON.parse(fileContent), contractAddress);
+};
+
+const binaryPull = async (contract, start, end, callback) => {
+  try {
+    console.log("start, end", start, end);
+
+    if (start <= end) {
+      const result = await contract.getPastEvents("Transfer", {
+        fromBlock: start,
+        toBlock: end,
+      });
+      if (result.length) callback(result);
+    }
+  } catch (error) {
+    if (error.message.includes("query returned more than 10000 results")) {
+      const mid = Math.floor((start + end) / 2);
+      await binaryPull(contract, start, mid, callback);
+      await binaryPull(contract, mid + 1, end, callback);
+    } else {
+      logger.error(`error while pulling from smart contract: ${error.message}`);
+    }
+  }
+};
+
+const pullWallets = async (contractAddress, contractAbi, lastBlockNumber) => {
+  const contract = await getContract(contractAddress, contractAbi);
+  const latest = await w3.eth.getBlockNumber();
+  const wallets = [];
+
+  await binaryPull(contract, lastBlockNumber, latest, (events) => {
+    console.log("count", events.length);
+    wallets.push(events);
+  });
+  const grouped = groupWallets(wallets.flat());
+  return [grouped, latest];
+};
+
+module.exports = {
+  pullWallets,
+};
