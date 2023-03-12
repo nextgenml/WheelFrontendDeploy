@@ -1,0 +1,89 @@
+2023-03-10T03:56:23.695Z - [INFO] - spin process started
+2023-03-10T03:56:32.859Z - [INFO] - ----------------------------app start---------------------
+2023-03-10T03:56:32.860Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-10T04:46:36.800Z - [INFO] - spin process started
+2023-03-10T04:46:42.105Z - [INFO] - ----------------------------app start---------------------
+2023-03-10T04:46:42.106Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-10T14:56:21.832Z - [INFO] - spin process started
+2023-03-10T14:57:10.352Z - [INFO] - ----------------------------app start---------------------
+2023-03-10T14:57:10.354Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-10T14:57:10.364Z - [INFO] - Cannot enqueue Query after fatal error.
+2023-03-10T14:57:10.365Z - [ERROR] - error in initiateNextSpin: Error: Cannot enqueue Query after fatal error.
+2023-03-10T15:02:41.149Z - [ERROR] - error occurred in eligibleForPromotion api: Error: Cannot enqueue Query after fatal error.
+2023-03-10T15:02:41.155Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-10T15:02:51.106Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-10T15:20:08.599Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-10T15:26:03.305Z - [INFO] - spin process started
+2023-03-10T15:26:11.615Z - [INFO] - ----------------------------app start---------------------
+2023-03-10T15:26:11.615Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-10T15:30:02.734Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:30:12.596Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:30:21.609Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:30:32.584Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:30:42.634Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:30:51.613Z - [INFO] - successfully fetched data at: Fri Mar 10 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-10T15:46:06.691Z - [ERROR] - saveBlogData error: Error: ER_WRONG_VALUE_COUNT_ON_ROW: Column count doesn't match value count at row 1
+2023-03-10T15:52:53.394Z - [ERROR] - saveBlogData error: Error: ER_WRONG_VALUE_COUNT_ON_ROW: Column count doesn't match value count at row 1
+2023-03-10T15:53:27.748Z - [INFO] - spin process started
+2023-03-10T15:53:31.800Z - [INFO] - ----------------------------app start---------------------
+2023-03-10T15:53:31.800Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-10T15:53:44.794Z - [ERROR] - saveBlogData error: Error: ER_BAD_FIELD_ERROR: Unknown column 'promoted_wallet' in 'field list'
+2023-03-10T16:03:59.857Z - [ERROR] - saveBlogData error: Error: ER_BAD_NULL_ERROR: Column 'promoted_wallet' cannot be null
+2023-03-11T15:43:56.825Z - [INFO] - spin process started
+2023-03-11T15:44:12.669Z - [INFO] - ----------------------------app start---------------------
+2023-03-11T15:44:12.669Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-11T15:44:12.677Z - [INFO] - Cannot enqueue Query after fatal error.
+2023-03-11T15:44:12.678Z - [ERROR] - error in initiateNextSpin: Error: Cannot enqueue Query after fatal error.
+2023-03-11T15:45:01.609Z - [INFO] - spin process started
+2023-03-11T15:45:01.933Z - [INFO] - ----------------------------app start---------------------
+2023-03-11T15:45:01.933Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-12T08:21:39.888Z - [INFO] - spin process started
+2023-03-12T08:22:14.205Z - [INFO] - ----------------------------app start---------------------
+2023-03-12T08:22:14.205Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-12T08:22:14.219Z - [INFO] - Cannot enqueue Query after fatal error.
+2023-03-12T08:22:14.220Z - [ERROR] - error in initiateNextSpin: Error: Cannot enqueue Query after fatal error.
+2023-03-12T08:22:46.976Z - [INFO] - spin process started
+2023-03-12T08:22:47.386Z - [INFO] - ----------------------------app start---------------------
+2023-03-12T08:22:47.386Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-12T09:30:02.285Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T09:30:12.336Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T09:30:21.289Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T09:30:31.144Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T09:30:41.411Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T09:30:51.129Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T14:30:25.330Z - [INFO] - spin process started
+2023-03-12T14:30:56.061Z - [INFO] - ----------------------------app start---------------------
+2023-03-12T14:30:56.062Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-12T14:30:56.085Z - [INFO] - Cannot enqueue Query after fatal error.
+2023-03-12T14:30:56.087Z - [ERROR] - error in initiateNextSpin: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:07.081Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:07.084Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:16.665Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:16.666Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:26.599Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:26.600Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:37.732Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:37.733Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:47.661Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:47.662Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:30:56.639Z - [INFO] - successfully fetched data at: Sun Mar 12 2023, new_addresses: [["0x49733c8bCd1830ED5300c8d1d0E8432ddE5ed601","8500000001570941000000"],["0x3db0aDaF12370ae1155f5861692B991397093fFf","300000000055444963328"],["0xF57434c0Ec4283B381a6f4ba80d00E92Cd467d90","100000000018481659904"],["0x000000000000000000000000000000000000dEaD","100000000018481659904"]]
+2023-03-12T15:30:56.640Z - [ERROR] - error fetching wallet at Sun Mar 12 2023, err: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:37:10.037Z - [ERROR] - error occurred in eligibleForPromotion api: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:37:10.047Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:37:14.294Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:41:00.360Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T15:41:28.633Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:17:06.101Z - [INFO] - spin process started
+2023-03-12T19:17:39.976Z - [INFO] - ----------------------------app start---------------------
+2023-03-12T19:17:39.976Z - [INFO] - app listening at ", "http://localhost: 8000
+2023-03-12T19:17:39.983Z - [INFO] - Cannot enqueue Query after fatal error.
+2023-03-12T19:17:39.984Z - [ERROR] - error in initiateNextSpin: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:22:32.624Z - [ERROR] - error occurred in eligibleForPromotion api: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:22:32.630Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:22:33.107Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:28:01.639Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:28:01.730Z - [ERROR] - error occurred in eligibleForPromotion api: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:28:08.396Z - [ERROR] - firstBlogAt error: Error: Cannot enqueue Query after fatal error.
+2023-03-12T19:35:58.964Z - [INFO] - spin process started
+2023-03-12T19:36:02.851Z - [INFO] - ----------------------------app start---------------------
+2023-03-12T19:36:02.852Z - [INFO] - app listening at ", "http://localhost: 8000
