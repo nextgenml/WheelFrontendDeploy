@@ -79,7 +79,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                     scope="col"
                     className="text-sm font-medium text-white px-6 py-4"
                   >
-                    Prize
+                    ETH
                   </th>
                 </tr>
               </thead>
@@ -126,7 +126,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                           {row.rank}
                         </td>
                         <td className="text-sm font-medium text-white px-6 py-4">
-                          eth {row.prize}
+                          ETH {row.prize}
                         </td>
                       </tr>
                     );
