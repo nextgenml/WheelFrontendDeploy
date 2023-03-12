@@ -46,7 +46,7 @@ export default function PromotionsList({ address, count }) {
   const open = Boolean(anchorEl);
   const fetchData = async () => {
     let url;
-    if (config.ADMIN_WALLET === address)
+    if (config.ADMIN_WALLET_1 === address)
       url = `${config.API_ENDPOINT}/promotions-admin?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
     else
       url = `${config.API_ENDPOINT}/get-promotions?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
@@ -156,7 +156,7 @@ export default function PromotionsList({ address, count }) {
                 <TableCell>{row.eth_amount}</TableCell>
                 <TableCell>{row.status}</TableCell>
                 <TableCell>{row.reason}</TableCell>
-                {address === config.ADMIN_WALLET ? (
+                {address === config.ADMIN_WALLET_1 ? (
                   <>
                     <TableCell>
                       <Button

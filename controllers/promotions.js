@@ -50,7 +50,7 @@ const approvePromotionRequest = async (req, res) => {
         message: "Insufficient data",
       });
 
-    if (req.body.walletId !== config.ADMIN_WALLET)
+    if (req.body.walletId !== config.ADMIN_WALLET_1)
       return res.status(401).json({
         statusCode: 401,
         message: "Unauthorized",
@@ -121,7 +121,7 @@ const getAppliedRequests = async (req, res) => {
 const getAppliedRequestsAdmin = async (req, res) => {
   try {
     const { walletId, pageNo, pageSize } = req.query;
-    if (walletId !== config.ADMIN_WALLET)
+    if (walletId !== config.ADMIN_WALLET_1)
       return res.status(401).json({
         statusCode: 401,
         message: "Unauthorized",
