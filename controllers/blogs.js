@@ -76,7 +76,7 @@ const getCustomBlogs = async (req, res) => {
 
     const [totalResult, data] = await blogsRepo.getCustomBlogs(
       walletId,
-      walletId === config.ADMIN_WALLET,
+      walletId === config.ADMIN_WALLET_1,
       search,
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
@@ -125,7 +125,7 @@ const getBlogData = async (req, res) => {
     : "";
   var totalResult, results;
 
-  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET) {
+  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET_1) {
     offset = req.query.offset;
   } else {
     return res.status(400).json({ msg: "Invalid data" });

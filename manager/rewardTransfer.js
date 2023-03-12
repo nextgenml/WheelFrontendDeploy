@@ -48,6 +48,7 @@ const distributeReward = async (address, amount) => {
 };
 
 const processPrizes = async (winners, callback) => {
+  // return;
   for (const item of winners) {
     logger.info(`transfer to ${item.walletId}, reward: ${item.prize}`);
     const success = await distributeReward(item.walletId, item.prize);
@@ -61,12 +62,34 @@ const processPrizes = async (winners, callback) => {
   }
 };
 // let addressArray = [
-//   "0xfeC714277eCcd686bDBd9A49e2877bAc2C532168",
-//   "0x4b8760C3E41a9CCC9d283586dF00e4e25FC6cCe5",
-//   "0x69CB26CD741AAe7Ad48aE57835448E5DE2dD77d6",
-//   "",
+//   "0x9F226175809BC145e2056c28FA2F39E249E862a7",
+//   "0xC69f509ca944EA69b5e2F4b93256a92426bDa752",
+//   "0x789e27433F9f0868B60b2aD6C53CdA52CD775F6e",
+//   "0x6102C87458e0a4fC23FdcA11d9Fc9a038470319E",
+//   "0xBB227b144F787470CeE78648B043316f3D907e8e",
+//   "0x4306cebc0028Ea9aD58Edb2c6e3e557e7515D960",
+//   "0x603553CefF0E0cb3CfD8526bbf43058ECd366B12",
+//   "0x93b0eB44711863A82518cEE91f56c8AA08Ba8676",
+//   "0xb960990198857b4277c625B837d955283691f94b",
+//   "0x248e62dA8c43b3b7E8e39D832c960fC3406b24BC",
+//   "0x1a459aA81570a5911238cf04325575e1f6B3274E",
+//   "0xf888060CaF4Ca24ce59c19f0210e99e844b425a0",
+//   "0xc3385b9b89416C068B5F3fB7698ae0c15917C1b7",
+//   "0x2199d2dD04B844Ac9D55fc5Fe8518Aab8555Ce67",
+//   "0x144b29657922C69d31CB6F666B01055B988F1a20",
 // ];
-
+// "0x6102C87458e0a4fC23FdcA11d9Fc9a038470319E",
+//  "0xBB227b144F787470CeE78648B043316f3D907e8e",
+//  "0x4306cebc0028Ea9aD58Edb2c6e3e557e7515D960",
+//  "0x603553CefF0E0cb3CfD8526bbf43058ECd366B12",
+//  "0x93b0eB44711863A82518cEE91f56c8AA08Ba8676",
+//  "0xb960990198857b4277c625B837d955283691f94b",
+//  "0x248e62dA8c43b3b7E8e39D832c960fC3406b24BC",
+//  "0x1a459aA81570a5911238cf04325575e1f6B3274E",
+//  "0xf888060CaF4Ca24ce59c19f0210e99e844b425a0",
+//  "0xc3385b9b89416C068B5F3fB7698ae0c15917C1b7",
+//  "0x2199d2dD04B844Ac9D55fc5Fe8518Aab8555Ce67",
+//  "0x144b29657922C69d31CB6F666B01055B988F1a20",
 // const startTransfer = async () => {
 //   logger.info("starting");
 //   for (let index = 0; index < addressArray.length; index++) {
