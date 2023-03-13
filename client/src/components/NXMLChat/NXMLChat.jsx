@@ -81,9 +81,8 @@ const BlogForm = () => {
     const url =
       initiative === "blog-customization"
         ? `${config.API_ENDPOINT}/get-custom-blogs?pageNo=${pageNo}&pageSize=${pageSize}&walletId=${address}`
-        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
-            reset || !walletAdd ? "" : walletAdd
-          }&offset=${offset}&walletId=${address}`;
+        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${reset || !walletAdd ? "" : walletAdd
+        }&offset=${offset}&walletId=${address}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -113,6 +112,7 @@ const BlogForm = () => {
       validatedFlag: vf,
       paidFlag: pf,
       promoted,
+      walletId: address
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
     let response = await fetch(url, {
@@ -149,7 +149,6 @@ const BlogForm = () => {
   const isAdmin = userRole === config.ADMIN_WALLET_1;
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
-  console.log("ispromote",isPromote);
   const getBlogStats = async () => {
     if (isCustom) {
       const res1 = await fetch(
@@ -162,8 +161,7 @@ const BlogForm = () => {
   const getPromotionBlogs = async () => {
     const res = await fetch(
       `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
-      );
-      console.log("getprmotionblogs",res.ok);
+    );
     if (res.ok) {
       const { data, total } = await res.json();
       console.log(promotedBlogs);
@@ -195,7 +193,7 @@ const BlogForm = () => {
     else
       get_gpt_data(
         searchParams.get("context") ||
-          `List 10 ways in which ${initiative} will be improved by blockchain`,
+        `List 10 ways in which ${initiative} will be improved by blockchain`,
         !!searchParams.get("context")
       );
   }, []);
@@ -419,6 +417,8 @@ const BlogForm = () => {
                                     className="form-check-input"
                                     type="checkbox"
                                     role="switch"
+                                    id={`validated_flag${index}`}
+                                    key={index}
                                     checked={user.validated_flag}
                                     onChange={(e) =>
                                       updateData(
@@ -437,6 +437,8 @@ const BlogForm = () => {
                                     className="form-check-input"
                                     type="checkbox"
                                     role="switch"
+                                    id={`paid_flag${index}`}
+                                    key={index}
                                     checked={user.paid_flag}
                                     onChange={(e) =>
                                       updateData(

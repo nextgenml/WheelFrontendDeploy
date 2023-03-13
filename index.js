@@ -37,11 +37,6 @@ const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
-app.put("/update-blog-data", blogsController.updateBlogData);
-
-app.get("/get-blog-data", blogsController.getBlogData);
-
-app.post("/save-blog-data", blogsController.saveBlogData);
 
 app.get("/spinner-data", async (req, res) => {
   try {
@@ -176,6 +171,9 @@ app.get(
   "/custom-blogs-eligibility",
   promotionsController.eligibleForCustomBlogs
 );
+app.put("/update-blog-data", blogsController.updateBlogData);
+app.get("/get-blog-data", blogsController.getBlogData);
+app.post("/save-blog-data", blogsController.saveBlogData);
 
 // social sharing routes
 app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);

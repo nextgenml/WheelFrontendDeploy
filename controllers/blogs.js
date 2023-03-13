@@ -1,4 +1,3 @@
-const { v4: uuidv4 } = require("uuid");
 const config = require("../config");
 const { dbConnection } = require("../dbconnect");
 const logger = require("../logger");
@@ -45,26 +44,29 @@ const getUserBlogStats = async (req, res) => {
 
 const updateBlogData = async (req, res) => {
   try {
-    let { validatedFlag, paidFlag, transactionID, promoted, blog } = req.body;
+    let { validatedFlag, walletId, paidFlag, transactionID } = req.body;
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
-      return res.status(400).json({ msg: "Invalid data" });
+      return res.status(400).json({
+        statusCode: 400,
+        msg: "Insufficient data",
+      });
     }
+    if (walletId !== config.ADMIN_WALLET_1)
+      return res.status(401).json({
+        statusCode: 401,
+        msg: "Unauthorized",
+      });
 
-    if (blog) {
-      await runQueryAsync(
-        `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ?, blog = ? WHERE transactionID = ?`,
-        [validatedFlag, paidFlag, promoted, blog, transactionID]
-      );
-    } else
-      await runQueryAsync(
-        `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ? WHERE transactionID = ?`,
-        [validatedFlag, paidFlag, promoted, transactionID]
-      );
-
-    return res.status(200).json({ msg: "Data updated successfully" });
+    await blogsRepo.updateBlogData(req.body);
+    return res.status(200).json({
+      msg: "Updated successfully",
+    });
   } catch (error) {
-    logger.error(`updateBlogData error: ${error}`);
-    return res.status(500).json({ msg: error });
+    logger.error(`error occurred in updateBlogData api: ${error}`);
+    res.status(400).json({
+      statusCode: 400,
+      msg: error,
+    });
   }
 };
 
@@ -118,107 +120,63 @@ const getPromotedBlogs = async (req, res) => {
 };
 
 const getBlogData = async (req, res) => {
-  const pageSize = 10;
-  let offset;
-  const searchWalletAdd = req.query.searchWalletAdd
-    ? req.query.searchWalletAdd
-    : "";
-  var totalResult, results;
+  try {
+    const pageSize = 10;
+    let offset;
+    const searchWalletAdd = req.query.searchWalletAdd
+      ? req.query.searchWalletAdd
+      : "";
+    var totalResult, results;
 
-  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET_1) {
-    offset = req.query.offset;
-  } else {
-    return res.status(400).json({ msg: "Invalid data" });
-  }
+    if (req.query.walletId !== config.ADMIN_WALLET_1)
+      return res.status(401).json({
+        statusCode: 401,
+        msg: "Unauthorized",
+      });
 
-  totalRecords = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT count(*) from saved_prompts`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
+    if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET_1) {
+      offset = req.query.offset;
+    } else {
+      return res.status(400).json({ msg: "Invalid data" });
+    }
+
+    [totalResult] = await blogsRepo.totalBlogs();
+
+    if (searchWalletAdd) {
+      [results] = await blogsRepo.selectSearchElements(searchWalletAdd);
+      totalResult = results ? results.length : 0;
+    }
+
+    if (pageSize && offset && !searchWalletAdd) {
+      [results] = await blogsRepo.selectAllElements(pageSize, offset);
+    }
+
+    return res.status(200).json({
+      totalResult,
+      data: results,
     });
-  };
 
-  totalResult = await totalRecords();
-  totalResult = totalResult[0]["count(*)"];
-
-  SelectSearchElements = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * from saved_prompts WHERE wallet_address='${searchWalletAdd}' ORDER BY create_date DESC, wallet_address DESC`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
+  } catch (error) {
+    logger.error(`error occurred in getBlogData api: ${error}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: error,
     });
-  };
-
-  if (searchWalletAdd) {
-    results = await SelectSearchElements(searchWalletAdd);
-    console.log(results);
-    totalResult = results ? results.length : 0;
   }
-
-  SelectAllElements = () => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        `SELECT * from saved_prompts ORDER BY create_date DESC, wallet_address DESC LIMIT ${pageSize} OFFSET ${offset}`,
-        async (error, elements) => {
-          if (error) {
-            // return reject(error);
-            return res.status(500).json({ msg: "Internal server error" });
-          }
-          return resolve(elements);
-        }
-      );
-    });
-  };
-
-  if (pageSize && offset && !searchWalletAdd) {
-    results = await SelectAllElements();
-  }
-
-  return res.status(200).json({ totalResult, data: results });
 };
 
 const saveBlogData = async (req, res) => {
   const data = req.body;
-  const transactionId = uuidv4();
-
   // Save the data to the database or process it as needed
   const {
     wallet_address,
     initiative,
     prompt,
-    blog,
-    mediumurl,
-    twitterurl,
-    facebookurl,
-    linkedinurl,
-    instagramurl,
-    pinteresturl,
-    hashword,
-    keyword,
-    validated_flag,
-    paid_amount,
-    paid_flag,
-    promotedWallet,
-    promotedId,
+    blog
   } = req.body;
 
   if (!wallet_address || !initiative || !prompt || !blog) {
-    return res.status(400).json({ msg: "All fields are required" });
+    return res.status(400).json({ msg: "Invalid data" });
   }
   // Blogs limit validation
   if (initiative === "blog-customization") {
@@ -239,39 +197,10 @@ const saveBlogData = async (req, res) => {
       .json({ msg: "Record already saved. You cannot save again" });
   }
 
-  const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
-  connection.query(
-    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, mediumUrl, twitterUrl, facebookUrl, linkedinUrl, instagramUrl, pinterestUrl, hashword, keyword, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      transactionId,
-      wallet_address,
-      initiative,
-      prompt,
-      blog,
-      mediumurl, 
-      twitterurl, 
-      facebookurl, 
-      linkedinurl, 
-      instagramurl, 
-      pinteresturl,
-      hashword, 
-      keyword,
-      create_date,
-      validated_flag,
-      paid_amount,
-      paid_flag,
-      promotedWallet,
-      promotedId,
-    ],
-    (error, results) => {
-      if (error) {
-        logger.error(`saveBlogData error: ${error}`);
-        return res.status(500).json({ msg: "Internal server error" });
-        // return res.status(500).send(error);
-      }
-      res.status(200).json({ msg: "Data saved successfully" });
-    }
-  );
+  await blogsRepo.saveBlogData(req.body);
+  return res.status(200).json({
+    msg: "Saved successfully",
+  });
 };
 module.exports = {
   updateBlogData,
