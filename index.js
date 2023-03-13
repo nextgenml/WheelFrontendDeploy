@@ -30,9 +30,10 @@ const logger = require("./logger");
 const socialSharingController = require("./controllers/socialSharing");
 const quizController = require("./controllers/quizzes");
 const walletController = require("./controllers/wallet");
+const tokenController = require("./controllers/token");
 const promotionsController = require("./controllers/promotions");
 const blogsController = require("./controllers/blogs");
-
+const { validateWalletId } = require("./auth");
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
@@ -197,6 +198,9 @@ app.get("/quizzes", quizController.getAllQuizzes);
 // wallet routes
 app.get("/get-wallet-details", walletController.getWalletDetails);
 app.post("/update-alias", walletController.updateAlias);
+
+// Token routes
+app.get("/get-user-tokens", validateWalletId, tokenController.getUserTokens);
 
 app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));

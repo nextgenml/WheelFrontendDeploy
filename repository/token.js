@@ -11,7 +11,18 @@ const updateBlockNumber = async (id, lastBlockNumber) => {
   return await runQueryAsync(query, [lastBlockNumber, id]);
 };
 
+const walletBalanceByToken = async (walletId) => {
+  const query =
+    "select token, sum(value) as value from wallets where wallet_id = ? group by token";
+  return await runQueryAsync(query, [walletId]);
+};
+const totalBalanceByToken = async () => {
+  const query = "select token, sum(value) as value from wallets group by token";
+  return await runQueryAsync(query, []);
+};
 module.exports = {
   getTokens,
   updateBlockNumber,
+  totalBalanceByToken,
+  walletBalanceByToken,
 };

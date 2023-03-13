@@ -1,5 +1,13 @@
-export const NEXGENML = "NEXGEN";
-export const SHIBA = "SHIB";
-export const DOGELON = "ELON";
-export const FLOKI = "FLOKI";
-export const VOLT = "VOLT";
+const NEXGENML = "NEXGEN";
+const SHIBA = "SHIB";
+const DOGELON = "ELON";
+const FLOKI = "FLOKI";
+const VOLT = "VOLT";
+
+module.exports = {
+  NEXGENML,
+  SHIBA,
+  DOGELON,
+  FLOKI,
+  VOLT,
+};
