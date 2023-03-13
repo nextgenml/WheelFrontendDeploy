@@ -8,7 +8,7 @@ function handleDisconnect() {
   dbConnection = mysql.createConnection({
     host: config.DB_HOST,
     user: "root",
-    password: "password",
+    password: "",
     database: "nextgenml",
   });
 
@@ -28,6 +28,12 @@ function handleDisconnect() {
         prompt varchar(255),
         blog text,
         link varchar(1000),
+        mediumurl varchar(255),
+        twitterurl varchar(255),
+        facebookurl varchar(255),
+        linkedinurl varchar(255),
+        instagramurl varchar(255),
+        pinteresturl varchar(255),
         create_date DATETIME,
         validated_flag BOOLEAN,
         paid_amount DOUBLE,

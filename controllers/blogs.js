@@ -76,7 +76,7 @@ const getCustomBlogs = async (req, res) => {
 
     const [totalResult, data] = await blogsRepo.getCustomBlogs(
       walletId,
-      walletId === config.ADMIN_WALLET,
+      walletId === config.ADMIN_WALLET_1,
       search,
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
@@ -125,7 +125,7 @@ const getBlogData = async (req, res) => {
     : "";
   var totalResult, results;
 
-  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET) {
+  if (req.query.offset >= 0 && req.query.walletId === config.ADMIN_WALLET_1) {
     offset = req.query.offset;
   } else {
     return res.status(400).json({ msg: "Invalid data" });
@@ -202,7 +202,14 @@ const saveBlogData = async (req, res) => {
     initiative,
     prompt,
     blog,
-    link,
+    mediumurl,
+    twitterurl,
+    facebookurl,
+    linkedinurl,
+    instagramurl,
+    pinteresturl,
+    hashword,
+    keyword,
     validated_flag,
     paid_amount,
     paid_flag,
@@ -234,14 +241,21 @@ const saveBlogData = async (req, res) => {
 
   const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
   connection.query(
-    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, link, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, mediumUrl, twitterUrl, facebookUrl, linkedinUrl, instagramUrl, pinterestUrl, hashword, keyword, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       transactionId,
       wallet_address,
       initiative,
       prompt,
       blog,
-      link,
+      mediumurl, 
+      twitterurl, 
+      facebookurl, 
+      linkedinurl, 
+      instagramurl, 
+      pinteresturl,
+      hashword, 
+      keyword,
       create_date,
       validated_flag,
       paid_amount,

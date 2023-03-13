@@ -54,6 +54,7 @@ const BlogForm = () => {
   }
 
   async function get_gpt_data(input, raw) {
+    console.log("gpt data");
     const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
     let response = await fetch(url, {
       headers: {
@@ -148,7 +149,7 @@ const BlogForm = () => {
   const isAdmin = userRole === config.ADMIN_WALLET_1;
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
-
+  console.log("ispromote",isPromote);
   const getBlogStats = async () => {
     if (isCustom) {
       const res1 = await fetch(
@@ -161,9 +162,11 @@ const BlogForm = () => {
   const getPromotionBlogs = async () => {
     const res = await fetch(
       `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
-    );
+      );
+      console.log("getprmotionblogs",res.ok);
     if (res.ok) {
       const { data, total } = await res.json();
+      console.log(promotedBlogs);
       setPromotedBlogs(data);
       setPromotedBlogsCount(total);
     } else {
@@ -264,7 +267,7 @@ const BlogForm = () => {
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
-          No blogs to display
+          No blogs to display1
         </Typography>
       )}
 
