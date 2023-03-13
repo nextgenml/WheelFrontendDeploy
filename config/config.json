@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "root",
-    "password": "password",
+    "password": "",
     "database": "nextgenml",
-    "host": "prod-mysql",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "production": {

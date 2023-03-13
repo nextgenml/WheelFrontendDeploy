@@ -126,14 +126,14 @@ const SaveInitiative = ({
   useEffect(() => {
     if (result && result != "populating blog") {
       console.log("ready for hash word");
-      get_gpt_data("provide 5 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'hashwords');
+      get_gpt_data("provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'hashwords');
     }
   }, [result])
 
   useEffect(() => {
     if (hashword) {
       console.log("ready for hash word");
-      get_gpt_data("provide 5 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'keywords');
+      get_gpt_data("provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'keywords');
     }
   }, [hashword])
 
@@ -367,7 +367,7 @@ const SaveInitiative = ({
               type="text"
               className="form-control"
               id="keyword"
-              placeholder="#nextgenml"
+              placeholder="trending keywords"
               value={keyWord}
               readOnly
               style={{ height: "100px" }}
