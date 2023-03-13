@@ -3,7 +3,7 @@
     "username": "root",
     "password": "password",
     "database": "nextgenml",
-    "host": "prod-mysql",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
