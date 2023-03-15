@@ -166,8 +166,13 @@ const getBlogData = async (req, res) => {
 };
 
 const saveBlogData = async (req, res) => {
-  const data = req.body;
-  // Save the data to the database or process it as needed
+  const { files } = req;
+  const image_urls = [];
+
+  files.forEach(file => {
+    image_urls.push(file.filename);
+  });
+
   const {
     wallet_address,
     initiative,
@@ -178,6 +183,7 @@ const saveBlogData = async (req, res) => {
   if (!wallet_address || !initiative || !prompt || !blog) {
     return res.status(400).json({ msg: "Invalid data" });
   }
+
   // Blogs limit validation
   if (initiative === "blog-customization") {
     const [valid, message, _, __] = await promotionsRepo.blogStats(
@@ -187,17 +193,16 @@ const saveBlogData = async (req, res) => {
   }
 
   // Stop same prompt being saved
-  const results = await runQueryAsync(
-    "select 1 from saved_prompts where wallet_address = ? and prompt = ?",
-    [wallet_address, prompt]
-  );
+  const results = await blogsRepo.checkReplica(wallet_address, prompt);
+
   if (results.length) {
     return res
       .status(400)
       .json({ msg: "Record already saved. You cannot save again" });
   }
 
-  await blogsRepo.saveBlogData(req.body);
+  await blogsRepo.saveBlogData(req.body, image_urls.toString());
+
   return res.status(200).json({
     msg: "Saved successfully",
   });

@@ -65,7 +65,6 @@ const getPromotedBlogs = async (promotedWallets, walletId) => {
 };
 
 const updateBlogData = async (data) => {
-  // let { validatedFlag, walletId, paidFlag, transactionID, promoted, blog } = req.body;
   if (data.blog) {
     await runQueryAsync(
       `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, blog = ? WHERE transactionID = ?`,
@@ -81,8 +80,8 @@ const updateBlogData = async (data) => {
 
 }
 
-const saveBlogData = async (data) => {
-  const query = `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, mediumUrl, twitterUrl, facebookUrl, linkedinUrl, instagramUrl, pinterestUrl, hashword, keyword, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+const saveBlogData = async (data, image_urls) => {
+  const query = `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, mediumUrl, twitterUrl, facebookUrl, linkedinUrl, instagramUrl, pinterestUrl, hashword, keyword, image_urls, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const transactionId = uuidv4();
   const create_date = new Date().toISOString().slice(0, 19).replace("T", " ");
 
@@ -100,6 +99,7 @@ const saveBlogData = async (data) => {
     data.pinteresturl,
     data.hashword,
     data.keyword,
+    image_urls,
     create_date,
     data.validated_flag,
     data.paid_amount,
@@ -108,6 +108,7 @@ const saveBlogData = async (data) => {
     data.promotedId,
   ]);
 }
+
 const totalBlogs = async () => {
   const query = `select count(1) as count from saved_prompts`;
   const count = await runQueryAsync(query);
@@ -126,6 +127,12 @@ const selectAllElements = async (pageSize, offset) => {
   return [data];
 }
 
+const checkReplica = async (wallet_address, prompt) => {
+  const query = `select 1 from saved_prompts where wallet_address = ? and prompt = ?`;
+  const result = await runQueryAsync(query, [wallet_address, prompt]);
+  return result;
+}
+
 module.exports = {
   saveBlogData,
   totalBlogs,
@@ -135,5 +142,6 @@ module.exports = {
   getPromotedBlogs,
   getBlogStats,
   firstBlogAt,
-  updateBlogData
+  updateBlogData,
+  checkReplica
 };

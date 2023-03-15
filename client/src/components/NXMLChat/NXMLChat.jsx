@@ -265,7 +265,7 @@ const BlogForm = () => {
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
-          No blogs to display1
+          No blogs to display
         </Typography>
       )}
 

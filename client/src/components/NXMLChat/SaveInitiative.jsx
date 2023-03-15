@@ -19,7 +19,7 @@ const SaveInitiative = ({
   getUserData,
   getBlogStats,
 }) => {
-  console.log(promotedWallet, promotedId);
+
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(false);
@@ -37,7 +37,36 @@ const SaveInitiative = ({
   const [pinterestlink, setpinterestLink] = useState("");
   const [isCopyDisable, setIsCopyDisable] = useState(true);
   const [isSubmit, setIsSubmit] = useState(true);
-  const [blogImages, setblogImages] = useState(["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"]);
+  const [customblogImages, setcustomblogImages] = useState([]);
+  const [blogImagesFiles, setblogImagesFiles] = useState([]);
+  let blogImageskey;
+
+  let blogImages = {
+    economicdevelopment: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    education: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    energy: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    environmentprotection: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    foodproduction: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    socialwelfare: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    healthcare: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    security: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    socialmedia: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    spaceexploration: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+  };
+
+  if (initiative == "economic-development") {
+    blogImageskey = "economicdevelopment";
+  } else if (initiative == "environment-protection") {
+    blogImageskey = "environmentprotection";
+  } else if (initiative == "food-production") {
+    blogImageskey = "foodproduction";
+  } else if (initiative == "social-media") {
+    blogImageskey = "socialmedia";
+  } else if (initiative == "social-welfare") {
+    blogImageskey = "socialwelfare";
+  } else {
+    blogImageskey = "";
+  }
 
   const isCustom = initiative === "blog-customization";
   // Toast alert
@@ -51,6 +80,29 @@ const SaveInitiative = ({
     }
   };
 
+  const onFileUpload = async (e) => {
+    console.log(e.target.files[0]);
+    setblogImagesFiles(e.target.files);
+    let flag = 1;
+    let images = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      if (!(e.target.files[i].type.includes("image"))) {
+        flag = 0;
+        notify("Please select valid file!", "error");
+      }
+      if ((Math.round((e.target.files[i].size / 1024)) > 500)) {
+        flag = 0;
+        notify("Size is too big!", "error");
+      }
+      if (flag > 0) {
+        console.log(i);
+        images.push(URL.createObjectURL(e.target.files[i]));
+      }
+      flag = 1;
+    }
+    setcustomblogImages(images);
+  };
+
   const ImageCopy = async (imgUrl) => {
     console.log("imgUrl", imgUrl);
     const blob = await fetch(imgUrl).then((resp) => resp.blob());
@@ -60,6 +112,7 @@ const SaveInitiative = ({
       })
     ]);
   }
+  
   async function get_gpt_data(input, callFor) {
     console.log("get gpt data", input);
     const url = "https://backend.chatbot.nexgenml.com/collections";
@@ -188,33 +241,35 @@ const SaveInitiative = ({
       (!pinterestlink || isValidUrl(pinterestlink))
     ) {
 
+      const formData = new FormData();
+      formData.append('wallet_address', address);
+      formData.append('initiative', initiative);
+      formData.append('prompt', prompt);
+      formData.append('blog', finalContent);
+      formData.append('mediumurl', mediumlink);
+      formData.append('twitterurl', twitterlink);
+      formData.append('facebookurl', facebooklink);
+      formData.append('linkedinurl', linkedinlink);
+      formData.append('instagramurl', instagramlink);
+      formData.append('pinteresturl', pinterestlink);
+      formData.append('hashword', hashword);
+      formData.append('keyword', keyWord);
+      formData.append('validated_flag', isValidatedFlag ? true : null);
+      formData.append('paid_amount', config.PAID_AMOUNT);
+      formData.append('paid_flag', isPaidFlag ? true : null);
+      formData.append('promotedWallet', promotedWallet);
+      formData.append('promotedId', promotedId);
+      console.log(blogImagesFiles);
+
+      if (blogImagesFiles && blogImagesFiles.length > 0) {
+        Array.from(blogImagesFiles).forEach((file, i) => {
+          formData.append(`file-${i}`, file, file.name);
+        });
+      }
       const url = `${config.API_ENDPOINT}/save-blog-data`;
       let response = await fetch(url, {
-        headers: {
-          accept: "*/*",
-          "accept-language": "en-US,en;q=0.9",
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          wallet_address: address,
-          initiative,
-          prompt,
-          blog: finalContent,
-          mediumurl: mediumlink,
-          twitterurl: twitterlink,
-          facebookurl: facebooklink,
-          linkedinurl: linkedinlink,
-          instagramurl: instagramlink,
-          pinteresturl: pinterestlink,
-          hashword: hashword,
-          keyword: keyWord,
-          validated_flag: isValidatedFlag ? true : null,
-          paid_amount: config.PAID_AMOUNT,
-          paid_flag: isPaidFlag ? true : null,
-          promotedWallet,
-          promotedId,
-        }),
         method: "POST",
+        body: formData,
       });
 
       let res = await response.text();
@@ -375,22 +430,44 @@ const SaveInitiative = ({
           </div>
           <div className="col-sm-12">
             <div className="row">
-              {blogImages.map((item, i) => (
-                <div className="col m-2" key={i}>
-                  <ModalImage
-                    small={`/${item}`}
-                    large={`/${item}`}
-                    alt={item}
-                  />
-                  <button
-                    key={i}
-                    id={i}
-                    onClick={() => { ImageCopy(`/${item}`) }}
-                    type="button"
-                    className="btn btn-success mt-2 text-center">Copy</button>
-                </div>
-
-              ))}
+              {initiative != "blog-customization" &&
+                blogImages[initiative.includes("-") ? blogImageskey : initiative].map((item, i) => (
+                  <div className="col m-2" key={i}>
+                    <ModalImage
+                      small={`/images/blogImages/${initiative}/${item}`}
+                      large={`/${item}`}
+                      alt={item}
+                    />
+                    <button
+                      key={i}
+                      id={i}
+                      onClick={() => { ImageCopy(`/${item}`) }}
+                      type="button"
+                      className="btn btn-success mt-2 text-center">Copy</button>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+          {initiative == "blog-customization" &&
+            <div className="col-sm-12">
+              <input className="form-control form-control-lg" id={`customImage`} multiple type="file" accept="image/*" onChange={onFileUpload} />
+            </div>
+          }
+          <div className="col-sm-12">
+            <div className="row">
+              {customblogImages &&
+                customblogImages.map((item, i) => (
+                  <div className="col m-2" key={i}>
+                    <ModalImage
+                      // small={`/images/blogImages/${initiative}/${item}`}
+                      small={`${item}`}
+                      large={`${item}`}
+                      alt={item}
+                    />
+                  </div>
+                ))
+              }
             </div>
           </div>
           <div className="col-sm-12">
