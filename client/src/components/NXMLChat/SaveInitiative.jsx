@@ -42,16 +42,16 @@ const SaveInitiative = ({
   let blogImageskey;
 
   let blogImages = {
-    economicdevelopment: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    education: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    energy: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    environmentprotection: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    foodproduction: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    economicdevelopment: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    education: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    energy: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    environmentprotection: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    foodproduction: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
     socialwelfare: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    healthcare: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    security: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    socialmedia: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    spaceexploration: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
+    healthcare: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    security: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    socialmedia: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    spaceexploration: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
   };
 
   if (initiative == "economic-development") {
