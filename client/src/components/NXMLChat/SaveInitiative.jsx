@@ -211,9 +211,9 @@ const SaveInitiative = ({
       mediumlink && isValidUrl(mediumlink) &&
       twitterlink && isValidUrl(twitterlink) &&
       facebooklink && isValidUrl(facebooklink) &&
-      linkedinlink && isValidUrl(linkedinlink) &&
-      instagramlink && isValidUrl(instagramlink) &&
-      pinterestlink && isValidUrl(pinterestlink)
+      linkedinlink && isValidUrl(linkedinlink)
+      // instagramlink && isValidUrl(instagramlink) &&
+      // pinterestlink && isValidUrl(pinterestlink)
     ) {
       setIsSubmit(false);
     } else {
@@ -236,9 +236,9 @@ const SaveInitiative = ({
       (!mediumlink || isValidUrl(mediumlink)) &&
       (!twitterlink || isValidUrl(twitterlink)) &&
       (!facebooklink || isValidUrl(facebooklink)) &&
-      (!linkedinlink || isValidUrl(linkedinlink)) &&
-      (!instagramlink || isValidUrl(instagramlink)) &&
-      (!pinterestlink || isValidUrl(pinterestlink))
+      (!linkedinlink || isValidUrl(linkedinlink))
+      // (!instagramlink || isValidUrl(instagramlink)) &&
+      // (!pinterestlink || isValidUrl(pinterestlink))
     ) {
 
       const formData = new FormData();
