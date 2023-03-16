@@ -60,7 +60,7 @@ const binaryPull = async (contract, start, end, callback) => {
         fromBlock: start,
         toBlock: end,
       });
-      if (result.length) callback(result);
+      if (result.length) await callback(result);
     }
   } catch (error) {
     if (error.message.includes("query returned more than 10000 results")) {
@@ -73,17 +73,20 @@ const binaryPull = async (contract, start, end, callback) => {
   }
 };
 
-const pullWallets = async (contractAddress, contractAbi, lastBlockNumber) => {
-  const contract = await getContract(contractAddress, contractAbi);
+const pullWallets = async (token, callback) => {
+  const contract = await getContract(token.contract_address, token.abi_file);
   const latest = await w3.eth.getBlockNumber();
-  const wallets = [];
 
-  await binaryPull(contract, lastBlockNumber, latest, (events) => {
-    console.log("count", events.length);
-    wallets.push(events);
-  });
-  const grouped = groupWallets(wallets.flat());
-  return [grouped, latest];
+  await binaryPull(
+    contract,
+    token.last_block_number,
+    latest,
+    async (events) => {
+      console.log("count", events.length);
+      await callback(token, events);
+    }
+  );
+  return latest;
 };
 
 module.exports = {

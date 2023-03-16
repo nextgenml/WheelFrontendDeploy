@@ -2,6 +2,19 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
 const config = require("../config");
 
+const createHolderV1 = async (walletId) => {
+  const existsQuery = `select id from holders where wallet_id = ?`;
+
+  const existsResults = await runQueryAsync(existsQuery, [walletId]);
+
+  if (!existsResults.length) {
+    const query = `insert into holders (wallet_id, alias, is_active) values(?, ?, true);`;
+    const randomName = await getUniqueName(walletId);
+
+    return await runQueryAsync(query, [walletId, randomName]);
+  }
+};
+
 const nextUserForPost = async (campaignId, skippedUsers) => {
   const query = `select distinct h.wallet_id from holders h left join chores c on c.wallet_id = h.wallet_id 
     and c.campaign_detail_id = ? and c.chore_type = 'post'
@@ -127,6 +140,7 @@ module.exports = {
   isEligibleForChore,
   getNextUserForChore,
   getActiveMediaHolders,
+  createHolderV1,
 };
 
 const getUniqueName = async (walletId) => {

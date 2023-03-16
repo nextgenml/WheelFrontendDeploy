@@ -26,7 +26,7 @@ const testConfig = {
   REWARD_TOKEN: "0x4bB4954FC47ce04B62F3493040ff8318E4A72981",
   CONTRACT_ADDRESS: "0x06C28f861Fc4b31b5D2C8CAD880468aEec266F31", // TO DO: CHANGE WALLET ADDRESS HERE
   WEB3_PROVIDER_URL:
-    "https://eth-goerli.g.alchemy.com/v2/surwT5Ql_QhEc083ru_C98XrwbDj-jVx",
+    "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
   DEPLOYER_WALLET:
     "f27d03d6b006c9f6fac2cd86e0cad1d61cbb62442056a98f895d81e48cc7c9b1",
   RPC_URL: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -77,6 +77,11 @@ const commonConfig = {
   },
   // above and beyond
   SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE: 10,
+
+  TOKEN_ALLOCATION_PERCENT: 0.1,
+  TOKEN_MONTHLY_ALLOCATION: [
+    0.01, 0.02, 0.25, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12,
+  ],
 };
 
 module.exports =

@@ -1,19 +1,29 @@
 const schedule = require("node-schedule");
 const logger = require("../../logger");
+const { createHolderV1 } = require("../../repository/holder");
 const { getTokens, updateBlockNumber } = require("../../repository/token");
+const { createTransaction } = require("../../repository/token_transactions");
 const { createWallet } = require("../../repository/wallet");
 const { pullWallets } = require("../../script/pullTransfers");
 
+const storeTransactions = async (token, transactions) => {
+  for (const transaction of transactions) {
+    const { value, from, to } = transaction.returnValues;
+    let formattedValue =
+      parseInt(
+        value.toString().substring(0, value.length - parseInt(token.decimals))
+      ) || 0;
+    await createTransaction(transaction, formattedValue, token.token);
+    const userWalletId = to === token.contract_address ? from : to;
+    await createHolderV1(userWalletId);
+  }
+};
 const startPulling = async () => {
   try {
     const tokens = await getTokens();
 
     for (const token of tokens) {
-      const [newWallets, lastBlockNumber] = await pullWallets(
-        token.contract_address,
-        token.abi_file,
-        token.last_block_number
-      );
+      const lastBlockNumber = await pullWallets(token, storeTransactions);
 
       for (const item of newWallets) {
         console.log("created wallet", item[0]);
