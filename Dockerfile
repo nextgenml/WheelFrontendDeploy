@@ -1,6 +1,5 @@
-FROM node:16-alpine
+FROM node:16
 
-RUN apk add --no-cache tzdata
 ENV TZ=America/Chicago
 
 WORKDIR /app
