@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: nextgenml
+    volumes:
+      - mysql_volume:/var/lib/mysql
+
+  app:
+    build: ./
+    ports:
+      - 0.0.0.0:5678:8000
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DB: nextgenml
+      NODE_ENV: 'production'
+    depends_on:
+      - mysql
+    volumes:
+      - ./dbconnect.js:/app/dbconnect.js
+      - ./index.js:/app/index.js
+      - ./config.js:/app/config.js
+      - ./config/config.json:/app/config/config.json
+      - ./repository:/app/repository
+      - ./migrations:/app/migrations
+      - ./manager:/app/manager
+  
+volumes:
+  mysql_volume:
