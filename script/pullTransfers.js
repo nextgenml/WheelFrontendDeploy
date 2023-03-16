@@ -91,4 +91,5 @@ const pullWallets = async (token, callback) => {
 
 module.exports = {
   pullWallets,
+  getContract,
 };

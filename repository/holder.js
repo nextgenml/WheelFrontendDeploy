@@ -2,6 +2,7 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
 const config = require("../config");
 
+// Created during tokens pulling implementation
 const createHolderV1 = async (walletId) => {
   const existsQuery = `select id from holders where wallet_id = ?`;
 
@@ -13,6 +14,22 @@ const createHolderV1 = async (walletId) => {
 
     return await runQueryAsync(query, [walletId, randomName]);
   }
+};
+
+const getHoldersMeta = async () => {
+  const query = `select max(id) as max_id, min(id) as min_id from holders`;
+
+  const results = await runQueryAsync(query, []);
+  return results[0];
+};
+
+const getHolderByPage = async (minId, maxId) => {
+  const query = `select id, wallet_id from holders where id >= ? and id < ?`;
+  return await runQueryAsync(query, [minId, maxId]);
+};
+const updateHolderBalance = async (id, balance, token) => {
+  const query = `update holders set ${token}_balance = ? where id = ?`;
+  return await runQueryAsync(query, [balance, id]);
 };
 
 const nextUserForPost = async (campaignId, skippedUsers) => {
@@ -128,6 +145,18 @@ const aliasExists = async (wallet_id, alias) => {
   return !!results[0];
 };
 
+const getUniqueName = async (walletId) => {
+  while (1) {
+    const existsQuery = `select 1 from holders where alias = ?`;
+    const randomName = `${uniqueNamesGenerator({
+      dictionaries: [names],
+    })}${walletId.substring(walletId.length - 2)}`;
+
+    const existsResults = await runQueryAsync(existsQuery, [randomName]);
+
+    if (!existsResults.length) return randomName;
+  }
+};
 module.exports = {
   getById,
   createHolder,
@@ -141,17 +170,7 @@ module.exports = {
   getNextUserForChore,
   getActiveMediaHolders,
   createHolderV1,
-};
-
-const getUniqueName = async (walletId) => {
-  while (1) {
-    const existsQuery = `select 1 from holders where alias = ?`;
-    const randomName = `${uniqueNamesGenerator({
-      dictionaries: [names],
-    })}${walletId.substring(walletId.length - 2)}`;
-
-    const existsResults = await runQueryAsync(existsQuery, [randomName]);
-
-    if (!existsResults.length) return randomName;
-  }
+  getHoldersMeta,
+  getHolderByPage,
+  updateHolderBalance,
 };
