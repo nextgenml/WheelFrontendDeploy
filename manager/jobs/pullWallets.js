@@ -74,7 +74,7 @@ const updateBalances = async () => {
   }
 };
 // startPulling();
-updateBalances();
+// updateBalances();
 // const rule = new schedule.RecurrenceRule();
 // const [hours, minutes] = config.CREATE_POST_CHORES_AT;
 // rule.hour = hours;
