@@ -1,28 +1,5 @@
 version: "3.9"
 services:
-  app:
-    build: app
-    ports:
-      - 0.0.0.0:4567:8000
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_DB: nextgenml
-    depends_on:
-      - mysql
-      - chatgpt-backend
-    volumes:
-      - ./app/config/:/app/config/
-      - ./app/config.js:/app/config.js
-      - ./app/manager:/app/manager
-      - ./app/script:/app/script
-      - ./app/repository:/app/repository
-      - ./app/package.json:/app/package.json
-      - ./app/tmp:/app/tmp
-      - ./app/uploads:/app/uploads
-      - ./app/utils:/app/utils
-
   mysql:
     image: mysql:5.7
     container_name: mysql
@@ -32,8 +9,8 @@ services:
     volumes:
       - mysql_volume:/var/lib/mysql
 
-  prod-app:
-    build: IOSite
+  app:
+    build: ./
     ports:
       - 0.0.0.0:5678:8000
     environment:
@@ -43,58 +20,16 @@ services:
       MYSQL_DB: nextgenml
       NODE_ENV: 'production'
     depends_on:
-      - prod-mysql
+      - mysql
       - chatgpt-backend
     volumes:
-      - ./IOSite/dbconnect.js:/app/dbconnect.js
-      - ./IOSite/index.js:/app/index.js
-      - ./IOSite/config.js:/app/config.js
-      - ./IOSite/config/config.json:/app/config/config.json
-      - ./IOSite/repository:/app/repository
-      - ./IOSite/migrations:/app/migrations
-      - ./IOSite/manager:/app/manager
-
-  prod-mysql:
-    image: mysql:5.7
-    container_name: prod-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: nextgenml
-    volumes:
-      - prod_mysql_volume:/var/lib/mysql
-    
-  proxy:
-    image: nginx:alpine
-    restart: unless-stopped
-    volumes: 
-      - ./dns_config/nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./dns_config/certbot/www:/var/www/certbot/:ro
-      - ./dns_config/certbot/conf/:/etc/letsencrypt/:rw
-    ports:
-      - 80:80 # listen for http connections
-      - 443:443 # listen for https connections
-    depends_on:
-      - app
-      - chatgpt-backend
-      - chatgpt-frontend
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./dns_config/certbot/www/:/var/www/certbot/:rw
-      - ./dns_config/certbot/conf/:/etc/letsencrypt/:rw
-
-  chatgpt-backend:
-    build: chatgpt_API
-    volumes:
-      - ./chatgpt_API/app.js:/app/app.js
-      - ./chatgpt_API/utils.js:/app/utils.js
-
-  chatgpt-frontend:
-    build: chatgpt_frontend
-    depends_on:
-      - chatgpt-backend
+      - ./dbconnect.js:/app/dbconnect.js
+      - ./index.js:/app/index.js
+      - ./config.js:/app/config.js
+      - ./config/config.json:/app/config/config.json
+      - ./repository:/app/repository
+      - ./migrations:/app/migrations
+      - ./manager:/app/manager
   
 volumes:
   mysql_volume:
-  prod_mysql_volume:
