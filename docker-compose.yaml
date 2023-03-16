@@ -21,7 +21,6 @@ services:
       NODE_ENV: 'production'
     depends_on:
       - mysql
-      - chatgpt-backend
     volumes:
       - ./dbconnect.js:/app/dbconnect.js
       - ./index.js:/app/index.js
