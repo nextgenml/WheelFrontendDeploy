@@ -9,7 +9,7 @@ const {
 const { getTokens, updateBlockNumber } = require("../../repository/token");
 const { createTransaction } = require("../../repository/token_transactions");
 const { pullWallets, getContract } = require("../../script/pullTransfers");
-const { getBalance } = require("../../script/walletBalance");
+const { getBalances } = require("../../script/walletBalance");
 
 const formatBalance = (value, decimals) => {
   return (
@@ -54,14 +54,20 @@ const updateBalances = async () => {
       const current_max_id = min_id + 100;
       const holders = await getHolderByPage(min_id, current_max_id);
       console.log("min_id < max_id", min_id, current_max_id);
-      for (const holder of holders) {
-        const balance = await getBalance(contract, holder.wallet_id);
+
+      const balances = await getBalances(
+        contract,
+        holders.map((h) => h.wallet_id)
+      );
+
+      for (const b of balances) {
         await updateHolderBalance(
-          holder.id,
-          formatBalance(balance, token.decimals),
+          b.walletId,
+          formatBalance(b.balance, token.decimals),
           token.token
         );
       }
+
       min_id = current_max_id;
     }
     break;

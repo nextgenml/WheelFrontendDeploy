@@ -78,7 +78,6 @@ const commonConfig = {
   // above and beyond
   SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE: 10,
 
-  TOKEN_ALLOCATION_PERCENT: 0.1,
   TOKEN_MONTHLY_ALLOCATION: [
     0.01, 0.02, 0.25, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12,
   ],

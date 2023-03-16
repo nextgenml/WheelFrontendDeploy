@@ -24,12 +24,12 @@ const getHoldersMeta = async () => {
 };
 
 const getHolderByPage = async (minId, maxId) => {
-  const query = `select id, wallet_id from holders where id >= ? and id < ?`;
+  const query = `select wallet_id from holders where id >= ? and id < ?`;
   return await runQueryAsync(query, [minId, maxId]);
 };
-const updateHolderBalance = async (id, balance, token) => {
-  const query = `update holders set ${token}_balance = ? where id = ?`;
-  return await runQueryAsync(query, [balance, id]);
+const updateHolderBalance = async (walletId, balance, token) => {
+  const query = `update holders set ${token}_balance = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [balance, walletId]);
 };
 
 const nextUserForPost = async (campaignId, skippedUsers) => {
