@@ -435,7 +435,7 @@ const SaveInitiative = ({
                   <div className="col m-2" key={i}>
                     <ModalImage
                       small={`/images/blogImages/${initiative}/${item}`}
-                      large={`/${item}`}
+                      large={`/images/blogImages/${initiative}/${item}`}
                       alt={item}
                     />
                     <button
