@@ -1,6 +1,36 @@
 const config = require("../config");
 const tokenRepo = require("../repository/token");
+const { getMaxSupply } = require("../script/walletBalance");
 
+const getAdminStats = async () => {
+  const tokens = await tokenRepo.getTokens();
+  const result = [];
+  const maxSupplyPromises = [];
+  for (const token of tokens) {
+    maxSupplyPromises.push(getMaxSupply(token));
+  }
+  const maxSupplyPerToken = await Promise.all(maxSupplyPromises);
+  for (const token of tokens) {
+    const tokenStats = await tokenRepo.getTokenStats(token.token);
+    const maxSupply = maxSupplyPerToken.filter((x) => x.token == token.token)[0]
+      ?.max;
+    const qualifiedFor = parseInt(
+      (token.allocation_percent * tokenStats.balance) / 100
+    );
+    const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
+      parseInt(x * qualifiedFor)
+    );
+    result.push({
+      maxSupply,
+      qualifiedFor,
+      balance: tokenStats.balance,
+      holdersCount: tokenStats.holdersCount,
+      token: token.token,
+      monthlyShare,
+    });
+  }
+  return result;
+};
 const getUserTokens = async (walletId, search) => {
   const walletIdTemp =
     config.ADMIN_WALLET_1 === walletId ? search || walletId : walletId;
@@ -35,4 +65,5 @@ const getUserTokens = async (walletId, search) => {
 
 module.exports = {
   getUserTokens,
+  getAdminStats,
 };

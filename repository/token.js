@@ -5,6 +5,13 @@ const getTokens = async () => {
 
   return await runQueryAsync(query, []);
 };
+
+const getTokenStats = async (token) => {
+  const query = `select sum(${token}_balance) as balance, count(1) as holdersCount from holders where ${token}_balance > 0`;
+
+  const results = await runQueryAsync(query, []);
+  return results[0];
+};
 const updateBlockNumber = async (id, lastBlockNumber) => {
   const query = `update tokens set last_block_number = ? where id = ?`;
 
@@ -25,4 +32,5 @@ module.exports = {
   updateBlockNumber,
   totalBalanceByToken,
   walletBalanceByToken,
+  getTokenStats,
 };

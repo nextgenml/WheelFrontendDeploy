@@ -201,6 +201,7 @@ app.post("/update-alias", walletController.updateAlias);
 
 // Token routes
 app.get("/get-user-tokens", validateWalletId, tokenController.getUserTokens);
+app.get("/admin-token-stats", validateWalletId, tokenController.getAdminStats);
 
 app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));

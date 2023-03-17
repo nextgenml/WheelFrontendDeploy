@@ -1,3 +1,4 @@
+const config = require("../config");
 const logger = require("../logger");
 const tokenManager = require("../manager/token");
 
@@ -18,7 +19,30 @@ const getUserTokens = async (req, res) => {
     });
   }
 };
+const getAdminStats = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+
+    if (config.ADMIN_WALLET_1 !== walletId)
+      return res.status(400).json({
+        statusCode: 401,
+        message: "Unauthorized",
+      });
+    const data = await tokenManager.getAdminStats();
+
+    res.json({
+      data,
+      total_count: data.length,
+    });
+  } catch (error) {
+    logger.error(`error in getAdminStats: ${error}`);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   getUserTokens,
+  getAdminStats,
 };

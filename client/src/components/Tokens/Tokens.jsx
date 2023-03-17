@@ -30,11 +30,24 @@ const headers = [
 
 const Tokens = () => {
   const [tokens, setTokens] = React.useState([]);
+  const [adminStats, setAdminStats] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
   const { address } = useAccount();
   const [search, setSearch] = React.useState("");
+  const isAdmin = config.ADMIN_WALLET_1 === address;
+  const fetchAdminData = async () => {
+    let url = `${config.API_ENDPOINT}/admin-token-stats?walletId=${address}`;
+
+    const res1 = await fetch(url);
+    if (res1.ok) {
+      const data = await res1.json();
+      setAdminStats(data);
+    } else {
+      alert("Something went wrong. Unable to fetch info");
+    }
+  };
   const fetchData = async () => {
     let url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&search=${search}`;
 
@@ -44,10 +57,13 @@ const Tokens = () => {
       setTokens(data.data);
       setTotalCount(data.total_count);
     } else {
-      alert("Something went wrong. Unable to fetch promotion requests");
+      alert("Something went wrong. Unable to fetch info");
     }
   };
 
+  React.useEffect(() => {
+    if (isAdmin) fetchAdminData();
+  }, []);
   React.useEffect(() => {
     fetchData();
   }, [rowsPerPage, page]);
@@ -77,7 +93,7 @@ const Tokens = () => {
             </Typography>
           </Box>
           <Box display={"flex"} alignItems="center">
-            {config.ADMIN_WALLET_1 === address && (
+            {isAdmin && (
               <>
                 <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
                   <InputLabel>Search</InputLabel>
