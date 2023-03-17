@@ -1,8 +1,11 @@
 const config = require("../config");
 const tokenRepo = require("../repository/token");
 
-const getUserTokens = async (walletId) => {
-  let wallets = await tokenRepo.walletBalanceByToken(walletId);
+const getUserTokens = async (walletId, search) => {
+  const walletIdTemp =
+    config.ADMIN_WALLET_1 === walletId ? search || walletId : walletId;
+
+  let wallets = await tokenRepo.walletBalanceByToken(walletIdTemp);
   let tokens = await tokenRepo.totalBalanceByToken();
   const tokensMeta = await tokenRepo.getTokens();
   const walletBalance = wallets[0];

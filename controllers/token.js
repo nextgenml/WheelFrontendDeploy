@@ -3,9 +3,9 @@ const tokenManager = require("../manager/token");
 
 const getUserTokens = async (req, res) => {
   try {
-    const walletId = req.query.walletId;
+    const { walletId, search } = req.query;
 
-    const data = await tokenManager.getUserTokens(walletId);
+    const data = await tokenManager.getUserTokens(walletId, search);
 
     res.json({
       data,

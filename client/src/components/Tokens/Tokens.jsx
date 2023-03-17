@@ -9,8 +9,19 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import config from "../../config";
 import styles from "./Tokens.module.css";
-import { Typography, TablePagination } from "@mui/material";
+import {
+  Typography,
+  TablePagination,
+  FormControl,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  Box,
+  Button,
+} from "@mui/material";
 import { useAccount } from "wagmi";
+import SearchIcon from "@mui/icons-material/Search";
+
 const headers = [
   "Token",
   "Max Wallet Allocation",
@@ -23,12 +34,9 @@ const Tokens = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
   const { address } = useAccount();
+  const [search, setSearch] = React.useState("");
   const fetchData = async () => {
-    let url;
-    if (config.ADMIN_WALLET === address)
-      url = `${config.API_ENDPOINT}/promotions-admin?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
-    else
-      url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
+    let url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&search=${search}`;
 
     const res1 = await fetch(url);
     if (res1.ok) {
@@ -56,12 +64,36 @@ const Tokens = () => {
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
       <TableContainer component={Paper} sx={{ p: 2 }}>
-        <Typography variant="h6" className={styles.campaignsTableHeader}>
-          Tokens
-        </Typography>
-        <Typography variant="subtitle2" className={styles.campaignsTableHeader}>
-          Your Wallet: {address}
-        </Typography>
+        <Box display={"flex"} justifyContent="space-between">
+          <Box>
+            <Typography variant="h6" className={styles.campaignsTableHeader}>
+              Tokens
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              className={styles.campaignsTableHeader}
+            >
+              Your Wallet: {address}
+            </Typography>
+          </Box>
+          <Box display={"flex"} alignItems="center">
+            {config.ADMIN_WALLET_1 === address && (
+              <>
+                <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+                  <InputLabel>Search</InputLabel>
+                  <OutlinedInput
+                    onChange={(e) => setSearch(e.target.value)}
+                    label="Search with wallet"
+                  />
+                </FormControl>
+                <Button variant="outlined" onClick={fetchData}>
+                  GET
+                </Button>
+              </>
+            )}
+          </Box>
+        </Box>
+
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
