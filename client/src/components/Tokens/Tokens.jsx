@@ -26,7 +26,7 @@ const headers = [
   "Percentage",
   "Allocation",
   "Max Allocation",
-  ...Array.from({ length: 12 }, (_, i) => i + 1),
+  ...Array.from({ length: 12 }, (_, i) => `MileStone ${i + 1}`),
 ];
 const adminHeaders = [
   "Token",
@@ -34,7 +34,7 @@ const adminHeaders = [
   "Max Supply",
   "Total Balance",
   "Allocation",
-  ...Array.from({ length: 12 }, (_, i) => i + 1),
+  ...Array.from({ length: 12 }, (_, i) => `MileStone ${i + 1}`),
 ];
 
 const Tokens = () => {
