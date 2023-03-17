@@ -11,29 +11,31 @@ import config from "../../config";
 import styles from "./Tokens.module.css";
 import {
   Typography,
-  TablePagination,
   FormControl,
   OutlinedInput,
   InputLabel,
-  InputAdornment,
   Box,
   Button,
 } from "@mui/material";
 import { useAccount } from "wagmi";
-import SearchIcon from "@mui/icons-material/Search";
 
 const headers = [
   "Token",
   "Max Wallet Allocation",
   ...Array.from({ length: 12 }, (_, i) => i + 1),
 ];
+const adminHeaders = [
+  "Token",
+  "No of holders",
+  "Max Supply",
+  "Total Balance",
+  "Total qualified for",
+  ...Array.from({ length: 12 }, (_, i) => i + 1),
+];
 
 const Tokens = () => {
   const [tokens, setTokens] = React.useState([]);
   const [adminStats, setAdminStats] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [totalCount, setTotalCount] = React.useState(0);
   const { address } = useAccount();
   const [search, setSearch] = React.useState("");
   const isAdmin = config.ADMIN_WALLET_1 === address;
@@ -42,20 +44,19 @@ const Tokens = () => {
 
     const res1 = await fetch(url);
     if (res1.ok) {
-      const data = await res1.json();
+      const { data } = await res1.json();
       setAdminStats(data);
     } else {
       alert("Something went wrong. Unable to fetch info");
     }
   };
   const fetchData = async () => {
-    let url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&search=${search}`;
+    let url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&search=${search}`;
 
     const res1 = await fetch(url);
     if (res1.ok) {
       const data = await res1.json();
       setTokens(data.data);
-      setTotalCount(data.total_count);
     } else {
       alert("Something went wrong. Unable to fetch info");
     }
@@ -63,19 +64,8 @@ const Tokens = () => {
 
   React.useEffect(() => {
     if (isAdmin) fetchAdminData();
-  }, []);
-  React.useEffect(() => {
     fetchData();
-  }, [rowsPerPage, page]);
-
-  const handleChangePage = (_, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  }, []);
 
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
@@ -83,7 +73,7 @@ const Tokens = () => {
         <Box display={"flex"} justifyContent="space-between">
           <Box>
             <Typography variant="h6" className={styles.campaignsTableHeader}>
-              Tokens
+              Your Tokens
             </Typography>
             <Typography
               variant="subtitle2"
@@ -131,25 +121,50 @@ const Tokens = () => {
                 {row.monthly_allocations.map((x) => (
                   <TableCell>{x}</TableCell>
                 ))}
-                <TableCell>{row.blogs_limit}</TableCell>
-                <TableCell>{row.overall_promotions_limit}</TableCell>
-                <TableCell>{row.eth_amount}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>{row.reason}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        component="div"
-        count={totalCount}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <TableContainer component={Paper} sx={{ p: 2 }}>
+        <Box display={"flex"} justifyContent="space-between">
+          <Box>
+            <Typography variant="h6" className={styles.campaignsTableHeader}>
+              Overall Stats
+            </Typography>
+          </Box>
+        </Box>
+
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
+              {adminHeaders.map((h) => {
+                return <TableCell>{h}</TableCell>;
+              })}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {console.log("adminStats", adminStats)}
+            {adminStats.map((row, index) => (
+              <TableRow
+                key={index}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell>{row.token}</TableCell>
+                <TableCell>{row.holdersCount}</TableCell>
+                <TableCell>{row.maxSupply}</TableCell>
+                <TableCell>{row.balance}</TableCell>
+                <TableCell>{row.qualifiedFor}</TableCell>
+                {row.monthlyShare.map((x) => (
+                  <TableCell>{x}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Paper>
   );
 };
