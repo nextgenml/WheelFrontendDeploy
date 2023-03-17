@@ -76,6 +76,7 @@ const getUserTokens = async (walletId, search) => {
           sharePercent: sharePercent * 100,
           maxSupply,
           allocation,
+          lastRunAt: tokenMeta.last_run_at,
         });
       }
     }

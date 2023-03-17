@@ -1,5 +1,10 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 
+const updateLastRunAt = async (id, lastRunAt) => {
+  const query = `update tokens set last_run_at = ? where id = ?`;
+
+  return await runQueryAsync(query, [lastRunAt, id]);
+};
 const getTokens = async () => {
   const query = `select * from tokens`;
 
@@ -33,4 +38,5 @@ module.exports = {
   totalBalanceByToken,
   walletBalanceByToken,
   getTokenStats,
+  updateLastRunAt,
 };

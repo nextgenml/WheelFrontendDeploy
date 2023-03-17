@@ -6,11 +6,16 @@ const {
   getHolderByPage,
   updateHolderBalance,
 } = require("../../repository/holder");
-const { getTokens, updateBlockNumber } = require("../../repository/token");
+const {
+  getTokens,
+  updateBlockNumber,
+  updateLastRunAt,
+} = require("../../repository/token");
 const { createTransaction } = require("../../repository/token_transactions");
 const { pullWallets, getContract } = require("../../script/pullTransfers");
 const { getBalances } = require("../../script/walletBalance");
-
+const moment = require("moment");
+const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const formatBalance = (value, decimals) => {
   return (
     parseInt(
@@ -70,6 +75,7 @@ const updateBalances = async () => {
 
       min_id = current_max_id;
     }
+    await updateLastRunAt(1, moment.utc().format(DATE_TIME_FORMAT));
   }
 };
 // startPulling();

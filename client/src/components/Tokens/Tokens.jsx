@@ -18,9 +18,11 @@ import {
   Button,
 } from "@mui/material";
 import { useAccount } from "wagmi";
+import moment from "moment";
 
 const headers = [
   "Token",
+  "Calculated At",
   "Max Supply",
   "Balance",
   "Percentage",
@@ -88,7 +90,7 @@ const Tokens = () => {
           </Box>
           <Box display={"flex"} alignItems="center">
             <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-              <InputLabel>Search</InputLabel>
+              <InputLabel>Search with wallet</InputLabel>
               <OutlinedInput
                 onChange={(e) => setSearch(e.target.value)}
                 label="Search with wallet"
@@ -117,6 +119,7 @@ const Tokens = () => {
                 }}
               >
                 <TableCell>{row.token}</TableCell>
+                <TableCell>{moment.utc(row.lastRunAt).format()}</TableCell>
                 <TableCell>{row.maxSupply}</TableCell>
                 <TableCell>{row.walletValue}</TableCell>
                 <TableCell>{row.sharePercent}</TableCell>
