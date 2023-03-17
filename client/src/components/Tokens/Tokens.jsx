@@ -33,7 +33,7 @@ const adminHeaders = [
   "No of holders",
   "Max Supply",
   "Total Balance",
-  "Total qualified for",
+  "Allocation",
   ...Array.from({ length: 12 }, (_, i) => i + 1),
 ];
 

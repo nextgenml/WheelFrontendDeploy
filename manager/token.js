@@ -26,12 +26,11 @@ const getAdminStats = async () => {
   const result = [];
 
   const maxSupplyPerToken = await getMaxSupplies(tokens);
+  console.log("maxSupplyPerToken", maxSupplyPerToken);
   for (const token of tokens) {
     const tokenStats = await tokenRepo.getTokenStats(token.token);
     const maxSupply = maxSupplyPerToken[token.token];
-    const qualifiedFor = parseInt(
-      (token.allocation_percent * tokenStats.balance) / 100
-    );
+    const qualifiedFor = parseInt((token.allocation_percent * maxSupply) / 100);
     const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
       parseInt(x * qualifiedFor)
     );
