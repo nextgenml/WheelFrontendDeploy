@@ -28,7 +28,6 @@ const storeTransactions = async (token, transactions) => {
     if (to !== token.contract_address) await createHolderV1(to);
     if (from !== token.contract_address) await createHolderV1(from);
   }
-  console.log("storeTransactions done");
 };
 const startPulling = async () => {
   try {
@@ -38,7 +37,6 @@ const startPulling = async () => {
       const lastBlockNumber = await pullWallets(token, storeTransactions);
 
       await updateBlockNumber(token.id, lastBlockNumber);
-      break;
     }
   } catch (error) {
     logger.error(`error in pulling wallets: ${error}`);
@@ -72,24 +70,28 @@ const updateBalances = async () => {
 
       min_id = current_max_id;
     }
-    break;
   }
 };
 // startPulling();
 // updateBalances();
-// const rule = new schedule.RecurrenceRule();
-// const [hours, minutes] = config.CREATE_POST_CHORES_AT;
-// rule.hour = hours;
-// rule.minute = minutes;
 
-// schedule.scheduleJob(rule, async () => {
-//   logger.info("started chores process");
-//   await startPulling();
-// });
-// process.on("SIGINT", () => {
-//   console.log("closing");
-//   schedule.gracefulShutdown().then(() => process.exit(0));
-// });
+const rule = new schedule.RecurrenceRule();
+rule.hour = 4;
+rule.minute = 0;
+
+schedule.scheduleJob(rule, async () => {
+  logger.info("started pulling wallets from smart contract");
+  await startPulling();
+  logger.info(
+    "completed pulling wallets from smart contract and getting balances"
+  );
+  await updateBalances();
+  logger.info("completed getting balances");
+});
+process.on("SIGINT", () => {
+  console.log("closing");
+  schedule.gracefulShutdown().then(() => process.exit(0));
+});
 
 module.exports = {
   formatBalance,

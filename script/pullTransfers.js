@@ -51,7 +51,7 @@ const getContract = async (contractAddress, contractAbi) => {
   return new w3.eth.Contract(JSON.parse(fileContent), contractAddress);
 };
 
-const binaryPull = async (contract, start, end, callback) => {
+const binaryPull = async (contract, start, end, promises, callback) => {
   try {
     console.log("start, end", start, end);
 
@@ -60,13 +60,13 @@ const binaryPull = async (contract, start, end, callback) => {
         fromBlock: start,
         toBlock: end,
       });
-      if (result.length) callback(result);
+      if (result.length) promises.push(callback(result));
     }
   } catch (error) {
     if (error.message.includes("query returned more than 10000 results")) {
       const mid = Math.floor((start + end) / 2);
-      await binaryPull(contract, start, mid, callback);
-      await binaryPull(contract, mid + 1, end, callback);
+      await binaryPull(contract, start, mid, promises, callback);
+      await binaryPull(contract, mid + 1, end, promises, callback);
     } else {
       logger.error(`error while pulling from smart contract: ${error.message}`);
     }
@@ -77,15 +77,20 @@ const pullWallets = async (token, callback) => {
   const contract = await getContract(token.contract_address, token.abi_file);
   const latest = await w3.eth.getBlockNumber();
 
+  const promises = [];
   await binaryPull(
     contract,
     token.last_block_number,
     latest,
+    promises,
     async (events) => {
       console.log("count", events.length);
       await callback(token, events);
     }
   );
+  console.log("waiting for db updates", token.token);
+  await Promise.all(promises);
+  console.log("db updates done");
   return latest;
 };
 
