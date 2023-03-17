@@ -75,11 +75,7 @@ const updateBalances = async () => {
 // startPulling();
 // updateBalances();
 
-const rule = new schedule.RecurrenceRule();
-rule.hour = 4;
-rule.minute = 0;
-
-schedule.scheduleJob(rule, async () => {
+schedule.scheduleJob("0 */3 * * *", async () => {
   logger.info("started pulling wallets from smart contract");
   await startPulling();
   logger.info(
