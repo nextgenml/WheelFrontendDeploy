@@ -21,7 +21,11 @@ import { useAccount } from "wagmi";
 
 const headers = [
   "Token",
-  "Max Wallet Allocation",
+  "Max Supply",
+  "Balance",
+  "Percentage",
+  "Allocation",
+  "Max Allocation",
   ...Array.from({ length: 12 }, (_, i) => i + 1),
 ];
 const adminHeaders = [
@@ -83,20 +87,16 @@ const Tokens = () => {
             </Typography>
           </Box>
           <Box display={"flex"} alignItems="center">
-            {isAdmin && (
-              <>
-                <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-                  <InputLabel>Search</InputLabel>
-                  <OutlinedInput
-                    onChange={(e) => setSearch(e.target.value)}
-                    label="Search with wallet"
-                  />
-                </FormControl>
-                <Button variant="outlined" onClick={fetchData}>
-                  GET
-                </Button>
-              </>
-            )}
+            <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+              <InputLabel>Search</InputLabel>
+              <OutlinedInput
+                onChange={(e) => setSearch(e.target.value)}
+                label="Search with wallet"
+              />
+            </FormControl>
+            <Button variant="outlined" onClick={fetchData}>
+              GET
+            </Button>
           </Box>
         </Box>
 
@@ -117,7 +117,11 @@ const Tokens = () => {
                 }}
               >
                 <TableCell>{row.token}</TableCell>
-                <TableCell>{row.total_allocation}</TableCell>
+                <TableCell>{row.maxSupply}</TableCell>
+                <TableCell>{row.walletValue}</TableCell>
+                <TableCell>{row.sharePercent}</TableCell>
+                <TableCell>{row.allocation}</TableCell>
+                <TableCell>{parseInt(row.maxAllocation)}</TableCell>
                 {row.monthly_allocations.map((x) => (
                   <TableCell>{x}</TableCell>
                 ))}
@@ -145,7 +149,6 @@ const Tokens = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {console.log("adminStats", adminStats)}
               {adminStats.map((row, index) => (
                 <TableRow
                   key={index}

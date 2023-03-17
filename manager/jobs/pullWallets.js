@@ -24,9 +24,11 @@ const storeTransactions = async (token, transactions) => {
     let formattedValue = formatBalance(value, token.decimals);
 
     await createTransaction(transaction, formattedValue, token.token);
-    const userWalletId = to === token.contract_address ? from : to;
-    await createHolderV1(userWalletId);
+
+    if (to !== token.contract_address) await createHolderV1(to);
+    if (from !== token.contract_address) await createHolderV1(from);
   }
+  console.log("storeTransactions done");
 };
 const startPulling = async () => {
   try {
@@ -88,3 +90,7 @@ const updateBalances = async () => {
 //   console.log("closing");
 //   schedule.gracefulShutdown().then(() => process.exit(0));
 // });
+
+module.exports = {
+  formatBalance,
+};

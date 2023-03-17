@@ -1,19 +1,34 @@
 const config = require("../config");
 const tokenRepo = require("../repository/token");
 const { getMaxSupply } = require("../script/walletBalance");
+const { formatBalance } = require("./jobs/pullWallets");
 
-const getAdminStats = async () => {
-  const tokens = await tokenRepo.getTokens();
-  const result = [];
+const getMaxSupplies = async (tokens) => {
   const maxSupplyPromises = [];
   for (const token of tokens) {
     maxSupplyPromises.push(getMaxSupply(token));
   }
-  const maxSupplyPerToken = await Promise.all(maxSupplyPromises);
+  const results = await Promise.all(maxSupplyPromises);
+  const output = {};
+
+  results.forEach(
+    (r) =>
+      (output[r.token] = formatBalance(
+        r.max,
+        tokens.filter((x) => x.token === r.token)[0].decimals
+      ))
+  );
+
+  return output;
+};
+const getAdminStats = async () => {
+  const tokens = await tokenRepo.getTokens();
+  const result = [];
+
+  const maxSupplyPerToken = await getMaxSupplies(tokens);
   for (const token of tokens) {
     const tokenStats = await tokenRepo.getTokenStats(token.token);
-    const maxSupply = maxSupplyPerToken.filter((x) => x.token == token.token)[0]
-      ?.max;
+    const maxSupply = maxSupplyPerToken[token.token];
     const qualifiedFor = parseInt(
       (token.allocation_percent * tokenStats.balance) / 100
     );
@@ -36,28 +51,34 @@ const getUserTokens = async (walletId, search) => {
     config.ADMIN_WALLET_1 === walletId ? search || walletId : walletId;
 
   let wallets = await tokenRepo.walletBalanceByToken(walletIdTemp);
-  let tokens = await tokenRepo.totalBalanceByToken();
   const tokensMeta = await tokenRepo.getTokens();
   const walletBalance = wallets[0];
-  const tokensBalance = tokens[0];
 
   const result = [];
-  for (const tokenMeta of tokensMeta) {
-    const walletValue = walletBalance[`${tokenMeta.token}_balance`];
-    const tokenValue = tokensBalance[`${tokenMeta.token}_balance`];
-    if (walletValue > 0) {
-      const sharePercent = walletValue / tokenValue;
-      const allowedBalance = (tokenMeta.allocation_percent * tokenValue) / 100;
-      const share = sharePercent * allowedBalance;
+  const maxSupplyPerToken = await getMaxSupplies(tokensMeta);
 
-      const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
-        parseInt(x * share)
-      );
-      result.push({
-        total_allocation: parseInt(share),
-        monthly_allocations: monthlyShare,
-        token: tokenMeta.token,
-      });
+  for (const tokenMeta of tokensMeta) {
+    if (walletBalance) {
+      const walletValue = walletBalance[`${tokenMeta.token}_balance`];
+      if (walletValue > 0) {
+        const maxSupply = maxSupplyPerToken[tokenMeta.token];
+        const sharePercent = walletValue / maxSupply;
+        const allocation = (maxSupply * tokenMeta.allocation_percent) / 100;
+        const maxAllocation = allocation * sharePercent;
+
+        const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
+          parseInt(x * maxAllocation)
+        );
+        result.push({
+          maxAllocation: maxAllocation,
+          monthly_allocations: monthlyShare,
+          token: tokenMeta.token,
+          walletValue,
+          sharePercent: sharePercent * 100,
+          maxSupply,
+          allocation,
+        });
+      }
     }
   }
   return result;

@@ -60,7 +60,7 @@ const binaryPull = async (contract, start, end, callback) => {
         fromBlock: start,
         toBlock: end,
       });
-      if (result.length) await callback(result);
+      if (result.length) callback(result);
     }
   } catch (error) {
     if (error.message.includes("query returned more than 10000 results")) {

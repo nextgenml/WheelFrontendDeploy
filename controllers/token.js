@@ -13,7 +13,7 @@ const getUserTokens = async (req, res) => {
       total_count: data.length,
     });
   } catch (error) {
-    logger.error(`error in getUserTokens: ${e}`);
+    logger.error(`error in getUserTokens: ${error}`);
     res.status(500).json({
       message: error.message,
     });
