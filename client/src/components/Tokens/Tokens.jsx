@@ -126,45 +126,47 @@ const Tokens = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <TableContainer component={Paper} sx={{ p: 2 }}>
-        <Box display={"flex"} justifyContent="space-between">
-          <Box>
-            <Typography variant="h6" className={styles.campaignsTableHeader}>
-              Overall Stats
-            </Typography>
+      {isAdmin && (
+        <TableContainer component={Paper} sx={{ p: 2 }}>
+          <Box display={"flex"} justifyContent="space-between">
+            <Box>
+              <Typography variant="h6" className={styles.campaignsTableHeader}>
+                Overall Stats
+              </Typography>
+            </Box>
           </Box>
-        </Box>
 
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
-              {adminHeaders.map((h) => {
-                return <TableCell>{h}</TableCell>;
-              })}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {console.log("adminStats", adminStats)}
-            {adminStats.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell>{row.token}</TableCell>
-                <TableCell>{row.holdersCount}</TableCell>
-                <TableCell>{row.maxSupply}</TableCell>
-                <TableCell>{row.balance}</TableCell>
-                <TableCell>{row.qualifiedFor}</TableCell>
-                {row.monthlyShare.map((x) => (
-                  <TableCell>{x}</TableCell>
-                ))}
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
+                {adminHeaders.map((h) => {
+                  return <TableCell>{h}</TableCell>;
+                })}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {console.log("adminStats", adminStats)}
+              {adminStats.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell>{row.token}</TableCell>
+                  <TableCell>{row.holdersCount}</TableCell>
+                  <TableCell>{row.maxSupply}</TableCell>
+                  <TableCell>{row.balance}</TableCell>
+                  <TableCell>{row.qualifiedFor}</TableCell>
+                  {row.monthlyShare.map((x) => (
+                    <TableCell>{x}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Paper>
   );
 };
