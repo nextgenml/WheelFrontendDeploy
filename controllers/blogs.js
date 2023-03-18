@@ -155,7 +155,6 @@ const getBlogData = async (req, res) => {
       totalResult,
       data: results,
     });
-
   } catch (error) {
     logger.error(`error occurred in getBlogData api: ${error}`);
     res.status(400).json({
@@ -166,46 +165,47 @@ const getBlogData = async (req, res) => {
 };
 
 const saveBlogData = async (req, res) => {
-  const { files } = req;
-  const image_urls = [];
+  try {
+    const { files } = req;
+    const image_urls = [];
 
-  files.forEach(file => {
-    image_urls.push(file.filename);
-  });
+    files.forEach((file) => {
+      image_urls.push(file.filename);
+    });
 
-  const {
-    wallet_address,
-    initiative,
-    prompt,
-    blog
-  } = req.body;
+    const { wallet_address, initiative, prompt, blog } = req.body;
 
-  if (!wallet_address || !initiative || !prompt || !blog) {
-    return res.status(400).json({ msg: "Invalid data" });
+    if (!wallet_address || !initiative || !prompt || !blog) {
+      return res.status(400).json({ msg: "Invalid data" });
+    }
+
+    // Blogs limit validation
+    if (initiative === "blog-customization") {
+      const [valid, message, _, __] = await promotionsRepo.blogStats(
+        wallet_address
+      );
+      if (!valid) return res.status(401).json({ msg: message });
+    }
+
+    // Stop same prompt being saved
+    const results = await blogsRepo.checkReplica(wallet_address, prompt);
+
+    if (results.length) {
+      return res
+        .status(400)
+        .json({ msg: "Record already saved. You cannot save again" });
+    }
+
+    await blogsRepo.saveBlogData(req.body, image_urls.toString());
+
+    return res.status(200).json({
+      msg: "Saved successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      msg: "Server Error",
+    });
   }
-
-  // Blogs limit validation
-  if (initiative === "blog-customization") {
-    const [valid, message, _, __] = await promotionsRepo.blogStats(
-      wallet_address
-    );
-    if (!valid) return res.status(401).json({ msg: message });
-  }
-
-  // Stop same prompt being saved
-  const results = await blogsRepo.checkReplica(wallet_address, prompt);
-
-  if (results.length) {
-    return res
-      .status(400)
-      .json({ msg: "Record already saved. You cannot save again" });
-  }
-
-  await blogsRepo.saveBlogData(req.body, image_urls.toString());
-
-  return res.status(200).json({
-    msg: "Saved successfully",
-  });
 };
 module.exports = {
   updateBlogData,
