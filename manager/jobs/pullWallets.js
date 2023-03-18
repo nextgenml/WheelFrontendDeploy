@@ -49,16 +49,14 @@ const startPulling = async () => {
 };
 
 const updateBalances = async () => {
-  let { max_id, min_id } = await getHoldersMeta();
-
   const tokens = await getTokens();
   for (const token of tokens) {
+    let { max_id, min_id } = await getHoldersMeta();
     const contract = await getContract(token.contract_address, token.abi_file);
 
     while (min_id < max_id) {
       const current_max_id = min_id + 100;
       const holders = await getHolderByPage(min_id, current_max_id);
-      console.log("min_id < max_id", min_id, current_max_id);
 
       const balances = await getBalances(
         contract,
@@ -75,13 +73,11 @@ const updateBalances = async () => {
 
       min_id = current_max_id;
     }
-    await updateLastRunAt(1, moment.utc().format(DATE_TIME_FORMAT));
+    await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
   }
 };
-// startPulling();
-// updateBalances();
 
-schedule.scheduleJob("0 */3 * * *", async () => {
+const initiateProcess = async () => {
   logger.info("started pulling wallets from smart contract");
   await startPulling();
   logger.info(
@@ -89,6 +85,10 @@ schedule.scheduleJob("0 */3 * * *", async () => {
   );
   await updateBalances();
   logger.info("completed getting balances");
+};
+// initiateProcess();
+schedule.scheduleJob("0 */3 * * *", async () => {
+  await initiateProcess();
 });
 process.on("SIGINT", () => {
   console.log("closing");
