@@ -8,7 +8,7 @@ const logger = require("../logger");
 //network provider goerli/mainnet
 const providerETH = new providers.JsonRpcProvider(config.RPC_URL);
 // admin/owner wallet
-const signerETH = new Wallet(config.DEPLOYER_WALLET_SECRET, providerETH);
+const signerETH = new Wallet(config.DEPLOYER_WALLET, providerETH);
 const rewardContract = new Contract(config.REWARD_TOKEN, tokenAbi, signerETH);
 // gas estimation for transaction
 let { MaxUint256 } = constants;
