@@ -77,8 +77,7 @@ const updateBlogData = async (data) => {
       // [data.validatedFlag, data.paidFlag, data.promoted, data.transactionID]
       [data.validatedFlag, data.paidFlag, data.transactionID]
     );
-
-}
+};
 
 const saveBlogData = async (data, image_urls) => {
   const query = `INSERT INTO saved_prompts(transactionID, wallet_address, initiative, prompt, blog, mediumUrl, twitterUrl, facebookUrl, linkedinUrl, instagramUrl, pinterestUrl, hashword, keyword, image_urls, create_date, validated_flag, paid_amount, paid_flag, promoted_wallet, promoted_blog_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -101,37 +100,37 @@ const saveBlogData = async (data, image_urls) => {
     data.keyword,
     image_urls,
     create_date,
-    data.validated_flag,
-    data.paid_amount,
-    data.paid_flag,
+    data.validated_flag || 0,
+    data.paid_amount || 0,
+    data.paid_flag || 0,
     data.promotedWallet,
-    data.promotedId,
+    data.promotedId || 0,
   ]);
-}
+};
 
 const totalBlogs = async () => {
   const query = `select count(1) as count from saved_prompts`;
   const count = await runQueryAsync(query);
   return [count[0].count];
-}
+};
 
 const selectSearchElements = async (searchWalletAdd) => {
   const query = `SELECT * from saved_prompts WHERE wallet_address='${searchWalletAdd}' ORDER BY create_date DESC, wallet_address DESC`;
   const data = await runQueryAsync(query);
   return [data];
-}
+};
 
 const selectAllElements = async (pageSize, offset) => {
   const query = `SELECT * from saved_prompts ORDER BY create_date DESC, wallet_address DESC LIMIT ${pageSize} OFFSET ${offset}`;
   const data = await runQueryAsync(query);
   return [data];
-}
+};
 
 const checkReplica = async (wallet_address, prompt) => {
   const query = `select 1 from saved_prompts where wallet_address = ? and prompt = ?`;
   const result = await runQueryAsync(query, [wallet_address, prompt]);
   return result;
-}
+};
 
 module.exports = {
   saveBlogData,
@@ -143,5 +142,5 @@ module.exports = {
   getBlogStats,
   firstBlogAt,
   updateBlogData,
-  checkReplica
+  checkReplica,
 };
