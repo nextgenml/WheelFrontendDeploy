@@ -1,4 +1,4 @@
-const config = require("../config");
+const config = require("../config/env");
 const { dbConnection } = require("../dbconnect");
 const logger = require("../logger");
 const blogsManager = require("../manager/blogs");

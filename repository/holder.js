@@ -1,6 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
-const config = require("../config");
+const config = require("../config/env");
 
 // Created during tokens pulling implementation
 const createHolderV1 = async (walletId) => {

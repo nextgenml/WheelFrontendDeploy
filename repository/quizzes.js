@@ -1,6 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
-const config = require("../config");
+const config = require("../config/env");
 
 const getAllQuizzes = async (walletId) => {
   const query = `select level, reward, starts_at from quizzes where is_active = 1 order by level asc;`;

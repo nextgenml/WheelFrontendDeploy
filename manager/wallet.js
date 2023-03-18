@@ -1,4 +1,4 @@
-const config = require("../config.js");
+const config = require("../config/env.js");
 const { NEXGENML } = require("../constants/token.js");
 const logger = require("../logger.js");
 const { createHolder } = require("../repository/holder.js");

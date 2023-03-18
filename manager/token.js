@@ -1,4 +1,4 @@
-const config = require("../config");
+const config = require("../config/env");
 const tokenRepo = require("../repository/token");
 const { getMaxSupply } = require("../script/walletBalance");
 const { formatBalance } = require("./jobs/pullWallets");

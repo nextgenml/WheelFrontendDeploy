@@ -1,7 +1,7 @@
 const fs = require("fs").promises;
 const Web3 = require("web3");
 const path = require("path");
-const config = require("../config.js");
+const config = require("../config/env.js");
 const logger = require("../logger");
 
 Number.prototype.toFixedSpecial = function (n) {

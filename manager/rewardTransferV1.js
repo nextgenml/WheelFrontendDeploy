@@ -1,6 +1,6 @@
 // import ethers.js
 const ethers = require("ethers");
-const config = require("../config");
+const config = require("../config/env");
 const logger = require("../logger");
 // provider: Infura or Etherscan will be automatically chosen
 let provider = new ethers.providers.JsonRpcProvider(config.RPC_URL);

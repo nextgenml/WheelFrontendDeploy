@@ -2,7 +2,7 @@ const logger = require("../logger");
 const fs = require("fs");
 const quizRepo = require("../repository/quizzes");
 const { readContentsFromCsv } = require("../utils/csv");
-const config = require("../config");
+const config = require("../config/env");
 const { intersectionOfArrays } = require("../utils");
 const moment = require("moment");
 
