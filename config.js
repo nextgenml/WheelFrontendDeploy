@@ -4,7 +4,7 @@ const config = {
   REWARD_TOKEN: process.env.REWARD_TOKEN,
   CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
   WEB3_PROVIDER_URL: process.env.WEB3_PROVIDER_URL,
-  DEPLOYER_WALLET: process.env.DEPLOYER_WALLET,
+  DEPLOYER_WALLET_SECRET: process.env.DEPLOYER_WALLET_SECRET,
   RPC_URL: process.env.RPC_URL,
 
   DISABLE_LOGS: process.env.DISABLE_LOGS == "true",
