@@ -24,7 +24,8 @@
     "unique-names-generator": "^4.7.1",
     "uuid": "^9.0.0",
     "web3": "^1.8.1",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "sequelize-cli": "^6.5.2"
   },
   "name": "server",
   "version": "1.0.0",
@@ -47,7 +48,5 @@
   },
   "homepage": "https://github.com/nextgenml/WheelFrontendDeploy#readme",
   "description": "",
-  "devDependencies": {
-    "sequelize-cli": "^6.5.2"
-  }
+  "devDependencies": {}
 }
