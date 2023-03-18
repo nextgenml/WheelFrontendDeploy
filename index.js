@@ -20,7 +20,7 @@ const walletController = require("./controllers/wallet");
 const tokenController = require("./controllers/token");
 const promotionsController = require("./controllers/promotions");
 const blogsController = require("./controllers/blogs");
-const { validateWalletId } = require("./auth");
+const { validateWalletId } = require("./routes/auth");
 
 const app = express();
 
