@@ -8,7 +8,7 @@ function handleDisconnect() {
   dbConnection = mysql.createConnection({
     host: config.DB_HOST,
     user: "root",
-    password: "",
+    password: "password",
     database: "nextgenml",
   });
 

@@ -26,11 +26,13 @@ import NXMLChat from "./components/NXMLChat/NXMLChat";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Promotions from "./components/Promotions/Promotions";
+import Tokens from "./components/Tokens/Tokens";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 function App() {
   const location = useLocation();
   const [socialSharing, setSocialSharing] = useState(false);
-  const whiteBgPages = ["/promotions"];
+  const whiteBgPages = ["/promotions", "/tokens"];
 
   useEffect(() => {
     const includes = whiteBgPages.includes(location.pathname);
@@ -58,8 +60,14 @@ function App() {
         />
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
+
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
         <Route path="/promotions" element={<Promotions />} />
+        <Route
+          path="/tokens"
+          element={<PrivateRoute component={<Tokens />} />}
+        />
+
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/" element={<SocialSharing />} />
         <Route path="/user-campaigns" element={<Campaigns />} />

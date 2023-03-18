@@ -2,6 +2,36 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
 const config = require("../config");
 
+// Created during tokens pulling implementation
+const createHolderV1 = async (walletId) => {
+  const existsQuery = `select id from holders where wallet_id = ?`;
+
+  const existsResults = await runQueryAsync(existsQuery, [walletId]);
+
+  if (!existsResults.length) {
+    const query = `insert into holders (wallet_id, alias, is_active) values(?, ?, true);`;
+    const randomName = await getUniqueName(walletId);
+
+    return await runQueryAsync(query, [walletId, randomName]);
+  }
+};
+
+const getHoldersMeta = async () => {
+  const query = `select max(id) as max_id, min(id) as min_id from holders`;
+
+  const results = await runQueryAsync(query, []);
+  return results[0];
+};
+
+const getHolderByPage = async (minId, maxId) => {
+  const query = `select wallet_id from holders where id >= ? and id < ?`;
+  return await runQueryAsync(query, [minId, maxId]);
+};
+const updateHolderBalance = async (walletId, balance, token) => {
+  const query = `update holders set ${token}_balance = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [balance, walletId]);
+};
+
 const nextUserForPost = async (campaignId, skippedUsers) => {
   const query = `select distinct h.wallet_id from holders h left join chores c on c.wallet_id = h.wallet_id 
     and c.campaign_detail_id = ? and c.chore_type = 'post'
@@ -115,6 +145,18 @@ const aliasExists = async (wallet_id, alias) => {
   return !!results[0];
 };
 
+const getUniqueName = async (walletId) => {
+  while (1) {
+    const existsQuery = `select 1 from holders where alias = ?`;
+    const randomName = `${uniqueNamesGenerator({
+      dictionaries: [names],
+    })}${walletId.substring(walletId.length - 2)}`;
+
+    const existsResults = await runQueryAsync(existsQuery, [randomName]);
+
+    if (!existsResults.length) return randomName;
+  }
+};
 module.exports = {
   getById,
   createHolder,
@@ -127,17 +169,8 @@ module.exports = {
   isEligibleForChore,
   getNextUserForChore,
   getActiveMediaHolders,
-};
-
-const getUniqueName = async (walletId) => {
-  while (1) {
-    const existsQuery = `select 1 from holders where alias = ?`;
-    const randomName = `${uniqueNamesGenerator({
-      dictionaries: [names],
-    })}${walletId.substring(walletId.length - 2)}`;
-
-    const existsResults = await runQueryAsync(existsQuery, [randomName]);
-
-    if (!existsResults.length) return randomName;
-  }
+  createHolderV1,
+  getHoldersMeta,
+  getHolderByPage,
+  updateHolderBalance,
 };

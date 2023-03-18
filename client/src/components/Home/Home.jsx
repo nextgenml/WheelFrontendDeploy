@@ -1,8 +1,7 @@
 import React from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography, Link } from "@mui/material";
 import homeimg from "./assets/home.png";
 import { Stack } from "@mui/system";
-import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
@@ -86,6 +85,25 @@ export default function Home() {
               }}
             >
               LAUNCH WHEEL
+            </Button>
+            <Button
+              sx={{
+                bgcolor: "#2E87E5",
+                my: 2,
+                fontFamily: "Audiowide",
+                borderRadius: "10px",
+                "&:hover": {
+                  bgcolor: "#2E87E5b1",
+                },
+              }}
+            >
+              <Link
+                href="/tokens"
+                target="_blank"
+                sx={{ color: "white !important", textDecoration: "none" }}
+              >
+                Allocation
+              </Link>
             </Button>
           </Stack>
         </Grid>

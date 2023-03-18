@@ -2,10 +2,10 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
-const createWallet = async (walletId, value) => {
-  const query = `insert into wallets (wallet_id, value, created_at) values(?, ?, now());`;
+const createWallet = async (walletId, value, token) => {
+  const query = `insert into wallets (wallet_id, value, created_at, token) values(?, ?, now(), ?);`;
 
-  return await runQueryAsync(query, [walletId, value]);
+  return await runQueryAsync(query, [walletId, value, token]);
 };
 
 const currSpinParticipants = async (offset, size, nextSpin) => {
