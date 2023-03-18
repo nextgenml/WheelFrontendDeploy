@@ -19,7 +19,6 @@ const SaveInitiative = ({
   getUserData,
   getBlogStats,
 }) => {
-
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(false);
@@ -42,16 +41,126 @@ const SaveInitiative = ({
   let blogImageskey;
 
   let blogImages = {
-    economicdevelopment: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    education: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    energy: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    environmentprotection: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    foodproduction: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    socialwelfare: ["food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png", "food.png"],
-    healthcare: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    security: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    socialmedia: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
-    spaceexploration: ["1.png", "2.png", "3.png", "4.png","5.png", "6.png", "7.png", "8.png", "9.png", "10.png"],
+    economicdevelopment: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    education: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    energy: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    environmentprotection: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    foodproduction: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    socialwelfare: [
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+      "food.png",
+    ],
+    healthcare: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    security: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    socialmedia: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
+    spaceexploration: [
+      "1.png",
+      "2.png",
+      "3.png",
+      "4.png",
+      "5.png",
+      "6.png",
+      "7.png",
+      "8.png",
+      "9.png",
+      "10.png",
+    ],
   };
 
   if (initiative == "economic-development") {
@@ -86,11 +195,11 @@ const SaveInitiative = ({
     let flag = 1;
     let images = [];
     for (let i = 0; i < e.target.files.length; i++) {
-      if (!(e.target.files[i].type.includes("image"))) {
+      if (!e.target.files[i].type.includes("image")) {
         flag = 0;
         notify("Please select valid file!", "error");
       }
-      if ((Math.round((e.target.files[i].size / 1024)) > 500)) {
+      if (Math.round(e.target.files[i].size / 1024) > 500) {
         flag = 0;
         notify("Size is too big!", "error");
       }
@@ -108,11 +217,11 @@ const SaveInitiative = ({
     const blob = await fetch(imgUrl).then((resp) => resp.blob());
     navigator.clipboard.write([
       new ClipboardItem({
-        "image/png": blob
-      })
+        "image/png": blob,
+      }),
     ]);
-  }
-  
+  };
+
   async function get_gpt_data(input, callFor) {
     console.log("get gpt data", input);
     const url = "https://backend.chatbot.nexgenml.com/collections";
@@ -150,7 +259,7 @@ const SaveInitiative = ({
           (isCustom
             ? res.result
             : res.result +
-            `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
+              `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
           ).trim()
         );
         setIsCopyDisable(false);
@@ -159,7 +268,6 @@ const SaveInitiative = ({
           getBlogStats();
         }
       }
-
     } else {
       notify("Something went wrong. Please try again later", "error");
     }
@@ -179,27 +287,33 @@ const SaveInitiative = ({
   useEffect(() => {
     if (result && result != "populating blog") {
       console.log("ready for hash word");
-      get_gpt_data("provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'hashwords');
+      get_gpt_data(
+        "provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        "hashwords"
+      );
     }
-  }, [result])
+  }, [result]);
 
   useEffect(() => {
     if (hashword) {
       console.log("ready for hash word");
-      get_gpt_data("provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'", 'keywords');
+      get_gpt_data(
+        "provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        "keywords"
+      );
     }
-  }, [hashword])
+  }, [hashword]);
 
   useEffect(() => {
     if (isChecked) {
       setResult("populating blog");
       const complete_prompt = isCustom
         ? `Write a ${Math.floor(
-          Math.random() * (800 - 600 + 1) + 600
-        )} word blog about ${prompt}`
+            Math.random() * (800 - 600 + 1) + 600
+          )} word blog about ${prompt}`
         : `Write a ${Math.floor(
-          Math.random() * (600 - 400 + 1) + 400
-        )} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telegram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt. Ignore title and do not repeat the question in the response.`;
+            Math.random() * (600 - 400 + 1) + 400
+          )} word blog about ${prompt}. Blend in links within the blog  Website: nexgenml.io , Twitter: https://twitter.com/nextgen_ml , Telegram: https://t.me/+JMGorMX41tM2NGIx . Also advise how NexGen ML is playing a crucial role based on the prompt. Ignore title and do not repeat the question in the response.`;
 
       get_gpt_data(complete_prompt);
     }
@@ -207,11 +321,17 @@ const SaveInitiative = ({
 
   // Check value empty
   useEffect(() => {
-    if (isChecked && !isCopyDisable &&
-      mediumlink && isValidUrl(mediumlink) &&
-      twitterlink && isValidUrl(twitterlink) &&
-      facebooklink && isValidUrl(facebooklink) &&
-      linkedinlink && isValidUrl(linkedinlink)
+    if (
+      isChecked &&
+      !isCopyDisable &&
+      mediumlink &&
+      isValidUrl(mediumlink) &&
+      twitterlink &&
+      isValidUrl(twitterlink) &&
+      facebooklink &&
+      isValidUrl(facebooklink) &&
+      linkedinlink &&
+      isValidUrl(linkedinlink)
       // instagramlink && isValidUrl(instagramlink) &&
       // pinterestlink && isValidUrl(pinterestlink)
     ) {
@@ -219,14 +339,24 @@ const SaveInitiative = ({
     } else {
       setIsSubmit(true);
     }
-  }, [isCopyDisable, link, mediumlink, twitterlink, facebooklink, linkedinlink, instagramlink, pinterestlink]);
+  }, [
+    isCopyDisable,
+    link,
+    mediumlink,
+    twitterlink,
+    facebooklink,
+    linkedinlink,
+    instagramlink,
+    pinterestlink,
+  ]);
 
   async function onSubmitClick() {
     // send post request to save data in database
     const finalContent = isPromote ? content : result;
     if (finalContent && finalContent.length > 60000) {
       notify(
-        `Blog cannot be more than 60000 characters, please remove extra ${finalContent.length - 60000
+        `Blog cannot be more than 60000 characters, please remove extra ${
+          finalContent.length - 60000
         } characters`
       );
       return;
@@ -240,25 +370,24 @@ const SaveInitiative = ({
       // (!instagramlink || isValidUrl(instagramlink)) &&
       // (!pinterestlink || isValidUrl(pinterestlink))
     ) {
-
       const formData = new FormData();
-      formData.append('wallet_address', address);
-      formData.append('initiative', initiative);
-      formData.append('prompt', prompt);
-      formData.append('blog', finalContent);
-      formData.append('mediumurl', mediumlink);
-      formData.append('twitterurl', twitterlink);
-      formData.append('facebookurl', facebooklink);
-      formData.append('linkedinurl', linkedinlink);
-      formData.append('instagramurl', instagramlink);
-      formData.append('pinteresturl', pinterestlink);
-      formData.append('hashword', hashword);
-      formData.append('keyword', keyWord);
-      formData.append('validated_flag', isValidatedFlag ? true : null);
-      formData.append('paid_amount', config.PAID_AMOUNT);
-      formData.append('paid_flag', isPaidFlag ? true : null);
-      formData.append('promotedWallet', promotedWallet);
-      formData.append('promotedId', promotedId);
+      formData.append("wallet_address", address);
+      formData.append("initiative", initiative);
+      formData.append("prompt", prompt);
+      formData.append("blog", finalContent);
+      formData.append("mediumurl", mediumlink);
+      formData.append("twitterurl", twitterlink);
+      formData.append("facebookurl", facebooklink);
+      formData.append("linkedinurl", linkedinlink);
+      formData.append("instagramurl", instagramlink);
+      formData.append("pinteresturl", pinterestlink);
+      formData.append("hashword", hashword);
+      formData.append("keyword", keyWord);
+      formData.append("validated_flag", isValidatedFlag ? true : null);
+      formData.append("paid_amount", config.PAID_AMOUNT);
+      formData.append("paid_flag", isPaidFlag ? true : null);
+      formData.append("promotedWallet", promotedWallet);
+      formData.append("promotedId", promotedId);
       console.log(blogImagesFiles);
 
       if (blogImagesFiles && blogImagesFiles.length > 0) {
@@ -391,7 +520,7 @@ const SaveInitiative = ({
               type="url"
               className="form-control"
               id="instagramlink"
-              placeholder="https://www.instagran.com"
+              placeholder="https://www.instagram.com"
               value={instagramlink}
               onChange={(e) => setinstagramLink(e.target.value)}
             />
@@ -431,29 +560,42 @@ const SaveInitiative = ({
           <div className="col-sm-12">
             <div className="row">
               {initiative != "blog-customization" &&
-                blogImages[initiative.includes("-") ? blogImageskey : initiative].map((item, i) => (
+                blogImages[
+                  initiative.includes("-") ? blogImageskey : initiative
+                ].map((item, i) => (
                   <div className="col m-2" key={i}>
                     <ModalImage
-                      small={`/images/blogImages/${initiative}/${item}`}
-                      large={`/images/blogImages/${initiative}/${item}`}
+                      small={`/blogAssets/blogImages/${initiative}/${item}`}
+                      large={`/blogAssets/blogImages/${initiative}/${item}`}
                       alt={item}
                     />
                     <button
                       key={i}
                       id={i}
-                      onClick={() => { ImageCopy(`/${item}`) }}
+                      onClick={() => {
+                        ImageCopy(`/${item}`);
+                      }}
                       type="button"
-                      className="btn btn-success mt-2 text-center">Copy</button>
+                      className="btn btn-success mt-2 text-center"
+                    >
+                      Copy
+                    </button>
                   </div>
-                ))
-              }
+                ))}
             </div>
           </div>
-          {initiative == "blog-customization" &&
+          {initiative == "blog-customization" && (
             <div className="col-sm-12">
-              <input className="form-control form-control-lg" id={`customImage`} multiple type="file" accept="image/*" onChange={onFileUpload} />
+              <input
+                className="form-control form-control-lg"
+                id={`customImage`}
+                multiple
+                type="file"
+                accept="image/*"
+                onChange={onFileUpload}
+              />
             </div>
-          }
+          )}
           <div className="col-sm-12">
             <div className="row">
               {customblogImages &&
@@ -466,8 +608,7 @@ const SaveInitiative = ({
                       alt={item}
                     />
                   </div>
-                ))
-              }
+                ))}
             </div>
           </div>
           <div className="col-sm-12">
