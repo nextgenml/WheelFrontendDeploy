@@ -100,11 +100,11 @@ const saveBlogData = async (data, image_urls) => {
     data.keyword,
     image_urls,
     create_date,
-    data.validated_flag || 0,
-    data.paid_amount || 0,
-    data.paid_flag || 0,
+    parseInt(data.validated_flag) || 0,
+    parseInt(data.paid_amount) || 0,
+    parseInt(data.paid_flag) || 0,
     data.promotedWallet,
-    data.promotedId || 0,
+    parseInt(data.promotedId) || 0,
   ]);
 };
 
