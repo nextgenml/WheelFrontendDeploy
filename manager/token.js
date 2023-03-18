@@ -4,21 +4,24 @@ const { getMaxSupply } = require("../script/walletBalance");
 const { formatBalance } = require("./jobs/pullWallets");
 
 const getMaxSupplies = async (tokens) => {
-  const maxSupplyPromises = [];
-  for (const token of tokens) {
-    maxSupplyPromises.push(getMaxSupply(token));
-  }
-  const results = await Promise.all(maxSupplyPromises);
+  // const maxSupplyPromises = [];
+  // for (const token of tokens) {
+  //   maxSupplyPromises.push(getMaxSupply(token));
+  // }
+  // const results = await Promise.all(maxSupplyPromises);
+  // const output = {};
+
+  // results.forEach(
+  //   (r) =>
+  //     (output[r.token] = formatBalance(
+  //       r.max,
+  //       tokens.filter((x) => x.token === r.token)[0].decimals
+  //     ))
+  // );
   const output = {};
-
-  results.forEach(
-    (r) =>
-      (output[r.token] = formatBalance(
-        r.max,
-        tokens.filter((x) => x.token === r.token)[0].decimals
-      ))
-  );
-
+  for (const token of tokens) {
+    output[token.token] = 1000000000000;
+  }
   return output;
 };
 const getAdminStats = async () => {
