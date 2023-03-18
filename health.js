@@ -1,6 +1,6 @@
 const { sendEmail } = require("./utils/mailer");
 const { runQueryAsync } = require("./utils/spinwheelUtil");
-require("dotenv").config({ path: "./config.env" });
+// require("dotenv").config({ path: "./config.env" });
 
 const checkResource = async () => {
   try {

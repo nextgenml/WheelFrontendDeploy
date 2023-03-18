@@ -7,7 +7,7 @@ const config = {
   DEPLOYER_WALLET: process.env.DEPLOYER_WALLET,
   RPC_URL: process.env.RPC_URL,
 
-  DISABLE_LOGS: process.env.DISABLE_LOGS,
+  DISABLE_LOGS: process.env.DISABLE_LOGS == "true",
   DB_HOST: process.env.DB_HOST,
   TWITTER_DEV_TOKEN: process.env.TWITTER_DEV_TOKEN,
   ADMIN_WALLET: process.env.ADMIN_WALLET,
