@@ -27,3 +27,5 @@ yarn-error.log*
 
 /logs/*.log
 logs/app.log
+
+.env
