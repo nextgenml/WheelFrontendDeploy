@@ -57,6 +57,7 @@ const updateBalances = async () => {
     while (min_id < max_id) {
       const current_max_id = min_id + 100;
       const holders = await getHolderByPage(min_id, current_max_id);
+      console.log("min_id < max_id", min_id, current_max_id);
 
       const balances = await getBalances(
         contract,
@@ -81,7 +82,7 @@ const initiateProcess = async () => {
   logger.info("started pulling wallets from smart contract");
   await startPulling();
   logger.info(
-    "completed pulling wallets from smart contract and getting balances"
+    "Completed pulling wallets from smart contract and getting balances"
   );
   await updateBalances();
   logger.info("completed getting balances");
