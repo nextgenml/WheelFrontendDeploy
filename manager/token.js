@@ -20,7 +20,7 @@ const getMaxSupplies = async (tokens) => {
   // );
   const output = {};
   for (const token of tokens) {
-    output[token.token] = 1000000000000;
+    output[token.token] = config.MAX_SUPPLY;
   }
   return output;
 };
