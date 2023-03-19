@@ -49,8 +49,7 @@ const getAdminStats = async () => {
   return result;
 };
 const getUserTokens = async (walletId, search) => {
-  const walletIdTemp =
-    config.ADMIN_WALLET_1 === walletId ? search || walletId : walletId;
+  const walletIdTemp = search || walletId;
 
   let wallets = await tokenRepo.walletBalanceByToken(walletIdTemp);
   const tokensMeta = await tokenRepo.getTokens();
