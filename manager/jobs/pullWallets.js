@@ -88,9 +88,9 @@ const initiateProcess = async () => {
   logger.info("completed getting balances");
 };
 // initiateProcess();
-schedule.scheduleJob("0 */3 * * *", async () => {
-  await initiateProcess();
-});
+// schedule.scheduleJob("0 */3 * * *", async () => {
+//   await initiateProcess();
+// });
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
