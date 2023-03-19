@@ -63,10 +63,7 @@ function App() {
 
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
         <Route path="/promotions" element={<Promotions />} />
-        <Route
-          path="/tokens"
-          element={<PrivateRoute component={<Tokens />} />}
-        />
+        <Route path="/tokens" element={<Tokens />} />
 
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/" element={<SocialSharing />} />
