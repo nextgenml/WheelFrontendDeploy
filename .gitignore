@@ -29,3 +29,4 @@ yarn-error.log*
 logs/app.log
 
 .env
+config/config.json
