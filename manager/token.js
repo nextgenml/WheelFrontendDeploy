@@ -4,24 +4,24 @@ const { getMaxSupply } = require("../script/walletBalance");
 const { formatBalance } = require("./jobs/pullWallets");
 
 const getMaxSupplies = async (tokens) => {
-  // const maxSupplyPromises = [];
-  // for (const token of tokens) {
-  //   maxSupplyPromises.push(getMaxSupply(token));
-  // }
-  // const results = await Promise.all(maxSupplyPromises);
-  // const output = {};
-
-  // results.forEach(
-  //   (r) =>
-  //     (output[r.token] = formatBalance(
-  //       r.max,
-  //       tokens.filter((x) => x.token === r.token)[0].decimals
-  //     ))
-  // );
-  const output = {};
+  const maxSupplyPromises = [];
   for (const token of tokens) {
-    output[token.token] = config.MAX_SUPPLY;
+    maxSupplyPromises.push(getMaxSupply(token));
   }
+  const results = await Promise.all(maxSupplyPromises);
+  const output = {};
+
+  results.forEach(
+    (r) =>
+      (output[r.token] = formatBalance(
+        r.max,
+        tokens.filter((x) => x.token === r.token)[0].decimals
+      ))
+  );
+  // const output = {};
+  // for (const token of tokens) {
+  //   output[token.token] = config.MAX_SUPPLY;
+  // }
   return output;
 };
 const getAdminStats = async () => {
@@ -33,7 +33,9 @@ const getAdminStats = async () => {
   for (const token of tokens) {
     const tokenStats = await tokenRepo.getTokenStats(token.token);
     const maxSupply = maxSupplyPerToken[token.token];
-    const qualifiedFor = parseInt((token.allocation_percent * maxSupply) / 100);
+    const qualifiedFor = parseInt(
+      (token.allocation_percent * config.MAX_SUPPLY) / 100
+    );
     const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
       parseInt(x * qualifiedFor)
     );
@@ -64,7 +66,8 @@ const getUserTokens = async (walletId, search) => {
       if (walletValue > 0) {
         const maxSupply = maxSupplyPerToken[tokenMeta.token];
         const sharePercent = walletValue / maxSupply;
-        const allocation = (maxSupply * tokenMeta.allocation_percent) / 100;
+        const allocation =
+          (config.MAX_SUPPLY * tokenMeta.allocation_percent) / 100;
         const maxAllocation = allocation * sharePercent;
 
         const monthlyShare = config.TOKEN_MONTHLY_ALLOCATION.map((x) =>
