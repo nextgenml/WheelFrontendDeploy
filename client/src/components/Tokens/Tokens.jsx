@@ -73,6 +73,8 @@ const Tokens = () => {
     fetchData();
   }, []);
 
+  const formatNumber = (num) =>
+    parseInt(num) > 0 ? num.toLocaleString("en-US") : 0;
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
       <TableContainer component={Paper} sx={{ p: 2 }}>
@@ -120,13 +122,15 @@ const Tokens = () => {
               >
                 <TableCell>{row.token}</TableCell>
                 <TableCell>{moment.utc(row.lastRunAt).format()}</TableCell>
-                <TableCell>{row.maxSupply}</TableCell>
-                <TableCell>{row.walletValue}</TableCell>
+                <TableCell>{formatNumber(row.maxSupply)}</TableCell>
+                <TableCell>{formatNumber(row.walletValue)}</TableCell>
                 <TableCell>{row.sharePercent}</TableCell>
-                <TableCell>{row.allocation}</TableCell>
-                <TableCell>{parseInt(row.maxAllocation)}</TableCell>
+                <TableCell>{formatNumber(row.allocation)}</TableCell>
+                <TableCell>
+                  {formatNumber(parseInt(row.maxAllocation))}
+                </TableCell>
                 {row.monthly_allocations.map((x) => (
-                  <TableCell>{x}</TableCell>
+                  <TableCell>{formatNumber(x)}</TableCell>
                 ))}
               </TableRow>
             ))}
@@ -160,12 +164,12 @@ const Tokens = () => {
                   }}
                 >
                   <TableCell>{row.token}</TableCell>
-                  <TableCell>{row.holdersCount}</TableCell>
-                  <TableCell>{row.maxSupply}</TableCell>
-                  <TableCell>{row.balance}</TableCell>
-                  <TableCell>{row.qualifiedFor}</TableCell>
+                  <TableCell>{formatNumber(row.holdersCount)}</TableCell>
+                  <TableCell>{formatNumber(row.maxSupply)}</TableCell>
+                  <TableCell>{formatNumber(row.balance)}</TableCell>
+                  <TableCell>{formatNumber(row.qualifiedFor)}</TableCell>
                   {row.monthlyShare.map((x) => (
-                    <TableCell>{x}</TableCell>
+                    <TableCell>{formatNumber(x)}</TableCell>
                   ))}
                 </TableRow>
               ))}
