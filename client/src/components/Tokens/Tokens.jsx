@@ -34,8 +34,11 @@ const adminHeaders = [
   "Token",
   "No of holders",
   "Max Supply",
-  "Total Balance",
+  "Balance",
+  "Percentage",
   "Allocation",
+  "Max Allocation",
+  "Token",
   ...Array.from({ length: 12 }, (_, i) => `MileStone ${i + 1}`),
 ];
 
@@ -75,6 +78,32 @@ const Tokens = () => {
 
   const formatNumber = (num) =>
     parseInt(num) > 0 ? num.toLocaleString("en-US") : 0;
+
+  const renderTable = (row, admin) => {
+    return (
+      <TableRow
+        key={row.token}
+        sx={{
+          "&:last-child td, &:last-child th": { border: 0 },
+        }}
+      >
+        <TableCell>{row.token}</TableCell>
+        <TableCell>
+          {admin
+            ? formatNumber(row.holdersCount)
+            : moment.utc(row.lastRunAt).format()}
+        </TableCell>
+        <TableCell>{formatNumber(row.maxSupply)}</TableCell>
+        <TableCell>{formatNumber(row.walletValue)}</TableCell>
+        <TableCell>{row.sharePercent}</TableCell>
+        <TableCell>{formatNumber(row.allocation)}</TableCell>
+        <TableCell>{formatNumber(parseInt(row.maxAllocation))}</TableCell>
+        {row.monthlyAllocations.map((x) => (
+          <TableCell>{formatNumber(x)}</TableCell>
+        ))}
+      </TableRow>
+    );
+  };
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
       <TableContainer component={Paper} sx={{ p: 2 }}>
@@ -112,29 +141,7 @@ const Tokens = () => {
               })}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {tokens.map((row) => (
-              <TableRow
-                key={row.id}
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell>{row.token}</TableCell>
-                <TableCell>{moment.utc(row.lastRunAt).format()}</TableCell>
-                <TableCell>{formatNumber(row.maxSupply)}</TableCell>
-                <TableCell>{formatNumber(row.walletValue)}</TableCell>
-                <TableCell>{row.sharePercent}</TableCell>
-                <TableCell>{formatNumber(row.allocation)}</TableCell>
-                <TableCell>
-                  {formatNumber(parseInt(row.maxAllocation))}
-                </TableCell>
-                {row.monthly_allocations.map((x) => (
-                  <TableCell>{formatNumber(x)}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
+          <TableBody>{tokens.map((row) => renderTable(row))}</TableBody>
         </Table>
       </TableContainer>
       {isAdmin && (
@@ -156,23 +163,7 @@ const Tokens = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {adminStats.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell>{row.token}</TableCell>
-                  <TableCell>{formatNumber(row.holdersCount)}</TableCell>
-                  <TableCell>{formatNumber(row.maxSupply)}</TableCell>
-                  <TableCell>{formatNumber(row.balance)}</TableCell>
-                  <TableCell>{formatNumber(row.qualifiedFor)}</TableCell>
-                  {row.monthlyShare.map((x) => (
-                    <TableCell>{formatNumber(x)}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
+              {adminStats.map((row) => renderTable(row, true))}
             </TableBody>
           </Table>
         </TableContainer>
