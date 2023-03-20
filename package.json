@@ -4,6 +4,7 @@
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.0.3",
+    "env-cmd": "^10.1.0",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
     "html-to-text": "^9.0.3",
@@ -19,13 +20,14 @@
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.21",
+    "pm2": "^5.3.0",
     "sequelize": "^6.28.0",
+    "sequelize-cli": "^6.5.2",
     "twitter-api-v2": "^1.13.0",
     "unique-names-generator": "^4.7.1",
     "uuid": "^9.0.0",
     "web3": "^1.8.1",
-    "winston": "^3.8.2",
-    "sequelize-cli": "^6.5.2"
+    "winston": "^3.8.2"
   },
   "name": "server",
   "version": "1.0.0",
@@ -33,7 +35,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm i && npm run build",
-    "start": "npx sequelize-cli db:migrate && node index.js",
+    "deploy": "npx sequelize-cli db:migrate && env-cmd -f .env pm2 restart --update-env index.js",
+    "start": "npx sequelize-cli db:migrate && env-cmd -f .env nodemon index.js",
     "start-view": "cd client && npm start"
   },
   "repository": {
@@ -47,6 +50,5 @@
     "url": "https://github.com/nextgenml/WheelFrontendDeploy/issues"
   },
   "homepage": "https://github.com/nextgenml/WheelFrontendDeploy#readme",
-  "description": "",
-  "devDependencies": {}
+  "description": ""
 }

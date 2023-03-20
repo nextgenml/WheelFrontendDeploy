@@ -2,7 +2,7 @@ const { Contract, Wallet, providers, constants, BigNumber } = require("ethers");
 const { parseUnits } = require("ethers/lib/utils.js");
 const { markWinnerAsPaid } = require("../repository/spinwheel");
 const tokenAbi = require("./tokenAbi.json");
-const config = require("../config.js");
+const config = require("../config/env.js");
 const logger = require("../logger");
 
 //network provider goerli/mainnet

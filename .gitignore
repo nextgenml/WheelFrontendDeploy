@@ -11,7 +11,7 @@ node_modules/
 
 # production
 /build
-/client/build
+/client/build/
 
 # misc
 .DS_Store
@@ -29,3 +29,4 @@ yarn-error.log*
 logs/app.log
 
 .env
+config/config.json

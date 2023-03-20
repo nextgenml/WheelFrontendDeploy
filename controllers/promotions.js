@@ -1,4 +1,4 @@
-const config = require("../config");
+const config = require("../config/env");
 const logger = require("../logger");
 const promotionsRepo = require("../repository/promotions");
 

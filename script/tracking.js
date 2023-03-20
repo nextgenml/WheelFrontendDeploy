@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const Web3 = require("web3");
 const path = require("path");
 const { generateRandomString, generateRandomNumber } = require("../utils");
-const config = require("../config.js");
+const config = require("../config/env.js");
 const logger = require("../logger");
 //RESET INSTRUCTIONS:
 //Put 0 to last_block_number.json and then run to filter the blocks from begining of the contract

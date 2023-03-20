@@ -1,7 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
-const config = require("../config");
+const config = require("../config/env");
 
 const getActiveChoresCount = async (campaignId, choreType) => {
   const query =

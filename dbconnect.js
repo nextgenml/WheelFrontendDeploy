@@ -1,6 +1,6 @@
 let mysql = require("mysql");
 const logger = require("./logger");
-const config = require("./config");
+const config = require("./config/env");
 
 let dbConnection = null;
 

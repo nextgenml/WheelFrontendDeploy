@@ -1,0 +1,38 @@
+const config = {
+  //  contract keys
+  SECRET_KEY: process.env.SECRET_KEY,
+  REWARD_TOKEN: process.env.REWARD_TOKEN,
+  CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
+  WEB3_PROVIDER_URL: process.env.WEB3_PROVIDER_URL,
+  DEPLOYER_WALLET: process.env.DEPLOYER_WALLET,
+  RPC_URL: process.env.RPC_URL,
+
+  DISABLE_LOGS: process.env.DISABLE_LOGS == "true",
+  DB_HOST: process.env.DB_HOST,
+  TWITTER_DEV_TOKEN: process.env.TWITTER_DEV_TOKEN,
+  ADMIN_WALLET: process.env.ADMIN_WALLET,
+  ADMIN_WALLET_1: process.env.ADMIN_WALLET_1,
+
+  // shill wheel
+  MIN_WALLETS_COUNT: process.env.MIN_WALLETS_COUNT,
+  FETCH_HOURS: JSON.parse(process.env.FETCH_HOURS),
+  FETCH_MINUTE: process.env.FETCH_MINUTE,
+  MINIMUM_WALLET_BALANCE: process.env.MINIMUM_WALLET_BALANCE,
+
+  // social media chores
+  NO_OF_POSTS_PER_DAY: process.env.NO_OF_POSTS_PER_DAY,
+  COST_PER_CHORE: process.env.COST_PER_CHORE,
+  POST_CHORE_VALID_DAYS: process.env.POST_CHORE_VALID_DAYS,
+  OTHER_CHORE_VALID_DAYS: process.env.OTHER_CHORE_VALID_DAYS,
+  CREATE_POST_CHORES_AT: JSON.parse(process.env.CREATE_POST_CHORES_AT),
+  MIN_AMOUNT_TO_PAY_IN_GO: process.env.MIN_AMOUNT_TO_PAY_IN_GO,
+  SUCCESS_FACTOR: JSON.parse(process.env.SUCCESS_FACTOR),
+  SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE:
+    process.env.SUCCESS_FACTOR_UPPER_BOUND_PERCENTAGE,
+
+  // Token allocation
+  TOKEN_MONTHLY_ALLOCATION: JSON.parse(process.env.TOKEN_MONTHLY_ALLOCATION),
+  MAX_SUPPLY: process.env.MAX_SUPPLY,
+};
+
+module.exports = config;

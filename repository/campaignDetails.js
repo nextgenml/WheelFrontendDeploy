@@ -1,6 +1,6 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
-const config = require("../config");
+const config = require("../config/env");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
 const getActiveCampaigns = async () => {

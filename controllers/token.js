@@ -1,4 +1,4 @@
-const config = require("../config");
+const config = require("../config/env");
 const logger = require("../logger");
 const tokenManager = require("../manager/token");
 
