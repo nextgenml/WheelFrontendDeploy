@@ -212,7 +212,7 @@ const SaveInitiative = ({
     setcustomblogImages(images);
   };
 
-  const ImageCopy = async (imgUrl) => {
+  const copyImage = async (imgUrl) => {
     console.log("imgUrl", imgUrl);
     const blob = await fetch(imgUrl).then((resp) => resp.blob());
     navigator.clipboard.write([
@@ -515,7 +515,7 @@ const SaveInitiative = ({
               onChange={(e) => setlinkedinLink(e.target.value)}
             />
           </div>
-          <div className="col-sm-12">
+          {/* <div className="col-sm-12">
             <input
               type="url"
               className="form-control"
@@ -534,7 +534,7 @@ const SaveInitiative = ({
               value={pinterestlink}
               onChange={(e) => setpinterestLink(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className="col-sm-12">
             <textarea
               type="text"
@@ -573,7 +573,9 @@ const SaveInitiative = ({
                       key={i}
                       id={i}
                       onClick={() => {
-                        ImageCopy(`/${item}`);
+                        copyImage(
+                          `/blogAssets/blogImages/${initiative}/${item}`
+                        );
                       }}
                       type="button"
                       className="btn btn-success mt-2 text-center"
