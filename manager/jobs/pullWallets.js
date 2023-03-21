@@ -42,40 +42,39 @@ const startPulling = async () => {
       const lastBlockNumber = await pullWallets(token, storeTransactions);
 
       await updateBlockNumber(token.id, lastBlockNumber);
+      await updateBalances(token);
+      console.log("updated balances for ", token.token);
     }
   } catch (error) {
     logger.error(`error in pulling wallets: ${error}`);
   }
 };
 
-const updateBalances = async () => {
-  const tokens = await getTokens();
-  for (const token of tokens) {
-    let { max_id, min_id } = await getHoldersMeta();
-    const contract = await getContract(token.contract_address, token.abi_file);
+const updateBalances = async (token) => {
+  let { max_id, min_id } = await getHoldersMeta();
+  const contract = await getContract(token.contract_address, token.abi_file);
 
-    while (min_id < max_id) {
-      const current_max_id = min_id + 100;
-      const holders = await getHolderByPage(min_id, current_max_id);
-      console.log("min_id < max_id", min_id, current_max_id);
+  while (min_id < max_id) {
+    const current_max_id = min_id + 100;
+    const holders = await getHolderByPage(min_id, current_max_id);
+    console.log("min_id < max_id", min_id, current_max_id);
 
-      const balances = await getBalances(
-        contract,
-        holders.map((h) => h.wallet_id)
+    const balances = await getBalances(
+      contract,
+      holders.map((h) => h.wallet_id)
+    );
+
+    for (const b of balances) {
+      await updateHolderBalance(
+        b.walletId,
+        formatBalance(b.balance, token.decimals),
+        token.token
       );
-
-      for (const b of balances) {
-        await updateHolderBalance(
-          b.walletId,
-          formatBalance(b.balance, token.decimals),
-          token.token
-        );
-      }
-
-      min_id = current_max_id;
     }
-    await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
+
+    min_id = current_max_id;
   }
+  await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
 };
 
 const initiateProcess = async () => {
@@ -84,7 +83,6 @@ const initiateProcess = async () => {
   logger.info(
     "Completed pulling wallets from smart contract and getting balances"
   );
-  await updateBalances();
   logger.info("completed getting balances");
 };
 // initiateProcess();
