@@ -61,7 +61,7 @@ const binaryPull = async (contract, start, end, promises, callback) => {
         toBlock: end,
       });
       // if (result.length) promises.push(callback(result));
-      if (result.length) await callback(result);
+      if (result.length) await callback(result, end);
     }
   } catch (error) {
     if (error.message.includes("query returned more than 10000 results")) {
@@ -84,9 +84,9 @@ const pullWallets = async (token, callback) => {
     token.last_block_number,
     latest,
     promises,
-    async (events) => {
+    async (events, blockEndNumber) => {
       console.log("count", events.length);
-      await callback(token, events);
+      await callback(token, events, blockEndNumber);
     }
   );
   console.log("waiting for db updates", token.token);

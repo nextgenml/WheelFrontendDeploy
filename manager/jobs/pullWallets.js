@@ -23,16 +23,26 @@ const formatBalance = (value, decimals) => {
     ) || 0
   );
 };
-const storeTransactions = async (token, transactions) => {
+const storeTransactions = async (token, transactions, blockEndNumber) => {
+  const walletIds = [];
   for (const transaction of transactions) {
     const { value, from, to } = transaction.returnValues;
     let formattedValue = formatBalance(value, token.decimals);
 
     await createTransaction(transaction, formattedValue, token.token);
 
-    if (to !== token.contract_address) await createHolderV1(to);
-    if (from !== token.contract_address) await createHolderV1(from);
+    if (to !== token.contract_address) {
+      await createHolderV1(to);
+      walletIds.push(to);
+    }
+    if (from !== token.contract_address) {
+      await createHolderV1(from);
+      walletIds.push(from);
+    }
   }
+  await updateBlockNumber(token.id, blockEndNumber);
+  await updateBalances(walletIds, token);
+  await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
 };
 const startPulling = async () => {
   try {
@@ -42,7 +52,7 @@ const startPulling = async () => {
       const lastBlockNumber = await pullWallets(token, storeTransactions);
 
       await updateBlockNumber(token.id, lastBlockNumber);
-      await updateBalances(token);
+      // await updateBalances(token);
       console.log("updated balances for ", token.token);
     }
   } catch (error) {
@@ -50,19 +60,16 @@ const startPulling = async () => {
   }
 };
 
-const updateBalances = async (token) => {
-  let { max_id, min_id } = await getHoldersMeta();
+const updateBalances = async (walletIds, token) => {
+  let [min_id, max_id] = [0, walletIds.length];
   const contract = await getContract(token.contract_address, token.abi_file);
-
+  console.log("updateBalances for token", token.token, walletIds.length);
   while (min_id < max_id) {
-    const current_max_id = min_id + 100;
-    const holders = await getHolderByPage(min_id, current_max_id);
+    const current_max_id = min_id + 200;
+    const holders = walletIds.slice(min_id, current_max_id);
     console.log("min_id < max_id", min_id, current_max_id);
 
-    const balances = await getBalances(
-      contract,
-      holders.map((h) => h.wallet_id)
-    );
+    const balances = await getBalances(contract, holders);
 
     for (const b of balances) {
       await updateHolderBalance(
@@ -74,8 +81,33 @@ const updateBalances = async (token) => {
 
     min_id = current_max_id;
   }
-  await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
 };
+// const updateBalances = async (token) => {
+//   let { max_id, min_id } = await getHoldersMeta();
+//   const contract = await getContract(token.contract_address, token.abi_file);
+
+//   while (min_id < max_id) {
+//     const current_max_id = min_id + 100;
+//     const holders = await getHolderByPage(min_id, current_max_id);
+//     console.log("min_id < max_id", min_id, current_max_id);
+
+//     const balances = await getBalances(
+//       contract,
+//       holders.map((h) => h.wallet_id)
+//     );
+
+//     for (const b of balances) {
+//       await updateHolderBalance(
+//         b.walletId,
+//         formatBalance(b.balance, token.decimals),
+//         token.token
+//       );
+//     }
+
+//     min_id = current_max_id;
+//   }
+//   await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
+// };
 
 const initiateProcess = async () => {
   logger.info("started pulling wallets from smart contract");
@@ -85,7 +117,7 @@ const initiateProcess = async () => {
   );
   logger.info("completed getting balances");
 };
-// initiateProcess();
+initiateProcess();
 // schedule.scheduleJob("0 */3 * * *", async () => {
 //   await initiateProcess();
 // });
