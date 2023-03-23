@@ -157,6 +157,26 @@ const getUniqueName = async (walletId) => {
     if (!existsResults.length) return randomName;
   }
 };
+
+const saveSocialLinks = async (
+  walletId,
+  facebookLink,
+  mediumLink,
+  linkedinLink,
+  twitterLink
+) => {
+  while (1) {
+    const existsQuery = `update holders set facebook_link = ?, medium_link = ?, linkedin_link = ?, twitter_link = ?  where wallet_id = ?`;
+
+    return await runQueryAsync(existsQuery, [
+      facebookLink,
+      mediumLink,
+      linkedinLink,
+      twitterLink,
+      walletId,
+    ]);
+  }
+};
 module.exports = {
   getById,
   createHolder,
@@ -173,4 +193,5 @@ module.exports = {
   getHoldersMeta,
   getHolderByPage,
   updateHolderBalance,
+  saveSocialLinks,
 };

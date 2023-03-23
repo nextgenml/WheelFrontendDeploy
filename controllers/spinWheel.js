@@ -9,7 +9,7 @@ const { nextSpinDetails } = require("../manager/scheduledSpins.js");
 const config = require("../config/env");
 const logger = require("../logger");
 const moment = require("moment");
-require("../manager/spinwheel");
+const spinWheel = require("../manager/spinwheel");
 require("../manager/wallet");
 
 const spinnerData = async (req, res) => {
@@ -123,9 +123,18 @@ const spinParticipants = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
+const getNextSpinEligibleUsers = async (req, res) => {
+  const data = await spinWheel.getNextSpinEligibleUsers();
+  return res.json({
+    count: data.length,
+  });
+};
+
 module.exports = {
   spinnerData,
   winnerData,
   participantsData,
   spinParticipants,
+  getNextSpinEligibleUsers,
 };

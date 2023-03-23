@@ -13,6 +13,9 @@ const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
 const logger = require("../logger.js");
 const { processPrizesV1 } = require("./rewardTransferV1.js");
+const participantsRepo = require("../repository/spinParticipants.js");
+const blogsRepo = require("../repository/blogs.js");
+const { isEligibleForNextSpin } = require("./blogs.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -158,3 +161,22 @@ const deleteScheduledJob = () => {
   currentSpinId = null;
 };
 initiateNextSpin();
+
+const getNextSpinEligibleUsers = async () => {
+  const lastSpinAt = await participantsRepo.lastSpinAt();
+
+  const bloggers = await blogsRepo.uniqueBloggersSince(lastSpinAt);
+
+  const result = [];
+
+  for (const blogger of bloggers) {
+    if (await isEligibleForNextSpin(blogger.wallet_address, lastSpinAt)) {
+      result.push(blogger);
+    }
+  }
+
+  return result;
+};
+module.exports = {
+  getNextSpinEligibleUsers,
+};

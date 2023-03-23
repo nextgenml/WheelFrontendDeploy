@@ -138,7 +138,21 @@ const totalBloggers = async () => {
   return result[0].count;
 };
 
+const uniqueBloggersSince = async (date) => {
+  const query = `select distinct wallet_address from saved_prompts where created_date > ?`;
+  const result = await runQueryAsync(query, [date]);
+  return result[0].count;
+};
+
+const blogsSince = async (walletId, date) => {
+  const query = `select * from saved_prompts where walletId = ? and created_date > ?`;
+  const result = await runQueryAsync(query, [walletId, date]);
+  return result;
+};
+
 module.exports = {
+  blogsSince,
+  uniqueBloggersSince,
   saveBlogData,
   totalBlogs,
   selectSearchElements,
