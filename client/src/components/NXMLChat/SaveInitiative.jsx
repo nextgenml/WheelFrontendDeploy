@@ -259,7 +259,7 @@ const SaveInitiative = ({
           (isCustom
             ? res.result
             : res.result +
-              `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelgram: https://t.me/+JMGorMX41tM2NGIx`
+              `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelegram: https://t.me/+JMGorMX41tM2NGIx`
           ).trim()
         );
         setIsCopyDisable(false);
