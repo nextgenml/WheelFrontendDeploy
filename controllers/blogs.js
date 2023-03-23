@@ -207,6 +207,12 @@ const saveBlogData = async (req, res) => {
     });
   }
 };
+const homePageStats = async (req, res) => {
+  res.send({
+    totalBloggers: await blogsRepo.totalBloggers(),
+    totalBlogs: (await blogsRepo.totalBlogs())[0],
+  });
+};
 module.exports = {
   updateBlogData,
   getBlogData,
@@ -216,4 +222,5 @@ module.exports = {
   getBlogStats,
   getUserBlogStats,
   firstBlogAt,
+  homePageStats,
 };

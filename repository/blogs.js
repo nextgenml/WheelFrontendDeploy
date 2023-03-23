@@ -132,6 +132,12 @@ const checkReplica = async (wallet_address, prompt) => {
   return result;
 };
 
+const totalBloggers = async () => {
+  const query = `select count(distinct wallet_address) as count from saved_prompts`;
+  const result = await runQueryAsync(query, []);
+  return result[0].count;
+};
+
 module.exports = {
   saveBlogData,
   totalBlogs,
@@ -143,4 +149,5 @@ module.exports = {
   firstBlogAt,
   updateBlogData,
   checkReplica,
+  totalBloggers,
 };
