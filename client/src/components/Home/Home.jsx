@@ -1,9 +1,20 @@
-import React from "react";
-import { Box, Button, Grid, Typography, Link } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Button, Grid, Typography, Link, Chip } from "@mui/material";
 import homeimg from "./assets/home.png";
 import { Stack } from "@mui/system";
+import { getHomePageStats } from "../../API/Blogs";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import SourceIcon from "@mui/icons-material/Source";
 
 export default function Home() {
+  const [stats, setStats] = useState({});
+  const fetchData = async () => {
+    const data = await getHomePageStats();
+    setStats(data);
+  };
+  useEffect(() => {
+    fetchData();
+  });
   return (
     <Box
       py={15}
@@ -16,6 +27,21 @@ export default function Home() {
     >
       <Grid container>
         <Grid item xs={12} sm={6}>
+          <Box display={"flex"} sx={{ mb: 2 }}>
+            <Chip
+              sx={{ color: "white", fontSize: "16px", mr: 3 }}
+              label={`Total Bloggers: ${stats.totalBloggers}`}
+              icon={<PeopleAltIcon sx={{ color: "#f57a2f !important" }} />}
+              variant="outlined"
+            />
+            <Chip
+              sx={{ color: "white", fontSize: "16px" }}
+              label={`Total Blogs: ${stats.totalBlogs}`}
+              icon={<SourceIcon sx={{ color: "#f57a2f !important" }} />}
+              variant="outlined"
+            />
+          </Box>
+
           <Typography
             color="#3B7AAA"
             sx={{

@@ -13,5 +13,4 @@ const config = {
   PROMOTIONS_RECEIVER_WALLET: process.env.REACT_APP_PROMOTIONS_RECEIVER_WALLET,
 };
 
-console.log("process.env", process.env);
 export default config;
