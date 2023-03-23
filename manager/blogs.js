@@ -84,7 +84,37 @@ const areLinksValid = async (walletId, links) => {
   };
 };
 
+const validDomains = (links) => {
+  const { facebookLink, mediumLink, linkedinLink, twitterLink } = links;
+  console.log(
+    "facebookLink, mediumLink, linkedinLink, twitterLink ",
+    facebookLink,
+    mediumLink,
+    linkedinLink,
+    twitterLink
+  );
+  if (!facebookLink || !mediumLink || !linkedinLink || !twitterLink)
+    return { message: "All Links are required", valid: false };
+
+  if (!facebookLink.includes("facebook.com"))
+    return { message: "Incorrect Facebook Url", valid: false };
+  if (!mediumLink.includes("medium.com"))
+    return { message: "Incorrect Medium Url", valid: false };
+  if (!twitterLink.includes("twitter.com"))
+    return { message: "Incorrect Twitter Url", valid: false };
+  if (!linkedinLink.includes("linkedin.com"))
+    return { message: "Incorrect LinkedIn Url", valid: false };
+
+  return { message: "", valid: true };
+};
+const replaceTrailingSlash = (value) => {
+  if (value[value.length - 1] === "/") return value.slice(0, value.length - 1);
+  return value;
+};
+
 module.exports = {
   getPromotedBlogs,
   isEligibleForNextSpin,
+  validDomains,
+  replaceTrailingSlash,
 };

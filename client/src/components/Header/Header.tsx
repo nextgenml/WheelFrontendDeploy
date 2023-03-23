@@ -19,6 +19,8 @@ import config from "../../config";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
+import { fetchSocialLinksAPI } from "../../API/Holder";
+import SaveSocialLinks from "./SaveSocialLinks";
 
 interface Props {
   socialSharing: boolean;
@@ -28,6 +30,8 @@ export default function Header(props: Props) {
   const { isConnected, address } = useAccount();
   const [blogDate, setBlogDate] = useState<string | null>(null);
   const [openDrawer, setState] = useState<boolean>(false);
+  const [showSaveLinks, setShowSaveLinks] = useState<boolean>(false);
+  const [socialLinks, setSocialLinks] = useState<any>({});
 
   const fetchData = async () => {
     const res = await fetch(
@@ -41,8 +45,13 @@ export default function Header(props: Props) {
     const data = await res.json();
     setBlogDate(data.createdAt);
   };
+  const fetchSocialLinks = async () => {
+    const data = await fetchSocialLinksAPI(address);
+    setSocialLinks(data);
+  };
   useEffect(() => {
     fetchData();
+    fetchSocialLinks();
   }, [isConnected]);
   const linkStyle = {
     fontSize: {
@@ -53,18 +62,23 @@ export default function Header(props: Props) {
   };
 
   const renderBlogTimer = () => {
-    if (blogDate)
+    if (blogDate && socialLinks.facebookLink)
       return (
         <Box display="flex" alignItems={"center"}>
-          <Typography className={styles.mintingText}>
-            Point Reward:
-          </Typography>
+          <Typography className={styles.mintingText}>Point Reward:</Typography>
           <TimeSpentCounter
             timestamp={blogDate}
             className={styles.mintingText}
           />
         </Box>
       );
+    else if (isConnected) {
+      return (
+        <Button variant="outlined" onClick={() => setShowSaveLinks(true)}>
+          Social Links
+        </Button>
+      );
+    }
   };
   //// { link: "buy-nextgen", title: "BUY" },
   // { link: "roadmap", title: "ROADMAP" },
@@ -160,6 +174,16 @@ export default function Header(props: Props) {
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
       {renderBlogTimer()}
+      {showSaveLinks && (
+        <SaveSocialLinks
+          onClose={(saved: boolean) => {
+            setShowSaveLinks(false);
+            if (saved) fetchSocialLinks();
+          }}
+          walletId={address}
+          links={socialLinks}
+        />
+      )}
       <Hidden smDown>
         <Stack
           direction="row"

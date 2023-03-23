@@ -14,7 +14,7 @@ export default function Home() {
   };
   useEffect(() => {
     fetchData();
-  });
+  }, []);
   return (
     <Box
       py={15}
