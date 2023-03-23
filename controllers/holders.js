@@ -8,7 +8,6 @@ const saveSocialLinks = async (req, res) => {
     const { facebookLink, mediumLink, linkedinLink, twitterLink } = req.body;
 
     const { valid, message } = validDomains(req.body);
-    console.log("valid, message ", valid, message);
     if (!valid) return res.status(400).send({ message });
 
     await holderRepo.saveSocialLinks(

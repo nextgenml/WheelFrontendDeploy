@@ -86,13 +86,7 @@ const areLinksValid = async (walletId, links) => {
 
 const validDomains = (links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink } = links;
-  console.log(
-    "facebookLink, mediumLink, linkedinLink, twitterLink ",
-    facebookLink,
-    mediumLink,
-    linkedinLink,
-    twitterLink
-  );
+
   if (!facebookLink || !mediumLink || !linkedinLink || !twitterLink)
     return { message: "All Links are required", valid: false };
 
