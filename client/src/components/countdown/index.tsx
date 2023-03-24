@@ -6,6 +6,7 @@ interface Props {
   start_date: Date;
   on_Complete?: Function;
   spinType: string;
+  nextUsersCount: number;
 }
 var _id: NodeJS.Timer;
 export default function CountDown({
@@ -13,6 +14,7 @@ export default function CountDown({
   start_date,
   on_Complete,
   spinType,
+  nextUsersCount,
 }: Props) {
   const countDown = () => {
     let today = start_date;
@@ -54,6 +56,7 @@ export default function CountDown({
 
   return (
     <div className="container">
+      <h1>Next Spin Eligible Users Count: {nextUsersCount}</h1>
       <h1>Next {spinType} Spin Is In</h1>
       <div className="timers">
         <div className="timer" id="day_div">

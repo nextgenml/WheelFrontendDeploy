@@ -12,7 +12,7 @@ const isEligibleForNextSpin = async (walletId, lastActionAt) => {
 
   const groups = blogs.reduce((groups, blog) => {
     if (moment().startOf("day").diff(moment(blog.create_date)) > 1) {
-      const date = blog.create_date.split(" ")[0];
+      const date = blog.create_date.toString().split("T")[0];
       if (!groups[date]) {
         groups[date] = [];
       }

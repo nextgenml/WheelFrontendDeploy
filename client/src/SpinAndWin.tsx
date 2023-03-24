@@ -10,6 +10,7 @@ import WinnersTable from "./components/WinnersTable";
 import { DateToString } from "./utils";
 import "react-calendar/dist/Calendar.css";
 import { useAccount } from "wagmi";
+import { fetchNextEligibleUsersAPI } from "./API/Spinwheel.js";
 
 const SPIN_TYPES = [
   ["daily", "Daily"],
@@ -49,16 +50,21 @@ export default function SpinAndWin() {
     prev_spin_type: "",
     next_spin_type: "",
   });
-
+  const [nextUsersCount, setNextUsersCount] = useState(0);
   useEffect(() => {
     fetchWinners();
   }, [typeValue]);
 
+  const fetchNextEligibleUsers = async () => {
+    const data = await fetchNextEligibleUsersAPI();
+    setNextUsersCount(data.count);
+  };
   useEffect(() => {
     if (winners_data) {
       fetchWinners();
       fetchSpinnerData();
     }
+    if (isConnected) fetchNextEligibleUsers();
   }, [isConnected]);
 
   console.log("rendering SpinAndWin", typeValue);
@@ -201,6 +207,7 @@ export default function SpinAndWin() {
               start_date={timer_start_date}
               end_date={timer_end_date ? timer_end_date : new Date()}
               spinType={spinTypes.next_spin_type}
+              nextUsersCount={nextUsersCount}
             />
           </div>
 
