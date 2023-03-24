@@ -1,8 +1,8 @@
 import config from "../config.js";
 
-export const fetchReferralsAPI = async (walletId) => {
+export const fetchReferralsAPI = async (walletId, pageNo, pageSize) => {
   const res = await fetch(
-    `${config.API_ENDPOINT}/api/v1/referrals/?walletId=${walletId}`
+    `${config.API_ENDPOINT}/api/v1/referrals/?walletId=${walletId}&pageNo=${pageNo}&pageSize=${pageSize}`
   );
   if (res.ok) {
     return await res.json();
@@ -11,7 +11,7 @@ export const fetchReferralsAPI = async (walletId) => {
     alert(
       error.message || "Something went wrong. Please try again after sometime"
     );
-    return [];
+    return {};
   }
 };
 

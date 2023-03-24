@@ -2,12 +2,15 @@ import { Grid, TextField, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { saveReferralAPI } from "../../API/Referrals";
+import ReferralList from "./ReferralList";
 import styles from "./Referrals.module.css";
 const Referrals = () => {
   const { address } = useAccount();
   const [referee, setReferee] = useState("");
+  const [refresh, setRefresh] = useState(0);
   const onSubmit = async () => {
     const saved = await saveReferralAPI(address, { referee });
+    if (saved) setRefresh((prev) => prev + 1);
   };
   return (
     <>
@@ -34,6 +37,7 @@ const Referrals = () => {
           </Button>
         </Grid>
       </Grid>
+      <ReferralList address={address} count={refresh} />
     </>
   );
 };
