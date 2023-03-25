@@ -11,7 +11,16 @@ import { Typography, TablePagination } from "@mui/material";
 import styles from "./Referrals.module.css";
 import { fetchReferralsAPI } from "../../API/Referrals";
 
-const headers = ["Referee", "Referred At", "Referral Paid"];
+const headers = [
+  "Referee",
+  "Referred At",
+  "Twitter",
+  "Facebook",
+  "LinkedIn",
+  "Criteria Met",
+  "Criteria Met At",
+  "Referral Paid",
+];
 
 export default function ReferralList({ address, count }) {
   const [referrals, setReferrals] = React.useState([]);
@@ -62,8 +71,13 @@ export default function ReferralList({ address, count }) {
                   "&:last-child td, &:last-child th": { border: 0 },
                 }}
               >
-                <TableCell>{row.referee}</TableCell>
+                <TableCell>{row.referee_twitter}</TableCell>
                 <TableCell>{row.referred_at}</TableCell>
+                <TableCell>{row.criteria_count}</TableCell>
+                <TableCell>{row.criteria_count}</TableCell>
+                <TableCell>{row.criteria_count}</TableCell>
+                <TableCell>{row.criteria_met === 1 ? "Yes" : "No"}</TableCell>
+                <TableCell>{row.criteria_met_at}</TableCell>
                 <TableCell>{row.paid_referer === 1 ? "Yes" : "No"}</TableCell>
               </TableRow>
             ))}

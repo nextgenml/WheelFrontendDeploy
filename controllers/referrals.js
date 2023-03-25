@@ -1,7 +1,8 @@
 const config = require("../config/env");
 const logger = require("../logger");
+const blogsManager = require("../manager/blogs");
 const referralsRepo = require("../repository/referrals");
-
+require("../manager/jobs/referrals");
 const get = async (req, res) => {
   try {
     const { walletId, pageNo, pageSize } = req.query;
@@ -35,20 +36,22 @@ const get = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { walletId } = req.query;
-    const { referee } = req.body;
+    let { twitter, telegram } = req.body;
+    twitter = blogsManager.replaceTrailingSlash(twitter);
+    telegram = blogsManager.replaceTrailingSlash(telegram);
 
-    if (walletId === referee)
-      return res.status(400).json({
-        message: "You cannot refer yourself",
-      });
+    // if (walletId === referee)
+    //   return res.status(400).json({
+    //     message: "You cannot refer yourself",
+    //   });
 
-    const exists = await referralsRepo.checkReplica(referee);
+    const exists = await referralsRepo.checkReplica(twitter);
     if (exists.length)
       return res.status(400).json({
         message: "Referral already exists",
       });
 
-    await referralsRepo.create(walletId, referee);
+    await referralsRepo.create(walletId, twitter, telegram);
 
     return res.json({
       message: "Create successful",

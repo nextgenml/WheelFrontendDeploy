@@ -131,6 +131,12 @@ const getById = async (wallet_id) => {
   const results = await runQueryAsync(query, [wallet_id]);
   return results[0];
 };
+const getByTwitter = async (twitter) => {
+  const query = `select * from holders where twitter_link = ?;`;
+
+  const results = await runQueryAsync(query, [twitter]);
+  return results[0];
+};
 
 const updateAlias = async (wallet_id, newAlias) => {
   const query = `update holders set alias = ? where wallet_id = ?;`;
@@ -210,4 +216,5 @@ module.exports = {
   getHolderByPage,
   updateHolderBalance,
   saveSocialLinks,
+  getByTwitter,
 };
