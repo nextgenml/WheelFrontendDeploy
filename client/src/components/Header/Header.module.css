@@ -13,3 +13,8 @@
 .saveLinksBox > div {
   margin-bottom: 30px;
 }
+.subtitle {
+  padding: 16px;
+  padding-top: 0;
+  color: var(--bs-danger);
+}

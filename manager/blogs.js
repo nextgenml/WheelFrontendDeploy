@@ -165,8 +165,6 @@ const validDomains = (links) => {
     return { message: "Incorrect LinkedIn Url", valid: false };
   if (!linkedinLink.includes("linkedin.com"))
     return { message: "Incorrect LinkedIn Url", valid: false };
-  if (!telegramLink.includes("telegram.com"))
-    return { message: "Incorrect Telegram Url", valid: false };
 
   return { message: "", valid: true };
 };

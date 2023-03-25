@@ -5,6 +5,7 @@ import {
   DialogTitle,
   Dialog,
   Box,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { saveSocialLinksAPI } from "../../API/Holder.js";
@@ -21,6 +22,11 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
   return (
     <Dialog open>
       <DialogTitle>Social Links</DialogTitle>
+      <Box>
+        <Typography variant="body2" className={styles.subtitle}>
+          *** To view point rewards, please complete the social links
+        </Typography>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -67,7 +73,7 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
         <Box>
           <TextField
             label="Telegram"
-            placeholder="https://telegram.com/<@handle>"
+            placeholder="<@handle>"
             value={socialLinks.telegramLink}
             onChange={(e) => setData("telegramLink", e.target.value)}
             className={styles.inputLink}
