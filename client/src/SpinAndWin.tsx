@@ -29,8 +29,6 @@ export default function SpinAndWin() {
 
   const { isConnected, address } = useAccount();
 
-  console.log("isConnected", isConnected, "address", address);
-
   const [loading, setLoading] = useState(false);
   const [wheel_items, setWheelItems] = useState<any[] | undefined>(undefined);
   const [winners_data, setWinnersData] = useState<any>();
@@ -66,8 +64,6 @@ export default function SpinAndWin() {
     }
     if (isConnected) fetchNextEligibleUsers();
   }, [isConnected]);
-
-  console.log("rendering SpinAndWin", typeValue);
 
   const setSpinnerData = (spinner_data: any) => {
     setWheelItems(spinner_data.participants);

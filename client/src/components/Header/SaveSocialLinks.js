@@ -31,6 +31,7 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
         <Box>
           <TextField
             label="Facebook"
+            placeholder="https://facebook.com/<@handle>"
             value={socialLinks.facebookLink}
             onChange={(e) => setData("facebookLink", e.target.value)}
             className={styles.inputLink}
@@ -39,6 +40,7 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
         <Box>
           <TextField
             label="Medium"
+            placeholder="https://medium.com/<@handle>"
             value={socialLinks.mediumLink}
             onChange={(e) => setData("mediumLink", e.target.value)}
             className={styles.inputLink}
@@ -47,6 +49,7 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
         <Box>
           <TextField
             label="LinkedIn"
+            placeholder="https://linkedin.com/<@handle>"
             value={socialLinks.linkedinLink}
             onChange={(e) => setData("linkedinLink", e.target.value)}
             className={styles.inputLink}
@@ -55,8 +58,18 @@ const SaveSocialLinks = ({ onClose, links, walletId }) => {
         <Box>
           <TextField
             label="Twitter"
+            placeholder="https://twitter.com/<@handle>"
             value={socialLinks.twitterLink}
             onChange={(e) => setData("twitterLink", e.target.value)}
+            className={styles.inputLink}
+          />
+        </Box>
+        <Box>
+          <TextField
+            label="Telegram"
+            placeholder="https://telegram.com/<@handle>"
+            value={socialLinks.telegramLink}
+            onChange={(e) => setData("telegramLink", e.target.value)}
             className={styles.inputLink}
           />
         </Box>

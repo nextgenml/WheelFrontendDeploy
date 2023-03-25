@@ -143,9 +143,16 @@ const areLinksValid = async (walletId, links) => {
 };
 
 const validDomains = (links) => {
-  const { facebookLink, mediumLink, linkedinLink, twitterLink } = links;
+  const { facebookLink, mediumLink, linkedinLink, twitterLink, telegramLink } =
+    links;
 
-  if (!facebookLink || !mediumLink || !linkedinLink || !twitterLink)
+  if (
+    !facebookLink ||
+    !mediumLink ||
+    !linkedinLink ||
+    !twitterLink ||
+    !telegramLink
+  )
     return { message: "All Links are required", valid: false };
 
   if (!facebookLink.includes("facebook.com"))
@@ -156,6 +163,10 @@ const validDomains = (links) => {
     return { message: "Incorrect Twitter Url", valid: false };
   if (!linkedinLink.includes("linkedin.com"))
     return { message: "Incorrect LinkedIn Url", valid: false };
+  if (!linkedinLink.includes("linkedin.com"))
+    return { message: "Incorrect LinkedIn Url", valid: false };
+  if (!telegramLink.includes("telegram.com"))
+    return { message: "Incorrect Telegram Url", valid: false };
 
   return { message: "", valid: true };
 };

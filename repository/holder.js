@@ -169,22 +169,24 @@ const saveSocialLinks = async (
   facebookLink,
   mediumLink,
   linkedinLink,
-  twitterLink
+  twitterLink,
+  telegramLink
 ) => {
   while (1) {
     const existsQuery = "select 1 from holders where wallet_id = ?";
     const results = await runQueryAsync(existsQuery, [walletId]);
     if (results.length) {
-      const query = `update holders set facebook_link = ?, medium_link = ?, linkedin_link = ?, twitter_link = ?  where wallet_id = ?`;
+      const query = `update holders set facebook_link = ?, medium_link = ?, linkedin_link = ?, twitter_link = ?, telegram_link = ?  where wallet_id = ?`;
       return await runQueryAsync(query, [
         facebookLink,
         mediumLink,
         linkedinLink,
         twitterLink,
+        telegramLink,
         walletId,
       ]);
     } else {
-      const query = `insert into holders(wallet_id, alias, facebook_link, medium_link, linkedin_link, twitter_link, is_active) values(?, ?, ?, ?, ?, ?, ?)`;
+      const query = `insert into holders(wallet_id, alias, facebook_link, medium_link, linkedin_link, twitter_link, telegram_link, is_active) values(?, ?, ?, ?, ?, ?, ?, ?)`;
       const randomName = await getUniqueName(walletId);
 
       return await runQueryAsync(query, [
@@ -194,6 +196,7 @@ const saveSocialLinks = async (
         mediumLink,
         linkedinLink,
         twitterLink,
+        telegramLink,
         1,
       ]);
     }

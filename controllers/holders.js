@@ -5,7 +5,13 @@ const holderRepo = require("../repository/holder");
 const saveSocialLinks = async (req, res) => {
   try {
     const { walletId } = req.query;
-    const { facebookLink, mediumLink, linkedinLink, twitterLink } = req.body;
+    const {
+      facebookLink,
+      mediumLink,
+      linkedinLink,
+      twitterLink,
+      telegramLink,
+    } = req.body;
 
     const { valid, message } = validDomains(req.body);
     if (!valid) return res.status(400).send({ message });
@@ -15,7 +21,8 @@ const saveSocialLinks = async (req, res) => {
       replaceTrailingSlash(facebookLink),
       replaceTrailingSlash(mediumLink),
       replaceTrailingSlash(linkedinLink),
-      replaceTrailingSlash(twitterLink)
+      replaceTrailingSlash(twitterLink),
+      replaceTrailingSlash(telegramLink)
     );
     return res.json({
       message: "Update successful",
@@ -37,6 +44,7 @@ const getSocialLinks = async (req, res) => {
       mediumLink: holder?.medium_link || "",
       linkedinLink: holder?.linkedin_link || "",
       twitterLink: holder?.twitter_link || "",
+      telegramLink: holder?.telegram_link || "",
     });
   } catch (error) {
     logger.info(`saveSocialLinks: ${error}`);
