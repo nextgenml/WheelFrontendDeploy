@@ -24,13 +24,15 @@ const get = async (req, res) => {
         (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
       );
       for (const ref of data) {
-        const holder = await getByTwitter(ref.referee_twitter);
-        if (holder) {
-          const blogsPosted = await blogsSince(
-            holder.wallet_id,
-            moment().startOf("day").format(DATE_TIME_FORMAT)
-          );
-          ref.criteria_count = blogsPosted.length;
+        if (!ref.criteria_met) {
+          const holder = await getByTwitter(ref.referee_twitter);
+          if (holder) {
+            const blogsPosted = await blogsSince(
+              holder.wallet_id,
+              moment().startOf("day").format(DATE_TIME_FORMAT)
+            );
+            ref.criteria_count = blogsPosted.length;
+          }
         }
       }
     }
