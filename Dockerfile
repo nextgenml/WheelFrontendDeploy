@@ -15,5 +15,5 @@ RUN cd client \
     && npm run build \
     && cd ..
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "deploy"]
 
