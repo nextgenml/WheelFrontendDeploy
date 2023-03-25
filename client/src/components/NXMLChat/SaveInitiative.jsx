@@ -18,6 +18,7 @@ const SaveInitiative = ({
   promotedId,
   getUserData,
   getBlogStats,
+  index,
 }) => {
   const { initiative } = useParams();
   const { address } = useAccount();
@@ -190,7 +191,6 @@ const SaveInitiative = ({
   };
 
   const onFileUpload = async (e) => {
-    console.log(e.target.files[0]);
     setblogImagesFiles(e.target.files);
     let flag = 1;
     let images = [];
@@ -204,7 +204,6 @@ const SaveInitiative = ({
         notify("Size is too big!", "error");
       }
       if (flag > 0) {
-        console.log(i);
         images.push(URL.createObjectURL(e.target.files[i]));
       }
       flag = 1;
@@ -213,7 +212,6 @@ const SaveInitiative = ({
   };
 
   const copyImage = async (imgUrl) => {
-    console.log("imgUrl", imgUrl);
     const blob = await fetch(imgUrl).then((resp) => resp.blob());
     navigator.clipboard.write([
       new ClipboardItem({
@@ -223,7 +221,6 @@ const SaveInitiative = ({
   };
 
   async function get_gpt_data(input, callFor) {
-    console.log("get gpt data", input);
     const url = "https://backend.chatbot.nexgenml.com/collections";
     let response = await fetch(url, {
       headers: {
@@ -240,7 +237,6 @@ const SaveInitiative = ({
       let resData = res.result;
       let indexOfone;
       if (callFor == "hashwords") {
-        console.log(resData.includes("1. "));
         if (resData.includes("1. ")) {
           indexOfone = resData.indexOf("1. ");
         } else {
@@ -285,8 +281,7 @@ const SaveInitiative = ({
   };
 
   useEffect(() => {
-    if (result && result != "populating blog") {
-      console.log("ready for hash word");
+    if (result && result !== "populating blog") {
       get_gpt_data(
         "provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
         "hashwords"
@@ -296,7 +291,6 @@ const SaveInitiative = ({
 
   useEffect(() => {
     if (hashword) {
-      console.log("ready for hash word");
       get_gpt_data(
         "provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
         "keywords"
@@ -388,7 +382,6 @@ const SaveInitiative = ({
       formData.append("paid_flag", isPaidFlag ? true : null);
       formData.append("promotedWallet", promotedWallet);
       formData.append("promotedId", promotedId);
-      console.log(blogImagesFiles);
 
       if (blogImagesFiles && blogImagesFiles.length > 0) {
         Array.from(blogImagesFiles).forEach((file, i) => {

@@ -9,7 +9,7 @@ import config from "../../config";
 import ReactPaginate from "react-paginate";
 import Initiative from "./SaveInitiative";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Box, Typography, Link } from "@mui/material";
+import { Box, Typography, Link, Button } from "@mui/material";
 import BlogStats from "./BlogStats";
 import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
@@ -29,10 +29,10 @@ const BlogForm = () => {
   const [searchParams, _] = useSearchParams();
   const { initiative } = useParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
-  const [promotedBlogsCount, setPromotedBlogsCount] = useState(0);
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
   const [blogStats, setBlogStats] = useState({});
+  const [showGenerate, setGenerate] = useState(false);
   let reset = 0;
 
   // Toast alert
@@ -54,7 +54,6 @@ const BlogForm = () => {
   }
 
   async function get_gpt_data(input, raw) {
-    console.log("gpt data");
     const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
     let response = await fetch(url, {
       headers: {
@@ -81,8 +80,9 @@ const BlogForm = () => {
     const url =
       initiative === "blog-customization"
         ? `${config.API_ENDPOINT}/get-custom-blogs?pageNo=${pageNo}&pageSize=${pageSize}&walletId=${address}`
-        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${reset || !walletAdd ? "" : walletAdd
-        }&offset=${offset}&walletId=${address}`;
+        : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
+            reset || !walletAdd ? "" : walletAdd
+          }&offset=${offset}&walletId=${address}`;
     let response = await fetch(url, {
       headers: {
         accept: "*/*",
@@ -112,7 +112,7 @@ const BlogForm = () => {
       validatedFlag: vf,
       paidFlag: pf,
       promoted,
-      walletId: address
+      walletId: address,
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
     let response = await fetch(url, {
@@ -163,10 +163,8 @@ const BlogForm = () => {
       `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
     );
     if (res.ok) {
-      const { data, total } = await res.json();
-      console.log(promotedBlogs);
+      const { data } = await res.json();
       setPromotedBlogs(data);
-      setPromotedBlogsCount(total);
     } else {
       notify("Something went wrong. Please try later", "danger");
     }
@@ -193,7 +191,7 @@ const BlogForm = () => {
     else
       get_gpt_data(
         searchParams.get("context") ||
-        `List 10 ways in which ${initiative} will be improved by blockchain`,
+          `List 10 ways in which ${initiative} will be improved by blockchain`,
         !!searchParams.get("context")
       );
   }, []);
@@ -225,17 +223,27 @@ const BlogForm = () => {
           promotedId={blog.id}
         />
       ));
-    else
-      return prompts.map((prompt, index) => (
-        <Initiative
-          key={index}
-          prompt={prompt}
-          index={index}
-          isCustom={isCustom}
-          getUserData={get_user_data}
-          getBlogStats={getBlogStats}
-        />
-      ));
+    else {
+      if (
+        !isPromote &&
+        !isCustom &&
+        localStorage.getItem(`${initiative}_blog_cache` && !showGenerate)
+      ) {
+        <Button variant="contained" onClick={() => setGenerate(true)}>
+          Generate Prompts
+        </Button>;
+      } else
+        return prompts.map((prompt, index) => (
+          <Initiative
+            key={index}
+            prompt={prompt}
+            index={index}
+            isCustom={isCustom}
+            getUserData={get_user_data}
+            getBlogStats={getBlogStats}
+          />
+        ));
+    }
   };
   const finalPrompts = isPromote ? promotedBlogs : prompts;
   if (!isConnected)
