@@ -1,11 +1,8 @@
 const config = require("../config/env");
-const { dbConnection } = require("../dbconnect");
 const logger = require("../logger");
 const blogsManager = require("../manager/blogs");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
-const { runQueryAsync } = require("../utils/spinwheelUtil");
-const connection = dbConnection;
 const moment = require("moment");
 const firstBlogAt = async (req, res) => {
   try {
@@ -207,6 +204,12 @@ const saveBlogData = async (req, res) => {
     });
   }
 };
+const homePageStats = async (req, res) => {
+  res.send({
+    totalBloggers: await blogsRepo.totalBloggers(),
+    totalBlogs: (await blogsRepo.totalBlogs())[0],
+  });
+};
 module.exports = {
   updateBlogData,
   getBlogData,
@@ -216,4 +219,5 @@ module.exports = {
   getBlogStats,
   getUserBlogStats,
   firstBlogAt,
+  homePageStats,
 };

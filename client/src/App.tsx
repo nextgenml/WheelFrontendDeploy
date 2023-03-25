@@ -28,11 +28,12 @@ import { useEffect, useState } from "react";
 import Promotions from "./components/Promotions/Promotions";
 import Tokens from "./components/Tokens/Tokens";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import Referrals from "./components/Referrals/Referrals";
 
 function App() {
   const location = useLocation();
   const [socialSharing, setSocialSharing] = useState(false);
-  const whiteBgPages = ["/promotions", "/tokens"];
+  const whiteBgPages = ["/promotions", "/tokens", "/referrals"];
 
   useEffect(() => {
     const includes = whiteBgPages.includes(location.pathname);
@@ -64,6 +65,10 @@ function App() {
         <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
         <Route path="/promotions" element={<Promotions />} />
         <Route path="/tokens" element={<Tokens />} />
+        <Route
+          path="/referrals"
+          element={<PrivateRoute component={<Referrals />} />}
+        />
 
         {/* <Route path="/spin-wheel" element={<SpinAndWin />} />
         <Route path="/" element={<SocialSharing />} />

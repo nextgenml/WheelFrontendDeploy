@@ -83,6 +83,8 @@ app.post("/update-alias", walletController.updateAlias);
 app.get("/get-user-tokens", tokenController.getUserTokens);
 app.get("/admin-token-stats", validateWalletId, tokenController.getAdminStats);
 
+app.use("/", require("./routes/index"));
+
 app.use("/", express.static(path.join(__dirname, "build")));
 app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));

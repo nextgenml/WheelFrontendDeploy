@@ -4,3 +4,17 @@
   padding-right: 16px;
   font-size: 20px !important;
 }
+.inputLink {
+  width: 300px;
+}
+.saveLinksBox {
+  padding: 16px;
+}
+.saveLinksBox > div {
+  margin-bottom: 30px;
+}
+.subtitle {
+  padding: 16px;
+  padding-top: 0;
+  color: var(--bs-danger);
+}

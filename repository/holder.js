@@ -131,6 +131,12 @@ const getById = async (wallet_id) => {
   const results = await runQueryAsync(query, [wallet_id]);
   return results[0];
 };
+const getByTwitter = async (twitter) => {
+  const query = `select * from holders where twitter_link = ?;`;
+
+  const results = await runQueryAsync(query, [twitter]);
+  return results[0];
+};
 
 const updateAlias = async (wallet_id, newAlias) => {
   const query = `update holders set alias = ? where wallet_id = ?;`;
@@ -157,6 +163,45 @@ const getUniqueName = async (walletId) => {
     if (!existsResults.length) return randomName;
   }
 };
+
+const saveSocialLinks = async (
+  walletId,
+  facebookLink,
+  mediumLink,
+  linkedinLink,
+  twitterLink,
+  telegramLink
+) => {
+  while (1) {
+    const existsQuery = "select 1 from holders where wallet_id = ?";
+    const results = await runQueryAsync(existsQuery, [walletId]);
+    if (results.length) {
+      const query = `update holders set facebook_link = ?, medium_link = ?, linkedin_link = ?, twitter_link = ?, telegram_link = ?  where wallet_id = ?`;
+      return await runQueryAsync(query, [
+        facebookLink,
+        mediumLink,
+        linkedinLink,
+        twitterLink,
+        telegramLink,
+        walletId,
+      ]);
+    } else {
+      const query = `insert into holders(wallet_id, alias, facebook_link, medium_link, linkedin_link, twitter_link, telegram_link, is_active) values(?, ?, ?, ?, ?, ?, ?, ?)`;
+      const randomName = await getUniqueName(walletId);
+
+      return await runQueryAsync(query, [
+        walletId,
+        randomName,
+        facebookLink,
+        mediumLink,
+        linkedinLink,
+        twitterLink,
+        telegramLink,
+        1,
+      ]);
+    }
+  }
+};
 module.exports = {
   getById,
   createHolder,
@@ -173,4 +218,6 @@ module.exports = {
   getHoldersMeta,
   getHolderByPage,
   updateHolderBalance,
+  saveSocialLinks,
+  getByTwitter,
 };
