@@ -54,6 +54,29 @@ const create = async (req, res) => {
     await referralsRepo.create(walletId, twitter, telegram);
 
     return res.json({
+      message: "Update successful",
+    });
+  } catch (error) {
+    logger.info(`Referral create: ${error}`);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+const update = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    let { paid } = req.body;
+    let { id } = req.params;
+
+    if (walletId !== config.ADMIN_WALLET_1)
+      return res.status(400).json({
+        message: "Unauthorized",
+      });
+
+    await referralsRepo.update(id, paid);
+
+    return res.json({
       message: "Create successful",
     });
   } catch (error) {
@@ -66,4 +89,5 @@ const create = async (req, res) => {
 module.exports = {
   create,
   get,
+  update,
 };

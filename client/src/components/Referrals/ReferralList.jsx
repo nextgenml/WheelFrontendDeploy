@@ -7,9 +7,16 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Typography, TablePagination } from "@mui/material";
+import {
+  Typography,
+  TablePagination,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import styles from "./Referrals.module.css";
-import { fetchReferralsAPI } from "../../API/Referrals";
+import { fetchReferralsAPI, updateReferralAPI } from "../../API/Referrals";
+import config from "../../config";
 
 const headers = [
   "Referee",
@@ -49,6 +56,18 @@ export default function ReferralList({ address, count }) {
     setPage(0);
   };
 
+  const isAdmin = address === config.ADMIN_WALLET_1;
+
+  if (isAdmin) headers.push("");
+
+  const onUpdate = async (paid, id) => {
+    const res = await updateReferralAPI(address, { paid });
+    if (res) {
+      const currentRow = referrals.filter((p) => p.id === id)[0];
+      currentRow.paid_referer = paid ? 1 : 0;
+      setReferrals([...referrals]);
+    }
+  };
   return (
     <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
       <TableContainer component={Paper} sx={{ p: 2 }}>
@@ -79,6 +98,21 @@ export default function ReferralList({ address, count }) {
                 <TableCell>{row.criteria_met === 1 ? "Yes" : "No"}</TableCell>
                 <TableCell>{row.criteria_met_at}</TableCell>
                 <TableCell>{row.paid_referer === 1 ? "Yes" : "No"}</TableCell>
+                <TableCell>
+                  {address === config.ADMIN_WALLET_1 && (
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={row.paid_referer}
+                            onChange={(e) => onUpdate(e.target.checked, row.id)}
+                          />
+                        }
+                        label="Mark as Paid"
+                      />
+                    </FormGroup>
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

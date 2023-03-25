@@ -37,3 +37,26 @@ export const saveReferralAPI = async (walletId, payload) => {
     return false;
   }
 };
+
+export const updateReferralAPI = async (walletId, payload) => {
+  const res = await fetch(
+    `${config.API_ENDPOINT}/api/v1/referrals?walletId=${walletId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(payload),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (res.ok) {
+    alert("Saved successfully");
+    return true;
+  } else {
+    const error = await res.json();
+    alert(
+      error.message || "Something went wrong. Please try again after sometime"
+    );
+    return false;
+  }
+};

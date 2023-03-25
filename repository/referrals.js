@@ -42,6 +42,11 @@ const updateSuccessCriteria = async (id, count) => {
   const query = `update referrals set criteria_met = 1, criteria_met_at=now(), criteria_count=? where id = ?`;
   return await runQueryAsync(query, [count, id]);
 };
+
+const update = async (id, paid) => {
+  const query = `update referrals set paid_referer = 1 where id = ?`;
+  return await runQueryAsync(query, [paid, id]);
+};
 module.exports = {
   create,
   checkReplica,
@@ -49,4 +54,5 @@ module.exports = {
   getReferralsAdmin,
   getIncompleteReferrals,
   updateSuccessCriteria,
+  update,
 };
