@@ -58,8 +58,6 @@ export default function ReferralList({ address, count }) {
 
   const isAdmin = address === config.ADMIN_WALLET_1;
 
-  if (isAdmin) headers.push("");
-
   const onUpdate = async (paid, id) => {
     const res = await updateReferralAPI(address, { paid });
     if (res) {
@@ -80,6 +78,7 @@ export default function ReferralList({ address, count }) {
               {headers.map((h) => {
                 return <TableCell>{h}</TableCell>;
               })}
+              {isAdmin && <TableCell></TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -99,7 +98,7 @@ export default function ReferralList({ address, count }) {
                 <TableCell>{row.criteria_met_at}</TableCell>
                 <TableCell>{row.paid_referer === 1 ? "Yes" : "No"}</TableCell>
                 <TableCell>
-                  {address === config.ADMIN_WALLET_1 && (
+                  {isAdmin && (
                     <FormGroup>
                       <FormControlLabel
                         control={

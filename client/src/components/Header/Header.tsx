@@ -19,7 +19,7 @@ import config from "../../config";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
-import { fetchSocialLinksAPI } from "../../API/Holder";
+import { fetchSocialLinksAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 
 interface Props {
