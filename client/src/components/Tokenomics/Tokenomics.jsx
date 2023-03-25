@@ -31,7 +31,7 @@ export default function Tokenomics() {
         TOKENOMICS
       </Typography>
       <Typography
-        color="white"
+        
         sx={{
           textAlign: "center",
         }}
@@ -42,7 +42,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -56,7 +56,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -70,7 +70,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -84,7 +84,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -98,7 +98,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -112,7 +112,7 @@ export default function Tokenomics() {
         <Grid item xs={6} sm={6} md={4}>
           <Box sx={borderStyle} borderRadius="10px" p={2} height="100%">
             <Typography
-              color="white"
+              
               sx={{
                 fontFamily: "Audiowide",
                 textAlign: "center",
@@ -125,7 +125,7 @@ export default function Tokenomics() {
         </Grid>
         <Grid item xs={12}>
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -161,7 +161,6 @@ export default function Tokenomics() {
         <li>
           {" "}
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,
@@ -183,7 +182,6 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,
@@ -206,7 +204,6 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,
@@ -225,7 +222,6 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,
@@ -251,7 +247,6 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,
@@ -291,7 +286,7 @@ export default function Tokenomics() {
         <li>
           {" "}
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -303,7 +298,7 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -315,7 +310,7 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -326,7 +321,7 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -337,7 +332,7 @@ export default function Tokenomics() {
         </li>
         <li>
           <Typography
-            color="white"
+            
             sx={{
               textAlign: "left",
               mt: 2,
@@ -363,7 +358,6 @@ export default function Tokenomics() {
         <li>
           {" "}
           <Typography
-            color="white"
             sx={{
               textAlign: "left",
               mt: 2,

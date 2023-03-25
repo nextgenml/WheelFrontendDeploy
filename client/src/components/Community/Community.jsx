@@ -26,7 +26,6 @@ export default function Community() {
         JOIN THE COMMUNITY
       </Typography>
       <Typography
-        color="white"
         sx={{
           textAlign: "center",
         }}

@@ -1,5 +1,5 @@
 :root {
-  --wheel-font: 'Lato', 'Quicksand', sans-serif;
+  --wheel-font: "Lato", "Quicksand", sans-serif;
   --wheel-size: 600px;
   --wheel-slice-spacing: 25px;
   --wheel-border-size: 5px;
@@ -14,11 +14,10 @@
   --reset-duration: 0.25s;
 }
 
-@media screen and (max-width:700px) {
+@media screen and (max-width: 700px) {
   :root {
     --wheel-size: 90vw;
   }
-
 }
 
 /* Conteneur de la roue = cercle rose extérieur */
@@ -28,10 +27,7 @@
   box-sizing: content-box;
   width: calc(var(--wheel-size) + 2 * var(--wheel-border-size));
   height: calc(var(--wheel-size) + 2 * var(--wheel-border-size));
-  padding: 3px;
   margin: auto;
-  background-color: var(--neutral-color);
-  border: solid var(--wheel-color) 3px;
   border-radius: 50%;
   user-select: none;
 }
@@ -39,7 +35,7 @@
 /* Triangle de sélection = 1 rose +  1 blanc */
 .wheel-container::before,
 .wheel-container::after {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   height: 0;
@@ -53,13 +49,12 @@
 
 .wheel-container::before {
   right: 0px;
-  border-right-color: var(--wheel-color);
+  border-right-color: #720b0b;
 }
 
-.wheel-container::after {
-  right: -5px;
-  border-right-color: var(--neutral-color);
-}
+/* .wheel-container::after {
+  border-right-color: black;
+} */
 
 /* Roue */
 .wheel {
@@ -80,14 +75,18 @@
 
 .wheel.spinning {
   transition: transform var(--spinning-duration);
-  transform: rotate(calc(var(--nb-turn) * 360deg + (-360deg * var(--selected-item) / var(--nb-item, 1))));
+  transform: rotate(
+    calc(
+      var(--nb-turn) * 360deg +
+        (-360deg * var(--selected-item) / var(--nb-item, 1))
+    )
+  );
 }
-
 
 .wheel::after {
   display: block;
   position: absolute;
-  content: '';
+  content: "";
   background-color: var(--neutral-color);
   width: 25px;
   height: 25px;
@@ -109,7 +108,8 @@
   left: 50%;
   width: 50%;
   transform-origin: center left;
-  transform: translateY(-50%) rotate(calc(var(--item-nb) * (360deg / var(--nb-item, 1))));
+  transform: translateY(-50%)
+    rotate(calc(var(--item-nb) * (360deg / var(--nb-item, 1))));
 
   /* text */
   color: black;
@@ -120,7 +120,7 @@
 
 /* Background de l'élément = triangle rose plus clair */
 .wheel-item:before {
-  content: ' ';
+  content: " ";
   display: block;
   position: absolute;
   box-sizing: border-box;
@@ -132,7 +132,7 @@
   transform: translate(-50%, -50%);
   padding-left: 0px;
   opacity: 0.25;
-  
+
   /* 
       Largeur du triangle
       Je ne sais pas pourquoi j'ai besoin d'ajouter 
@@ -140,8 +140,12 @@
       mais globalement ca marche a peu près bien 
       TODO: A étudier 
     */
-  --slice-max-width: calc(var(--PI) * var(--wheel-size) + var(--wheel-size) / 2);
-  --slice-width: calc((var(--slice-max-width) / var(--nb-item)) - var(--wheel-slice-spacing));
+  --slice-max-width: calc(
+    var(--PI) * var(--wheel-size) + var(--wheel-size) / 2
+  );
+  --slice-width: calc(
+    (var(--slice-max-width) / var(--nb-item)) - var(--wheel-slice-spacing)
+  );
   border: solid transparent calc(var(--slice-width) / 2);
   border-left: solid transparent 0;
   /* profondeur du triangle = du centre de la roue à la bordure = 300px / 2 */

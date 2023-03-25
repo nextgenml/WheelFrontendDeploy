@@ -74,7 +74,7 @@ export default function CustomizeBlogs() {
 
   return (
     <Accordion className={styles.main}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography className={styles.heading}>
           Customize and Promote Blogs
         </Typography>
@@ -166,7 +166,6 @@ export default function CustomizeBlogs() {
           <Grid item md={2}>
             <Button
               variant="contained"
-              component="label"
               onClick={() =>
                 window.open(`/nxml-blog-chat/promote-blogs`, "_blank")
               }
@@ -177,7 +176,6 @@ export default function CustomizeBlogs() {
           <Grid item md={2}>
             <Button
               variant="contained"
-              component="label"
               onClick={() => window.open(`/promotions`, "_blank")}
             >
               Promotion Requests
@@ -186,7 +184,6 @@ export default function CustomizeBlogs() {
           <Grid item md={2}>
             <Button
               variant="contained"
-              component="label"
               onClick={() =>
                 window.open(
                   `/nxml-blog-chat/blog-customization?view=1`,

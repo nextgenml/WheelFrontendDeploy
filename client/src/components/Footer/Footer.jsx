@@ -99,7 +99,7 @@ const Footer = () => {
               sx={{
                 fontWeight: 400,
                 fontSize: "16px",
-                color: "white",
+                
                 mt: "20px",
               }}
             >
@@ -116,7 +116,6 @@ const Footer = () => {
               textAlign: "center",
               fontSize: "14px",
               fontWeight: 400,
-              color: "white",
             }}
           >
             © 2022 NEXGEN ML ECOSYSTEM. All Rights Reserved.
@@ -128,7 +127,6 @@ const Footer = () => {
               textAlign: "center",
               fontSize: "11px",
               fontWeight: 400,
-              color: "white",
             }}
           >
             Disclaimer: The information provided on this website does not
