@@ -200,7 +200,7 @@ const saveBlogData = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      msg: "Server Error",
+      msg: error.messsage || "Server Error",
     });
   }
 };
