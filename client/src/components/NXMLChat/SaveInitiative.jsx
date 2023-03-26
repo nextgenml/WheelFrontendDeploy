@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import config from "../../config";
 import { updateBlogCount } from "../../Utils/Blog";
 import { Checkbox, TextField } from "@mui/material";
+import { updateInCache } from "./BlogUtil";
 
 const SaveInitiative = ({
   prompt,
@@ -19,27 +20,29 @@ const SaveInitiative = ({
   promotedId,
   getUserData,
   getBlogStats,
+  index,
+  isBlogPage,
+  cachedData,
 }) => {
   const { initiative } = useParams();
   const { address } = useAccount();
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(!!cachedData.blog);
   const [isValidatedFlag, setIsValidatedFlag] = useState(null);
   const [isPaidFlag, setPaidFlag] = useState(null);
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(cachedData.blog || "");
   const [link, setLink] = useState("");
-  const [mediumlink, setmediumLink] = useState("");
-  const [twitterlink, settwitterLink] = useState("");
-  const [hashword, sethashWord] = useState("");
-  const [keyWord, setkeyWord] = useState("");
-  const [facebooklink, setfacebookLink] = useState("");
-  const [linkedinlink, setlinkedinLink] = useState("");
+  const [mediumlink, setmediumLink] = useState(cachedData.medium || "");
+  const [twitterlink, settwitterLink] = useState(cachedData.twitter || "");
+  const [hashword, sethashWord] = useState(cachedData.hashes || "");
+  const [keyWord, setkeyWord] = useState(cachedData.keywords || "");
+  const [facebooklink, setfacebookLink] = useState(cachedData.facebook || "");
+  const [linkedinlink, setlinkedinLink] = useState(cachedData.linkedin || "");
   const [instagramlink, setinstagramLink] = useState("");
   const [pinterestlink, setpinterestLink] = useState("");
-  const [isCopyDisable, setIsCopyDisable] = useState(true);
+  const [isCopyDisable, setIsCopyDisable] = useState(!cachedData.blog);
   const [isSubmit, setIsSubmit] = useState(true);
   const [customblogImages, setcustomblogImages] = useState([]);
   const [blogImagesFiles, setblogImagesFiles] = useState([]);
-  let blogImageskey;
 
   let blogImages = {
     economicdevelopment: [
@@ -163,7 +166,7 @@ const SaveInitiative = ({
       "10.png",
     ],
   };
-
+  let blogImageskey;
   if (initiative == "economic-development") {
     blogImageskey = "economicdevelopment";
   } else if (initiative == "environment-protection") {
@@ -191,7 +194,6 @@ const SaveInitiative = ({
   };
 
   const onFileUpload = async (e) => {
-    console.log(e.target.files[0]);
     setblogImagesFiles(e.target.files);
     let flag = 1;
     let images = [];
@@ -205,7 +207,6 @@ const SaveInitiative = ({
         notify("Size is too big!", "error");
       }
       if (flag > 0) {
-        console.log(i);
         images.push(URL.createObjectURL(e.target.files[i]));
       }
       flag = 1;
@@ -214,7 +215,6 @@ const SaveInitiative = ({
   };
 
   const copyImage = async (imgUrl) => {
-    console.log("imgUrl", imgUrl);
     const blob = await fetch(imgUrl).then((resp) => resp.blob());
     navigator.clipboard.write([
       new ClipboardItem({
@@ -224,7 +224,6 @@ const SaveInitiative = ({
   };
 
   async function get_gpt_data(input, callFor) {
-    console.log("get gpt data", input);
     const url = "https://backend.chatbot.nexgenml.com/collections";
     let response = await fetch(url, {
       headers: {
@@ -241,13 +240,19 @@ const SaveInitiative = ({
       let resData = res.result;
       let indexOfone;
       if (callFor == "hashwords") {
-        console.log(resData.includes("1. "));
         if (resData.includes("1. ")) {
           indexOfone = resData.indexOf("1. ");
         } else {
           indexOfone = resData.indexOf("#");
         }
         sethashWord(resData.substr(indexOfone));
+        if (isBlogPage)
+          updateInCache(
+            initiative,
+            "hashes",
+            resData.substr(indexOfone),
+            index
+          );
       } else if (callFor == "keywords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.substr(resData.indexOf("1. "));
@@ -255,19 +260,22 @@ const SaveInitiative = ({
           indexOfone = resData;
         }
         setkeyWord(indexOfone);
+        if (isBlogPage)
+          updateInCache(initiative, "keywords", indexOfone, index);
       } else {
-        setResult(
-          (isCustom
+        const resultTemp = (
+          isCustom
             ? res.result
             : res.result +
               `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelegram: https://t.me/+JMGorMX41tM2NGIx`
-          ).trim()
-        );
+        ).trim();
+        setResult(resultTemp);
         setIsCopyDisable(false);
         if (isCustom) {
           await updateBlogCount(address);
           getBlogStats();
         }
+        if (isBlogPage) updateInCache(initiative, "blog", resultTemp, index);
       }
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -286,8 +294,7 @@ const SaveInitiative = ({
   };
 
   useEffect(() => {
-    if (result && result != "populating blog") {
-      console.log("ready for hash word");
+    if (!cachedData.hashes && result && result !== "populating blog") {
       get_gpt_data(
         "provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
         "hashwords"
@@ -296,8 +303,7 @@ const SaveInitiative = ({
   }, [result]);
 
   useEffect(() => {
-    if (hashword) {
-      console.log("ready for hash word");
+    if (!cachedData.keywords && hashword) {
       get_gpt_data(
         "provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
         "keywords"
@@ -306,7 +312,7 @@ const SaveInitiative = ({
   }, [hashword]);
 
   useEffect(() => {
-    if (isChecked) {
+    if (isChecked && !cachedData.blog) {
       setResult("populating blog");
       const complete_prompt = isCustom
         ? `Write a ${Math.floor(
@@ -389,7 +395,6 @@ const SaveInitiative = ({
       formData.append("paid_flag", isPaidFlag ? true : null);
       formData.append("promotedWallet", promotedWallet);
       formData.append("promotedId", promotedId);
-      console.log(blogImagesFiles);
 
       if (blogImagesFiles && blogImagesFiles.length > 0) {
         Array.from(blogImagesFiles).forEach((file, i) => {
@@ -423,7 +428,10 @@ const SaveInitiative = ({
           </div>
           {!isPromote && (
             <div className="col-sm-12">
-              <Checkbox onClick={() => setIsChecked(!isChecked)} />
+              <Checkbox
+                onClick={() => setIsChecked(!isChecked)}
+                checked={!!result}
+              />
               <label>&nbsp;&nbsp;Generate Blog</label>
             </div>
           )}
@@ -479,7 +487,10 @@ const SaveInitiative = ({
               id="mediumLink"
               placeholder="https://www.medium.com"
               value={mediumlink}
-              onChange={(e) => setmediumLink(e.target.value)}
+              onChange={(e) => {
+                setmediumLink(e.target.value);
+                updateInCache(initiative, "medium", e.target.value, index);
+              }}
             />
           </div>
           <div className="col-sm-12">
@@ -489,7 +500,10 @@ const SaveInitiative = ({
               id="twitterLink"
               placeholder="https://www.twitter.com"
               value={twitterlink}
-              onChange={(e) => settwitterLink(e.target.value)}
+              onChange={(e) => {
+                settwitterLink(e.target.value);
+                updateInCache(initiative, "twitter", e.target.value, index);
+              }}
             />
           </div>
           <div className="col-sm-12">
@@ -499,7 +513,10 @@ const SaveInitiative = ({
               id="facebooklink"
               placeholder="https://www.facebook.com"
               value={facebooklink}
-              onChange={(e) => setfacebookLink(e.target.value)}
+              onChange={(e) => {
+                setfacebookLink(e.target.value);
+                updateInCache(initiative, "facebook", e.target.value, index);
+              }}
             />
           </div>
           <div className="col-sm-12">
@@ -509,7 +526,10 @@ const SaveInitiative = ({
               id="linkedinlink"
               placeholder="https://www.linkedin.com"
               value={linkedinlink}
-              onChange={(e) => setlinkedinLink(e.target.value)}
+              onChange={(e) => {
+                setlinkedinLink(e.target.value);
+                updateInCache(initiative, "linkedin", e.target.value, index);
+              }}
             />
           </div>
           {/* <div className="col-sm-12">

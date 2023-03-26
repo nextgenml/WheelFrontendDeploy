@@ -25,21 +25,24 @@ const formatBalance = (value, decimals) => {
 };
 const storeTransactions = async (token, transactions, blockEndNumber) => {
   const walletIds = [];
+  const promises = [];
   for (const transaction of transactions) {
     const { value, from, to } = transaction.returnValues;
     let formattedValue = formatBalance(value, token.decimals);
 
-    await createTransaction(transaction, formattedValue, token.token);
+    promises.push(createTransaction(transaction, formattedValue, token.token));
 
     if (to !== token.contract_address) {
-      await createHolderV1(to);
+      promises.push(createHolderV1(to));
       walletIds.push(to);
     }
     if (from !== token.contract_address) {
-      await createHolderV1(from);
+      promises.push(createHolderV1(from));
       walletIds.push(from);
     }
   }
+  console.log("awaiting promises", promises.length);
+  await Promise.all(promises);
   await updateBlockNumber(token.id, blockEndNumber);
   await updateBalances(walletIds, token);
   await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
@@ -65,7 +68,7 @@ const updateBalances = async (walletIds, token) => {
   const contract = await getContract(token.contract_address, token.abi_file);
   console.log("updateBalances for token", token.token, walletIds.length);
   while (min_id < max_id) {
-    const current_max_id = min_id + 200;
+    const current_max_id = min_id + 1000;
     const holders = walletIds.slice(min_id, current_max_id);
     console.log("min_id < max_id", min_id, current_max_id);
 

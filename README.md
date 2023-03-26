@@ -10,8 +10,9 @@ Token Urls
 2. https://etherscan.io/token/0x761d38e5ddf6ccf6cf7c55759d5210750b5d60f3#code
 3. https://etherscan.io/token/0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce#code
 4. https://etherscan.io/token/0x7db5af2b9624e1b3b4bb69d6debd9ad1016a58ac#code
-
-Sample transfer transaction:
+5. https://etherscan.io/token/0x4d224452801aced8b2f0aebe155379bb5d594381
+6. https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+   Sample transfer transaction:
 
 {
 address: '0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac',

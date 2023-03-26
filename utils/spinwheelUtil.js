@@ -1,4 +1,4 @@
-const { dbConnection } = require("../dbconnect");
+const { dbConnection, connectionPool } = require("../dbconnect");
 const sha256 = require("js-sha256");
 
 const moment = require("moment");
@@ -41,12 +41,18 @@ const executeQueryAsync = (query) =>
 
 const runQueryAsync = (query, args) =>
   new Promise((resolve, reject) => {
-    dbConnection.query(query, args, (error, elements) => {
-      // logger.info(`running query: ${query}`);
-      if (error) {
-        return reject(error);
+    connectionPool.getConnection((err, conn) => {
+      if (err) {
+        return reject(err);
       }
-      return resolve(elements);
+      conn.query(query, args, (error, elements) => {
+        if (error) {
+          return reject(error);
+        }
+        // logger.info(`running query: ${query}`);
+        conn.release();
+        return resolve(elements);
+      });
     });
   });
 
