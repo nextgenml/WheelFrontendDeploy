@@ -18,7 +18,12 @@ import { getCachedPrompt, getCachedPrompts } from "./BlogUtil";
 const BlogForm = () => {
   const { initiative } = useParams();
   const blogCached = !!localStorage.getItem(`${initiative}_generated_data`);
+  const isCustom = initiative === "blog-customization";
+  const isPromote = initiative === "promote-blogs";
+  const isBlogPage = !isCustom && !isPromote;
   const { address, isConnected } = useAccount();
+  const isAdmin = address === config.ADMIN_WALLET_1;
+
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
@@ -34,7 +39,9 @@ const BlogForm = () => {
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
   const [blogStats, setBlogStats] = useState({});
-  const [showInitiatives, setShowInitiatives] = useState(blogCached);
+  const [showInitiatives, setShowInitiatives] = useState(
+    !isBlogPage || blogCached
+  );
   const [refreshCount, setRefreshCount] = useState(0);
   const [loading, setLoading] = useState(false);
   let reset = 0;
@@ -167,11 +174,6 @@ const BlogForm = () => {
     get_user_data(newOffset);
   };
 
-  let userRole = address;
-  const isAdmin = userRole === config.ADMIN_WALLET_1;
-  const isCustom = initiative === "blog-customization";
-  const isPromote = initiative === "promote-blogs";
-  const isBlogPage = !isCustom && !isPromote;
   const getBlogStats = async () => {
     if (isCustom) {
       const res1 = await fetch(
@@ -220,12 +222,14 @@ const BlogForm = () => {
       .filter((x) => !!x);
     if (Array.isArray(queryPrompts) && queryPrompts.length)
       setPrompts(queryPrompts.filter((x) => !!x));
-    else
+    else {
+      setLoading(true);
       get_gpt_data(
         searchParams.get("context") ||
           `List 10 ways in which ${initiative} will be improved by blockchain`,
         !!searchParams.get("context")
       );
+    }
   }, [showInitiatives]);
 
   useEffect(() => {
@@ -294,7 +298,7 @@ const BlogForm = () => {
               isBlogPage={isBlogPage}
               getUserData={get_user_data}
               getBlogStats={getBlogStats}
-              cachedData={getCachedPrompt(initiative, index)}
+              cachedData={getCachedPrompt(initiative, index, isBlogPage)}
             />
           ))}
         </>

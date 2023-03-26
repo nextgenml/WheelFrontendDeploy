@@ -263,19 +263,19 @@ const SaveInitiative = ({
         if (isBlogPage)
           updateInCache(initiative, "keywords", indexOfone, index);
       } else {
-        const result = (
+        const resultTemp = (
           isCustom
             ? res.result
             : res.result +
               `\nJoin the revolution with NexGen ML\nWebsite: nexgenml.io\nTwitter: https://twitter.com/nextgen_ml\nTelegram: https://t.me/+JMGorMX41tM2NGIx`
         ).trim();
-        setResult(result);
+        setResult(resultTemp);
         setIsCopyDisable(false);
         if (isCustom) {
           await updateBlogCount(address);
           getBlogStats();
         }
-        if (isBlogPage) updateInCache(initiative, "blog", result, index);
+        if (isBlogPage) updateInCache(initiative, "blog", resultTemp, index);
       }
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -312,7 +312,7 @@ const SaveInitiative = ({
   }, [hashword]);
 
   useEffect(() => {
-    if (isChecked) {
+    if (isChecked && !cachedData.blog) {
       setResult("populating blog");
       const complete_prompt = isCustom
         ? `Write a ${Math.floor(

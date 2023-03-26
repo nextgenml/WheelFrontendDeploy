@@ -18,20 +18,23 @@ export const updateInCache = (initiative, key, data, index) => {
 
     if (cachedData) {
       const cachedPrompts = JSON.parse(cachedData);
-      const prompt = cachedPrompts[index];
-      prompt[key] = data;
-      localStorage.setItem(
-        `${initiative}_generated_data`,
-        JSON.stringify(cachedPrompts)
-      );
+      if (cachedPrompts) {
+        const prompt = cachedPrompts[index];
+        prompt[key] = data;
+        localStorage.setItem(
+          `${initiative}_generated_data`,
+          JSON.stringify(cachedPrompts)
+        );
+      }
     }
   } catch (error) {
     console.log("error in updateInCache", error);
   }
 };
 
-export const getCachedPrompt = (initiative, index) => {
+export const getCachedPrompt = (initiative, index, isBlogPage) => {
   try {
+    if (!isBlogPage) return {};
     const cachedData = localStorage.getItem(`${initiative}_generated_data`);
 
     if (cachedData) {
