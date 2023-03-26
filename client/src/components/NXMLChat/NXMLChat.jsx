@@ -15,8 +15,11 @@ import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
 
 const BlogForm = () => {
+  const { initiative } = useParams();
+  const blogCached =
+    localStorage.getItem(`${initiative}_blog_cache`) === "true";
   const { address, isConnected } = useAccount();
-  const [prompts, setPrompts] = useState();
+  const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
   const [offset, setOffset] = useState(0);
@@ -27,12 +30,12 @@ const BlogForm = () => {
   const [isSubmit, setIsSubmit] = useState(true);
   // eslint-disable-next-line no-unused-vars
   const [searchParams, _] = useSearchParams();
-  const { initiative } = useParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
   const [blogStats, setBlogStats] = useState({});
-  const [showGenerate, setGenerate] = useState(false);
+  const [showInitiatives, setShowInitiatives] = useState(blogCached);
+  const [loading, setLoading] = useState(false);
   let reset = 0;
 
   // Toast alert
@@ -54,25 +57,43 @@ const BlogForm = () => {
   }
 
   async function get_gpt_data(input, raw) {
-    const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
-    let response = await fetch(url, {
-      headers: {
-        accept: "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ msg: input }),
-      method: "POST",
-    });
-    if (response.ok) {
-      if (isCustom) {
-        await updateBlogCount(address);
-        getBlogStats();
+    try {
+      const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
+      let response = await fetch(url, {
+        headers: {
+          accept: "*/*",
+          "accept-language": "en-US,en;q=0.9",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({ msg: input }),
+        method: "POST",
+      });
+      if (response.ok) {
+        if (isCustom) {
+          await updateBlogCount(address);
+          getBlogStats();
+        }
+        let data = process_data(await response.json());
+        setPrompts(data);
+
+        if (isBlogPage) {
+          const hash = data.reduce((prev, curr, i) => {
+            prev[i] = {
+              prompt: curr,
+            };
+            return prev;
+          }, {});
+          localStorage.setItem(
+            `${initiative}_generated_data`,
+            JSON.stringify(hash)
+          );
+        }
+      } else {
+        notify("Something went wrong. Please try again later", "error");
       }
-      let data = process_data(await response.json());
-      setPrompts(data);
-    } else {
-      notify("Something went wrong. Please try again later", "error");
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
     }
   }
 
@@ -149,6 +170,7 @@ const BlogForm = () => {
   const isAdmin = userRole === config.ADMIN_WALLET_1;
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
+  const isBlogPage = !isCustom && !isPromote;
   const getBlogStats = async () => {
     if (isCustom) {
       const res1 = await fetch(
@@ -170,6 +192,7 @@ const BlogForm = () => {
     }
   };
   useEffect(() => {
+    if (isBlogPage && !showInitiatives) return;
     getBlogStats();
     if (isPromote) {
       getPromotionBlogs();
@@ -194,7 +217,7 @@ const BlogForm = () => {
           `List 10 ways in which ${initiative} will be improved by blockchain`,
         !!searchParams.get("context")
       );
-  }, []);
+  }, [showInitiatives]);
 
   useEffect(() => {
     if (walletAdd) {
@@ -211,6 +234,25 @@ const BlogForm = () => {
     get_user_data(offset);
   }
 
+  const renderGenerateButton = () => {
+    if (isBlogPage) {
+      return (
+        <Box textAlign={"center"}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setShowInitiatives(true);
+              localStorage.setItem(`${initiative}_blog_cache`, true);
+              localStorage.removeItem(`${initiative}_generated_data`);
+              setLoading(true);
+            }}
+          >
+            Generate Prompts
+          </Button>
+        </Box>
+      );
+    }
+  };
   const renderPrompts = () => {
     if (isPromote)
       return promotedBlogs.map((blog, index) => (
@@ -224,25 +266,21 @@ const BlogForm = () => {
         />
       ));
     else {
-      if (
-        !isPromote &&
-        !isCustom &&
-        localStorage.getItem(`${initiative}_blog_cache` && !showGenerate)
-      ) {
-        <Button variant="contained" onClick={() => setGenerate(true)}>
-          Generate Prompts
-        </Button>;
-      } else
-        return prompts.map((prompt, index) => (
-          <Initiative
-            key={index}
-            prompt={prompt}
-            index={index}
-            isCustom={isCustom}
-            getUserData={get_user_data}
-            getBlogStats={getBlogStats}
-          />
-        ));
+      return (
+        <>
+          {renderGenerateButton()}
+          {prompts.map((prompt, index) => (
+            <Initiative
+              key={index}
+              prompt={prompt}
+              index={index}
+              isCustom={isCustom}
+              getUserData={get_user_data}
+              getBlogStats={getBlogStats}
+            />
+          ))}
+        </>
+      );
     }
   };
   const finalPrompts = isPromote ? promotedBlogs : prompts;
@@ -252,7 +290,7 @@ const BlogForm = () => {
         Please connect your wallet
       </Typography>
     );
-  if (!finalPrompts || !Array.isArray(finalPrompts))
+  if (showInitiatives && loading)
     return (
       <div className="d-flex justify-content-center">
         <div
@@ -269,7 +307,7 @@ const BlogForm = () => {
     );
   return (
     <Box sx={{ p: 3 }}>
-      {finalPrompts.length > 0 ? (
+      {isBlogPage || finalPrompts.length > 0 ? (
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20 }}>
