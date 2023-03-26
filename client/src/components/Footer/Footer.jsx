@@ -51,6 +51,7 @@ const Footer = () => {
           </Box> */}
           <Box mt="10px">
             <a
+              rel="noreferrer"
               href="https://t.me/+JMGorMX41tM2NGIx"
               target="_blank"
               style={{ textDecoration: "none" }}
@@ -59,6 +60,20 @@ const Footer = () => {
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
               >
                 Telegram
+              </Typography>
+            </a>
+          </Box>
+          <Box mt="10px">
+            <a
+              rel="noreferrer"
+              href="https://www.youtube.com/watch?v=bSKqQIwjDrQ"
+              target="_blank"
+              style={{ textDecoration: "none" }}
+            >
+              <Typography
+                sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
+              >
+                Youtube
               </Typography>
             </a>
           </Box>

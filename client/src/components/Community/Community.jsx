@@ -72,7 +72,7 @@ export default function Community() {
               />
             </IconButton>
           </a>
-          <a href="#" target="_blank">
+          <a href="https://www.youtube.com/watch?v=bSKqQIwjDrQ" target="_blank">
             <IconButton>
               <YouTubeIcon
                 sx={{

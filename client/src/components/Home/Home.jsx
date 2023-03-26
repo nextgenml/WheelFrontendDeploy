@@ -19,14 +19,13 @@ export default function Home() {
     <Box
       py={15}
       sx={{
-        background: `url(${homeimg})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: { xs: "100% 100%", sm: "30% 90%" },
         backgroundPosition: "center right",
       }}
     >
       <Grid container>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={12}>
           <Box display={"flex"} sx={{ mb: 2 }}>
             <Chip
               sx={{ fontSize: "16px", mr: 3 }}
@@ -118,6 +117,18 @@ export default function Home() {
               }}
             >
               Allocation
+            </Button>
+            <Button
+              variant="contained"
+              href="/referrals"
+              target="_blank"
+              sx={{
+                my: 2,
+                fontFamily: "Audiowide",
+                borderRadius: "10px",
+              }}
+            >
+              Referrals
             </Button>
           </Stack>
         </Grid>
