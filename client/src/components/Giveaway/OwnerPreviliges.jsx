@@ -22,14 +22,12 @@ import CSVReader from "./CsvReader";
 import config from "../../config.js";
 
 let borderStyle = {
-  color: "white",
   width: "100%",
   borderRight: "2px solid #3B7AAA",
   borderLeft: "2px solid #3B7AAA",
   borderTop: "2px solid rgb(251, 156, 3)",
   borderBottom: "2px solid rgb(251, 156, 3)",
   "&:hover": {
-    color: "white",
     borderBottom: "2px solid #3B7AAA",
     borderRight: "2px solid rgb(251, 156, 3)",
     borderTop: "2px solid #3B7AAA",
@@ -335,7 +333,7 @@ export default function OwnerPreviliges() {
               <Button
                 sx={{
                   bgcolor: "#2E87E5",
-                  color: "white",
+
                   fontFamily: "Audiowide",
                   borderRadius: "10px",
                   "&:hover": {
@@ -361,7 +359,6 @@ export default function OwnerPreviliges() {
 
             <Stack direction="row" alignItems="center" spacing={2} my={3}>
               <Typography
-                color="white"
                 sx={{
                   textAlign: "center",
                   flexBasis: "30%",
@@ -409,10 +406,7 @@ export default function OwnerPreviliges() {
                       }}
                       key={index}
                       sx={{
-                        color: "white",
-                        "&:hover": {
-                          color: "white",
-                        },
+                        "&:hover": {},
                         width: 300,
                       }}
                     >
@@ -422,7 +416,6 @@ export default function OwnerPreviliges() {
                   ))
                 ) : (
                   <Typography
-                    color="white"
                     sx={{
                       textAlign: "center",
                     }}
@@ -463,7 +456,7 @@ export default function OwnerPreviliges() {
               <Button
                 sx={{
                   bgcolor: "#2E87E5",
-                  color: "white",
+
                   fontFamily: "Audiowide",
                   borderRadius: "10px",
                   "&:hover": {
@@ -491,7 +484,6 @@ export default function OwnerPreviliges() {
             </Typography>
             <Stack direction="row" alignItems="center" spacing={2} my={3}>
               <Typography
-                color="white"
                 sx={{
                   textAlign: "center",
                   flexBasis: "30%",
@@ -535,10 +527,7 @@ export default function OwnerPreviliges() {
                     <Option
                       value={index}
                       sx={{
-                        color: "white",
-                        "&:hover": {
-                          color: "white",
-                        },
+                        "&:hover": {},
                         width: 300,
                       }}
                     >
@@ -547,7 +536,6 @@ export default function OwnerPreviliges() {
                   ))
                 ) : (
                   <Typography
-                    color="white"
                     sx={{
                       textAlign: "center",
                     }}
@@ -566,7 +554,7 @@ export default function OwnerPreviliges() {
               <Button
                 sx={{
                   bgcolor: "#2E87E5",
-                  color: "white",
+
                   fontFamily: "Audiowide",
                   borderRadius: "10px",
                   "&:hover": {

@@ -3,6 +3,7 @@ const blogsRepo = require("../repository/blogs");
 const moment = require("moment");
 const holderRepo = require("../repository/holder");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { isUrlValid } = require("../utils");
 const getPromotedBlogs = async (walletId) => {
   const eligibleWallets = await promotionsRepo.eligibleWallets(walletId);
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
@@ -110,8 +111,15 @@ const areLinksValid = async (walletId, links) => {
 
   const account = await holderRepo.getById(walletId);
 
+  if (!account)
+    return {
+      message: "Account is missing",
+      valid: false,
+    };
+
   if (account.medium_link) {
-    if (!mediumLink.startsWith(account.medium_link))
+    const validLink = await isUrlValid(mediumLink);
+    if (!mediumLink.startsWith(account.medium_link) || !validLink)
       return {
         message: "Invalid Medium Link",
         valid: false,
@@ -119,7 +127,10 @@ const areLinksValid = async (walletId, links) => {
   }
 
   if (account.twitter_link) {
-    if (!twitterLink.startsWith(account.twitter_link))
+    if (
+      !twitterLink.startsWith(account.twitter_link) ||
+      !(await isUrlValid(twitterLink))
+    )
       return {
         message: "Invalid Twitter Link",
         valid: false,
@@ -128,13 +139,18 @@ const areLinksValid = async (walletId, links) => {
 
   if (account.linkedin_link) {
     const link = account.linkedin_link.replace("/in/", "/posts/");
-    if (!linkedinLink.startsWith(link))
+    if (!linkedinLink.startsWith(link) || !(await isUrlValid(linkedinLink)))
       return {
         message: "Invalid LinkedIn Link",
         valid: false,
       };
   }
   if (account.facebook_link) {
+    if (!(await isUrlValid(facebookLink)))
+      return {
+        message: "Invalid Facebook Link",
+        valid: false,
+      };
   }
   return {
     valid: true,

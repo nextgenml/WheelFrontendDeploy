@@ -1,7 +1,11 @@
 const config = require("../config/env");
 const logger = require("../logger");
+const moment = require("moment");
 const blogsManager = require("../manager/blogs");
+const { blogsSince } = require("../repository/blogs");
+const { getByTwitter } = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 require("../manager/jobs/referrals");
 const get = async (req, res) => {
   try {
@@ -19,6 +23,18 @@ const get = async (req, res) => {
         parseInt(pageSize) || 10,
         (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
       );
+      for (const ref of data) {
+        if (!ref.criteria_met) {
+          const holder = await getByTwitter(ref.referee_twitter);
+          if (holder) {
+            const blogsPosted = await blogsSince(
+              holder.wallet_id,
+              moment().startOf("day").format(DATE_TIME_FORMAT)
+            );
+            ref.criteria_count = blogsPosted.length;
+          }
+        }
+      }
     }
 
     return res.status(200).json({
@@ -29,7 +45,7 @@ const get = async (req, res) => {
     logger.error(`error occurred in get referrals api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      message: error,
+      message: error.message,
     });
   }
 };

@@ -11,6 +11,14 @@ import { DateToString } from "./utils";
 import "react-calendar/dist/Calendar.css";
 import { useAccount } from "wagmi";
 import { fetchNextEligibleUsersAPI } from "./API/Spinwheel.js";
+import {
+  Button,
+  MenuItem,
+  Select,
+  Typography,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 const SPIN_TYPES = [
   ["daily", "Daily"],
@@ -194,7 +202,7 @@ export default function SpinAndWin() {
                 </div>
               </div>
             ) : (
-              <p style={{ color: "white", fontSize: "20px" }}>
+              <p style={{ fontSize: "20px" }}>
                 No Spin As Minimum Wallet Requirement Is Not Met
               </p>
             )}
@@ -211,29 +219,34 @@ export default function SpinAndWin() {
             style={{ padding: "0 5rem", marginTop: "30px" }}
             className="flex flex-col  "
           >
-            <h2 className="text-white font-medium mx-auto  text-center text-4xl">
+            <h2 className="font-medium mx-auto  text-center text-4xl">
               Winners on the selected date range
             </h2>
             <div
-              style={{ marginTop: "3rem", gap: "0.2rem" }}
+              style={{
+                marginTop: "3rem",
+                gap: "0.2rem",
+                border: "1px solid #d5d0d0",
+                padding: "8px",
+                borderRadius: "8px",
+              }}
               className="flex flex-row  items-center justify-center mt-8 lg:justify-end w-full"
             >
               {!showStart && (
                 <>
                   <DateIcon />
-                  <p
+                  <Typography
+                    variant="subtitle1"
                     onClick={() => setShowStart(true)}
-                    className="cursor-pointer font-medium text-white"
                   >
                     {DateToString(startDate)}
-                  </p>
+                  </Typography>
                 </>
               )}
               <span
                 style={{
                   marginLeft: "16px",
                   marginRight: "16px",
-                  color: "white",
                 }}
               >
                 to
@@ -252,12 +265,12 @@ export default function SpinAndWin() {
               {!showEnd && (
                 <>
                   <DateIcon />
-                  <p
+                  <Typography
+                    variant="subtitle1"
                     onClick={() => setShowEnd(true)}
-                    className="cursor-pointer font-medium text-white"
                   >
                     {DateToString(endDate)}
-                  </p>
+                  </Typography>
                 </>
               )}
               {showEnd && (
@@ -271,19 +284,23 @@ export default function SpinAndWin() {
                   defaultActiveStartDate={new Date()}
                 />
               )}
-              <select
-                value={typeValue}
-                id="type-select"
-                className="type-selection"
-                onChange={(e) => setTypeValue(e.target.value)}
-              >
-                {SPIN_TYPES.map(([value, text]) => {
-                  return <option value={value}>{text}</option>;
-                })}
-              </select>
-              <button onClick={fetchWinners} className="get-winners-btn">
+
+              <FormControl>
+                <Select
+                  id="select-spin"
+                  value={typeValue}
+                  onChange={(e) => setTypeValue(e.target.value)}
+                  sx={{ ml: 2 }}
+                >
+                  {SPIN_TYPES.map(([value, text]) => {
+                    return <MenuItem value={value}>{text}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
+
+              <Button variant="outlined" onClick={fetchWinners} sx={{ ml: 2 }}>
                 Get Winners
-              </button>
+              </Button>
               {nextTypeSpinAt && (
                 <>
                   <span className="next-spin-time">

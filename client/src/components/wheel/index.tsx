@@ -9,14 +9,7 @@ interface Props {
   onFinish?: Function;
 }
 
-const spinner_colors = [
-  "#CBE4F9",
-  "#CDF5F6",
-  "#EFF9DA",
-  "#F9EBDF",
-  "#F9D8D6",
-  "#D6CDEA",
-];
+const spinner_colors = ["#ef304c", "#812fb4", "#fb5526", "#1594cb"];
 
 export default function Wheel({ items, selected_item, onFinish }: Props) {
   const [spinning, setSpinning] = useState<"spinning" | "">("");

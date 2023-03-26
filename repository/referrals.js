@@ -22,7 +22,7 @@ const getReferrals = async (walletId, pageSize, offset) => {
 };
 
 const getReferralsAdmin = async (pageSize, offset) => {
-  const query = `select * from referrals order by id desc limit ? offset ?;`;
+  const query = `select * from referrals where criteria_met = 1 order by id desc limit ? offset ?;`;
 
   const data = await runQueryAsync(query, [pageSize, offset]);
 

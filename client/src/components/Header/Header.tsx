@@ -19,7 +19,7 @@ import config from "../../config";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
-import { fetchSocialLinksAPI } from "../../API/Holder";
+import { fetchSocialLinksAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 
 interface Props {
@@ -57,7 +57,6 @@ export default function Header(props: Props) {
     fontSize: {
       sm: "12px",
       md: "15px",
-      color: props.socialSharing || props.whiteBg ? "black" : "white",
     },
   };
 
@@ -127,7 +126,11 @@ export default function Header(props: Props) {
             return (
               <a
                 href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
-                style={{ textDecoration: "none", whiteSpace: "nowrap" }}
+                style={{
+                  textDecoration: "none",
+                  whiteSpace: "nowrap",
+                  color: "black",
+                }}
                 key={h.title}
               >
                 <ListItem
@@ -201,7 +204,7 @@ export default function Header(props: Props) {
                   href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
                   rel="noopener noreferrer"
                   key={h.title}
-                  style={{ whiteSpace: "nowrap" }}
+                  style={{ whiteSpace: "nowrap", color: "black" }}
                 >
                   <Typography className="header-link" sx={linkStyle}>
                     {h.title}
@@ -219,7 +222,6 @@ export default function Header(props: Props) {
               style={{
                 fontSize: "38px",
                 cursor: "pointer",
-                color: props.socialSharing || props.whiteBg ? "black" : "white",
               }}
             ></MenuIcon>
           </Button>

@@ -47,7 +47,7 @@ export default function Utilities() {
               Wheel Rewards
             </Typography>
             <Typography
-              color="white"
+              
               sx={{
                 textAlign: "justify",
                 mt: 2,
@@ -71,7 +71,7 @@ export default function Utilities() {
               Daily Rewards
             </Typography>
             <Typography
-              color="white"
+              
               sx={{
                 textAlign: "justify",
                 mt: 2,
