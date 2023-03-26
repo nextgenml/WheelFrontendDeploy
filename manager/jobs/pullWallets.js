@@ -41,6 +41,7 @@ const storeTransactions = async (token, transactions, blockEndNumber) => {
       walletIds.push(from);
     }
   }
+  console.log("awaiting promises", promises.length);
   await Promise.all(promises);
   await updateBlockNumber(token.id, blockEndNumber);
   await updateBalances(walletIds, token);
