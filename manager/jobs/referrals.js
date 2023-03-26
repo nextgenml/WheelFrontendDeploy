@@ -17,6 +17,6 @@ const initiateProcess = async () => {
   }
 };
 // initiateProcess();
-schedule.scheduleJob("0 */3 * * *", async () => {
+schedule.scheduleJob("0 */1 * * *", async () => {
   await initiateProcess();
 });
