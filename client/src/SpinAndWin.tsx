@@ -17,7 +17,6 @@ import {
   Select,
   Typography,
   FormControl,
-  InputLabel,
 } from "@mui/material";
 
 const SPIN_TYPES = [
