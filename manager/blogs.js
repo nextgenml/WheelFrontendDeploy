@@ -111,6 +111,12 @@ const areLinksValid = async (walletId, links) => {
 
   const account = await holderRepo.getById(walletId);
 
+  if (!account)
+    return {
+      message: "Account is missing",
+      valid: false,
+    };
+
   if (account.medium_link) {
     const validLink = await isUrlValid(mediumLink);
     if (!mediumLink.startsWith(account.medium_link) || !validLink)
