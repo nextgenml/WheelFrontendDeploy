@@ -32,7 +32,7 @@ export default function GameSection() {
         </Typography>
 
         <Typography
-          color="white"
+          
           sx={{
             textAlign: "center",
           }}
@@ -60,7 +60,7 @@ export default function GameSection() {
               RULES
             </Typography>
             <Typography
-              color="white"
+              
               sx={{
                 textAlign: "justify",
               }}
@@ -83,7 +83,7 @@ export default function GameSection() {
                 <Button
                   sx={{
                     bgcolor: "#2E87E5",
-                    color: "white",
+                    
                     my: 2,
                     p: 2,
 

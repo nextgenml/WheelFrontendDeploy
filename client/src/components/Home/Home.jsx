@@ -29,15 +29,15 @@ export default function Home() {
         <Grid item xs={12} sm={6}>
           <Box display={"flex"} sx={{ mb: 2 }}>
             <Chip
-              sx={{ color: "white", fontSize: "16px", mr: 3 }}
+              sx={{ fontSize: "16px", mr: 3 }}
               label={`Total Bloggers: ${stats.totalBloggers}`}
-              icon={<PeopleAltIcon sx={{ color: "#f57a2f !important" }} />}
+              icon={<PeopleAltIcon sx={{ color: "#fb9c01 !important" }} />}
               variant="outlined"
             />
             <Chip
-              sx={{ color: "white", fontSize: "16px" }}
+              sx={{ fontSize: "16px" }}
               label={`Total Blogs: ${stats.totalBlogs}`}
-              icon={<SourceIcon sx={{ color: "#f57a2f !important" }} />}
+              icon={<SourceIcon sx={{ color: "#fb9c01 !important" }} />}
               variant="outlined"
             />
           </Box>
@@ -52,7 +52,6 @@ export default function Home() {
             NEXGEN ML TOKEN
           </Typography>
           <Typography
-            color="white"
             sx={{
               textDecoration: "none",
               textAlign: "justify",
@@ -78,7 +77,7 @@ export default function Home() {
               <Button
                 sx={{
                   bgcolor: "#2E87E5",
-                  color: "white",
+                  
                   my: 2,
                   fontFamily: "Audiowide",
                   borderRadius: "10px",
@@ -92,15 +91,11 @@ export default function Home() {
             </a> */}
 
             <Button
+              variant="contained"
               sx={{
-                bgcolor: "#2E87E5",
-                color: "white",
                 my: 2,
                 fontFamily: "Audiowide",
                 borderRadius: "10px",
-                "&:hover": {
-                  bgcolor: "#2E87E5b1",
-                },
               }}
               onClick={() => {
                 return window.open(
@@ -113,23 +108,16 @@ export default function Home() {
               LAUNCH WHEEL
             </Button>
             <Button
+              variant="contained"
+              href="/tokens"
+              target="_blank"
               sx={{
-                bgcolor: "#2E87E5",
                 my: 2,
                 fontFamily: "Audiowide",
                 borderRadius: "10px",
-                "&:hover": {
-                  bgcolor: "#2E87E5b1",
-                },
               }}
             >
-              <Link
-                href="/tokens"
-                target="_blank"
-                sx={{ color: "white !important", textDecoration: "none" }}
-              >
-                Allocation
-              </Link>
+              Allocation
             </Button>
           </Stack>
         </Grid>

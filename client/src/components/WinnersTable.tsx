@@ -33,52 +33,28 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
             <table className="min-w-full text-center ">
               <thead className="border-b bg-gray-800">
                 <tr>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     View wallets
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Winner for the day
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Spin Date
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Type
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Spin No
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Winner
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     Rank
                   </th>
-                  <th
-                    scope="col"
-                    className="text-sm font-medium text-white px-6 py-4"
-                  >
+                  <th scope="col" className="text-sm font-medium  px-6 py-4">
                     ETH
                   </th>
                 </tr>
@@ -88,7 +64,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                   props.winners_data.map((row) => {
                     return (
                       <tr>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           <div
                             onClick={() => setCurrentSpin(row)}
                             className="open-wallets"
@@ -96,7 +72,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                             <ViewIcon />
                           </div>
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           <div
                             onClick={() => {
                               navigator.clipboard.writeText(formatTweet(row));
@@ -110,22 +86,22 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                             </Tooltip>
                           </div>
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           {row.day}
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           {row.type}
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           {row.spin}
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           {row.wallet_id}
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           {row.rank}
                         </td>
-                        <td className="text-sm font-medium text-white px-6 py-4">
+                        <td className="text-sm font-medium  px-6 py-4">
                           ETH {row.prize}
                         </td>
                       </tr>
@@ -146,7 +122,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                     margin: "auto",
                     textAlign: "center",
                   }}
-                  className="text-white "
+                  className=" "
                 >
                   No winners
                 </p>

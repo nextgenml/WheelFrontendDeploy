@@ -248,7 +248,7 @@ const BlogForm = () => {
   const finalPrompts = isPromote ? promotedBlogs : prompts;
   if (!isConnected)
     return (
-      <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+      <Typography variant="h6" sx={{ mb: 20 }}>
         Please connect your wallet
       </Typography>
     );
@@ -260,7 +260,7 @@ const BlogForm = () => {
           style={{
             width: "3rem",
             height: "3rem",
-            color: "white",
+
             marginBottom: "16px",
           }}
           role="status"
@@ -272,7 +272,7 @@ const BlogForm = () => {
       {finalPrompts.length > 0 ? (
         renderPrompts()
       ) : (
-        <Typography variant="h6" sx={{ mb: 20, color: "white" }}>
+        <Typography variant="h6" sx={{ mb: 20 }}>
           No blogs to display
         </Typography>
       )}
@@ -280,14 +280,12 @@ const BlogForm = () => {
       {(isCustom || isAdmin) && (
         <>
           <div className="p-2 col-md-12 col-lg-12">
-            <h4 className="text-center" style={{ color: "white" }}>
-              Blog Data
-            </h4>
+            <h4 className="text-center">Blog Data</h4>
             {isCustom && (
               <Typography
                 variant="body2"
                 className="text-center"
-                sx={{ color: "white", mb: 2 }}
+                sx={{ mb: 2 }}
               >
                 Paid Plan for promotions - {blogStats.totalCountP}
                 <br />

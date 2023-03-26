@@ -36,9 +36,9 @@ function App() {
   const whiteBgPages = ["/promotions", "/tokens", "/referrals"];
 
   useEffect(() => {
-    const includes = whiteBgPages.includes(location.pathname);
+    const includes = true; //whiteBgPages.includes(location.pathname);
     document.body.style.backgroundColor = includes ? "white" : "black";
-    setSocialSharing(includes);
+    setSocialSharing(true);
   }, [location.pathname]);
 
   return (

@@ -108,7 +108,6 @@ export default function ClaimRedistribution() {
           CLAIM REDISTRIBUTION
         </Typography>
         <Typography
-          color="white"
           sx={{
             textAlign: "center",
             my: 3,
@@ -122,7 +121,7 @@ export default function ClaimRedistribution() {
             <Button
               sx={{
                 bgcolor: "#2E87E5",
-                color: "white",
+
                 fontFamily: "Audiowide",
                 borderRadius: "10px",
                 "&:hover": {

@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 function stringToDate(date_str) {
   let date = new Date();
   let date_str_arr = date_str.split("/");
@@ -84,6 +86,21 @@ const intersectionOfArrays = (lists) => {
   return result;
 };
 
+const isUrlValid = async (url) => {
+  let result = false;
+  try {
+    const res = await axios.get(url);
+    if (res.status === 200) result = true;
+    else {
+      console.log("status", res.status);
+    }
+  } catch (error) {
+    console.log("error", error);
+  }
+  console.log("result", result);
+  return result;
+};
+
 const roundTo2Decimals = (num) => Math.round(num * 100) / 100;
 module.exports = {
   dateToString,
@@ -96,4 +113,5 @@ module.exports = {
   shuffleArray,
   intersectionOfArrays,
   roundTo2Decimals,
+  isUrlValid,
 };

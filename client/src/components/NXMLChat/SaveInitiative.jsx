@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import config from "../../config";
 import { updateBlogCount } from "../../Utils/Blog";
+import { Checkbox, TextField } from "@mui/material";
 
 const SaveInitiative = ({
   prompt,
@@ -408,18 +409,14 @@ const SaveInitiative = ({
   }
   return (
     <div className="col-md-6 offset-md-3 col-lg-6 offset-lg-3">
-      <form style={{ color: "white" }}>
+      <form>
         <div className="row g-3 m-3">
           <div className="col-sm-12">
             <span>{prompt}</span>
           </div>
           {!isPromote && (
             <div className="col-sm-12">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                onClick={() => setIsChecked(!isChecked)}
-              />
+              <Checkbox onClick={() => setIsChecked(!isChecked)} />
               <label>&nbsp;&nbsp;Generate Blog</label>
             </div>
           )}
@@ -469,7 +466,7 @@ const SaveInitiative = ({
             </button>
           </div>
           <div className="col-sm-12">
-            <input
+            <TextField
               type="url"
               className="form-control"
               id="mediumLink"
@@ -479,7 +476,7 @@ const SaveInitiative = ({
             />
           </div>
           <div className="col-sm-12">
-            <input
+            <TextField
               type="url"
               className="form-control"
               id="twitterLink"
@@ -489,7 +486,7 @@ const SaveInitiative = ({
             />
           </div>
           <div className="col-sm-12">
-            <input
+            <TextField
               type="url"
               className="form-control"
               id="facebooklink"
@@ -499,7 +496,7 @@ const SaveInitiative = ({
             />
           </div>
           <div className="col-sm-12">
-            <input
+            <TextField
               type="url"
               className="form-control"
               id="linkedinlink"

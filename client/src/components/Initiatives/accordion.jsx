@@ -8,7 +8,7 @@ import { Box, Grid, Button, Link } from "@mui/material";
 import { useAccount } from "wagmi";
 
 let borderStyle = {
-  backgroundColor: "#f57a2f",
+  backgroundColor: "#fb9c01",
   // border: "3px solid #802600",
   borderRadius: "10px",
   my: 3,
@@ -26,14 +26,13 @@ export default function AccordionElement({
   return (
     <Accordion disabled={disableCondition} sx={{ ...borderStyle }}>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+        expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <Typography
           sx={{
             fontFamily: "Audiowide",
-            color: "white",
           }}
         >
           {title}
@@ -43,7 +42,7 @@ export default function AccordionElement({
         <Box className="initiative-section">
           <Grid container spacing={2}>
             <Grid item md={6}>
-              <Typography color="white">{subTitle}</Typography>
+              <Typography>{subTitle}</Typography>
             </Grid>
             <Grid item md={6}>
               <img
@@ -60,7 +59,9 @@ export default function AccordionElement({
                     target="_blank"
                     style={{ textDecoration: "none" }}
                   >
-                    <Button className="initiative-btn">BLOG</Button>
+                    <Button variant="contained" sx={{ mt: 2 }}>
+                      BLOG
+                    </Button>
                   </Link>
                   {/* <Link
                     href={extVideoUrl}
