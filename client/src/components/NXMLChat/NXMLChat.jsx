@@ -13,11 +13,11 @@ import { Box, Typography, Link, Button } from "@mui/material";
 import BlogStats from "./BlogStats";
 import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
+import { getCachedPrompt, getCachedPrompts } from "./BlogUtil";
 
 const BlogForm = () => {
   const { initiative } = useParams();
-  const blogCached =
-    localStorage.getItem(`${initiative}_blog_cache`) === "true";
+  const blogCached = !!localStorage.getItem(`${initiative}_generated_data`);
   const { address, isConnected } = useAccount();
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -35,6 +35,7 @@ const BlogForm = () => {
   const [showBlog, setShowBlog] = useState(null);
   const [blogStats, setBlogStats] = useState({});
   const [showInitiatives, setShowInitiatives] = useState(blogCached);
+  const [refreshCount, setRefreshCount] = useState(0);
   const [loading, setLoading] = useState(false);
   let reset = 0;
 
@@ -191,8 +192,16 @@ const BlogForm = () => {
       notify("Something went wrong. Please try later", "danger");
     }
   };
+
+  console.log("prompts", prompts);
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
+    const cachedPrompts = getCachedPrompts(initiative);
+    if (cachedPrompts) {
+      setPrompts(cachedPrompts);
+      setLoading(false);
+      return;
+    }
     getBlogStats();
     if (isPromote) {
       getPromotionBlogs();
@@ -220,6 +229,13 @@ const BlogForm = () => {
   }, [showInitiatives]);
 
   useEffect(() => {
+    if (refreshCount > 0)
+      get_gpt_data(
+        `List 10 ways in which ${initiative} will be improved by blockchain`
+      );
+  }, [refreshCount]);
+
+  useEffect(() => {
     if (walletAdd) {
       setIsSubmit(false);
     }
@@ -242,9 +258,9 @@ const BlogForm = () => {
             variant="contained"
             onClick={() => {
               setShowInitiatives(true);
-              localStorage.setItem(`${initiative}_blog_cache`, true);
               localStorage.removeItem(`${initiative}_generated_data`);
               setLoading(true);
+              setRefreshCount((prev) => prev + 1);
             }}
           >
             Generate Prompts
@@ -275,8 +291,10 @@ const BlogForm = () => {
               prompt={prompt}
               index={index}
               isCustom={isCustom}
+              isBlogPage={isBlogPage}
               getUserData={get_user_data}
               getBlogStats={getBlogStats}
+              cachedData={getCachedPrompt(initiative, index)}
             />
           ))}
         </>
