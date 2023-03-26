@@ -82,32 +82,36 @@ const updateBalances = async (walletIds, token) => {
     min_id = current_max_id;
   }
 };
-// const updateBalances = async (token) => {
-//   let { max_id, min_id } = await getHoldersMeta();
-//   const contract = await getContract(token.contract_address, token.abi_file);
+const updateAllBalances = async () => {
+  const tokens = await getTokens();
 
-//   while (min_id < max_id) {
-//     const current_max_id = min_id + 100;
-//     const holders = await getHolderByPage(min_id, current_max_id);
-//     console.log("min_id < max_id", min_id, current_max_id);
+  for (const token of tokens) {
+    let { max_id, min_id } = await getHoldersMeta();
+    const contract = await getContract(token.contract_address, token.abi_file);
 
-//     const balances = await getBalances(
-//       contract,
-//       holders.map((h) => h.wallet_id)
-//     );
+    while (min_id < max_id) {
+      const current_max_id = min_id + 1000;
+      const holders = await getHolderByPage(min_id, current_max_id);
+      console.log("min_id < max_id", min_id, current_max_id);
 
-//     for (const b of balances) {
-//       await updateHolderBalance(
-//         b.walletId,
-//         formatBalance(b.balance, token.decimals),
-//         token.token
-//       );
-//     }
+      const balances = await getBalances(
+        contract,
+        holders.map((h) => h.wallet_id)
+      );
 
-//     min_id = current_max_id;
-//   }
-//   await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
-// };
+      for (const b of balances) {
+        await updateHolderBalance(
+          b.walletId,
+          formatBalance(b.balance, token.decimals),
+          token.token
+        );
+      }
+
+      min_id = current_max_id;
+    }
+    await updateLastRunAt(token.id, moment.utc().format(DATE_TIME_FORMAT));
+  }
+};
 
 const initiateProcess = async () => {
   logger.info("started pulling wallets from smart contract");
@@ -117,10 +121,11 @@ const initiateProcess = async () => {
   );
   logger.info("completed getting balances");
 };
-initiateProcess();
-// schedule.scheduleJob("0 */3 * * *", async () => {
-//   await initiateProcess();
-// });
+// initiateProcess();
+schedule.scheduleJob("0 */3 * * *", async () => {
+  await initiateProcess();
+  await updateAllBalances();
+});
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
