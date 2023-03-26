@@ -10,7 +10,7 @@ const createHolderV1 = async (walletId) => {
 
   if (!existsResults.length) {
     const query = `insert into holders (wallet_id, alias, is_active) values(?, ?, true);`;
-    const randomName = await getUniqueName(walletId);
+    const randomName = ""; // await getUniqueName(walletId);
 
     return await runQueryAsync(query, [walletId, randomName]);
   }

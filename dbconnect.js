@@ -3,8 +3,15 @@ const logger = require("./logger");
 const config = require("./config/env");
 
 let dbConnection = null;
-
+let connectionPool = null;
 function handleDisconnect() {
+  connectionPool = mysql.createPool({
+    host: config.DB_HOST,
+    user: "root",
+    password: "password",
+    database: "nextgenml",
+    connectionLimit: 100,
+  });
   dbConnection = mysql.createConnection({
     host: config.DB_HOST,
     user: "root",
@@ -210,6 +217,7 @@ function handleDisconnect() {
 handleDisconnect();
 module.exports = {
   dbConnection,
+  connectionPool,
 };
 // brew install mysql
 // ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
