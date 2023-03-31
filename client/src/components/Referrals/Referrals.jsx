@@ -19,7 +19,7 @@ const Referrals = () => {
         Enter referral details
       </Typography>
       <Grid container spacing={2} className={styles.form}>
-        <Grid item md={10} xs={12} display="flex">
+        <Grid item md={6} xs={12} display="flex">
           <TextField
             id="outlined-basic"
             label="Twitter @*"
@@ -29,6 +29,8 @@ const Referrals = () => {
             onChange={(e) => setTwitter(e.target.value)}
             sx={{ mr: 2 }}
           />
+        </Grid>
+        <Grid item md={4} xs={9}>
           <TextField
             id="outlined-basic"
             label="Telegram @*"
@@ -37,11 +39,12 @@ const Referrals = () => {
             value={telegram}
             onChange={(e) => setTelegram(e.target.value)}
           />
+        </Grid>
+        <Grid item md={2} xs={3}>
           <Button
             variant="contained"
             component="label"
             onClick={onSubmit}
-            sx={{ ml: 4 }}
             disabled={!(twitter && telegram)}
           >
             Refer

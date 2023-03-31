@@ -3,6 +3,10 @@
   margin-bottom: 30px !important;
 }
 .form {
-  padding-left: 200px;
-  padding-right: 200px;
+  padding-left: 16px;
 }
+/* @media only screen and (max-width: 640px) {
+  .form {
+    padding: 0;
+  }
+} */
