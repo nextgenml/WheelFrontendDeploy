@@ -10,10 +10,17 @@ import {
 import { useState } from "react";
 import { saveSocialLinksAPI } from "../../API/Holder.js";
 import styles from "./Header.module.css";
-const SaveSocialLinks = ({ onClose, links, walletId }) => {
-  const [socialLinks, setSocialLinks] = useState(links);
+const SaveSocialLinks = ({ onClose, walletId }) => {
+  const [socialLinks, setSocialLinks] = useState({
+    facebookLink: localStorage.getItem(`${walletId}_facebookLink`),
+    linkedinLink: localStorage.getItem(`${walletId}_linkedinLink`),
+    mediumLink: localStorage.getItem(`${walletId}_mediumLink`),
+    telegramLink: localStorage.getItem(`${walletId}_telegramLink`),
+    twitterLink: localStorage.getItem(`${walletId}_twitterLink`),
+  });
   const setData = (key, value) => {
     setSocialLinks((prev) => ({ ...prev, [key]: value }));
+    localStorage.setItem(`${walletId}_${key}`, value);
   };
   const submitData = async () => {
     const saved = await saveSocialLinksAPI(walletId, socialLinks);

@@ -6,8 +6,12 @@ import ReferralList from "./ReferralList";
 import styles from "./Referrals.module.css";
 const Referrals = () => {
   const { address } = useAccount();
-  const [twitter, setTwitter] = useState("");
-  const [telegram, setTelegram] = useState("");
+  const [twitter, setTwitter] = useState(
+    localStorage.getItem(`${address}_referral_twitterLink`)
+  );
+  const [telegram, setTelegram] = useState(
+    localStorage.getItem(`${address}_referral_telegramLink`)
+  );
   const [refresh, setRefresh] = useState(0);
   const onSubmit = async () => {
     const saved = await saveReferralAPI(address, { telegram, twitter });
@@ -26,7 +30,13 @@ const Referrals = () => {
             variant="outlined"
             fullWidth
             value={twitter}
-            onChange={(e) => setTwitter(e.target.value)}
+            onChange={(e) => {
+              setTwitter(e.target.value);
+              localStorage.setItem(
+                `${address}_referral_twitterLink`,
+                e.target.value
+              );
+            }}
             sx={{ mr: 2 }}
           />
         </Grid>
@@ -37,7 +47,13 @@ const Referrals = () => {
             variant="outlined"
             fullWidth
             value={telegram}
-            onChange={(e) => setTelegram(e.target.value)}
+            onChange={(e) => {
+              setTelegram(e.target.value);
+              localStorage.setItem(
+                `${address}_referral_telegramLink`,
+                e.target.value
+              );
+            }}
           />
         </Grid>
         <Grid item md={2} xs={3}>

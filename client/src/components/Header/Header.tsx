@@ -71,7 +71,7 @@ export default function Header(props: Props) {
           />
         </Box>
       );
-    else if (isConnected) {
+    else if (isConnected && !socialLinks.facebookLink) {
       return (
         <Button variant="outlined" onClick={() => setShowSaveLinks(true)}>
           Social Links
@@ -184,7 +184,6 @@ export default function Header(props: Props) {
             if (saved) fetchSocialLinks();
           }}
           walletId={address}
-          links={socialLinks}
         />
       )}
       <Hidden smDown>
