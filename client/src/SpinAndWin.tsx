@@ -89,7 +89,7 @@ export default function SpinAndWin() {
     const f_end = moment(endDate).format("YYYY-MM-DD");
 
     //@ts-ignore
-    const type = document.getElementById("type-select").value;
+    //const type = document.getElementById("type-select").value;
 
     const url =
       api_url +
@@ -97,7 +97,7 @@ export default function SpinAndWin() {
       new URLSearchParams({
         from: f_start,
         to: f_end,
-        type: type,
+        type: 'adhoc',
         walletAddress: (address || "").toString(),
       });
 
@@ -110,6 +110,7 @@ export default function SpinAndWin() {
 
     const winners_data = await winners_data_res.json();
     setWinnersData(winners_data.data);
+    console.log(`WINNERS DATA: ${winners_data.data}`);
     setNextTypeAt(winners_data.next_spin_at);
   };
   const fetchSpinnerData = async () => {
