@@ -48,11 +48,11 @@ const updateBlogData = async (req, res) => {
         msg: "Insufficient data",
       });
     }
-    if (walletId !== config.ADMIN_WALLET_1)
-      return res.status(401).json({
-        statusCode: 401,
-        msg: "Unauthorized",
-      });
+    // if (walletId !== config.ADMIN_WALLET_1)
+    //   return res.status(401).json({
+    //     statusCode: 401,
+    //     msg: "Unauthorized",
+    //   });
 
     await blogsRepo.updateBlogData(req.body);
     return res.status(200).json({
