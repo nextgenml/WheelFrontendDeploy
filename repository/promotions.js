@@ -47,11 +47,11 @@ const getAppliedPromotions = async (walletId, pageSize, offset) => {
 };
 
 const getAppliedPromotionsAdmin = async (pageSize, offset) => {
-  const query = `select * from promotion_requests where status = 'requested' and mark_as_done_by_user = 1 order by id desc limit ? offset ?;`;
+  const query = `select * from promotion_requests where mark_as_done_by_user = 1 order by id desc limit ? offset ?;`;
 
   const data = await runQueryAsync(query, [pageSize, offset]);
 
-  const query1 = `select count(1) as count from promotion_requests where status = 'requested'  and mark_as_done_by_user = 1`;
+  const query1 = `select count(1) as count from promotion_requests where mark_as_done_by_user = 1`;
   const count = await runQueryAsync(query1);
 
   return [data, count[0].count];
