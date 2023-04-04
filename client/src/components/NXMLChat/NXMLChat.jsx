@@ -283,6 +283,7 @@ const BlogForm = () => {
           isPromote
           promotedWallet={blog.wallet_address}
           promotedId={blog.id}
+          cachedData={{}}
         />
       ));
     else {

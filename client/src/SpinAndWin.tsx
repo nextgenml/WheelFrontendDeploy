@@ -88,16 +88,13 @@ export default function SpinAndWin() {
     const f_start = moment(startDate).format("YYYY-MM-DD");
     const f_end = moment(endDate).format("YYYY-MM-DD");
 
-    //@ts-ignore
-    //const type = document.getElementById("type-select").value;
-
     const url =
       api_url +
       "winners-data?" +
       new URLSearchParams({
         from: f_start,
         to: f_end,
-        type: 'adhoc',
+        type: typeValue,
         walletAddress: (address || "").toString(),
       });
 

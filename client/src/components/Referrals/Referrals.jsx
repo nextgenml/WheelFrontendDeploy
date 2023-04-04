@@ -26,8 +26,9 @@ const Referrals = () => {
         <Grid item md={6} xs={12} display="flex">
           <TextField
             id="outlined-basic"
-            label="Twitter @*"
+            label="Twitter Profile Link*"
             variant="outlined"
+            placeholder="eg: https://twitter.com/nextgen_ml"
             fullWidth
             value={twitter}
             onChange={(e) => {
@@ -46,6 +47,7 @@ const Referrals = () => {
             label="Telegram @*"
             variant="outlined"
             fullWidth
+            placeholder="eg: @nexgen_ml"
             value={telegram}
             onChange={(e) => {
               setTelegram(e.target.value);
