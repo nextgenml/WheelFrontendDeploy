@@ -7,17 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import {
-  Typography,
-  TablePagination,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Button,
-} from "@mui/material";
+import { Typography, TablePagination, Button } from "@mui/material";
 import styles from "./PostedBlogs.module.css";
-import { fetchPostedBlogsAPI, updatePostedBlogAPI } from "../../API/Blogs";
-import config from "../../config";
+import { fetchPostedBlogsAPI } from "../../API/Blogs";
 import { useAccount } from "wagmi";
 import ShowBlog from "../NXMLChat/ShowBlog";
 import ViewLinks from "./ViewLinks";
@@ -59,17 +51,6 @@ export default function PostedBlogs() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const isAdmin = address === config.ADMIN_WALLET_1;
-
-  const onUpdate = async (links, id) => {
-    const res = await updatePostedBlogAPI(address, { links });
-    if (res) {
-      const currentRow = blogs.filter((p) => p.id === id)[0];
-      // currentRow.paid_referer = paid ? 1 : 0;
-      setBlogs([...blogs]);
-    }
-  };
   return (
     <>
       <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
@@ -83,7 +64,6 @@ export default function PostedBlogs() {
                 {headers.map((h) => {
                   return <TableCell>{h}</TableCell>;
                 })}
-                {isAdmin && <TableCell></TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
