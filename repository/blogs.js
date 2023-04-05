@@ -148,6 +148,7 @@ const blogsSince = async (walletId, date) => {
   const query = `select * from saved_prompts where wallet_address = ? and create_date > ?`;
   return await runQueryAsync(query, [walletId, date]);
 };
+
 const postedBlogs = async (walletId, date, pageSize, offset) => {
   const query = `select * from saved_prompts where wallet_address = ? and create_date between ? and ? order by id desc limit ? offset ?;`;
   const startDate = moment(date).startOf("day").format(DATE_TIME_FORMAT);
@@ -185,7 +186,18 @@ const updateLinks = async (
   ]);
 };
 
+const getBlogById = async (blogId) => {
+  const query = `select * from saved_prompts where id = ? `;
+  const data = await runQueryAsync(query, [blogId]);
+  return data[0];
+};
+const validateBlog = async (blogId, isValid, details) => {
+  const query = `update saved_prompts set validated_flag = ?, details = ? where id = ? `;
+  return await runQueryAsync(query, [isValid, details, blogId]);
+};
 module.exports = {
+  validateBlog,
+  getBlogById,
   updateLinks,
   postedBlogs,
   blogsSince,

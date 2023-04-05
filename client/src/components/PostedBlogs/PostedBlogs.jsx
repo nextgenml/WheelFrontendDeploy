@@ -21,6 +21,7 @@ const headers = [
   "Links",
   "Posted On",
   "Is Valid",
+  "Details",
 ];
 
 export default function PostedBlogs() {
@@ -89,6 +90,7 @@ export default function PostedBlogs() {
                   </TableCell>
                   <TableCell>{row.create_date}</TableCell>
                   <TableCell>{row.validated_flag}</TableCell>
+                  <TableCell sx={{ color: "red" }}>{row.details}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

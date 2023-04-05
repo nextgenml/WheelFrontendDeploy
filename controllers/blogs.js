@@ -248,7 +248,7 @@ const updatePostedBlogs = async (req, res) => {
       twitterLink,
       blogId
     );
-
+    blogsManager.validateBlog(blogId);
     return res.status(200).json({
       message: "Links updated successfully",
     });
