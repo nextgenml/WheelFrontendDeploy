@@ -1,0 +1,19 @@
+.tableHeader {
+  text-align: center;
+  padding: 24px;
+}
+
+.inputLink {
+  width: 900px;
+}
+.saveLinksBox {
+  padding: 16px;
+}
+.saveLinksBox > div {
+  margin-bottom: 30px;
+}
+.subtitle {
+  padding: 16px;
+  padding-top: 0;
+  color: var(--bs-danger);
+}

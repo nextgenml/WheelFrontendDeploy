@@ -411,7 +411,7 @@ const BlogForm = () => {
                         </>
                       )}
 
-                      <th scope="col">Promot</th>
+                      <th scope="col">Prompt</th>
                       <th scope="col">Blog</th>
                       {isCustom && <th scope="col">View Stats</th>}
                       <th scope="col">Link</th>

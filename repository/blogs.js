@@ -1,6 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { v4: uuidv4 } = require("uuid");
-
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const moment = require("moment");
 const firstBlogAt = async (walletId) => {
   const query =
     "select create_date from saved_prompts where wallet_address = ? order by create_date asc limit 1";
@@ -147,8 +148,46 @@ const blogsSince = async (walletId, date) => {
   const query = `select * from saved_prompts where wallet_address = ? and create_date > ?`;
   return await runQueryAsync(query, [walletId, date]);
 };
+const postedBlogs = async (walletId, date, pageSize, offset) => {
+  const query = `select * from saved_prompts where wallet_address = ? and create_date between ? and ? order by id desc limit ? offset ?;`;
+  const startDate = moment(date).startOf("day").format(DATE_TIME_FORMAT);
+  const endDate = moment(date).endOf("day").format(DATE_TIME_FORMAT);
+  const data = await runQueryAsync(query, [
+    walletId,
+    startDate,
+    endDate,
+    pageSize,
+    offset,
+  ]);
+
+  const query1 = `select count(1) as count from saved_prompts where wallet_address = ? and create_date between ? and ?;`;
+  const count = await runQueryAsync(query1, [walletId, startDate, endDate]);
+
+  return [data, count[0].count];
+};
+
+const updateLinks = async (
+  walletId,
+  facebookLink,
+  linkedinLink,
+  mediumLink,
+  twitterLink,
+  blogId
+) => {
+  const query = `update saved_prompts set facebookurl = ?,  linkedinurl = ?,  mediumurl = ?, twitterurl = ? where id = ? and wallet_address= ?`;
+  return await runQueryAsync(query, [
+    facebookLink,
+    linkedinLink,
+    mediumLink,
+    twitterLink,
+    blogId,
+    walletId,
+  ]);
+};
 
 module.exports = {
+  updateLinks,
+  postedBlogs,
   blogsSince,
   uniqueBloggersSince,
   saveBlogData,

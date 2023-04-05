@@ -19,16 +19,17 @@ import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import NXMLChat from "./components/NXMLChat/NXMLChat";
 // import { useAccount } from "wagmi";
 // import { useNavigate } from "react-router-dom";
-// import SocialSharing from "./components/SocialSharing/SocialSharing";
-// import Campaigns from "./components/Campaigns/Campaigns";
-// import Profile from "./components/Profile/Profile";
-// import Quizzes from "./components/Quizzes/Quizzes";
+import SocialSharing from "./components/SocialSharing/SocialSharing";
+import Campaigns from "./components/Campaigns/Campaigns";
+import Profile from "./components/Profile/Profile";
+import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Promotions from "./components/Promotions/Promotions";
 import Tokens from "./components/Tokens/Tokens";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Referrals from "./components/Referrals/Referrals";
+import PostedBlogs from "./components/PostedBlogs/PostedBlogs";
 
 function App() {
   const location = useLocation();
@@ -54,7 +55,7 @@ function App() {
               <Tokenomics />
               <Initiatives />
               {/* <BuyNextGen /> */}
-              {/* <ConverseWithAI /> */}
+              <ConverseWithAI />
               <Community />
             </Container>
           }
@@ -69,12 +70,11 @@ function App() {
           path="/referrals"
           element={<PrivateRoute component={<Referrals />} />}
         />
-
-        {/* <Route path="/spin-wheel" element={<SpinAndWin />} />
-        <Route path="/" element={<SocialSharing />} />
+        <Route path="/social-sharing" element={<SocialSharing />} />
         <Route path="/user-campaigns" element={<Campaigns />} />
         <Route path="/user-profile" element={<Profile />} />
-        <Route path="/user-quizzes" element={<Quizzes />} /> */}
+        <Route path="/user-quizzes" element={<Quizzes />} />
+        <Route path="/posted-blogs" element={<PostedBlogs />} />
       </Routes>
       <Footer />
     </>
