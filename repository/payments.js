@@ -12,11 +12,15 @@ const createPayment = async (walletId, data) => {
     data.earned_at,
   ]);
 };
+const updatePayment = async (id, amount) => {
+  const query = `update payments set amount = ? where id = ?`;
+  return await runQueryAsync(query, [amount, id]);
+};
 
 const blogsDoneOn = async (walletId, date) => {
-  const query = `select * from payments where wallet_id = ? and earned_at = ? and type = 'blog' and amount > 0`;
+  const query = `select * from payments where wallet_id = ? and earned_at = ? and type = 'blog'`;
   const results = await runQueryAsync(query, [walletId, date]);
-  return results.length > 0;
+  return results[0];
 };
 
 const getPayments = async (walletId, date, pageSize, offset) => {
@@ -33,4 +37,5 @@ module.exports = {
   createPayment,
   blogsDoneOn,
   getPayments,
+  updatePayment,
 };

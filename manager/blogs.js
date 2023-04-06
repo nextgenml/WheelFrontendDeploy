@@ -11,17 +11,18 @@ const getPromotedBlogs = async (walletId) => {
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
 };
 
-const hasPostedValidBlogs = async (walletId, lastActionAt) => {
+const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
   const blogs = await blogsRepo.blogsSince(
     walletId,
     moment(lastActionAt).startOf("day").format(DATE_TIME_FORMAT)
   );
 
-  const groups = groupBlogsByDate(blogs);
+  const groups = groupBlogsByDate(blogs, includeToday);
 
   const diffDays =
     moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
 
+  console.log("diffDays", diffDays, Object.keys(groups).length);
   if (diffDays > Object.keys(groups).length) return false;
 
   for (const date of Object.keys(groups)) {
@@ -31,13 +32,15 @@ const hasPostedValidBlogs = async (walletId, lastActionAt) => {
 
     const validBlogs = [];
     for (const blog of postedBlogs) {
-      const res = await areLinksValid(walletId, {
-        facebookLink: blog.facebookurl,
-        mediumLink: blog.mediumurl,
-        linkedinLink: blog.linkedinurl,
-        twitterLink: blog.twitterurl,
-      });
-      if (res.valid) validBlogs.push(blog);
+      if (!blog.validated_flag) {
+        const res = await areLinksValid(walletId, {
+          facebookLink: blog.facebookurl,
+          mediumLink: blog.mediumurl,
+          linkedinLink: blog.linkedinurl,
+          twitterLink: blog.twitterurl,
+        });
+        if (res.valid) validBlogs.push(blog);
+      }
     }
     if (validBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
   }
@@ -82,13 +85,16 @@ const referralMet = async (twitter, referredAt) => {
 
     const validBlogs = [];
     for (const blog of postedBlogs) {
-      const res = await areLinksValid(walletId, {
-        facebookLink: blog.facebookurl,
-        mediumLink: blog.mediumurl,
-        linkedinLink: blog.linkedinurl,
-        twitterLink: blog.twitterurl,
-      });
-      if (res.valid) validBlogs.push(blog);
+      if (blog.validated_flag) validBlogs.push(blog);
+      else {
+        const res = await areLinksValid(walletId, {
+          facebookLink: blog.facebookurl,
+          mediumLink: blog.mediumurl,
+          linkedinLink: blog.linkedinurl,
+          twitterLink: blog.twitterurl,
+        });
+        if (res.valid) validBlogs.push(blog);
+      }
     }
     if (validBlogs.length >= process.env.MINIMUM_BLOGS_PER_DAY)
       return {
