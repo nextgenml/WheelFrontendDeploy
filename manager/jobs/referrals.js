@@ -22,7 +22,7 @@ const initiateProcess = async () => {
       await createPayment(ref.referer, {
         type: "referral",
         is_paid: 0,
-        amount: 6,
+        amount: process.env.REFERRAL_PRIZE,
         earned_at: date,
       });
     }
