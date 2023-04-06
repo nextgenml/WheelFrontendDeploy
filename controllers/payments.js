@@ -3,11 +3,10 @@ const paymentsRepo = require("../repository/payments");
 
 const getPayments = async (req, res) => {
   try {
-    const { walletId, pageNo, pageSize, date } = req.query;
+    const { walletId, pageNo, pageSize } = req.query;
 
     const [data, total_count] = await paymentsRepo.getPayments(
       walletId,
-      date,
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
     );
@@ -24,6 +23,25 @@ const getPayments = async (req, res) => {
     });
   }
 };
+
+const paymentStats = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+
+    const stats = await paymentsRepo.getPaymentStats(walletId);
+
+    return res.status(200).json({
+      stats,
+    });
+  } catch (error) {
+    logger.error(`error occurred in get getPayments api: ${error}`);
+    res.status(400).json({
+      statusCode: 400,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
   getPayments,
+  paymentStats,
 };

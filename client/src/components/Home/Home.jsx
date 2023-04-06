@@ -1,19 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Box, Button, Grid, Typography, Link, Chip } from "@mui/material";
-import homeimg from "./assets/home.png";
+import { Box, Button, Grid, Typography, Chip } from "@mui/material";
 import { Stack } from "@mui/system";
 import { getHomePageStats } from "../../API/Blogs";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import SourceIcon from "@mui/icons-material/Source";
+import { fetchPaymentStatsAPI } from "../../API/Payments";
+import { useAccount } from "wagmi";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import { useNavigate } from "react-router";
 
 export default function Home() {
+  const { address } = useAccount();
   const [stats, setStats] = useState({});
+  const [paymentStats, setPaymentStats] = useState({});
   const fetchData = async () => {
     const data = await getHomePageStats();
     setStats(data);
   };
+  const fetchStatsData = async () => {
+    const data = await fetchPaymentStatsAPI(address);
+    setPaymentStats(data.stats);
+  };
+  const navigate = useNavigate();
   useEffect(() => {
     fetchData();
+    fetchStatsData();
   }, []);
   return (
     <Box
@@ -24,23 +36,33 @@ export default function Home() {
         backgroundPosition: "center right",
       }}
     >
-      <Grid container>
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={12}>
-          <Box display={"flex"} sx={{ mb: 2 }}>
-            <Chip
-              sx={{ fontSize: "16px", mr: 3 }}
-              label={`Total Bloggers: ${stats.totalBloggers}`}
-              icon={<PeopleAltIcon sx={{ color: "#fb9c01 !important" }} />}
-              variant="outlined"
-            />
-            <Chip
-              sx={{ fontSize: "16px" }}
-              label={`Total Blogs: ${stats.totalBlogs}`}
-              icon={<SourceIcon sx={{ color: "#fb9c01 !important" }} />}
-              variant="outlined"
-            />
-          </Box>
-
+          <Chip
+            sx={{ fontSize: "16px", mr: 3 }}
+            label={`Total Earned: ${
+              paymentStats.blog + paymentStats.referral || 0
+            }`}
+            variant="outlined"
+            icon={<LocalAtmIcon sx={{ color: "#fb9c01 !important" }} />}
+            onClick={() => navigate("/payments")}
+          />
+          <Chip
+            sx={{ fontSize: "16px", mr: 3 }}
+            label={`Earned in Blogs: ${paymentStats.blog || 0}`}
+            variant="outlined"
+            icon={<LocalAtmIcon sx={{ color: "#fb9c01 !important" }} />}
+            onClick={() => navigate("/payments")}
+          />
+          <Chip
+            sx={{ fontSize: "16px", mr: 3 }}
+            label={`Earned in Referrals: ${paymentStats.referral || 0}`}
+            variant="outlined"
+            icon={<LocalAtmIcon sx={{ color: "#fb9c01 !important" }} />}
+            onClick={() => navigate("/payments")}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12}>
           <Typography
             color="#3B7AAA"
             sx={{
@@ -67,6 +89,21 @@ export default function Home() {
             innovation. Join us in the journey to secure control and value from
             your data in the decentralized era. 
           </Typography>
+
+          <Box display={"flex"} sx={{ mb: 2 }}>
+            <Chip
+              sx={{ fontSize: "16px", mr: 3 }}
+              label={`Total Bloggers: ${stats.totalBloggers}`}
+              icon={<PeopleAltIcon sx={{ color: "#fb9c01 !important" }} />}
+              variant="outlined"
+            />
+            <Chip
+              sx={{ fontSize: "16px" }}
+              label={`Total Blogs: ${stats.totalBlogs}`}
+              icon={<SourceIcon sx={{ color: "#fb9c01 !important" }} />}
+              variant="outlined"
+            />
+          </Box>
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* <a
               href="#buy-nextgen"
