@@ -17,9 +17,3 @@
   padding-top: 0;
   color: var(--bs-danger);
 }
-.datePickerText {
-  width: 200px;
-  display: flex;
-  align-self: center;
-  justify-self: center;
-}

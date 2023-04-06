@@ -11,9 +11,9 @@ export const getHomePageStats = async () => {
   }
 };
 
-export const fetchPostedBlogsAPI = async (walletId, pageNo, pageSize) => {
+export const fetchPostedBlogsAPI = async (walletId, pageNo, pageSize, date) => {
   const res = await fetch(
-    `${config.API_ENDPOINT}/api/v1/blogs/posted/?walletId=${walletId}&pageNo=${pageNo}&pageSize=${pageSize}`
+    `${config.API_ENDPOINT}/api/v1/blogs/posted/?walletId=${walletId}&pageNo=${pageNo}&pageSize=${pageSize}&date=${date}`
   );
   if (res.ok) {
     return await res.json();

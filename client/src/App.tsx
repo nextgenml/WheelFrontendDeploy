@@ -30,6 +30,7 @@ import Tokens from "./components/Tokens/Tokens";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Referrals from "./components/Referrals/Referrals";
 import PostedBlogs from "./components/PostedBlogs/PostedBlogs";
+import TotalEarnings from "./components/TotalEarnings/TotalEarnings";
 
 function App() {
   const location = useLocation();
@@ -75,6 +76,7 @@ function App() {
         <Route path="/user-profile" element={<Profile />} />
         <Route path="/user-quizzes" element={<Quizzes />} />
         <Route path="/posted-blogs" element={<PostedBlogs />} />
+        <Route path="/payments" element={<TotalEarnings />} />
       </Routes>
       <Footer />
     </>
