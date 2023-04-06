@@ -15,7 +15,7 @@ const logger = require("../logger.js");
 const { processPrizesV1 } = require("./rewardTransferV1.js");
 const participantsRepo = require("../repository/spinParticipants.js");
 const blogsRepo = require("../repository/blogs.js");
-const { isEligibleForNextSpin } = require("./blogs.js");
+const { hasPostedValidBlogs } = require("./blogs.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
@@ -170,7 +170,7 @@ const getNextSpinEligibleUsers = async () => {
   const result = [];
 
   for (const blogger of bloggers) {
-    if (await isEligibleForNextSpin(blogger.wallet_address, lastSpinAt)) {
+    if (await hasPostedValidBlogs(blogger.wallet_address, lastSpinAt)) {
       result.push(blogger);
     }
   }

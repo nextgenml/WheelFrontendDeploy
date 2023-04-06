@@ -140,7 +140,7 @@ const totalBloggers = async () => {
 };
 
 const uniqueBloggersSince = async (date) => {
-  const query = `select distinct wallet_address from saved_prompts where create_date > ?`;
+  const query = `select distinct wallet_address from saved_prompts where create_date >= ?`;
   return await runQueryAsync(query, [date]);
 };
 

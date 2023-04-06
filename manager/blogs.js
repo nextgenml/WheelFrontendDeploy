@@ -5,12 +5,13 @@ const holderRepo = require("../repository/holder");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { isUrlValid } = require("../utils");
 const logger = require("../logger");
+
 const getPromotedBlogs = async (walletId) => {
   const eligibleWallets = await promotionsRepo.eligibleWallets(walletId);
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
 };
 
-const isEligibleForNextSpin = async (walletId, lastActionAt) => {
+const hasPostedValidBlogs = async (walletId, lastActionAt) => {
   const blogs = await blogsRepo.blogsSince(
     walletId,
     moment(lastActionAt).startOf("day").format(DATE_TIME_FORMAT)
@@ -196,7 +197,7 @@ const validateBlog = async (blogId) => {
 };
 module.exports = {
   getPromotedBlogs,
-  isEligibleForNextSpin,
+  hasPostedValidBlogs,
   validDomains,
   replaceTrailingSlash,
   referralMet,

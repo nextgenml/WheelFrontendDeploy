@@ -4,6 +4,7 @@ const blogsManager = require("../manager/blogs");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
 const moment = require("moment");
+require("../manager/jobs/blogPayments");
 const firstBlogAt = async (req, res) => {
   try {
     const { walletId } = req.query;
