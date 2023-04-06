@@ -66,7 +66,7 @@ const Footer = () => {
           <Box mt="10px">
             <a
               rel="noreferrer"
-              href="https://www.youtube.com/watch?v=bSKqQIwjDrQ"
+              href="https://www.youtube.com/channel/UCsAKUeJJzRG0TLveljIi96g"
               target="_blank"
               style={{ textDecoration: "none" }}
             >
