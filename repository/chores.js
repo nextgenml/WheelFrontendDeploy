@@ -284,7 +284,13 @@ const validateChore = async (walletId, choreId, action, targetChoreId) => {
 
   return await runQueryAsync(query, [choreId, walletId]);
 };
+
+const unValidatedChores = async () => {
+  const query = `select * from chores where chore_type = 'validate' and is_completed = 0 and valid_to < now()`;
+  return await runQueryAsync(query, []);
+};
 module.exports = {
+  unValidatedChores,
   validateChore,
   markChoreAsCompletedByUser,
   getTodayChores,

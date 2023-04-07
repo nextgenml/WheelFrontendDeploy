@@ -8,6 +8,7 @@ const { roundTo2Decimals } = require("../utils");
 const { createValidationChore } = require("../manager/chores");
 const { createOtherChores } = require("../manager/jobs/otherChores");
 require("../manager/jobs/postChores");
+require("../manager/jobs/validationChore");
 
 const getSocialSharingStats = async (req, res) => {
   try {

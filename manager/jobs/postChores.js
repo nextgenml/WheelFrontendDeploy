@@ -171,7 +171,7 @@ schedule.scheduleJob(rule, async () => {
   await initiateAlgorithm();
 });
 
-initiateAlgorithm();
+// initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
