@@ -78,7 +78,7 @@ const updateCampaign = async (campaignId, isActive, isRecursive) => {
 };
 
 const saveCampaignDetails = async (data) => {
-  const query = `SET NAMES utf8mb4; insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
+  const query = `SET NAMES utf8mb4; insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls, post_link) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaign_id,
@@ -90,6 +90,7 @@ const saveCampaignDetails = async (data) => {
     data.media_type,
     1,
     data.image_urls,
+    data.post_link,
   ]);
 };
 

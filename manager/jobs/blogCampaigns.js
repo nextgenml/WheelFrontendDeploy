@@ -28,6 +28,7 @@ const initiateProcess = async () => {
       content_type: "text",
       collection_id: uuid.v4(),
       media_type: "twitter",
+      post_link: blog.twitterurl,
     });
   }
 };
