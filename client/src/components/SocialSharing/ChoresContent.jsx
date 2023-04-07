@@ -17,7 +17,7 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import styles from "./SocialSharing.module.css";
 // import { convert } from "html-to-text";
 import Chore from "./Chore";
-import { markChoreAsDoneAPI } from "../../API/SocialSharing";
+import { markChoreAsDoneAPI, validateChoreAPI } from "../../API/SocialSharing";
 
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
@@ -51,6 +51,16 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
     }
   };
 
+  const validateChore = async (choreId, action, refChoreId) => {
+    const res = await validateChoreAPI(walletId, choreId, action, {
+      targetChoreId: refChoreId,
+    });
+    if (res) {
+      const chore = chores.filter((c) => c.id === choreId)[0];
+      chore.completed_by_user = 1;
+      setChores([...chores]);
+    }
+  };
   const renderContent = () => {
     if (chores.length)
       return (
@@ -58,7 +68,12 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
           <List>
             {chores.map((chore, index) => {
               return (
-                <Chore chore={chore} index={index} markAsDone={markAsDone} />
+                <Chore
+                  chore={chore}
+                  index={index}
+                  markAsDone={markAsDone}
+                  validateChore={validateChore}
+                />
               );
             })}
           </List>

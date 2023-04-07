@@ -239,6 +239,14 @@ const getOldChores = async (walletId, mediaType, filter) => {
   return results;
 };
 
+const getChoresById = async (choreId) => {
+  const query = `select * from chores where id = ?`;
+
+  const results = await runQueryAsync(query, [choreId]);
+
+  return results[0];
+};
+
 const getChoresByType = async (walletId, mediaType, choreType, filter) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 and cd.is_active = 1 
@@ -266,7 +274,17 @@ const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
     walletId,
   ]);
 };
+const validateChore = async (walletId, choreId, action, targetChoreId) => {
+  const query1 = `update chores set is_completed = ? where id  = ?;`;
+
+  await runQueryAsync(query1, [action === "approve" ? 1 : 2, targetChoreId]);
+
+  const query = `update chores set is_completed = 1, completed_by_user = 1  where id  = ? and wallet_id = ?;`;
+
+  return await runQueryAsync(query, [choreId, walletId]);
+};
 module.exports = {
+  validateChore,
   markChoreAsCompletedByUser,
   getTodayChores,
   getTotalByChore,
@@ -288,4 +306,5 @@ module.exports = {
   markOtherChoreAsCompleted,
   getActiveChoresCount,
   getCampaignPost,
+  getChoresById,
 };

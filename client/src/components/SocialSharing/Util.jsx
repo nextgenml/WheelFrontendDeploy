@@ -60,6 +60,17 @@ export const getChoreDesc = (chore) => {
           - Follow the user in the link below
         </Typography>
       );
+    case "validate":
+      return (
+        <Typography variant="body1">
+          - Validate this work by going to this{" "}
+          <Link href={chore.link_to_post} target={chore.link_to_post}>
+            Post
+          </Link>{" "}
+          and compare with what is posted. If valid, mark as correct. Please
+          make sure you are validating correctly to get paid
+        </Typography>
+      );
     default:
       return null;
   }

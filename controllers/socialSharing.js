@@ -4,6 +4,7 @@ const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
+const { createValidationChore } = require("../manager/chores");
 require("../manager/jobs/postChores");
 
 const getSocialSharingStats = async (req, res) => {
@@ -185,6 +186,7 @@ const markChoreAsCompletedByUser = async (req, res) => {
     const { choreId } = req.params;
 
     await choresRepo.markChoreAsCompletedByUser(walletId, choreId, req.body);
+    createValidationChore(choreId);
     res.json({
       message: "Updated successfully",
     });
@@ -196,7 +198,26 @@ const markChoreAsCompletedByUser = async (req, res) => {
     });
   }
 };
+const validateChore = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    const { choreId, action } = req.params;
+    const { targetChoreId } = req.body;
+
+    await choresRepo.validateChore(walletId, choreId, action, targetChoreId);
+    res.json({
+      message: "Updated successfully",
+    });
+  } catch (error) {
+    logger.error(`error in validateChore: ${error}`);
+    return res.status(400).json({
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+};
 module.exports = {
+  validateChore,
   getChoresByType,
   getSocialSharingStats,
   saveCampaign,
