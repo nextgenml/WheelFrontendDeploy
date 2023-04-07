@@ -181,15 +181,10 @@ const updateCampaign = async (req, res) => {
 };
 const markChoreAsCompletedByUser = async (req, res) => {
   try {
-    const { walletId, choreId } = req.query;
+    const { walletId } = req.query;
+    const { choreId } = req.params;
 
-    if (!walletId)
-      return res.status(400).json({
-        statusCode: 400,
-        message: "wallet data is missing",
-      });
-
-    await choresRepo.markChoreAsCompletedByUser(walletId, choreId);
+    await choresRepo.markChoreAsCompletedByUser(walletId, choreId, req.body);
     res.json({
       message: "Updated successfully",
     });
@@ -197,7 +192,7 @@ const markChoreAsCompletedByUser = async (req, res) => {
     logger.error(`error in markChoreAsCompletedByUser: ${error}`);
     return res.status(400).json({
       statusCode: 500,
-      message: error,
+      message: error.message,
     });
   }
 };

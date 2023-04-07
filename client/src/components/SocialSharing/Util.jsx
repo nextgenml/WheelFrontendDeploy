@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { Box } from "@mui/system";
+import { Link } from "@mui/material";
 
 export const getHeading = (mediaType) => {
   switch (mediaType) {
@@ -18,8 +19,8 @@ export const getHeading = (mediaType) => {
       return null;
   }
 };
-export const getChoreDesc = (mediaType) => {
-  switch (mediaType) {
+export const getChoreDesc = (chore) => {
+  switch (chore.chore_type) {
     case "post":
       return (
         <Typography variant="body1">
@@ -29,19 +30,28 @@ export const getChoreDesc = (mediaType) => {
     case "like":
       return (
         <Typography variant="body1">
-          - Click on the link below to like the post
+          - Click on the link below to like the{" "}
+          <Link href={chore.link_to_post} target={chore.link_to_post}>
+            Post
+          </Link>
         </Typography>
       );
     case "retweet":
       return (
         <Typography variant="body1">
-          - Click on the link below to retweet the post
+          - Click on the link below to retweet the{" "}
+          <Link href={chore.link_to_post} target={chore.link_to_post}>
+            Post
+          </Link>
         </Typography>
       );
     case "comment":
       return (
         <Typography variant="body1">
-          - Click on the link below to comment on the post
+          - Click on the link below to comment on the{" "}
+          <Link href={chore.link_to_post} target={chore.link_to_post}>
+            Post
+          </Link>
         </Typography>
       );
     case "follow":

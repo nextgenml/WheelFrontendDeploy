@@ -6,6 +6,7 @@ import {
   Grid,
   Link,
   TextField,
+  FormLabel,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 // import CardActions from "@mui/material/CardActions";
@@ -20,38 +21,30 @@ import styles from "./SocialSharing.module.css";
 import { Box } from "@mui/system";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { getChoreDesc, getHeading } from "./Util";
+import { getContentFromChatGptAPI } from "../../API/SocialSharing";
 
 const Chore = ({ chore, index, markAsDone }) => {
   const [comment, setComment] = useState({ loading: false, data: "" });
+  const [commentLink, setCommentLink] = useState("");
   const generateComment = async (chore) => {
     setComment((prev) => ({
       ...prev,
       loading: true,
     }));
 
-    try {
-      const res = await fetch(`${config.CHAT_BOT_URL}/collections`, {
-        method: "POST",
-        body: JSON.stringify({
-          msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
-        }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setComment((prev) => ({
-          loading: false,
-          data: data.result,
-        }));
-      } else {
-        alert("Something went wrong. Please try again after sometime");
-      }
-    } catch (error) {
-      alert("Something went wrong. Please try again after sometime");
+    const res = await getContentFromChatGptAPI({
+      msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
+    });
+    if (res) {
+      setComment((prev) => ({
+        loading: false,
+        data: res.result,
+      }));
+    } else {
+      setComment((prev) => ({
+        ...prev,
+        loading: false,
+      }));
     }
   };
   const renderCardBody = (chore) => {
@@ -143,6 +136,7 @@ const Chore = ({ chore, index, markAsDone }) => {
                   placeholder="Click on Generate button below to populate comment"
                   value={comment.data || ""}
                 />
+
                 <Button
                   variant="outlined"
                   sx={{ mt: 1 }}
@@ -160,6 +154,17 @@ const Chore = ({ chore, index, markAsDone }) => {
                 >
                   Copy Text
                 </Button>
+              </Grid>
+              <Grid item md={6}>
+                <FormLabel sx={{ mb: 2 }}>
+                  Paste comment post link after commenting and mark as done
+                </FormLabel>
+                <TextField
+                  fullWidth
+                  placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
+                  value={commentLink}
+                  onChange={(e) => setCommentLink(e.target.value)}
+                />
               </Grid>
             </Grid>
             <Box sx={{ pt: 2 }}>
@@ -185,12 +190,15 @@ const Chore = ({ chore, index, markAsDone }) => {
         <CardContent>
           <Box sx={{ mb: 2 }} display={"flex"} alignItems="center">
             {getHeading(chore.media_type)}
-            {getChoreDesc(chore.chore_type)}
+            {getChoreDesc(chore)}
             <Button
               variant="outlined"
               sx={{ ml: "auto" }}
-              disabled={chore.completed_by_user === 1}
-              onClick={() => markAsDone(chore.id)}
+              disabled={
+                chore.completed_by_user === 1 ||
+                (chore.chore_type === "comment" && (!comment || !commentLink))
+              }
+              onClick={() => markAsDone(chore.id, comment.data, commentLink)}
             >
               {chore.completed_by_user ? "Completed" : "Mark as done"}
             </Button>

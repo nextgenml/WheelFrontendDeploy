@@ -64,10 +64,6 @@ app.get("/social-sharing-chores", socialSharingController.getChoresByType);
 app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
 app.get("/campaigns", socialSharingController.getCampaigns);
 app.post("/update-campaign", socialSharingController.updateCampaign);
-app.post(
-  "/mark-chore-as-done",
-  socialSharingController.markChoreAsCompletedByUser
-);
 
 // quizzes routes
 app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);

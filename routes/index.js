@@ -5,5 +5,6 @@ router.use("/api/v1/spinWheel", require("./spinWheel"));
 router.use("/api/v1/holders", require("./holders"));
 router.use("/api/v1/referrals", require("./referrals"));
 router.use("/api/v1/payments", require("./payments"));
+router.use("/api/v1/socialSharing", require("./socialSharing"));
 
 module.exports = router;

@@ -17,6 +17,7 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import styles from "./SocialSharing.module.css";
 // import { convert } from "html-to-text";
 import Chore from "./Chore";
+import { markChoreAsDoneAPI } from "../../API/SocialSharing";
 
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
@@ -38,19 +39,16 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
     fetchStats();
   }, [menuOption, filter]);
 
-  const markAsDone = async (choreId) => {
-    const res = await fetch(
-      `${config.API_ENDPOINT}/mark-chore-as-done?walletId=${walletId}&choreId=${choreId}`,
-      {
-        method: "POST",
-      }
-    );
-
-    if (res.ok) {
+  const markAsDone = async (choreId, content, contentLink) => {
+    const res = await markChoreAsDoneAPI(walletId, choreId, {
+      content,
+      contentLink,
+    });
+    if (res) {
       const chore = chores.filter((c) => c.id === choreId)[0];
       chore.completed_by_user = 1;
       setChores([...chores]);
-    } else alert("Something went wrong. Please try later");
+    }
   };
 
   const renderContent = () => {

@@ -256,10 +256,15 @@ const getChoresByType = async (walletId, mediaType, choreType, filter) => {
   return results;
 };
 
-const markChoreAsCompletedByUser = async (walletId, choreId) => {
-  const query = `update chores set completed_by_user = 1 where id  = ? and wallet_id = ?;`;
+const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
+  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ? where id  = ? and wallet_id = ?;`;
 
-  return await runQueryAsync(query, [choreId, walletId]);
+  return await runQueryAsync(query, [
+    data.content,
+    data.contentLink,
+    choreId,
+    walletId,
+  ]);
 };
 module.exports = {
   markChoreAsCompletedByUser,
