@@ -4,6 +4,7 @@ const campaignRepo = require("../repository/campaignDetails");
 const uuid = require("uuid");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
+require("../manager/jobs/postChores");
 
 const getSocialSharingStats = async (req, res) => {
   try {

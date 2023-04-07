@@ -74,8 +74,6 @@ const markOtherChoreAsCompleted = async (data) => {
 };
 
 const markChoreAsCompleted = async (data) => {
-  // console.log("markChoreAsCompleted", data);
-
   const existsQuery = `select id from chores where wallet_id = ? and campaign_detail_id = ? and valid_to >= ? and chore_type = ?`;
 
   const existsResults = await runQueryAsync(existsQuery, [
@@ -88,19 +86,13 @@ const markChoreAsCompleted = async (data) => {
   if (existsResults.length) {
     const chore = existsResults[0];
 
-    if (data.choreType === "post") {
-      const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ?, follow_link = ? where id = ?`;
-      return await runQueryAsync(query, [
-        data.linkToPost,
-        data.mediaPostId,
-        data.followLink,
-        chore.id,
-      ]);
-    } else {
-      const query = `update chores set is_completed = 1 where id = ?`;
-
-      return await runQueryAsync(query, [chore.id]);
-    }
+    const query = `update chores set is_completed = 1, link_to_post = ?, media_post_id = ?, follow_link = ? where id = ?`;
+    return await runQueryAsync(query, [
+      data.linkToPost,
+      data.mediaPostId,
+      data.followLink,
+      chore.id,
+    ]);
   } else {
     console.log("result not found", data);
   }

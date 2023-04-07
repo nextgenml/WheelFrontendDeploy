@@ -10,7 +10,7 @@ const {
   getNextUserForChore,
   isEligibleForChore,
 } = require("../../repository/holder");
-const config = require("../../config.js");
+
 const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const logger = require("../../logger");
@@ -18,6 +18,7 @@ const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+const config = require("../../config/env");
 
 const createOtherChores = async (
   campaigns,
