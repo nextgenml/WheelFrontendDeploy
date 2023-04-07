@@ -195,7 +195,13 @@ const validateBlog = async (blogId, isValid, details) => {
   const query = `update saved_prompts set validated_flag = ?, details = ? where id = ? `;
   return await runQueryAsync(query, [isValid, details, blogId]);
 };
+
+const newValidatedBlogs = async () => {
+  const query = `select b.* from saved_prompts b left join campaigns c on c.blog_id = b.id where b.validated_flag = 1 and c.id is null;`;
+  return await runQueryAsync(query, []);
+};
 module.exports = {
+  newValidatedBlogs,
   validateBlog,
   getBlogById,
   updateLinks,

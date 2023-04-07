@@ -43,7 +43,7 @@ const updateLastCheckedDate = async (id, endTime) => {
 };
 
 const saveCampaign = async (data) => {
-  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default, reward) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
+  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default, reward, blog_id) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.client,
@@ -56,6 +56,7 @@ const saveCampaign = async (data) => {
     data.wallet_id,
     data.default === "true" ? 1 : 0,
     config.COST_PER_CHORE,
+    data.blogId,
   ]);
 };
 const deleteCampaign = async (campaignId) => {
