@@ -51,10 +51,8 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
     }
   };
 
-  const validateChore = async (choreId, action, refChoreId) => {
-    const res = await validateChoreAPI(walletId, choreId, action, {
-      targetChoreId: refChoreId,
-    });
+  const validateChore = async (choreId, action, payload) => {
+    const res = await validateChoreAPI(walletId, choreId, action, payload);
     if (res) {
       const chore = chores.filter((c) => c.id === choreId)[0];
       chore.completed_by_user = 1;

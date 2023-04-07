@@ -20,14 +20,10 @@ const { chatGptResponse } = require("../../utils/chatgpt");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const config = require("../../config/env");
 
-const createOtherChores = async (
-  campaigns,
-  sourceChoreType,
-  mediaPostId = null
-) => {
+const createOtherChores = async (campaigns, sourceChoreType, args = {}) => {
   try {
     for (const campaign of campaigns) {
-      // console.log("campaign------", campaign);
+      console.log("campaign------", campaign);
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
 
@@ -81,10 +77,10 @@ const createOtherChores = async (
                 validTo: endTime.format(DATE_TIME_FORMAT),
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
-                linkToPost: campaignPost.link_to_post,
-                mediaPostId: mediaPostId || campaignPost.media_post_id,
+                linkToPost: args["postLink"] || campaignPost.link_to_post,
+                mediaPostId: args["mediaPostId"] || campaignPost.media_post_id,
                 commentSuggestions: comments,
-                content: campaign.content,
+                content: args["content"] || campaign.content,
               });
               noOfPosts -= 1;
             } else {
@@ -156,7 +152,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                       },
                     ],
                     action,
-                    user.postId
+                    { mediaPostId: user.postId }
                   );
               }
             }

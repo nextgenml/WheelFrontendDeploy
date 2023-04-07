@@ -1,10 +1,12 @@
 const choresRepo = require("../repository/chores");
 
 const campaignRepo = require("../repository/campaignDetails");
+const campaign1Repo = require("../repository/campaign");
 const uuid = require("uuid");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
 const { createValidationChore } = require("../manager/chores");
+const { createOtherChores } = require("../manager/jobs/otherChores");
 require("../manager/jobs/postChores");
 
 const getSocialSharingStats = async (req, res) => {
@@ -202,9 +204,33 @@ const validateChore = async (req, res) => {
   try {
     const { walletId } = req.query;
     const { choreId, action } = req.params;
-    const { targetChoreId } = req.body;
+    const chore = await choresRepo.getChoresById(choreId);
 
-    await choresRepo.validateChore(walletId, choreId, action, targetChoreId);
+    await choresRepo.validateChore(
+      walletId,
+      choreId,
+      action,
+      chore.ref_chore_id
+    );
+
+    const campaign = await campaign1Repo.getCampaignForChore(choreId);
+    if (action === "approve") {
+      if (campaign.is_recursive_algo)
+        await createOtherChores(
+          [
+            {
+              ...campaign,
+              content: chore.content,
+            },
+          ],
+          "comment",
+          {
+            mediaPostId: chore.media_post_id,
+            content: chore.content,
+            postLink: chore.link_to_post,
+          }
+        );
+    }
     res.json({
       message: "Updated successfully",
     });

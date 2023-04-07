@@ -274,6 +274,7 @@ const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
     walletId,
   ]);
 };
+
 const validateChore = async (walletId, choreId, action, targetChoreId) => {
   const query1 = `update chores set is_completed = ? where id  = ?;`;
 

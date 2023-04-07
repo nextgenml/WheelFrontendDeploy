@@ -253,7 +253,11 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                   sx={{ mr: 1 }}
                   disabled={!blueScore || chore.completed_by_user !== 0}
                   onClick={() =>
-                    validateChore(chore.id, "reject", chore.ref_chore_id)
+                    validateChore(chore.id, "reject", {
+                      targetChoreId: chore.ref_chore_id,
+                      mediaPostId: chore.media_post_id,
+                      content: chore.content,
+                    })
                   }
                 >
                   Reject
@@ -262,7 +266,11 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                   variant="contained"
                   disabled={!blueScore || chore.completed_by_user !== 0}
                   onClick={() =>
-                    validateChore(chore.id, "approve", chore.ref_chore_id)
+                    validateChore(chore.id, "approve", {
+                      targetChoreId: chore.ref_chore_id,
+                      mediaPostId: chore.media_post_id,
+                      content: chore.content,
+                    })
                   }
                 >
                   Approve

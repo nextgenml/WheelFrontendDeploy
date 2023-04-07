@@ -24,6 +24,9 @@ const createValidationChore = async (choreId) => {
         nextUser.wallet_id,
         "validate"
       );
+
+      const split = chore.target_post_link.split("/");
+      const postId = split[split.length - 1];
       if (isEligible) {
         const startTime = moment();
         const endTime = moment(startTime).add(
@@ -40,7 +43,7 @@ const createValidationChore = async (choreId) => {
           value: campaign.reward,
           ref_chore_id: chore.id,
           linkToPost: chore.target_post_link,
-          mediaPostId: chore.media_post_id,
+          mediaPostId: postId,
           content: chore.target_post,
         });
         break;
