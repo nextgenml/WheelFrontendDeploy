@@ -43,6 +43,7 @@ const createOtherChores = async (
         noOfPosts -= activeChoresCount;
         const skippedUsers = [-1];
         const skippedCampaigns = [-1];
+        console.log("noOfPosts", noOfPosts);
         while (noOfPosts > 0) {
           const campaignPost = await getCampaignPost(
             campaign.id,
@@ -57,6 +58,7 @@ const createOtherChores = async (
             skippedUsers
           );
 
+          console.log("nextUser", nextUser);
           if (nextUser) {
             const isEligible = await isEligibleForChore(
               nextUser.wallet_id,

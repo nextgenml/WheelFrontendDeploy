@@ -34,7 +34,8 @@ const config = require("../../config/env");
 const createPostChores = async (campaigns) => {
   try {
     for (const campaign of campaigns) {
-      if (campaign.name === NXML_BLOG_CAMPAIGN) continue;
+      console.log("campaign.campaign", campaign.campaign);
+      if (campaign.campaign === NXML_BLOG_CAMPAIGN) continue;
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
       let noOfPosts = successCriteria.POST;
@@ -146,10 +147,10 @@ rule.minute = minutes;
 const initiateAlgorithm = async () => {
   logger.info("started chores work distribution");
   const endTime = moment().subtract(10, "seconds").toISOString();
-  await updateWallets(new Date());
+  // await updateWallets(new Date());
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
-
+  console.log("campaigns", campaigns);
   // await checkIfPostsChoreCompleted(postedCampaigns, endTime);
   // await checkIfOtherChoresCompleted(postedCampaigns, endTime);
   // await checkIfFollowComplete();

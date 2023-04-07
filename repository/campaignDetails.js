@@ -4,7 +4,7 @@ const config = require("../config/env");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, cd.content, c.success_factor, c.reward, c.is_recursive_algo 
+  const query = `select cd.id, cd.media_type, cd.content, c.success_factor, c.reward, c.is_recursive_algo, c.campaign
                 from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
