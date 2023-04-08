@@ -13,6 +13,7 @@ import ReferralList from "./ReferralList";
 import styles from "./Referrals.module.css";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import config from "../../config";
+import { useSearchParams } from "react-router-dom";
 const Referrals = () => {
   const { address } = useAccount();
   const [twitter, setTwitter] = useState(
@@ -23,6 +24,13 @@ const Referrals = () => {
   );
   const [refresh, setRefresh] = useState(0);
   const [inviteLink, setInviteLink] = useState("");
+
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
+  const searchWalletId = searchParams.get("walletId");
+  const finalWallet =
+    address === config.ADMIN_WALLET_1 ? searchWalletId || address : address;
+
   const onSubmit = async () => {
     const saved = await saveReferralAPI(address, { telegram, twitter });
     if (saved) setRefresh((prev) => prev + 1);
@@ -107,6 +115,7 @@ const Referrals = () => {
       </Box>
       <ReferralList
         address={address}
+        finalWallet={finalWallet}
         count={refresh}
         setInvite={(x) => setInviteLink(x)}
       />

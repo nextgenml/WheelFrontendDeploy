@@ -23,6 +23,7 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import config from "../../config";
 
 const headers = [
   "Initiative",
@@ -40,6 +41,9 @@ export default function PostedBlogs() {
   // eslint-disable-next-line no-unused-vars
   const [searchParams, _] = useSearchParams();
   const queryDate = searchParams.get("date") || moment().format("YYYY-MM-DD");
+  const searchWalletId = searchParams.get("walletId");
+  const finalWallet =
+    address === config.ADMIN_WALLET_1 ? searchWalletId || address : address;
 
   const [blogs, setBlogs] = React.useState([]);
   const [page, setPage] = React.useState(0);
@@ -50,7 +54,7 @@ export default function PostedBlogs() {
   const [selectedDate, setSelectedDate] = React.useState(queryDate);
   const fetchData = async () => {
     const res = await fetchPostedBlogsAPI(
-      address,
+      finalWallet,
       page,
       rowsPerPage,
       selectedDate || queryDate

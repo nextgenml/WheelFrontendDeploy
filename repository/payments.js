@@ -1,5 +1,6 @@
 const moment = require("moment");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const createPayment = async (walletId, data) => {
   const query = `insert into payments (type, is_paid, amount, wallet_id, details, earned_at) values(?, ?, ?, ?, ?, ?);`;
 
@@ -23,12 +24,34 @@ const blogsDoneOn = async (walletId, date) => {
   return results[0];
 };
 
-const getPayments = async (walletId, pageSize, offset) => {
-  const query = `select * from payments where wallet_id = ? order by id desc limit ? offset ?;`;
-  const data = await runQueryAsync(query, [walletId, pageSize, offset]);
+const getPayments = async (
+  walletId,
+  pageSize,
+  offset,
+  fromDate,
+  toDate,
+  isAdmin,
+  search
+) => {
+  const start = moment(fromDate).startOf("day").format(DATE_TIME_FORMAT);
+  const end = moment(toDate).startOf("day").format(DATE_TIME_FORMAT);
+  const query = `select * from payments where earned_at >= ? and earned_at <= ? and (wallet_id = ? or 1 = ?) order by id desc limit ? offset ?;`;
+  const data = await runQueryAsync(query, [
+    start,
+    end,
+    search || walletId,
+    isAdmin && search ? 0 : 1,
+    pageSize,
+    offset,
+  ]);
 
-  const query1 = `select count(1) as count from payments where wallet_id = ?;`;
-  const count = await runQueryAsync(query1, [walletId]);
+  const query1 = `select count(1) as count from payments where earned_at >= ? and earned_at <= ? and (wallet_id = ? or 1 = ?);`;
+  const count = await runQueryAsync(query1, [
+    start,
+    end,
+    search || walletId,
+    isAdmin && search ? 0 : 1,
+  ]);
 
   return [data, count[0].count];
 };

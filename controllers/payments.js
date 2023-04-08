@@ -1,14 +1,19 @@
+const config = require("../config/env");
 const logger = require("../logger");
 const paymentsRepo = require("../repository/payments");
 
 const getPayments = async (req, res) => {
   try {
-    const { walletId, pageNo, pageSize } = req.query;
+    const { walletId, pageNo, pageSize, fromDate, toDate, search } = req.query;
 
     const [data, total_count] = await paymentsRepo.getPayments(
       walletId,
       parseInt(pageSize) || 10,
-      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
+      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0),
+      fromDate,
+      toDate,
+      config.ADMIN_WALLET_1 == walletId,
+      search
     );
 
     return res.status(200).json({
