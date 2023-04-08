@@ -1,9 +1,18 @@
-import { Grid, TextField, Button, Typography } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  InputAdornment,
+} from "@mui/material";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import { saveReferralAPI } from "../../API/Referrals";
 import ReferralList from "./ReferralList";
 import styles from "./Referrals.module.css";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import config from "../../config";
 const Referrals = () => {
   const { address } = useAccount();
   const [twitter, setTwitter] = useState(
@@ -13,6 +22,7 @@ const Referrals = () => {
     localStorage.getItem(`${address}_referral_telegramLink`)
   );
   const [refresh, setRefresh] = useState(0);
+  const [inviteLink, setInviteLink] = useState("");
   const onSubmit = async () => {
     const saved = await saveReferralAPI(address, { telegram, twitter });
     if (saved) setRefresh((prev) => prev + 1);
@@ -69,7 +79,37 @@ const Referrals = () => {
           </Button>
         </Grid>
       </Grid>
-      <ReferralList address={address} count={refresh} />
+      <Box className={styles.inviteBox}>
+        <Typography variant="h6">
+          Or Copy InviteLink
+          <TextField
+            disabled
+            value={`${config.API_ENDPOINT}/${inviteLink}`}
+            sx={{ width: "300px", ml: 2 }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Button>
+                    <ContentCopyIcon
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          `${config.API_ENDPOINT}/${inviteLink}`
+                        )
+                      }
+                    />
+                  </Button>
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+        </Typography>
+      </Box>
+      <ReferralList
+        address={address}
+        count={refresh}
+        setInvite={(x) => setInviteLink(x)}
+      />
     </>
   );
 };

@@ -29,7 +29,7 @@ const headers = [
   "Referral Paid",
 ];
 
-export default function ReferralList({ address, count }) {
+export default function ReferralList({ address, count, setInvite }) {
   const [referrals, setReferrals] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -40,6 +40,7 @@ export default function ReferralList({ address, count }) {
     if (res.referrals) {
       setReferrals(res.referrals);
       setTotalCount(res.totalCount);
+      setInvite(res.inviteLink);
     }
   };
 

@@ -31,6 +31,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Referrals from "./components/Referrals/Referrals";
 import PostedBlogs from "./components/PostedBlogs/PostedBlogs";
 import TotalEarnings from "./components/TotalEarnings/TotalEarnings";
+import Invites from "./components/Invites/Invites";
 
 function App() {
   const location = useLocation();
@@ -77,6 +78,7 @@ function App() {
         <Route path="/user-quizzes" element={<Quizzes />} />
         <Route path="/posted-blogs" element={<PostedBlogs />} />
         <Route path="/payments" element={<TotalEarnings />} />
+        <Route path="/referrals/inviteCodes/:code" element={<Invites />} />
       </Routes>
       <Footer />
     </>

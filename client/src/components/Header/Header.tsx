@@ -184,6 +184,7 @@ export default function Header(props: Props) {
             if (saved) fetchSocialLinks();
           }}
           walletId={address}
+          inviteCode=""
         />
       )}
       <Hidden smDown>

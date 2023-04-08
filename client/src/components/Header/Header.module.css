@@ -13,6 +13,7 @@
   margin-bottom: 30px;
 }
 .subtitle {
+  width: 330px;
   padding: 16px;
   padding-top: 0;
   color: var(--bs-danger);
