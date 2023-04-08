@@ -25,7 +25,7 @@ const headers = [
   "Facebook",
   "LinkedIn",
   "Criteria Met",
-  "Criteria Met At",
+  "Criteria Met Date",
   "Referral Paid",
 ];
 
