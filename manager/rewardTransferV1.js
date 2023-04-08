@@ -2,6 +2,7 @@
 const ethers = require("ethers");
 const config = require("../config/env");
 const logger = require("../logger");
+const { timer } = require("../utils");
 // provider: Infura or Etherscan will be automatically chosen
 let provider = new ethers.providers.JsonRpcProvider(config.RPC_URL);
 // Sender private key:
@@ -39,6 +40,7 @@ const processPrizesV1 = async (winners, callback) => {
     const success = await distributeReward(item.walletId, item.prize);
     if (success) {
       await callback(item.id);
+      await timer(10000);
       logger.info(`processPrizes reward distribution: completed: ${item.id}`);
     } else
       logger.error(
