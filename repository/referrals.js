@@ -1,5 +1,6 @@
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { runQueryAsync } = require("../utils/spinwheelUtil");
-
+const moment = require("moment");
 const create = async (referer, twitter, telegram) => {
   const query = `insert into referrals(referer, referee_twitter, referee_telegram, referred_at) values(?, ?, ?, now())`;
   return await runQueryAsync(query, [referer, twitter, telegram]);
@@ -47,7 +48,14 @@ const update = async (id, paid) => {
   const query = `update referrals set paid_referer = 1 where id = ?`;
   return await runQueryAsync(query, [paid, id]);
 };
+const topReferrals = async () => {
+  const query = `select referer as wallet_id, count(1) as count from referrals where criteria_met = 1 and criteria_met_at >= ? group by referer order by 2 desc limit 10`;
+  return await runQueryAsync(query, [
+    moment().startOf("month").format(DATE_TIME_FORMAT),
+  ]);
+};
 module.exports = {
+  topReferrals,
   create,
   checkReplica,
   getReferrals,

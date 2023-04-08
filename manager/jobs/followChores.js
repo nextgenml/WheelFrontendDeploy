@@ -7,13 +7,14 @@ const {
   getHoldersByWalletId,
   getActiveMediaHolders,
 } = require("../../repository/holder");
-const config = require("../../config.js");
+
 const moment = require("moment");
 const { shuffleArray } = require("../../utils");
 const logger = require("../../logger");
 const { followingUsers } = require("../../utils/mediaClients/twitter");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const { createChore } = require("../../repository/chores");
+const config = require("../../config/env");
 
 const createFollowChores = async (campaigns) => {
   try {

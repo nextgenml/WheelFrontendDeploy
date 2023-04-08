@@ -95,9 +95,8 @@ const isUrlValid = async (url) => {
       console.log("status", res.status);
     }
   } catch (error) {
-    console.log("error", error);
+    console.log("error", url, error.message);
   }
-  console.log("result", result);
   return result;
 };
 

@@ -9,7 +9,6 @@ const {
   nextUserForPost,
   isEligibleForChore,
 } = require("../../repository/holder");
-const config = require("../../config.js");
 const {
   createChore,
   markChoreAsCompleted,
@@ -29,10 +28,14 @@ const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
 const { updateWallets } = require("../wallet");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+const { NXML_BLOG_CAMPAIGN } = require("../../constants");
+const config = require("../../config/env");
 
 const createPostChores = async (campaigns) => {
   try {
     for (const campaign of campaigns) {
+      console.log("campaign.campaign", campaign.campaign);
+      if (campaign.campaign === NXML_BLOG_CAMPAIGN) continue;
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
       let noOfPosts = successCriteria.POST;
@@ -142,14 +145,15 @@ rule.hour = hours;
 rule.minute = minutes;
 
 const initiateAlgorithm = async () => {
+  logger.info("started chores work distribution");
   const endTime = moment().subtract(10, "seconds").toISOString();
-  await updateWallets(new Date());
+  // await updateWallets(new Date());
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
-
-  await checkIfPostsChoreCompleted(postedCampaigns, endTime);
-  await checkIfOtherChoresCompleted(postedCampaigns, endTime);
-  await checkIfFollowComplete();
+  console.log("campaigns", campaigns);
+  // await checkIfPostsChoreCompleted(postedCampaigns, endTime);
+  // await checkIfOtherChoresCompleted(postedCampaigns, endTime);
+  // await checkIfFollowComplete();
 
   await createPostChores(campaigns);
   await createOtherChores(campaigns, "post");
@@ -167,7 +171,7 @@ schedule.scheduleJob(rule, async () => {
   await initiateAlgorithm();
 });
 
-initiateAlgorithm();
+// initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));

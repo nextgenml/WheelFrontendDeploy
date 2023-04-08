@@ -1,9 +1,14 @@
 const choresRepo = require("../repository/chores");
 
 const campaignRepo = require("../repository/campaignDetails");
+const campaign1Repo = require("../repository/campaign");
 const uuid = require("uuid");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
+const { createValidationChore } = require("../manager/chores");
+const { createOtherChores } = require("../manager/jobs/otherChores");
+require("../manager/jobs/postChores");
+require("../manager/jobs/validationChore");
 
 const getSocialSharingStats = async (req, res) => {
   try {
@@ -180,15 +185,11 @@ const updateCampaign = async (req, res) => {
 };
 const markChoreAsCompletedByUser = async (req, res) => {
   try {
-    const { walletId, choreId } = req.query;
+    const { walletId } = req.query;
+    const { choreId } = req.params;
 
-    if (!walletId)
-      return res.status(400).json({
-        statusCode: 400,
-        message: "wallet data is missing",
-      });
-
-    await choresRepo.markChoreAsCompletedByUser(walletId, choreId);
+    await choresRepo.markChoreAsCompletedByUser(walletId, choreId, req.body);
+    createValidationChore(choreId);
     res.json({
       message: "Updated successfully",
     });
@@ -196,11 +197,54 @@ const markChoreAsCompletedByUser = async (req, res) => {
     logger.error(`error in markChoreAsCompletedByUser: ${error}`);
     return res.status(400).json({
       statusCode: 500,
-      message: error,
+      message: error.message,
+    });
+  }
+};
+const validateChore = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    const { choreId, action } = req.params;
+    const chore = await choresRepo.getChoresById(choreId);
+
+    await choresRepo.validateChore(
+      walletId,
+      choreId,
+      action,
+      chore.ref_chore_id
+    );
+
+    const campaign = await campaign1Repo.getCampaignForChore(choreId);
+    if (action === "approve") {
+      if (campaign.is_recursive_algo)
+        await createOtherChores(
+          [
+            {
+              ...campaign,
+              content: chore.content,
+            },
+          ],
+          "comment",
+          {
+            mediaPostId: chore.media_post_id,
+            content: chore.content,
+            postLink: chore.link_to_post,
+          }
+        );
+    }
+    res.json({
+      message: "Updated successfully",
+    });
+  } catch (error) {
+    logger.error(`error in validateChore: ${error}`);
+    return res.status(400).json({
+      statusCode: 500,
+      message: error.message,
     });
   }
 };
 module.exports = {
+  validateChore,
   getChoresByType,
   getSocialSharingStats,
   saveCampaign,

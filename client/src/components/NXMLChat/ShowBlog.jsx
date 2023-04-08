@@ -11,7 +11,7 @@ import {
 import config from "../../config";
 import { useState } from "react";
 
-function ShowBlog({ onClose, currentRow }) {
+function ShowBlog({ onClose, currentRow, hideUpdate }) {
   const [blog, setBlog] = useState(currentRow.blog);
   const onUpdate = async () => {
     let data = {
@@ -57,10 +57,16 @@ function ShowBlog({ onClose, currentRow }) {
           />
         </Box>
       </DialogContent>
+
       <DialogActions>
-        <Button variant="contained" onClick={onUpdate}>
-          Update
+        <Button variant="outlined" onClick={onClose}>
+          Close
         </Button>
+        {!hideUpdate && (
+          <Button variant="contained" onClick={onUpdate}>
+            Update
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

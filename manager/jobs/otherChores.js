@@ -10,7 +10,7 @@ const {
   getNextUserForChore,
   isEligibleForChore,
 } = require("../../repository/holder");
-const config = require("../../config.js");
+
 const { createChore } = require("../../repository/chores");
 const moment = require("moment");
 const logger = require("../../logger");
@@ -18,15 +18,12 @@ const { getTwitterActionFunc } = require("../../utils/mediaClients/twitter");
 
 const { chatGptResponse } = require("../../utils/chatgpt");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+const config = require("../../config/env");
 
-const createOtherChores = async (
-  campaigns,
-  sourceChoreType,
-  mediaPostId = null
-) => {
+const createOtherChores = async (campaigns, sourceChoreType, args = {}) => {
   try {
     for (const campaign of campaigns) {
-      // console.log("campaign------", campaign);
+      console.log("campaign------", campaign);
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
 
@@ -42,6 +39,7 @@ const createOtherChores = async (
         noOfPosts -= activeChoresCount;
         const skippedUsers = [-1];
         const skippedCampaigns = [-1];
+        console.log("noOfPosts", noOfPosts);
         while (noOfPosts > 0) {
           const campaignPost = await getCampaignPost(
             campaign.id,
@@ -56,6 +54,7 @@ const createOtherChores = async (
             skippedUsers
           );
 
+          console.log("nextUser", nextUser);
           if (nextUser) {
             const isEligible = await isEligibleForChore(
               nextUser.wallet_id,
@@ -78,10 +77,10 @@ const createOtherChores = async (
                 validTo: endTime.format(DATE_TIME_FORMAT),
                 value: campaign.reward,
                 ref_chore_id: campaignPost.id,
-                linkToPost: campaignPost.link_to_post,
-                mediaPostId: mediaPostId || campaignPost.media_post_id,
+                linkToPost: args["postLink"] || campaignPost.link_to_post,
+                mediaPostId: args["mediaPostId"] || campaignPost.media_post_id,
                 commentSuggestions: comments,
-                content: campaign.content,
+                content: args["content"] || campaign.content,
               });
               noOfPosts -= 1;
             } else {
@@ -153,7 +152,7 @@ const checkIfOtherChoresCompleted = async (postedCampaigns, endTime) => {
                       },
                     ],
                     action,
-                    user.postId
+                    { mediaPostId: user.postId }
                   );
               }
             }

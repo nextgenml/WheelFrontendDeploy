@@ -4,12 +4,13 @@ const config = require("../config/env");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 
 const getActiveCampaigns = async () => {
-  const query = `select cd.id, cd.media_type, cd.content, c.success_factor, c.reward, c.is_recursive_algo 
+  const query = `select cd.id, cd.media_type, cd.content, c.success_factor, c.reward, c.is_recursive_algo, c.campaign
                 from campaign_details cd 
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
-                and c.start_time <= now() and c.end_time >= now() and c.is_active = 1 and c.is_default = 0
-                and cd.is_active = 1 and cd.content_type = 'text'`;
+                and c.start_time <= now() and c.end_time >= now() and c.is_active = 1
+                and cd.is_active = 1 and cd.content_type = 'text'
+                order by is_default`;
 
   return await runQueryAsync(query, []);
 };
@@ -43,7 +44,7 @@ const updateLastCheckedDate = async (id, endTime) => {
 };
 
 const saveCampaign = async (data) => {
-  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default, reward) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
+  const query = `insert into campaigns (client, campaign, start_time, end_time, minimum_check, success_factor, is_active, wallet_id, is_default, reward, blog_id, is_recursive_algo) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.client,
@@ -56,6 +57,8 @@ const saveCampaign = async (data) => {
     data.wallet_id,
     data.default === "true" ? 1 : 0,
     config.COST_PER_CHORE,
+    data.blogId,
+    data.is_recursive_algo,
   ]);
 };
 const deleteCampaign = async (campaignId) => {
@@ -77,7 +80,7 @@ const updateCampaign = async (campaignId, isActive, isRecursive) => {
 };
 
 const saveCampaignDetails = async (data) => {
-  const query = `SET NAMES utf8mb4; insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls) values(?, ?, ?, ?, ?, ? ,?, ?, ?);`;
+  const query = `SET NAMES utf8mb4; insert into campaign_details (campaign_id, content, content_type, start_time, end_time, collection_id, media_type, is_active, image_urls, post_link) values(?, ?, ?, ?, ?, ? ,?, ?, ?, ?);`;
 
   return await runQueryAsync(query, [
     data.campaign_id,
@@ -89,6 +92,7 @@ const saveCampaignDetails = async (data) => {
     data.media_type,
     1,
     data.image_urls,
+    data.post_link,
   ]);
 };
 

@@ -1,7 +1,8 @@
 const { TwitterApi, TwitterV2IncludesHelper } = require("twitter-api-v2");
-const config = require("../../config.js");
+
 const logger = require("../../logger.js");
 const { timer } = require("../index.js");
+const config = require("../../config/env.js");
 
 let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;

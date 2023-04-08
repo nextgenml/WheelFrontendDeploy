@@ -4,22 +4,25 @@ const moment = require("moment");
 const holderRepo = require("../repository/holder");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { isUrlValid } = require("../utils");
+const logger = require("../logger");
+
 const getPromotedBlogs = async (walletId) => {
   const eligibleWallets = await promotionsRepo.eligibleWallets(walletId);
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
 };
 
-const isEligibleForNextSpin = async (walletId, lastActionAt) => {
+const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
   const blogs = await blogsRepo.blogsSince(
     walletId,
     moment(lastActionAt).startOf("day").format(DATE_TIME_FORMAT)
   );
 
-  const groups = groupBlogsByDate(blogs);
+  const groups = groupBlogsByDate(blogs, includeToday);
 
   const diffDays =
     moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
 
+  console.log("diffDays", diffDays, Object.keys(groups).length);
   if (diffDays > Object.keys(groups).length) return false;
 
   for (const date of Object.keys(groups)) {
@@ -29,13 +32,15 @@ const isEligibleForNextSpin = async (walletId, lastActionAt) => {
 
     const validBlogs = [];
     for (const blog of postedBlogs) {
-      const res = await areLinksValid(walletId, {
-        facebookLink: blog.facebookurl,
-        mediumLink: blog.mediumurl,
-        linkedinLink: blog.linkedinurl,
-        twitterLink: blog.twitterurl,
-      });
-      if (res.valid) validBlogs.push(blog);
+      if (!blog.validated_flag) {
+        const res = await areLinksValid(walletId, {
+          facebookLink: blog.facebookurl,
+          mediumLink: blog.mediumurl,
+          linkedinLink: blog.linkedinurl,
+          twitterLink: blog.twitterurl,
+        });
+        if (res.valid) validBlogs.push(blog);
+      }
     }
     if (validBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
   }
@@ -80,13 +85,16 @@ const referralMet = async (twitter, referredAt) => {
 
     const validBlogs = [];
     for (const blog of postedBlogs) {
-      const res = await areLinksValid(walletId, {
-        facebookLink: blog.facebookurl,
-        mediumLink: blog.mediumurl,
-        linkedinLink: blog.linkedinurl,
-        twitterLink: blog.twitterurl,
-      });
-      if (res.valid) validBlogs.push(blog);
+      if (blog.validated_flag) validBlogs.push(blog);
+      else {
+        const res = await areLinksValid(walletId, {
+          facebookLink: blog.facebookurl,
+          mediumLink: blog.mediumurl,
+          linkedinLink: blog.linkedinurl,
+          twitterLink: blog.twitterurl,
+        });
+        if (res.valid) validBlogs.push(blog);
+      }
     }
     if (validBlogs.length >= process.env.MINIMUM_BLOGS_PER_DAY)
       return {
@@ -105,7 +113,7 @@ const areLinksValid = async (walletId, links) => {
 
   if (!facebookLink || !mediumLink || !linkedinLink || !twitterLink)
     return {
-      message: "Some of the links are missing",
+      message: ["Some of the links are missing"],
       valid: false,
     };
 
@@ -113,17 +121,15 @@ const areLinksValid = async (walletId, links) => {
 
   if (!account)
     return {
-      message: "Account is missing",
+      message: ["Account is missing"],
       valid: false,
     };
 
+  const message = [];
   if (account.medium_link) {
     const validLink = await isUrlValid(mediumLink);
     if (!mediumLink.startsWith(account.medium_link) || !validLink)
-      return {
-        message: "Invalid Medium Link",
-        valid: false,
-      };
+      message.push("Invalid Medium Link");
   }
 
   if (account.twitter_link) {
@@ -131,30 +137,21 @@ const areLinksValid = async (walletId, links) => {
       !twitterLink.startsWith(account.twitter_link) ||
       !(await isUrlValid(twitterLink))
     )
-      return {
-        message: "Invalid Twitter Link",
-        valid: false,
-      };
+      message.push("Invalid Twitter Link");
   }
 
   if (account.linkedin_link) {
     const link = account.linkedin_link.replace("/in/", "/posts/");
     if (!linkedinLink.startsWith(link) || !(await isUrlValid(linkedinLink)))
-      return {
-        message: "Invalid LinkedIn Link",
-        valid: false,
-      };
+      message.push("Invalid LinkedIn Link");
   }
   if (account.facebook_link) {
     if (!(await isUrlValid(facebookLink)))
-      return {
-        message: "Invalid Facebook Link",
-        valid: false,
-      };
+      message.push("Invalid Facebook Link");
   }
   return {
-    valid: true,
-    message: "",
+    valid: message.length === 0,
+    message,
   };
 };
 
@@ -189,10 +186,26 @@ const replaceTrailingSlash = (value) => {
   return value;
 };
 
+const validateBlog = async (blogId) => {
+  try {
+    const blog = await blogsRepo.getBlogById(blogId);
+    const { valid, message } = await areLinksValid(blog.wallet_address, {
+      facebookLink: blog.facebookurl,
+      mediumLink: blog.mediumurl,
+      linkedinLink: blog.linkedinurl,
+      twitterLink: blog.twitterurl,
+    });
+
+    await blogsRepo.validateBlog(blogId, valid, message.join(", "));
+  } catch (error) {
+    logger.error(`error in validateBlog: ${error}`);
+  }
+};
 module.exports = {
   getPromotedBlogs,
-  isEligibleForNextSpin,
+  hasPostedValidBlogs,
   validDomains,
   replaceTrailingSlash,
   referralMet,
+  validateBlog,
 };

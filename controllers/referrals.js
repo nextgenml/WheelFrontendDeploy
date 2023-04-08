@@ -6,6 +6,7 @@ const { blogsSince } = require("../repository/blogs");
 const { getByTwitter } = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { formatTransactionId } = require("../utils/spinwheelUtil");
 require("../manager/jobs/referrals");
 const get = async (req, res) => {
   try {
@@ -96,7 +97,29 @@ const update = async (req, res) => {
       message: "Create successful",
     });
   } catch (error) {
-    logger.info(`Referral create: ${error}`);
+    logger.info(`Referral update: ${error}`);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+const topReferrals = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    const results = await referralsRepo.topReferrals();
+    for (const res of results) {
+      res.wallet_id = formatTransactionId(
+        res.wallet_id,
+        walletId === config.ADMIN_WALLET,
+        walletId
+      );
+    }
+    return res.json({
+      data: results,
+    });
+  } catch (error) {
+    logger.info(`topReferrals: ${error}`);
     return res.status(500).json({
       error: error.message,
     });
@@ -106,4 +129,5 @@ module.exports = {
   create,
   get,
   update,
+  topReferrals,
 };
