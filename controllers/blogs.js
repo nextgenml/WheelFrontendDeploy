@@ -196,8 +196,11 @@ const saveBlogData = async (req, res) => {
         .json({ msg: "Record already saved. You cannot save again" });
     }
 
-    await blogsRepo.saveBlogData(req.body, image_urls.toString());
-
+    const { insertId } = await blogsRepo.saveBlogData(
+      req.body,
+      image_urls.toString()
+    );
+    blogsManager.validateBlog(insertId);
     return res.status(200).json({
       msg: "Saved successfully",
     });

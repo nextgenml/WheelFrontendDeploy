@@ -137,7 +137,8 @@ export default function PostedBlogs() {
                     </Button>
                   </TableCell>
                   <TableCell>{row.create_date}</TableCell>
-                  <TableCell>{row.validated_flag}</TableCell>
+                  <TableCell>{row.validated_flag ? "Yes" : "No"}</TableCell>
+                  <TableCell>{row.details}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

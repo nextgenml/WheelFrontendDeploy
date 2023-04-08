@@ -47,7 +47,7 @@ export default function TotalEarnings() {
       <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
         <TableContainer component={Paper} sx={{ p: 2 }}>
           <Typography variant="h6" className={styles.tableHeader}>
-            Your Payments
+            Details
           </Typography>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>

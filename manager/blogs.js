@@ -146,7 +146,10 @@ const areLinksValid = async (walletId, links) => {
       message.push("Invalid LinkedIn Link");
   }
   if (account.facebook_link) {
-    if (!(await isUrlValid(facebookLink)))
+    if (
+      !facebookLink.includes(account.facebook_link) ||
+      !(await isUrlValid(facebookLink))
+    )
       message.push("Invalid Facebook Link");
   }
   return {
