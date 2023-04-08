@@ -143,7 +143,7 @@ export default function Home() {
                 target="_blank"
                 className={styles.appBtn}
               >
-                Social Media
+                Work Area
               </Button>
             </Box>
           </Grid>
