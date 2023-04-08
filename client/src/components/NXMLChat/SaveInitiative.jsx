@@ -23,6 +23,7 @@ const SaveInitiative = ({
   index,
   isBlogPage,
   cachedData,
+  promotedBlog,
 }) => {
   const { initiative } = useParams();
   const { address } = useAccount();
@@ -30,7 +31,6 @@ const SaveInitiative = ({
   const [isValidatedFlag, setIsValidatedFlag] = useState(null);
   const [isPaidFlag, setPaidFlag] = useState(null);
   const [result, setResult] = useState(cachedData.blog || "");
-  const [link, setLink] = useState("");
   const [mediumlink, setmediumLink] = useState(cachedData.medium || "");
   const [twitterlink, settwitterLink] = useState(cachedData.twitter || "");
   const [hashword, sethashWord] = useState(cachedData.hashes || "");
@@ -226,7 +226,7 @@ const SaveInitiative = ({
   const sanitizeResponse = (value, type) => {
     const result = value.replace(/\d+\.\s/gm, "");
     if (type === "keywords") return "Nexgenml\n" + result;
-    else return "#nexgenml\n" + result;
+    else return "#Nexgenml\n" + result;
   };
   async function get_gpt_data(input, callFor) {
     const url = "https://backend.chatbot.nexgenml.com/collections";
@@ -353,7 +353,6 @@ const SaveInitiative = ({
     }
   }, [
     isCopyDisable,
-    link,
     mediumlink,
     twitterlink,
     facebooklink,
@@ -563,7 +562,7 @@ const SaveInitiative = ({
               className="form-control"
               id="hashword"
               placeholder="#nextgenml"
-              value={hashword}
+              value={isPromote ? promotedBlog.hashword : hashword}
               readOnly
               style={{ height: "100px" }}
             ></textarea>
@@ -573,8 +572,8 @@ const SaveInitiative = ({
               type="text"
               className="form-control"
               id="keyword"
-              placeholder="trending keywords"
-              value={keyWord}
+              placeholder="Nexgenml"
+              value={isPromote ? promotedBlog.keyword : keyWord}
               readOnly
               style={{ height: "100px" }}
             ></textarea>
