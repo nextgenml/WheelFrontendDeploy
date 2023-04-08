@@ -107,7 +107,7 @@ const createParticipants = async (nextSpin) => {
 
       winners = await processWinners(currParticipants, nextSpin);
 
-      await markSpinAsDone(spin.id);
+      await markSpinAsDone(spin?.id);
 
       if (nextSpin.type === "daily" || nextSpin.type === "adhoc") break;
 
