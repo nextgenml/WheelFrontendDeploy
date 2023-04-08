@@ -223,6 +223,11 @@ const SaveInitiative = ({
     ]);
   };
 
+  const sanitizeResponse = (value, type) => {
+    const result = value.replace(/\d+\.\s/gm, "");
+    if (type === "keywords") return "Nexgenml\n" + result;
+    else return "#nexgenml\n" + result;
+  };
   async function get_gpt_data(input, callFor) {
     const url = "https://backend.chatbot.nexgenml.com/collections";
     let response = await fetch(url, {
@@ -239,13 +244,13 @@ const SaveInitiative = ({
       let res = await response.json();
       let resData = res.result;
       let indexOfone;
-      if (callFor == "hashwords") {
+      if (callFor === "hashwords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.indexOf("1. ");
         } else {
           indexOfone = resData.indexOf("#");
         }
-        sethashWord(resData.substr(indexOfone));
+        sethashWord(sanitizeResponse(resData.substr(indexOfone)));
         if (isBlogPage)
           updateInCache(
             initiative,
@@ -253,13 +258,13 @@ const SaveInitiative = ({
             resData.substr(indexOfone),
             index
           );
-      } else if (callFor == "keywords") {
+      } else if (callFor === "keywords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.substr(resData.indexOf("1. "));
         } else {
           indexOfone = resData;
         }
-        setkeyWord(indexOfone);
+        setkeyWord(sanitizeResponse(indexOfone, "keywords"));
         if (isBlogPage)
           updateInCache(initiative, "keywords", indexOfone, index);
       } else {
