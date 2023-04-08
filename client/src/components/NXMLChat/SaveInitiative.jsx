@@ -576,10 +576,12 @@ const SaveInitiative = ({
           </div>
           <div className="col-sm-12">
             <div className="row">
-              {initiative != "blog-customization" &&
-                blogImages[
-                  initiative.includes("-") ? blogImageskey : initiative
-                ].map((item, i) => (
+              {initiative !== "blog-customization" &&
+                (
+                  blogImages[
+                    initiative.includes("-") ? blogImageskey : initiative
+                  ] || []
+                ).map((item, i) => (
                   <div className="col m-2" key={i}>
                     <ModalImage
                       small={`/blogAssets/blogImages/${initiative}/${item}`}
