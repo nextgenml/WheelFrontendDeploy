@@ -128,13 +128,13 @@ const areLinksValid = async (walletId, links) => {
   const message = [];
   if (account.medium_link) {
     const validLink = await isUrlValid(mediumLink);
-    if (!mediumLink.startsWith(account.medium_link) || !validLink)
+    if (!mediumLink.includes(account.medium_link) || !validLink)
       message.push("Invalid Medium Link");
   }
 
   if (account.twitter_link) {
     if (
-      !twitterLink.startsWith(account.twitter_link) ||
+      !twitterLink.includes(account.twitter_link) ||
       !(await isUrlValid(twitterLink))
     )
       message.push("Invalid Twitter Link");
@@ -142,7 +142,7 @@ const areLinksValid = async (walletId, links) => {
 
   if (account.linkedin_link) {
     const link = account.linkedin_link.replace("/in/", "/posts/");
-    if (!linkedinLink.startsWith(link) || !(await isUrlValid(linkedinLink)))
+    if (!linkedinLink.includes(link) || !(await isUrlValid(linkedinLink)))
       message.push("Invalid LinkedIn Link");
   }
   if (account.facebook_link) {
