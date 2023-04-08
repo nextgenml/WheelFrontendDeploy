@@ -8,7 +8,7 @@ const initiateProcess = async () => {
     await validateBlog(blog.id);
   }
 };
-initiateProcess();
+// initiateProcess();
 // schedule.scheduleJob("0 */1 * * *", async () => {
 //   await initiateProcess();
 // });
