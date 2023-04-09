@@ -1,3 +1,4 @@
+export const DATE_TIME_FORMAT = "YYYY-MM-DD HH:mm:ss";
 export function similarity(str1, str2) {
   var len1 = str1.length;
   var len2 = str2.length;

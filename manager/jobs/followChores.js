@@ -21,9 +21,9 @@ const createFollowChores = async (campaigns) => {
     const holders = await getActiveMediaHolders(config.MINIMUM_WALLET_BALANCE);
 
     for (const holder of holders) {
-      if (holder.twitter_id) {
+      if (holder.twitter_link) {
         const nextFollows = await nextFollowUsers(holder.wallet_id, "twitter");
-
+        // console.log("nextFollows", nextFollows);
         const noOfPosts = Math.min(
           config.NO_OF_POSTS_PER_DAY,
           nextFollows.length

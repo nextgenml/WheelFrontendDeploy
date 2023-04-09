@@ -10,13 +10,19 @@ import {
 import { useState } from "react";
 import { saveSocialLinksAPI } from "../../API/Holder.js";
 import styles from "./Header.module.css";
-const SaveSocialLinks = ({ onClose, walletId }) => {
+const SaveSocialLinks = ({ onClose, walletId, inviteCode, links }) => {
   const [socialLinks, setSocialLinks] = useState({
-    facebookLink: localStorage.getItem(`${walletId}_facebookLink`),
-    linkedinLink: localStorage.getItem(`${walletId}_linkedinLink`),
-    mediumLink: localStorage.getItem(`${walletId}_mediumLink`),
-    telegramLink: localStorage.getItem(`${walletId}_telegramLink`),
-    twitterLink: localStorage.getItem(`${walletId}_twitterLink`),
+    facebookLink:
+      localStorage.getItem(`${walletId}_facebookLink`) || links.facebookLink,
+    linkedinLink:
+      localStorage.getItem(`${walletId}_linkedinLink`) || links.linkedinLink,
+    mediumLink:
+      localStorage.getItem(`${walletId}_mediumLink`) || links.mediumLink,
+    telegramLink:
+      localStorage.getItem(`${walletId}_telegramLink`) || links.telegramLink,
+    twitterLink:
+      localStorage.getItem(`${walletId}_twitterLink`) || links.twitterLink,
+    inviteCode,
   });
   const setData = (key, value) => {
     setSocialLinks((prev) => ({ ...prev, [key]: value }));
@@ -31,7 +37,11 @@ const SaveSocialLinks = ({ onClose, walletId }) => {
       <DialogTitle>Social Links</DialogTitle>
       <Box>
         <Typography variant="body2" className={styles.subtitle}>
-          *** To view point rewards, please complete the social links
+          *** To view point rewards, please fill all details.
+        </Typography>
+        <Typography variant="body2" className={styles.subtitle}>
+          This step is important to order to get paid in the website. So please
+          complete this step before browsing the website
         </Typography>
       </Box>
       <Box

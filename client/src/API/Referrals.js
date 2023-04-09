@@ -38,9 +38,9 @@ export const saveReferralAPI = async (walletId, payload) => {
   }
 };
 
-export const updateReferralAPI = async (walletId, payload) => {
+export const updateReferralAPI = async (walletId, id, payload) => {
   const res = await fetch(
-    `${config.API_ENDPOINT}/api/v1/referrals?walletId=${walletId}`,
+    `${config.API_ENDPOINT}/api/v1/referrals/${id}?walletId=${walletId}`,
     {
       method: "PUT",
       body: JSON.stringify(payload),

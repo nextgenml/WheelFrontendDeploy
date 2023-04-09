@@ -29,17 +29,23 @@ const headers = [
   "Referral Paid",
 ];
 
-export default function ReferralList({ address, count }) {
+export default function ReferralList({
+  address,
+  count,
+  setInvite,
+  finalWallet,
+}) {
   const [referrals, setReferrals] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
 
   const fetchData = async () => {
-    const res = await fetchReferralsAPI(address, page, rowsPerPage);
+    const res = await fetchReferralsAPI(finalWallet, page, rowsPerPage);
     if (res.referrals) {
       setReferrals(res.referrals);
       setTotalCount(res.totalCount);
+      setInvite(res.inviteLink);
     }
   };
 
@@ -59,7 +65,7 @@ export default function ReferralList({ address, count }) {
   const isAdmin = address === config.ADMIN_WALLET_1;
 
   const onUpdate = async (paid, id) => {
-    const res = await updateReferralAPI(address, { paid });
+    const res = await updateReferralAPI(address, id, { paid });
     if (res) {
       const currentRow = referrals.filter((p) => p.id === id)[0];
       currentRow.paid_referer = paid ? 1 : 0;

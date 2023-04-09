@@ -280,6 +280,7 @@ const BlogForm = () => {
           key={index}
           prompt={blog.prompt}
           content={blog.blog}
+          promotedBlog={blog}
           isPromote
           promotedWallet={blog.wallet_address}
           promotedId={blog.id}

@@ -7,23 +7,6 @@ const moment = require("moment");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
 require("../manager/jobs/validateOldBlogs");
-const firstBlogAt = async (req, res) => {
-  try {
-    const { walletId } = req.query;
-
-    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
-
-    const data = await blogsRepo.firstBlogAt(walletId);
-    return res.json({
-      createdAt: data[0]?.create_date
-        ? moment(data[0]?.create_date).add(5, "hours").add(30, "minutes")
-        : null,
-    });
-  } catch (error) {
-    logger.error(`firstBlogAt error: ${error}`);
-    return res.status(500).json({ msg: error });
-  }
-};
 const getUserBlogStats = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -196,8 +179,11 @@ const saveBlogData = async (req, res) => {
         .json({ msg: "Record already saved. You cannot save again" });
     }
 
-    await blogsRepo.saveBlogData(req.body, image_urls.toString());
-
+    const { insertId } = await blogsRepo.saveBlogData(
+      req.body,
+      image_urls.toString()
+    );
+    blogsManager.validateBlog(insertId);
     return res.status(200).json({
       msg: "Saved successfully",
     });
@@ -273,6 +259,5 @@ module.exports = {
   getPromotedBlogs,
   getBlogStats,
   getUserBlogStats,
-  firstBlogAt,
   homePageStats,
 };

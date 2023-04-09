@@ -3,7 +3,7 @@ const logger = require("../logger");
 const moment = require("moment");
 const blogsManager = require("../manager/blogs");
 const { blogsSince } = require("../repository/blogs");
-const { getByTwitter } = require("../repository/holder");
+const holderRepo = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { formatTransactionId } = require("../utils/spinwheelUtil");
@@ -26,7 +26,7 @@ const get = async (req, res) => {
       );
       for (const ref of data) {
         if (!ref.criteria_met) {
-          const holder = await getByTwitter(ref.referee_twitter);
+          const holder = await holderRepo.getByTwitter(ref.referee_twitter);
           if (holder) {
             const blogsPosted = await blogsSince(
               holder.wallet_id,
@@ -37,10 +37,13 @@ const get = async (req, res) => {
         }
       }
     }
+    const code = await holderRepo.getInviteCode(walletId);
+    const inviteLink = `referrals/inviteCodes/${code}`;
 
     return res.status(200).json({
       referrals: data,
       totalCount: total_count,
+      inviteLink: inviteLink,
     });
   } catch (error) {
     logger.error(`error occurred in get referrals api: ${error}`);

@@ -1,8 +1,8 @@
 import config from "../config.js";
 
-export const fetchSocialLinksAPI = async (walletId) => {
+export const fetchHolderAPI = async (walletId) => {
   const res = await fetch(
-    `${config.API_ENDPOINT}/api/v1/holders/social-links?walletId=${walletId}`
+    `${config.API_ENDPOINT}/api/v1/holders/details?walletId=${walletId}`
   );
   if (res.ok) {
     return await res.json();

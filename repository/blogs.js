@@ -2,11 +2,7 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { v4: uuidv4 } = require("uuid");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const moment = require("moment");
-const firstBlogAt = async (walletId) => {
-  const query =
-    "select create_date from saved_prompts where wallet_address = ? order by create_date asc limit 1";
-  return await runQueryAsync(query, [walletId]);
-};
+
 const getBlogStats = async (blogId) => {
   const query =
     "select link, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
@@ -220,7 +216,6 @@ module.exports = {
   getCustomBlogs,
   getPromotedBlogs,
   getBlogStats,
-  firstBlogAt,
   updateBlogData,
   checkReplica,
   totalBloggers,

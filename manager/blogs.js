@@ -146,7 +146,10 @@ const areLinksValid = async (walletId, links) => {
       message.push("Invalid LinkedIn Link");
   }
   if (account.facebook_link) {
-    if (!(await isUrlValid(facebookLink)))
+    if (
+      !facebookLink.includes(account.facebook_link) ||
+      !(await isUrlValid(facebookLink))
+    )
       message.push("Invalid Facebook Link");
   }
   return {
@@ -189,14 +192,16 @@ const replaceTrailingSlash = (value) => {
 const validateBlog = async (blogId) => {
   try {
     const blog = await blogsRepo.getBlogById(blogId);
-    const { valid, message } = await areLinksValid(blog.wallet_address, {
-      facebookLink: blog.facebookurl,
-      mediumLink: blog.mediumurl,
-      linkedinLink: blog.linkedinurl,
-      twitterLink: blog.twitterurl,
-    });
+    if (!blog.validated_flag) {
+      const { valid, message } = await areLinksValid(blog.wallet_address, {
+        facebookLink: blog.facebookurl,
+        mediumLink: blog.mediumurl,
+        linkedinLink: blog.linkedinurl,
+        twitterLink: blog.twitterurl,
+      });
 
-    await blogsRepo.validateBlog(blogId, valid, message.join(", "));
+      await blogsRepo.validateBlog(blogId, valid, message.join(", "));
+    }
   } catch (error) {
     logger.error(`error in validateBlog: ${error}`);
   }
