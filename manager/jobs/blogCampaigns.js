@@ -61,7 +61,7 @@ const initiateProcess = async () => {
     });
   }
 };
-// initiateProcess();
+initiateProcess();
 schedule.scheduleJob("0 */1 * * *", async () => {
   await initiateProcess();
 });

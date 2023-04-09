@@ -40,7 +40,7 @@ const initiateProcess = async () => {
     await timer(5000);
   }
 };
-initiateProcess();
+// initiateProcess();
 // schedule.scheduleJob("0 */1 * * *", async () => {
 //   await initiateProcess();
 // });
