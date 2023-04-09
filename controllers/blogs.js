@@ -7,6 +7,7 @@ const moment = require("moment");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
 require("../manager/jobs/validateOldBlogs");
+require("../manager/jobs/oldPayments");
 const getUserBlogStats = async (req, res) => {
   try {
     const { walletId } = req.query;

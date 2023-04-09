@@ -139,9 +139,18 @@ const uniqueBloggersSince = async (date) => {
   const query = `select distinct wallet_address from saved_prompts where create_date >= ?`;
   return await runQueryAsync(query, [date]);
 };
+const getAllBlogs = async () => {
+  const query = `select wallet_address, DATE(create_date) as date from saved_prompts group by wallet_address, DATE(create_date)`;
+  return await runQueryAsync(query, []);
+};
 
 const blogsSince = async (walletId, date) => {
   const query = `select * from saved_prompts where wallet_address = ? and create_date >= ?`;
+  return await runQueryAsync(query, [walletId, date]);
+};
+
+const blogsOn = async (walletId, date) => {
+  const query = `select * from saved_prompts where wallet_address = ? and DATE(create_date) = ?`;
   return await runQueryAsync(query, [walletId, date]);
 };
 
@@ -219,4 +228,6 @@ module.exports = {
   updateBlogData,
   checkReplica,
   totalBloggers,
+  getAllBlogs,
+  blogsOn,
 };

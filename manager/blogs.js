@@ -11,6 +11,46 @@ const getPromotedBlogs = async (walletId) => {
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
 };
 
+const hasPostedValidBlogsTemp = async (
+  walletId,
+  lastActionAt,
+  includeToday
+) => {
+  const blogs = await blogsRepo.blogsOn(
+    walletId,
+    moment(lastActionAt).startOf("day").format(DATE_TIME_FORMAT)
+  );
+
+  const groups = groupBlogsByDate(blogs, includeToday);
+
+  const diffDays =
+    moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
+
+  console.log("diffDays", diffDays, Object.keys(groups).length);
+  if (diffDays > Object.keys(groups).length) return false;
+
+  for (const date of Object.keys(groups)) {
+    const postedBlogs = groups[date];
+
+    if (postedBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
+
+    const validBlogs = [];
+    for (const blog of postedBlogs) {
+      if (!blog.validated_flag) {
+        const res = await areLinksValid(walletId, {
+          facebookLink: blog.facebookurl,
+          mediumLink: blog.mediumurl,
+          linkedinLink: blog.linkedinurl,
+          twitterLink: blog.twitterurl,
+        });
+        if (res.valid) validBlogs.push(blog);
+      }
+    }
+    if (validBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
+  }
+  return true;
+};
+
 const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
   const blogs = await blogsRepo.blogsSince(
     walletId,
@@ -230,4 +270,5 @@ module.exports = {
   replaceTrailingSlash,
   referralMet,
   validateBlog,
+  hasPostedValidBlogsTemp,
 };
