@@ -14,7 +14,10 @@ const initiateProcess = async () => {
   const blogs = await blogRepo.getAllBlogs();
 
   for (const blog of blogs) {
-    const todayBlog = await blogsDoneOn(blog.wallet_address, blog.date);
+    const todayBlog = await blogsDoneOn(
+      blog.wallet_address,
+      moment(blog.date).format("YYYY-MM-DD")
+    );
 
     if (!todayBlog || todayBlog.amount <= 0) {
       const validated = await blogsManager.hasPostedValidBlogsTemp(

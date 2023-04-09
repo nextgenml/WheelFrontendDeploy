@@ -18,16 +18,16 @@ const hasPostedValidBlogsTemp = async (
 ) => {
   const blogs = await blogsRepo.blogsOn(
     walletId,
-    moment(lastActionAt).startOf("day").format(DATE_TIME_FORMAT)
+    moment(lastActionAt).format("YYYY-MM-DD")
   );
 
   const groups = groupBlogsByDate(blogs, includeToday);
 
-  const diffDays =
-    moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
+  // const diffDays =
+  //   moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
 
-  console.log("diffDays", diffDays, Object.keys(groups).length);
-  if (diffDays > Object.keys(groups).length) return false;
+  // console.log("diffDays", diffDays, Object.keys(groups).length);
+  // if (diffDays > Object.keys(groups).length) return false;
 
   for (const date of Object.keys(groups)) {
     const postedBlogs = groups[date];
@@ -46,6 +46,11 @@ const hasPostedValidBlogsTemp = async (
         if (res.valid) validBlogs.push(blog);
       }
     }
+    console.log(
+      "validBlogs",
+      validBlogs.length,
+      moment(lastActionAt).format("YYYY-MM-DD")
+    );
     if (validBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
   }
   return true;
