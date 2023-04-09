@@ -14,7 +14,7 @@ const initiateProcess = async () => {
   // await Promise.all(promises);
   console.log("all blogs are updated");
 };
-initiateProcess();
+// initiateProcess();
 // schedule.scheduleJob("0 */1 * * *", async () => {
 //   await initiateProcess();
 // });
