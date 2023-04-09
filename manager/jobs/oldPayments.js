@@ -8,6 +8,7 @@ const blogRepo = require("../../repository/blogs");
 const blogsManager = require("../blogs");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const moment = require("moment");
+const { timer } = require("../../utils");
 
 const initiateProcess = async () => {
   const blogs = await blogRepo.getAllBlogs();
@@ -33,6 +34,7 @@ const initiateProcess = async () => {
         });
       console.log("updated for ", blog.wallet_address);
     }
+    await timer(5000);
   }
 };
 initiateProcess();
