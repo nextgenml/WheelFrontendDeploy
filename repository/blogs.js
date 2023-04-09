@@ -197,7 +197,7 @@ const newValidatedBlogs = async () => {
   return await runQueryAsync(query, []);
 };
 const allBlogs = async () => {
-  const query = `select id from saved_prompts where id in (4438, 4437)`;
+  const query = `select id from saved_prompts`;
   return await runQueryAsync(query, []);
 };
 module.exports = {
