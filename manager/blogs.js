@@ -133,7 +133,13 @@ const areLinksValid = async (walletId, links) => {
   const message = [];
   if (account.medium_link) {
     const validLink = await isUrlValid(mediumLink);
-    console.log("getAtHandle", getAtHandle(account.medium_link), mediumLink);
+    console.log(
+      "getAtHandle",
+      getAtHandle(account.medium_link),
+      mediumLink,
+      validLink,
+      mediumLink.includes(getAtHandle(account.medium_link))
+    );
     if (!mediumLink.includes(getAtHandle(account.medium_link)) || !validLink)
       message.push("Invalid Medium Link");
   }
