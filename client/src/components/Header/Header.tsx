@@ -11,15 +11,15 @@ import {
   Button,
   Paper,
   SwipeableDrawer,
+  Link,
 } from "@mui/material";
 import { Web3Button } from "@web3modal/react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAccount } from "wagmi";
-import config from "../../config";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
-import { fetchSocialLinksAPI } from "../../API/Holder.js";
+import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 
 interface Props {
@@ -33,25 +33,13 @@ export default function Header(props: Props) {
   const [showSaveLinks, setShowSaveLinks] = useState<boolean>(false);
   const [socialLinks, setSocialLinks] = useState<any>({});
 
-  const fetchData = async () => {
-    const res = await fetch(
-      `${config.API_ENDPOINT}/first-blog-at?walletId=${address}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await res.json();
-    setBlogDate(data.createdAt);
-  };
-  const fetchSocialLinks = async () => {
-    const data = await fetchSocialLinksAPI(address);
+  const fetchHolder = async () => {
+    const data = await fetchHolderAPI(address);
     setSocialLinks(data);
+    setBlogDate(data.pointRewardsStartAt);
   };
   useEffect(() => {
-    fetchData();
-    fetchSocialLinks();
+    fetchHolder();
   }, [isConnected]);
   const linkStyle = {
     fontSize: {
@@ -71,13 +59,6 @@ export default function Header(props: Props) {
           />
         </Box>
       );
-    else if (isConnected && !socialLinks.facebookLink) {
-      return (
-        <Button variant="outlined" onClick={() => setShowSaveLinks(true)}>
-          Social Links
-        </Button>
-      );
-    }
   };
   //// { link: "buy-nextgen", title: "BUY" },
   // { link: "roadmap", title: "ROADMAP" },
@@ -107,6 +88,24 @@ export default function Header(props: Props) {
       return;
     }
     setState(open);
+  };
+  const socialLinksBtn = () => {
+    return (
+      <>
+        {isConnected && (
+          <Link
+            href="#"
+            rel="noopener noreferrer"
+            style={{ whiteSpace: "nowrap", color: "black" }}
+            onClick={() => setShowSaveLinks(true)}
+          >
+            <Typography className="header-link" sx={linkStyle}>
+              SOCIAL LINKS
+            </Typography>
+          </Link>
+        )}
+      </>
+    );
   };
   const mobileNavLinks = () => (
     <Box
@@ -146,7 +145,6 @@ export default function Header(props: Props) {
                         textAlign: "center",
                         textDecoration: "none",
                         cursor: "pointer",
-                        color: "#ffffff",
                         fontFamily: "Audiowide",
                       },
                     }}
@@ -156,6 +154,7 @@ export default function Header(props: Props) {
               </a>
             );
           })}
+        {socialLinksBtn()}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
         <Web3Button />
@@ -181,8 +180,9 @@ export default function Header(props: Props) {
         <SaveSocialLinks
           onClose={(saved: boolean) => {
             setShowSaveLinks(false);
-            if (saved) fetchSocialLinks();
+            if (saved) fetchHolder();
           }}
+          links={socialLinks}
           walletId={address}
           inviteCode=""
         />
@@ -212,6 +212,7 @@ export default function Header(props: Props) {
                 </a>
               );
             })}
+          {socialLinksBtn()}
           <Web3Button />
         </Stack>
       </Hidden>

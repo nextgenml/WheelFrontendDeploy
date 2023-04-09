@@ -13,6 +13,7 @@ const Invites = () => {
         walletId={address}
         onClose={() => navigate("/")}
         inviteCode={code}
+        links={{}}
       />
     </>
   );

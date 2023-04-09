@@ -7,5 +7,5 @@ router.post(
   validateWalletId,
   holdersController.saveSocialLinks
 );
-router.get("/social-links", validateWalletId, holdersController.getSocialLinks);
+router.get("/details", validateWalletId, holdersController.getDetails);
 module.exports = router;

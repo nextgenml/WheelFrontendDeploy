@@ -10,13 +10,18 @@ import {
 import { useState } from "react";
 import { saveSocialLinksAPI } from "../../API/Holder.js";
 import styles from "./Header.module.css";
-const SaveSocialLinks = ({ onClose, walletId, inviteCode }) => {
+const SaveSocialLinks = ({ onClose, walletId, inviteCode, links }) => {
   const [socialLinks, setSocialLinks] = useState({
-    facebookLink: localStorage.getItem(`${walletId}_facebookLink`),
-    linkedinLink: localStorage.getItem(`${walletId}_linkedinLink`),
-    mediumLink: localStorage.getItem(`${walletId}_mediumLink`),
-    telegramLink: localStorage.getItem(`${walletId}_telegramLink`),
-    twitterLink: localStorage.getItem(`${walletId}_twitterLink`),
+    facebookLink:
+      localStorage.getItem(`${walletId}_facebookLink`) || links.facebookLink,
+    linkedinLink:
+      localStorage.getItem(`${walletId}_linkedinLink`) || links.linkedinLink,
+    mediumLink:
+      localStorage.getItem(`${walletId}_mediumLink`) || links.mediumLink,
+    telegramLink:
+      localStorage.getItem(`${walletId}_telegramLink`) || links.telegramLink,
+    twitterLink:
+      localStorage.getItem(`${walletId}_twitterLink`) || links.twitterLink,
     inviteCode,
   });
   const setData = (key, value) => {

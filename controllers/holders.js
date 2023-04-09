@@ -49,7 +49,7 @@ const saveSocialLinks = async (req, res) => {
   }
 };
 
-const getSocialLinks = async (req, res) => {
+const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
     const holder = await holderRepo.getById(walletId);
@@ -59,6 +59,7 @@ const getSocialLinks = async (req, res) => {
       linkedinLink: holder?.linkedin_link || "",
       twitterLink: holder?.twitter_link || "",
       telegramLink: holder?.telegram_link || "",
+      pointRewardsStartAt: holder?.social_links_updated_at,
     });
   } catch (error) {
     logger.info(`saveSocialLinks: ${error}`);
@@ -70,5 +71,5 @@ const getSocialLinks = async (req, res) => {
 
 module.exports = {
   saveSocialLinks,
-  getSocialLinks,
+  getDetails,
 };
