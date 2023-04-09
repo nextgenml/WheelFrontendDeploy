@@ -140,7 +140,7 @@ const uniqueBloggersSince = async (date) => {
   return await runQueryAsync(query, [date]);
 };
 const getAllBlogs = async () => {
-  const query = `select wallet_address, DATE(create_date) as date from saved_prompts where wallet_address = '0x5Dad51B05ED091384dDa15972f1C4C29ae087Ce8' group by wallet_address, DATE(create_date) `;
+  const query = `select wallet_address, DATE(create_date) as date from saved_prompts group by wallet_address, DATE(create_date) `;
   return await runQueryAsync(query, []);
 };
 
@@ -206,7 +206,7 @@ const newValidatedBlogs = async () => {
   return await runQueryAsync(query, []);
 };
 const allBlogs = async () => {
-  const query = `select id from saved_prompts where wallet_address = '0x5Dad51B05ED091384dDa15972f1C4C29ae087Ce8'`;
+  const query = `select id from saved_prompts`;
   return await runQueryAsync(query, []);
 };
 module.exports = {
