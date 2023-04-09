@@ -169,7 +169,7 @@ const areLinksValid = async (walletId, links) => {
       message.push("Invalid Facebook Link");
   }
   return {
-    valid: message.length === 0,
+    valid: message.filter((x) => !!x).length === 0,
     message,
   };
 };
@@ -217,7 +217,7 @@ const validateBlog = async (blogId) => {
       });
 
       await blogsRepo.validateBlog(blogId, valid, message.join(", "));
-      console.log("blog updated", blog.id);
+      console.log("blog updated", blog.id, message, valid);
     }
   } catch (error) {
     logger.error(`error in validateBlog: ${error}`);
