@@ -110,8 +110,9 @@ const referralMet = async (twitter, referredAt) => {
 
 const getAtHandle = (link) => {
   const split = link.split("/");
-  return split[split.length - 1];
+  return split[split.length - 1].trim();
 };
+
 const areLinksValid = async (walletId, links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink } = links;
 
@@ -132,6 +133,7 @@ const areLinksValid = async (walletId, links) => {
   const message = [];
   if (account.medium_link) {
     const validLink = await isUrlValid(mediumLink);
+    console.log("getAtHandle", getAtHandle(account.medium_link), mediumLink);
     if (!mediumLink.includes(getAtHandle(account.medium_link)) || !validLink)
       message.push("Invalid Medium Link");
   }
