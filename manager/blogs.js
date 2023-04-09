@@ -44,6 +44,8 @@ const hasPostedValidBlogsTemp = async (
           twitterLink: blog.twitterurl,
         });
         if (res.valid) validBlogs.push(blog);
+      } else {
+        validBlogs.push(blog);
       }
     }
     console.log(
