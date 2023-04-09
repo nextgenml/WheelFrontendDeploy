@@ -6,9 +6,10 @@ const initiateProcess = async () => {
   const promises = [];
   for (const blog of blogs) {
     console.log("new blog for validation ", blog);
+    await validateBlog(blog.id);
     promises.push(validateBlog(blog.id));
   }
-  await Promise.all(promises);
+  // await Promise.all(promises);
   console.log("all blogs are updated");
 };
 initiateProcess();
