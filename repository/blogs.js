@@ -197,7 +197,7 @@ const newValidatedBlogs = async () => {
   return await runQueryAsync(query, []);
 };
 const allBlogs = async () => {
-  const query = `select id from saved_prompts`;
+  const query = `select id from saved_prompts where wallet_address = '0x5Dad51B05ED091384dDa15972f1C4C29ae087Ce8'`;
   return await runQueryAsync(query, []);
 };
 module.exports = {
