@@ -140,8 +140,9 @@ const areLinksValid = async (walletId, links) => {
       validLink,
       mediumLink.includes(getAtHandle(account.medium_link))
     );
-    if (!mediumLink.includes(getAtHandle(account.medium_link)) || !validLink)
+    if (!mediumLink.includes(getAtHandle(account.medium_link)))
       message.push("Invalid Medium Link");
+    else if (!validLink) message.push("Medium link response is failed");
   }
 
   if (account.twitter_link) {
