@@ -91,7 +91,7 @@ const getActiveHolders = async (walletBalance) => {
 };
 
 const getActiveMediaHolders = async (walletBalance) => {
-  const query = `select * from holders where wallet_balance >= ? and is_active = 1 and twitter_id is not null;`;
+  const query = `select * from holders where twitter_link is not null;`;
 
   return await runQueryAsync(query, [walletBalance]);
 };
