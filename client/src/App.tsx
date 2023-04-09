@@ -78,7 +78,10 @@ function App() {
         <Route path="/user-quizzes" element={<Quizzes />} />
         <Route path="/posted-blogs" element={<PostedBlogs />} />
         <Route path="/payments" element={<TotalEarnings />} />
-        <Route path="/referrals/inviteCodes/:code" element={<Invites />} />
+        <Route
+          path="/referrals/inviteCodes/:code"
+          element={<PrivateRoute component={<Invites />} />}
+        />
       </Routes>
       <Footer />
     </>

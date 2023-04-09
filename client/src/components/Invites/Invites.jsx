@@ -4,18 +4,20 @@ import { useNavigate, useParams } from "react-router";
 
 const Invites = () => {
   const { code } = useParams();
-  console.log("code", code);
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const navigate = useNavigate();
-  return (
-    <>
-      <SaveSocialLinks
-        walletId={address}
-        onClose={() => navigate("/")}
-        inviteCode={code}
-        links={{}}
-      />
-    </>
-  );
+
+  if (isConnected)
+    return (
+      <>
+        <SaveSocialLinks
+          walletId={address}
+          onClose={() => navigate("/")}
+          inviteCode={code}
+          links={{}}
+        />
+      </>
+    );
+  return null;
 };
 export default Invites;
