@@ -201,6 +201,7 @@ const validateBlog = async (blogId) => {
       });
 
       await blogsRepo.validateBlog(blogId, valid, message.join(", "));
+      console.log("blog updated", blog.id);
     }
   } catch (error) {
     logger.error(`error in validateBlog: ${error}`);
