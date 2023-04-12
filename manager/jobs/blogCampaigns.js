@@ -17,7 +17,7 @@ const initiateProcess = async () => {
       end_time: moment().add(3, "months"),
       success_factor: "best",
       wallet_id: process.env.ADMIN_WALLET,
-      is_default: 1,
+      default: blog.prompt === 'blog-customization' ? "false" : "true",
       reward: process.env.COST_PER_CHORE,
       blogId: blog.id,
       is_recursive_algo: 1,
