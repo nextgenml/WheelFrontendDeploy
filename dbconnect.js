@@ -30,21 +30,11 @@ function handleDisconnect() {
         } else logger.info("dropped table saved_prompts");
       });
       const spins = `create table saved_prompts (
-        id int primary key auto_increment,
         transactionID varchar(255),
         wallet_address varchar(255),
         initiative varchar(255),
         prompt varchar(255),
         blog text,
-        mediumurl varchar(255),
-        twitterurl varchar(255),
-        facebookurl varchar(255),
-        linkedinurl varchar(255),
-        instagramurl varchar(255),
-        pinteresturl varchar(255),
-        hashword varchar(1000),
-        keyword varchar(1000),
-        image_urls varchar(1000),
         create_date DATETIME,
         validated_flag BOOLEAN,
         paid_amount DOUBLE,
