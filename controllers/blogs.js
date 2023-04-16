@@ -1,6 +1,7 @@
 const config = require("../config/env");
 const logger = require("../logger");
 const blogsManager = require("../manager/blogs");
+const { validatePayment } = require("../manager/payments");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
 const moment = require("moment");
@@ -185,6 +186,7 @@ const saveBlogData = async (req, res) => {
       image_urls.toString()
     );
     blogsManager.validateBlog(insertId);
+    validatePayment(moment(), wallet_address)
     return res.status(200).json({
       msg: "Saved successfully",
     });
@@ -239,6 +241,8 @@ const updatePostedBlogs = async (req, res) => {
       blogId
     );
     blogsManager.validateBlog(blogId);
+    const blog = await blogsRepo.getBlogById(blogId)
+    validatePayment(blog.create_date, walletId)
     return res.status(200).json({
       message: "Links updated successfully",
     });
