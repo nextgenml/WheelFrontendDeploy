@@ -7,6 +7,12 @@ const getAllSpins = async () => {
   return await executeQueryAsync(query);
 };
 
+const getSpinById = async (id) => {
+  const query = "select * from scheduled_spins where id = ?;";
+  const results = await runQueryAsync(query, [id]);
+  return results[0];
+};
+
 const updateLaunchDate = async (id) => {
   const dateFormatted = moment().format(DATE_TIME_FORMAT);
   const query = "update scheduled_spins set prev_launch_date = ? where id = ?;";
@@ -30,4 +36,5 @@ module.exports = {
   updateLaunchDate,
   recentDailyLaunchAt,
   getScheduledSpin,
+  getSpinById,
 };

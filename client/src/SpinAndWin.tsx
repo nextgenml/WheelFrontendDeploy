@@ -226,6 +226,7 @@ export default function SpinAndWin() {
                 border: "1px solid #d5d0d0",
                 padding: "8px",
                 borderRadius: "8px",
+                display: "flex"
               }}
               className="flex flex-row  items-center justify-center mt-8 lg:justify-end w-full"
             >

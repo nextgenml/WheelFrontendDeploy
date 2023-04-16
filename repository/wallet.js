@@ -1,6 +1,7 @@
 const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { getSpinById } = require("./scheduledSpin");
 
 const createWallet = async (walletId, value, token) => {
   const query = `insert into wallets (wallet_id, value, created_at, token) values(?, ?, now(), ?);`;
@@ -9,8 +10,12 @@ const createWallet = async (walletId, value, token) => {
 };
 
 const currSpinParticipants = async (offset, size, nextSpin) => {
-  if (nextSpin.type === "adhoc")
-    return nextSpin.participants.map((p) => ({ walletId: p }));
+  if (nextSpin.type === "adhoc") {
+    const spin = await getSpinById(nextSpin.id);
+    if (spin && spin.participants)
+      return spin.participants.split(",").map((p) => ({ walletId: p }));
+    else return nextSpin.participants.map((p) => ({ walletId: p }));
+  }
 
   const start = moment(nextSpin.prevLaunchAt).format(DATE_TIME_FORMAT);
   const query = `select wallet_id, sum(value) as total_value from wallets where created_at > ? and value >= ? group by wallet_id order by 2 desc limit ? OFFSET ?;`;
