@@ -62,7 +62,7 @@ const NavBar = ({ stats, onMenuChange }) => {
               className={selected === item.text ? styles.selectedListItem : ""}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={`${item.text} (${item.stat})`} />
+              <ListItemText primary={`${item.text} ($${item.stat})`} />
             </ListItemButton>
           );
         })}

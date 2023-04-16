@@ -100,7 +100,9 @@ const isUrlValid = async (url) => {
   return result;
 };
 
-const roundTo2Decimals = (num) => Math.round(num * 100) / 100;
+const roundTo2Decimals = (num) =>
+  Math.round(num * process.env.ETH_VALUE * 10000) / 10000;
+
 module.exports = {
   dateToString,
   stringToDate,
