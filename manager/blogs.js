@@ -82,7 +82,7 @@ const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
           twitterLink: blog.twitterurl,
         });
         if (res.valid) validBlogs.push(blog);
-      }else{
+      } else {
         validBlogs.push(blog);
       }
     }
@@ -175,25 +175,41 @@ const areLinksValid = async (walletId, links) => {
     };
 
   const message = [];
-  await isPostedLinkValid(account.medium_link, mediumLink, 'Medium', message)
-  await isPostedLinkValid(account.twitter_link, twitterLink, 'Twitter', message)
-  await isPostedLinkValid(account.linkedin_link, linkedinLink, 'LinkedIn', message)
-  await isPostedLinkValid(account.facebook_link, facebookLink, 'Facebook', message)
-  
+  await isPostedLinkValid(account.medium_link, mediumLink, "Medium", message);
+  await isPostedLinkValid(
+    account.twitter_link,
+    twitterLink,
+    "Twitter",
+    message
+  );
+  await isPostedLinkValid(
+    account.linkedin_link,
+    linkedinLink,
+    "LinkedIn",
+    message
+  );
+  await isPostedLinkValid(
+    account.facebook_link,
+    facebookLink,
+    "Facebook",
+    message
+  );
+
   return {
     valid: message.filter((x) => !!x).length === 0,
     message,
   };
 };
 const isPostedLinkValid = async (handle, link, type, errors) => {
-  if(handle && link){
-    if(!link.toLowerCase().includes(handle.toLowerCase()) && !link.toLowerCase().includes(handle.toLowerCase().replace('@', '')))
-      errors.push(`Wrong ${type} link is added.`)
-    if(!(await isUrlValid(link)))
-    errors.push(`${type} link response status is not success`);
+  if (handle && link) {
+    if (
+      !link.toLowerCase().includes(handle.toLowerCase()) &&
+      !link.toLowerCase().includes(handle.toLowerCase().replace("@", ""))
+    )
+      errors.push(`${type} link is not from author profile.`);
+    if (!(await isUrlValid(link))) errors.push(`Invalid ${type} link`);
   }
-}
-
+};
 
 const validateAtHandles = (links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink, telegramLink } =
@@ -218,7 +234,7 @@ const validateAtHandles = (links) => {
     return { message: "Incorrect LinkedIn Url", valid: false };
   return { message: "", valid: true };
 };
-const isValidHandle = (link) => !link.includes("http") && !link.includes("/")
+const isValidHandle = (link) => !link.includes("http") && !link.includes("/");
 
 const replaceTrailingSlash = (value) => {
   if (value[value.length - 1] === "/") return value.slice(0, value.length - 1);

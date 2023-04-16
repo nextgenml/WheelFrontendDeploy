@@ -6,6 +6,7 @@ const moment = require("moment");
 const uuid = require("uuid");
 const { NXML_BLOG_CAMPAIGN } = require("../../constants");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+
 const initiateProcess = async () => {
   const newBlogs = await blogRepo.newValidatedBlogs();
   for (const blog of newBlogs) {
@@ -17,7 +18,7 @@ const initiateProcess = async () => {
       end_time: moment().add(3, "months"),
       success_factor: "best",
       wallet_id: process.env.ADMIN_WALLET,
-      default: blog.prompt === 'blog-customization' ? "false" : "true",
+      default: blog.prompt === "blog-customization" ? "false" : "true",
       reward: process.env.COST_PER_CHORE,
       blogId: blog.id,
       is_recursive_algo: 1,
