@@ -1,5 +1,5 @@
 const logger = require("../logger");
-const { validDomains, replaceTrailingSlash } = require("../manager/blogs");
+const { validateAtHandles, replaceTrailingSlash } = require("../manager/blogs");
 const holderRepo = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
 
@@ -15,7 +15,7 @@ const saveSocialLinks = async (req, res) => {
       inviteCode,
     } = req.body;
 
-    const { valid, message } = validDomains(req.body);
+    const { valid, message } = validateAtHandles(req.body);
     if (!valid) return res.status(400).send({ message });
 
     await holderRepo.saveSocialLinks(

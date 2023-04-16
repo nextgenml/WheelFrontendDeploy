@@ -2,32 +2,27 @@ const promotionsRepo = require("../repository/promotions");
 const blogsRepo = require("../repository/blogs");
 const moment = require("moment");
 const holderRepo = require("../repository/holder");
-const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { DATE_TIME_FORMAT, DATE_FORMAT } = require("../constants/momentHelper");
 const { isUrlValid } = require("../utils");
 const logger = require("../logger");
+const { error } = require("winston");
 
 const getPromotedBlogs = async (walletId) => {
   const eligibleWallets = await promotionsRepo.eligibleWallets(walletId);
   return await blogsRepo.getPromotedBlogs(eligibleWallets, walletId);
 };
 
-const hasPostedValidBlogsTemp = async (
+const hasPostedValidBlogsPast = async (
   walletId,
   lastActionAt,
   includeToday
 ) => {
   const blogs = await blogsRepo.blogsOn(
     walletId,
-    moment(lastActionAt).format("YYYY-MM-DD")
+    moment(lastActionAt).format(DATE_FORMAT)
   );
 
   const groups = groupBlogsByDate(blogs, includeToday);
-
-  // const diffDays =
-  //   moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
-
-  // console.log("diffDays", diffDays, Object.keys(groups).length);
-  // if (diffDays > Object.keys(groups).length) return false;
 
   for (const date of Object.keys(groups)) {
     const postedBlogs = groups[date];
@@ -69,7 +64,7 @@ const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
   const diffDays =
     moment().startOf("day").diff(moment(lastActionAt), "days") + 1;
 
-  console.log("diffDays", diffDays, Object.keys(groups).length);
+  // console.log("diffDays", diffDays, Object.keys(groups).length);
   if (diffDays > Object.keys(groups).length) return false;
 
   for (const date of Object.keys(groups)) {
@@ -87,6 +82,8 @@ const hasPostedValidBlogs = async (walletId, lastActionAt, includeToday) => {
           twitterLink: blog.twitterurl,
         });
         if (res.valid) validBlogs.push(blog);
+      }else{
+        validBlogs.push(blog);
       }
     }
     if (validBlogs.length < process.env.MINIMUM_BLOGS_PER_DAY) return false;
@@ -178,50 +175,27 @@ const areLinksValid = async (walletId, links) => {
     };
 
   const message = [];
-  if (account.medium_link) {
-    const validLink = await isUrlValid(mediumLink);
-    console.log(
-      "getAtHandle",
-      getAtHandle(account.medium_link),
-      mediumLink,
-      validLink,
-      mediumLink.includes(getAtHandle(account.medium_link))
-    );
-    if (!mediumLink.includes(getAtHandle(account.medium_link)))
-      message.push("Invalid Medium Link");
-    else if (!validLink) message.push("Medium link response is failed");
-  }
-
-  if (account.twitter_link) {
-    if (
-      !twitterLink.includes(getAtHandle(account.twitter_link)) ||
-      !(await isUrlValid(twitterLink))
-    )
-      message.push("Invalid Twitter Link");
-  }
-
-  if (account.linkedin_link) {
-    const link = account.linkedin_link.replace("/in/", "/posts/");
-    if (
-      !linkedinLink.includes(getAtHandle(link)) ||
-      !(await isUrlValid(linkedinLink))
-    )
-      message.push("Invalid LinkedIn Link");
-  }
-  if (account.facebook_link) {
-    if (
-      !facebookLink.includes(getAtHandle(account.facebook_link)) ||
-      !(await isUrlValid(facebookLink))
-    )
-      message.push("Invalid Facebook Link");
-  }
+  await isPostedLinkValid(account.medium_link, mediumLink, 'Medium', message)
+  await isPostedLinkValid(account.twitter_link, twitterLink, 'Twitter', message)
+  await isPostedLinkValid(account.linkedin_link, linkedinLink, 'LinkedIn', message)
+  await isPostedLinkValid(account.facebook_link, facebookLink, 'Facebook', message)
+  
   return {
     valid: message.filter((x) => !!x).length === 0,
     message,
   };
 };
+const isPostedLinkValid = async (handle, link, type, errors) => {
+  if(handle && link){
+    if(!link.toLowerCase().includes(handle.toLowerCase()) && !link.toLowerCase().includes(handle.toLowerCase().replace('@', '')))
+      errors.push(`Wrong ${type} link is added.`)
+    if(!(await isUrlValid(link)))
+    errors.push(`${type} link response status is not success`);
+  }
+}
 
-const validDomains = (links) => {
+
+const validateAtHandles = (links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink, telegramLink } =
     links;
 
@@ -234,19 +208,18 @@ const validDomains = (links) => {
   )
     return { message: "All Links are required", valid: false };
 
-  if (!facebookLink.includes("facebook.com"))
+  if (!isValidHandle(facebookLink))
     return { message: "Incorrect Facebook Url", valid: false };
-  if (!mediumLink.includes("medium.com"))
+  if (!isValidHandle(mediumLink))
     return { message: "Incorrect Medium Url", valid: false };
-  if (!twitterLink.includes("twitter.com"))
+  if (!isValidHandle(twitterLink))
     return { message: "Incorrect Twitter Url", valid: false };
-  if (!linkedinLink.includes("linkedin.com"))
+  if (!isValidHandle(linkedinLink))
     return { message: "Incorrect LinkedIn Url", valid: false };
-  if (!linkedinLink.includes("linkedin.com"))
-    return { message: "Incorrect LinkedIn Url", valid: false };
-
   return { message: "", valid: true };
 };
+const isValidHandle = (link) => !link.includes("http") && !link.includes("/")
+
 const replaceTrailingSlash = (value) => {
   if (value[value.length - 1] === "/") return value.slice(0, value.length - 1);
   return value;
@@ -273,9 +246,9 @@ const validateBlog = async (blogId) => {
 module.exports = {
   getPromotedBlogs,
   hasPostedValidBlogs,
-  validDomains,
+  validateAtHandles,
   replaceTrailingSlash,
   referralMet,
   validateBlog,
-  hasPostedValidBlogsTemp,
+  hasPostedValidBlogsPast,
 };

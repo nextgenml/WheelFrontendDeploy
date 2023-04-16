@@ -57,7 +57,7 @@ export default function PostedBlogs() {
       finalWallet,
       page,
       rowsPerPage,
-      selectedDate || queryDate
+      moment(selectedDate.toString()).format('YYYY-MM-DD') || queryDate
     );
     if (res.blogs) {
       setBlogs(res.blogs);

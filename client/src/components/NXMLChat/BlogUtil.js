@@ -44,4 +44,5 @@ export const getCachedPrompt = (initiative, index, isBlogPage) => {
   } catch (error) {
     console.log("error in getCachedPrompt", error);
   }
+  return {}
 };

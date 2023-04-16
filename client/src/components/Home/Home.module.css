@@ -1,7 +1,6 @@
 .appBtn {
   margin-top: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 16px !important;
   margin-right: 16px !important;
-  font-family: Audiowide;
   border-radius: 10px;
 }

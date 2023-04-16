@@ -137,13 +137,31 @@ export default function Home() {
               >
                 Referrals
               </Button>
-              <Button
+            </Box>
+            <Box display="flex" alignItems="center">
+            <Button
                 variant="contained"
                 href="/social-sharing"
                 target="_blank"
                 className={styles.appBtn}
               >
                 Work Area
+              </Button>
+              <Button
+                variant="contained"
+                href="/payments"
+                target="_blank"
+                className={styles.appBtn}
+              >
+                Earnings
+              </Button>
+              <Button
+                variant="contained"
+                href="/posted-blogs"
+                target="_blank"
+                className={styles.appBtn}
+              >
+                Posted Blogs
               </Button>
             </Box>
           </Grid>
