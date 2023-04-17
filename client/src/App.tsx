@@ -9,7 +9,7 @@ import { Container } from "@mui/material";
 import Home from "./components/Home/Home";
 import Features from "./components/Features/Features";
 import Tokenomics from "./components/Tokenomics/Tokenomics";
-// import BuyNextGen from "./components/Buy NextGen/BuyNextGen";
+import BuyNextGen from "./components/Buy NextGen/BuyNextGen";
 import Community from "./components/Community/Community";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
@@ -56,7 +56,7 @@ function App() {
               <Features />
               <Tokenomics />
               <Initiatives />
-              {/* <BuyNextGen /> */}
+              <BuyNextGen />
               <ConverseWithAI />
               <Community />
             </Container>

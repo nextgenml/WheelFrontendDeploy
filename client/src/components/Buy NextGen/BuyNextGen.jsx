@@ -8,7 +8,7 @@ let borderStyle = {
 };
 export default function BuyNextGen() {
   return (
-    <Box my={5} id="buy-nextgen">
+    <Box my={5} id="buy-nexgen">
       <Typography
         color="#3B7AAA"
         sx={{
@@ -24,7 +24,7 @@ export default function BuyNextGen() {
         <Grid item xs={12}>
           <iframe
             title="buy_nextgenml"
-            src="https://app.uniswap.org/#/swap?exactField=input&exactAmount=10&inputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f"
+            src="https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x3858dad8a5b3364be56de0566ab59e3d656c51f6"
             height="660px"
             width="100%"
             style={{

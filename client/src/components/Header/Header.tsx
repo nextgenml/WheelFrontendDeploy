@@ -60,7 +60,6 @@ export default function Header(props: Props) {
         </Box>
       );
   };
-  //// { link: "buy-nextgen", title: "BUY" },
   // { link: "roadmap", title: "ROADMAP" },
   //{ link: "tokenomics", title: "TOKENOMICS" },
   // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
@@ -74,6 +73,7 @@ export default function Header(props: Props) {
     : [
         { link: "", title: "HOME" },
         { link: "goals", title: "GOALS" },
+        { link: "buy-nexgen", title: "BUY" },
         { link: "values", title: "VALUES" },
         { link: "services", title: "SERVICES" },
         { link: "utilities", title: "UTILITIES" },

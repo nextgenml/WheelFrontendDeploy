@@ -77,15 +77,15 @@ const Footer = () => {
               </Typography>
             </a>
           </Box>
-          {/* <Box mt="10px">
-            <a href="#buy-nextgen" style={{ textDecoration: "none" }}>
+          <Box mt="10px">
+            <a href="#buy-nexgen" style={{ textDecoration: "none" }}>
               <Typography
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
               >
                 Buy NEXGEN ML
               </Typography>
             </a>
-          </Box> */}
+          </Box>
           {/* <Box mt="10px">
             <a href="#" target="_blank" style={{ textDecoration: "none" }}>
               <Typography
