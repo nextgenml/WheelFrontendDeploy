@@ -27,7 +27,7 @@ export default function ConverseWithAI() {
         <Grid item xs={12}>
           <iframe
             title="converse-with-ai"
-            src={config.CHATGPT_ENDPOINT}
+            src="https://chatbot.nexgenml.com/"
             height="660px"
             width="100%"
             style={{
