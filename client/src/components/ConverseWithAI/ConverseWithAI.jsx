@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import config from "../../config.js";
+import { useAccount } from "wagmi";
 
 let borderStyle = {
   borderRight: "2px solid #3B7AAA",
@@ -10,6 +11,8 @@ let borderStyle = {
 };
 
 export default function ConverseWithAI() {
+  const {isConnected} = useAccount()
+  if(!isConnected) return null
   return (
     <Box my={5} id="converse_with_ai">
       <Typography

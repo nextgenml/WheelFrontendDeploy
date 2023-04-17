@@ -1,5 +1,6 @@
-import { Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import { Box, Grid, Typography, Button } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import styles from './BuyNextGen.module.css'
 let borderStyle = {
   borderRight: "2px solid #3B7AAA",
   borderLeft: "2px solid #3B7AAA",
@@ -19,6 +20,20 @@ export default function BuyNextGen() {
       >
         BUY NEXGEN ML
       </Typography>
+
+      <Box display={'flex'} alignItems={'center'} justifyContent={'center'}>
+        <Typography variant="h6" className={styles.contractText}>Contract - 0x3858daD8A5b3364BE56DE0566AB59e3D656c51F6</Typography>
+        <Button>
+            <ContentCopyIcon
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  '0x3858daD8A5b3364BE56DE0566AB59e3D656c51F6'
+                )
+              }
+            />
+        </Button>
+      </Box>
+      
 
       <Grid container mt={4} spacing={3}>
         <Grid item xs={12}>
