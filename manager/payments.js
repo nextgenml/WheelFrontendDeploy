@@ -23,7 +23,7 @@ const validatePayment = async (date, walletId) => {
         type: "blog",
         is_paid: 0,
         amount: validated ? process.env.DAY_BLOG_PRIZE : 0,
-        earned_at: date,
+        earned_at: moment(date).format(DATE_FORMAT),
       });
     console.log("updated for ", walletId);
   }

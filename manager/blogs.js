@@ -5,7 +5,6 @@ const holderRepo = require("../repository/holder");
 const { DATE_TIME_FORMAT, DATE_FORMAT } = require("../constants/momentHelper");
 const { isUrlValid } = require("../utils");
 const logger = require("../logger");
-const { error } = require("winston");
 
 const getPromotedBlogs = async (walletId) => {
   const eligibleWallets = await promotionsRepo.eligibleWallets(walletId);

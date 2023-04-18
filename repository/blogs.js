@@ -5,7 +5,7 @@ const moment = require("moment");
 
 const getBlogStats = async (blogId) => {
   const query =
-    "select link, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
+    "select mediumurl, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
   return await runQueryAsync(query, [blogId]);
 };
 
@@ -64,15 +64,21 @@ const getPromotedBlogs = async (promotedWallets, walletId) => {
 const updateBlogData = async (data) => {
   if (data.blog) {
     await runQueryAsync(
-      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, blog = ? WHERE transactionID = ?`,
+      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, blog = ?, promoted = ? WHERE transactionID = ?`,
       // [data.validatedFlag, data.paidFlag, data.promoted, data.blog, data.transactionID]
-      [data.validatedFlag, data.paidFlag, data.blog, data.transactionID]
+      [
+        data.validatedFlag,
+        data.paidFlag,
+        data.blog,
+        data.promoted,
+        data.transactionID,
+      ]
     );
   } else
     await runQueryAsync(
-      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ? WHERE transactionID = ?`,
+      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, promoted = ? WHERE transactionID = ?`,
       // [data.validatedFlag, data.paidFlag, data.promoted, data.transactionID]
-      [data.validatedFlag, data.paidFlag, data.transactionID]
+      [data.validatedFlag, data.paidFlag, data.promoted, data.transactionID]
     );
 };
 

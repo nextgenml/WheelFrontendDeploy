@@ -30,8 +30,8 @@ function BlogStats({ onClose, blogId, address }) {
               {moment(stat.create_date).format("YYYY-MM-DD HH:mm")}
             </Grid>
             <Grid item md={6}>
-              <Link href={stat.link} target="_blank">
-                {stat.link}
+              <Link href={stat.mediumurl} target="_blank">
+                {stat.mediumurl}
               </Link>
             </Grid>
           </>

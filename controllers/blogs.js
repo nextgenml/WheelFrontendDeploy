@@ -22,7 +22,7 @@ const getUserBlogStats = async (req, res) => {
       await promotionsRepo.promotionStats(walletId);
     return res.json({ totalCountB, usedCountB, totalCountP, usedCountP });
   } catch (error) {
-    logger.error(`getCustomBlogs error: ${error}`);
+    logger.error(`getUserBlogStats error: ${error}`);
     return res.status(500).json({ msg: error });
   }
 };
@@ -85,14 +85,13 @@ const getBlogStats = async (req, res) => {
     const data = await blogsRepo.getBlogStats(blogId);
     return res.json({ data });
   } catch (error) {
-    logger.error(`getCustomBlogs error: ${error}`);
+    logger.error(`getBlogStats error: ${error}`);
     return res.status(500).json({ msg: error });
   }
 };
 
 const getPromotedBlogs = async (req, res) => {
   try {
-    console.log("reached jere");
     const { walletId } = req.query;
 
     if (!walletId) return res.status(400).json({ msg: "Invalid data" });
@@ -186,7 +185,7 @@ const saveBlogData = async (req, res) => {
       image_urls.toString()
     );
     blogsManager.validateBlog(insertId);
-    validatePayment(moment(), wallet_address)
+    validatePayment(moment(), wallet_address);
     return res.status(200).json({
       msg: "Saved successfully",
     });
@@ -241,8 +240,8 @@ const updatePostedBlogs = async (req, res) => {
       blogId
     );
     blogsManager.validateBlog(blogId);
-    const blog = await blogsRepo.getBlogById(blogId)
-    validatePayment(blog.create_date, walletId)
+    const blog = await blogsRepo.getBlogById(blogId);
+    validatePayment(blog.create_date, walletId);
     return res.status(200).json({
       message: "Links updated successfully",
     });

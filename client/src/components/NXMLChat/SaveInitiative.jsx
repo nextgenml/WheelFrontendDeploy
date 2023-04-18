@@ -477,7 +477,7 @@ const SaveInitiative = ({
               className="btn btn-success"
               disabled={!isPromote && isCopyDisable}
               onClick={() => {
-                navigator.clipboard.writeText(result);
+                navigator.clipboard.writeText(result || content);
                 notify("Copied", "info");
               }}
             >
