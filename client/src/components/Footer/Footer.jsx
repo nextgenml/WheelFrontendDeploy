@@ -77,7 +77,7 @@ const Footer = () => {
               </Typography>
             </a>
           </Box>
-          <Box mt="10px">
+          {/* <Box mt="10px">
             <a href="#buy-nexgen" style={{ textDecoration: "none" }}>
               <Typography
                 sx={{ fontWeight: 400, fontSize: "16px", color: "white" }}
@@ -85,7 +85,7 @@ const Footer = () => {
                 Buy NEXGEN ML
               </Typography>
             </a>
-          </Box>
+          </Box> */}
           {/* <Box mt="10px">
             <a href="#" target="_blank" style={{ textDecoration: "none" }}>
               <Typography

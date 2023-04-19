@@ -63,6 +63,8 @@ export default function Header(props: Props) {
   // { link: "roadmap", title: "ROADMAP" },
   //{ link: "tokenomics", title: "TOKENOMICS" },
   // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
+  // { link: "buy-nexgen", title: "BUY" },
+
   const headerLinks = props.socialSharing
     ? [
         { link: "", title: "HOME" },
@@ -73,7 +75,6 @@ export default function Header(props: Props) {
     : [
         { link: "", title: "HOME" },
         { link: "goals", title: "GOALS" },
-        { link: "buy-nexgen", title: "BUY" },
         { link: "values", title: "VALUES" },
         { link: "services", title: "SERVICES" },
         { link: "utilities", title: "UTILITIES" },
