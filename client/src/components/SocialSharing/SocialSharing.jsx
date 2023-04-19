@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 
-import { Card, Grid, Typography } from "@mui/material";
+import { Card, Grid, Typography, Button } from "@mui/material";
 import styles from "./SocialSharing.module.css";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -156,6 +156,14 @@ const SocialSharing = () => {
             </Card>
           </Grid>
           <Grid item md={6} sm={4} textAlign={"right"}>
+          <Button
+                variant="contained"
+                href="/user-campaigns"
+                target="_blank"
+                sx={{mr: 2}}
+              >
+                Campaigns
+              </Button>
             <Instructions
               generatedAlias={walletDetails.alias}
               address={address}

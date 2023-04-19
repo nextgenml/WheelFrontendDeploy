@@ -120,16 +120,16 @@ const Campaigns = () => {
   };
 
   const renderForm = () => {
-    if (
-      !balance ||
-      parseInt(balance.formatted) < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
-    )
-      return (
-        <Typography variant="h6" sx={{ mb: 20 }}>
-          Minimum {config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required
-          to create a campaign
-        </Typography>
-      );
+    // if (
+    //   !balance ||
+    //   parseInt(balance.formatted) < config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN
+    // )
+    //   return (
+    //     <Typography variant="h6" sx={{ mb: 20 }}>
+    //       Minimum {config.MIN_WALLET_BALANCE_TO_CREATE_CAMPAIGN} tokens required
+    //       to create a campaign
+    //     </Typography>
+    //   );
     return (
       <>
         <Typography variant="h4" className={styles.heading}>
