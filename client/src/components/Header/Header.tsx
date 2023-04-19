@@ -22,6 +22,7 @@ import styles from "./Header.module.css";
 import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 import InternalApps from "./InternalApps";
+import { useNavigate } from "react-router";
 
 interface Props {
   socialSharing: boolean;
@@ -33,7 +34,7 @@ export default function Header(props: Props) {
   const [openDrawer, setState] = useState<boolean>(false);
   const [showSaveLinks, setShowSaveLinks] = useState<boolean>(false);
   const [socialLinks, setSocialLinks] = useState<any>({});
-
+  const navigate = useNavigate();
   const fetchHolder = async () => {
     const data = await fetchHolderAPI(address);
     setSocialLinks(data);
@@ -118,7 +119,7 @@ export default function Header(props: Props) {
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
-      sx={{ width: "240px" }}
+      sx={{ width: "240px", cursor: "pointer" }}
     >
       <Box mt={-20} display="flex" justifyContent="center">
         <img width="150px" src="/logo.png" alt="" />
@@ -179,7 +180,8 @@ export default function Header(props: Props) {
       <Box
         width={{ xs: "150px", sm: "200px" }}
         flexBasis={{ xs: "auto", sm: "15%" }}
-        sx={{ p: 1 }}
+        sx={{ p: 1, cursor: "pointer" }}
+        onClick={() => navigate("/")}
       >
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>

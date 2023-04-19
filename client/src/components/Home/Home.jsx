@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Box, Button, Grid, Typography, Chip } from "@mui/material";
-import { Stack } from "@mui/system";
 import { getHomePageStats } from "../../API/Blogs";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import SourceIcon from "@mui/icons-material/Source";
@@ -139,7 +138,7 @@ export default function Home() {
               </Button>
             </Box>
             <Box display="flex" alignItems="center">
-            <Button
+              <Button
                 variant="contained"
                 href="/social-sharing"
                 target="_blank"
