@@ -56,7 +56,7 @@ function App() {
               <Features />
               <Tokenomics />
               <Initiatives />
-              <BuyNextGen />
+              {/* <BuyNextGen /> */}
               <ConverseWithAI />
               <Community />
             </Container>
