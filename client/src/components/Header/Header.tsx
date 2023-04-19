@@ -21,7 +21,6 @@ import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 import styles from "./Header.module.css";
 import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
-import { useNavigate } from "react-router";
 import InternalApps from "./InternalApps";
 
 interface Props {
