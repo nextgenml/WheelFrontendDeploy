@@ -13,7 +13,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import styles from "./SocialSharing.module.css";
 import { useState } from "react";
-
+import DomainVerificationIcon from '@mui/icons-material/DomainVerification';
 const NavBar = ({ stats, onMenuChange }) => {
   const [selected, setSelected] = useState("New");
   const navItems = [
@@ -46,6 +46,11 @@ const NavBar = ({ stats, onMenuChange }) => {
       text: "Follow",
       icon: <AddBoxIcon />,
       stat: stats.follow,
+    },
+    {
+      text: "Validate",
+      icon: <DomainVerificationIcon />,
+      stat: stats.validate,
     },
   ];
   return (

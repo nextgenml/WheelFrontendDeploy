@@ -27,6 +27,7 @@ const getSocialSharingStats = async (req, res) => {
       retweet,
       comment,
       follow,
+      validate,
     ] = (
       await Promise.all([
         choresRepo.getTotalEarnings(walletId),
@@ -35,7 +36,7 @@ const getSocialSharingStats = async (req, res) => {
         choresRepo.getTodayTotal(walletId),
         choresRepo.getTodayChoresTotal(walletId, mediaType),
         choresRepo.getOldChoresTotal(walletId, mediaType),
-        ...["like", "retweet", "comment", "follow"].map((chore) =>
+        ...["like", "retweet", "comment", "follow", "validate"].map((chore) =>
           choresRepo.getTotalByChore(walletId, mediaType, chore)
         ),
       ])
@@ -54,6 +55,7 @@ const getSocialSharingStats = async (req, res) => {
       retweet: roundTo2Decimals(retweet),
       comment: roundTo2Decimals(comment),
       follow: roundTo2Decimals(follow),
+      validate: roundTo2Decimals(validate),
     });
   } catch (ex) {
     logger.error(`error occurred in getSocialSharingStats api: ${ex}`);
