@@ -39,11 +39,7 @@ const nextUserForPost = async (campaignId, skippedUsers) => {
     and h.wallet_id not in (?)
     ORDER BY RAND () limit 1`;
 
-  const results = await runQueryAsync(query, [
-    campaignId,
-    config.MINIMUM_WALLET_BALANCE,
-    skippedUsers,
-  ]);
+  const results = await runQueryAsync(query, [campaignId, skippedUsers]);
   return results[0];
 };
 
@@ -53,7 +49,6 @@ const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
   const results = await runQueryAsync(query, [
     choreId,
     choreType,
-    config.MINIMUM_WALLET_BALANCE,
     skippedUsers,
   ]);
 
@@ -90,10 +85,10 @@ const getActiveHolders = async (walletBalance) => {
   return await runQueryAsync(query, [walletBalance]);
 };
 
-const getActiveMediaHolders = async (walletBalance) => {
+const getActiveMediaHolders = async () => {
   const query = `select * from holders where twitter_link is not null;`;
 
-  return await runQueryAsync(query, [walletBalance]);
+  return await runQueryAsync(query, []);
 };
 
 const getHoldersByWalletId = async (userNames) => {

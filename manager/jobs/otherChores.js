@@ -23,7 +23,7 @@ const config = require("../../config/env");
 const createOtherChores = async (campaigns, sourceChoreType, args = {}) => {
   try {
     for (const campaign of campaigns) {
-      console.log("campaign------", campaign);
+      // console.log("campaign------", campaign);
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
 

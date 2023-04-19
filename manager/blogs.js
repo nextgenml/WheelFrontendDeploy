@@ -151,11 +151,6 @@ const referralMet = async (twitter, referredAt) => {
   };
 };
 
-const getAtHandle = (link) => {
-  const split = link.split("/");
-  return split[split.length - 1].trim();
-};
-
 const areLinksValid = async (walletId, links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink } = links;
 
@@ -187,12 +182,12 @@ const areLinksValid = async (walletId, links) => {
     "LinkedIn",
     message
   );
-  await isPostedLinkValid(
-    account.facebook_link,
-    facebookLink,
-    "Facebook",
-    message
-  );
+  // await isPostedLinkValid(
+  //   account.facebook_link,
+  //   facebookLink,
+  //   "Facebook",
+  //   message
+  // );
 
   return {
     valid: message.filter((x) => !!x).length === 0,

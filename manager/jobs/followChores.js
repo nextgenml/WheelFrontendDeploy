@@ -18,7 +18,7 @@ const config = require("../../config/env");
 
 const createFollowChores = async (campaigns) => {
   try {
-    const holders = await getActiveMediaHolders(config.MINIMUM_WALLET_BALANCE);
+    const holders = await getActiveMediaHolders();
 
     for (const holder of holders) {
       if (holder.twitter_link) {

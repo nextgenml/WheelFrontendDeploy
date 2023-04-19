@@ -28,6 +28,7 @@ import { similarity } from "../../Utils/index";
 const Chore = ({ chore, index, markAsDone, validateChore }) => {
   const [comment, setComment] = useState({ loading: false, data: "" });
   const [commentLink, setCommentLink] = useState("");
+  const [postLink, setPostLink] = useState("");
   const [pastedContent, setPastedContent] = useState("");
   const [blueScore, setBlueScore] = useState();
   const generateComment = async (chore) => {
@@ -61,11 +62,6 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
         return (
           <Grid container spacing={2}>
             <Grid item md={6}>
-              {/* <RichTextEditor
-                onChange={() => {}}
-                initialHtml={chore.content}
-                readOnly
-              /> */}
               <TextField
                 multiline
                 fullWidth
@@ -117,6 +113,17 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                 </ImageList>
               )}
             </Grid>
+            <Grid item md={6}>
+                <FormLabel sx={{ mb: 2 }}>
+                  Paste post link after posting in and mark as done
+                </FormLabel>
+                <TextField
+                  fullWidth
+                  placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
+                  value={postLink}
+                  onChange={(e) => setPostLink(e.target.value)}
+                />
+              </Grid>
           </Grid>
         );
       case "like":
@@ -239,6 +246,7 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
     }
   };
 
+  const disableMarkDoneBtn = (chore.chore_type === "comment" && (!comment || !commentLink)) || (chore.chore_type === "post" && (!postLink))
   return (
     <ListItem key={index}>
       <Card sx={{ width: "100%" }}>
@@ -282,9 +290,13 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                 sx={{ ml: "auto" }}
                 disabled={
                   chore.completed_by_user === 1 ||
-                  (chore.chore_type === "comment" && (!comment || !commentLink))
+                  disableMarkDoneBtn
                 }
-                onClick={() => markAsDone(chore.id, comment.data, commentLink)}
+                onClick={() => markAsDone(chore.id, {
+                  comment: comment.data,
+                  commentLink,
+                  postLink: postLink || chore.link_to_post,
+                } )}
               >
                 {chore.completed_by_user ? "Completed" : "Mark as done"}
               </Button>

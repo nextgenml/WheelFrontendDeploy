@@ -5,7 +5,7 @@ const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const createValidationChore = async (choreId) => {
   const chore = await choresRepo.getChoresById(choreId);
-  if (chore.chore_type !== "comment") return;
+  if (!["comment", "post"].includes(chore.chore_type)) return;
 
   const campaign = await campaignRepo.getCampaignByDetailsId(
     chore.campaign_detail_id
@@ -18,6 +18,7 @@ const createValidationChore = async (choreId) => {
       "validate",
       skippedUsers
     );
+    console.log("nextUser", nextUser, skippedUsers);
 
     if (nextUser) {
       const isEligible = await holderRepo.isEligibleForChore(
@@ -44,7 +45,7 @@ const createValidationChore = async (choreId) => {
           ref_chore_id: chore.id,
           linkToPost: chore.target_post_link,
           mediaPostId: postId,
-          content: chore.target_post,
+          content: chore.target_post || chore.content,
         });
         break;
       } else {

@@ -39,11 +39,8 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
     fetchStats();
   }, [menuOption, filter]);
 
-  const markAsDone = async (choreId, content, contentLink) => {
-    const res = await markChoreAsDoneAPI(walletId, choreId, {
-      content,
-      contentLink,
-    });
+  const markAsDone = async (choreId, payload) => {
+    const res = await markChoreAsDoneAPI(walletId, choreId, payload);
     if (res) {
       const chore = chores.filter((c) => c.id === choreId)[0];
       chore.completed_by_user = 1;

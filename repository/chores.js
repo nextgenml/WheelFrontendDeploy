@@ -265,11 +265,12 @@ const getChoresByType = async (walletId, mediaType, choreType, filter) => {
 };
 
 const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
-  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ? where id  = ? and wallet_id = ?;`;
+  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ?, link_to_post = ? where id  = ? and wallet_id = ?;`;
 
   return await runQueryAsync(query, [
-    data.content,
-    data.contentLink,
+    data.comment,
+    data.commentLink,
+    data.postLink,
     choreId,
     walletId,
   ]);

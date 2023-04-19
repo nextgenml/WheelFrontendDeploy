@@ -15,7 +15,7 @@ const initiateProcess = async () => {
     await validatePayment(moment().format(DATE_FORMAT), wallet.wallet_address);
   }
 };
-initiateProcess();
+// initiateProcess();
 schedule.scheduleJob("0 */1 * * *", async () => {
   await initiateProcess();
 });

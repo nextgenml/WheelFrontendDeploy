@@ -10,4 +10,4 @@ const initiateProcess = async () => {
     await timer(5000);
   }
 };
-initiateProcess();
+// initiateProcess();
