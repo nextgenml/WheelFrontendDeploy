@@ -21,6 +21,8 @@ import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 import styles from "./Header.module.css";
 import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
+import { useNavigate } from "react-router";
+import InternalApps from "./InternalApps";
 
 interface Props {
   socialSharing: boolean;
@@ -97,7 +99,11 @@ export default function Header(props: Props) {
           <Link
             href="#"
             rel="noopener noreferrer"
-            style={{ whiteSpace: "nowrap", color: "black" }}
+            style={{
+              whiteSpace: "nowrap",
+              color: "black",
+              textAlign: "center",
+            }}
             onClick={() => setShowSaveLinks(true)}
           >
             <Typography className="header-link" sx={linkStyle}>
@@ -155,6 +161,7 @@ export default function Header(props: Props) {
               </a>
             );
           })}
+        <InternalApps />
         {socialLinksBtn()}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
@@ -168,6 +175,7 @@ export default function Header(props: Props) {
       alignItems="center"
       justifyContent={{ xs: "space-between" }}
       spacing={1}
+      sx={{ p: 2 }}
     >
       <Box
         width={{ xs: "150px", sm: "200px" }}
@@ -202,6 +210,7 @@ export default function Header(props: Props) {
             .map((h) => {
               return (
                 <a
+                  // onClick={() => navigate(h.route || `/#${h.link}`)}
                   href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
                   rel="noopener noreferrer"
                   key={h.title}
@@ -214,6 +223,7 @@ export default function Header(props: Props) {
               );
             })}
           {socialLinksBtn()}
+          <InternalApps />
           <Web3Button />
         </Stack>
       </Hidden>
@@ -231,8 +241,8 @@ export default function Header(props: Props) {
             <SwipeableDrawer
               PaperProps={{
                 sx: {
-                  background: "#1C0D38 !important",
                   justifyContent: "center",
+                  p: 2,
                 },
               }}
               anchor="left"
