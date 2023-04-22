@@ -218,8 +218,6 @@ const validateAtHandles = (links) => {
   )
     return { message: "All Links are required", valid: false };
 
-  if (!isValidHandle(facebookLink))
-    return { message: "Incorrect Facebook Url", valid: false };
   if (!isValidHandle(mediumLink))
     return { message: "Incorrect Medium Url", valid: false };
   if (!isValidHandle(twitterLink))
