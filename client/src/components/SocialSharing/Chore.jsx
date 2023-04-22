@@ -24,12 +24,19 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { getChoreDesc, getHeading } from "./Util";
 import { getContentFromChatGptAPI } from "../../API/SocialSharing";
 import { similarity } from "../../Utils/index";
+import { getChoreCache, setChoreCache } from "./CacheHelper";
 
 const Chore = ({ chore, index, markAsDone, validateChore }) => {
-  const [comment, setComment] = useState({ loading: false, data: "" });
-  const [commentLink, setCommentLink] = useState("");
-  const [postLink, setPostLink] = useState("");
-  const [pastedContent, setPastedContent] = useState("");
+  const choreCache = getChoreCache(chore.id);
+  const [comment, setComment] = useState({
+    loading: false,
+    data: choreCache.comment || "",
+  });
+  const [commentLink, setCommentLink] = useState(choreCache.commentLink || "");
+  const [postLink, setPostLink] = useState(choreCache.postLink || "");
+  const [pastedContent, setPastedContent] = useState(
+    choreCache.pastedContent || ""
+  );
   const [blueScore, setBlueScore] = useState();
   const generateComment = async (chore) => {
     setComment((prev) => ({
@@ -41,10 +48,12 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
       msg: `rewrite the next sentence in 256 characters. ${chore.content}`,
     });
     if (res) {
+      const comm = res.result + "\r\n#nexgenml #nml $nml #1000xGem #SpinWheel";
       setComment((prev) => ({
         loading: false,
-        data: res.result + "\r\n#nexgenml #nml $nml #1000xGem #SpinWheel",
+        data: comm,
       }));
+      setChoreCache(chore.id, "comment", comm);
     } else {
       setComment((prev) => ({
         ...prev,
@@ -121,7 +130,10 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                 fullWidth
                 placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
                 value={postLink}
-                onChange={(e) => setPostLink(e.target.value)}
+                onChange={(e) => {
+                  setPostLink(e.target.value);
+                  setChoreCache(chore.id, "postLink", e.target.value);
+                }}
               />
             </Grid>
           </Grid>
@@ -156,7 +168,7 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                   variant="outlined"
                   sx={{ mt: 1 }}
                   onClick={() => generateComment(chore)}
-                  disabled={comment.loading}
+                  disabled={comment.loading || !!comment.data}
                 >
                   {comment.loading ? "Generating....." : "Generate Comment"}
                 </Button>
@@ -178,7 +190,10 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                   fullWidth
                   placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
                   value={commentLink}
-                  onChange={(e) => setCommentLink(e.target.value)}
+                  onChange={(e) => {
+                    setCommentLink(e.target.value);
+                    setChoreCache(chore.id, "commentLink", e.target.value);
+                  }}
                 />
               </Grid>
             </Grid>
@@ -215,7 +230,10 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
                   placeholder="Paste content here"
                   rows={4}
                   value={pastedContent}
-                  onChange={(e) => setPastedContent(e.target.value)}
+                  onChange={(e) => {
+                    setPastedContent(e.target.value);
+                    setChoreCache(chore.id, "pastedContent", e.target.value);
+                  }}
                 />
                 <FormLabel sx={{ mb: 2 }}>
                   Paste comment post in the provided link and compare the
