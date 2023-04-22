@@ -212,7 +212,7 @@ const newValidatedBlogs = async () => {
   return await runQueryAsync(query, []);
 };
 const allBlogs = async () => {
-  const query = `select id from saved_prompts where id > 3450 and (validated_flag is null or validated_flag = 0)`;
+  const query = `select id from saved_prompts where id > 4680 and (validated_flag is null or validated_flag = 0)`;
   return await runQueryAsync(query, []);
 };
 module.exports = {
