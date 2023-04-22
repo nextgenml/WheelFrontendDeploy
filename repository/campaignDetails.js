@@ -9,7 +9,7 @@ const getActiveCampaigns = async () => {
                 inner join campaigns c on c.id = cd.campaign_id 
                 where cd.start_time <= now() and cd.end_time >= now() 
                 and c.start_time <= now() and c.end_time >= now() and c.is_active = 1
-                and cd.is_active = 1 and cd.content_type = 'text' and c.id = 1735
+                and cd.is_active = 1 and cd.content_type = 'text'
                 order by is_default`;
 
   return await runQueryAsync(query, []);
