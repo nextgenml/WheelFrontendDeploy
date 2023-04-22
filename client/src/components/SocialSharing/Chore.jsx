@@ -43,7 +43,7 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
     if (res) {
       setComment((prev) => ({
         loading: false,
-        data: res.result,
+        data: res.result + "\r\n#nexgenml #nml $nml #1000xGem #SpinWheel",
       }));
     } else {
       setComment((prev) => ({
@@ -114,16 +114,16 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
               )}
             </Grid>
             <Grid item md={6}>
-                <FormLabel sx={{ mb: 2 }}>
-                  Paste post link after posting in and mark as done
-                </FormLabel>
-                <TextField
-                  fullWidth
-                  placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
-                  value={postLink}
-                  onChange={(e) => setPostLink(e.target.value)}
-                />
-              </Grid>
+              <FormLabel sx={{ mb: 2 }}>
+                Paste post link after posting in and mark as done
+              </FormLabel>
+              <TextField
+                fullWidth
+                placeholder="Eg: https://twitter.com/PuredlaB/status/1638250676009701377"
+                value={postLink}
+                onChange={(e) => setPostLink(e.target.value)}
+              />
+            </Grid>
           </Grid>
         );
       case "like":
@@ -246,7 +246,9 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
     }
   };
 
-  const disableMarkDoneBtn = (chore.chore_type === "comment" && (!comment || !commentLink)) || (chore.chore_type === "post" && (!postLink))
+  const disableMarkDoneBtn =
+    (chore.chore_type === "comment" && (!comment || !commentLink)) ||
+    (chore.chore_type === "post" && !postLink);
   return (
     <ListItem key={index}>
       <Card sx={{ width: "100%" }}>
@@ -288,15 +290,14 @@ const Chore = ({ chore, index, markAsDone, validateChore }) => {
               <Button
                 variant="outlined"
                 sx={{ ml: "auto" }}
-                disabled={
-                  chore.completed_by_user === 1 ||
-                  disableMarkDoneBtn
+                disabled={chore.completed_by_user === 1 || disableMarkDoneBtn}
+                onClick={() =>
+                  markAsDone(chore.id, {
+                    comment: comment.data,
+                    commentLink,
+                    postLink: postLink || chore.link_to_post,
+                  })
                 }
-                onClick={() => markAsDone(chore.id, {
-                  comment: comment.data,
-                  commentLink,
-                  postLink: postLink || chore.link_to_post,
-                } )}
               >
                 {chore.completed_by_user ? "Completed" : "Mark as done"}
               </Button>
