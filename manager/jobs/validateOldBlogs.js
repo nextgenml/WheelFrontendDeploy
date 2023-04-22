@@ -6,9 +6,12 @@ const initiateProcess = async () => {
   const blogs = await blogRepo.allBlogs();
   const promises = [];
   for (const blog of blogs) {
+    try {
+      await validateBlog(blog.id);
+      await timer(5);
+    } catch (error) {}
     // console.log("new blog for validation ", blog);
-    await validateBlog(blog.id);
-    await timer(5);
+
     // promises.push(validateBlog(blog.id));
   }
   // await Promise.all(promises);
