@@ -25,7 +25,7 @@ import { useAccount } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
 import CampaignsList from "./CampaignsList";
 
-const initialState = {
+const newState = {
   media: ["twitter"],
   client: "",
   campaign_name: "",
@@ -37,9 +37,23 @@ const initialState = {
   files: [],
   post_link: "",
 };
-const Campaigns = () => {
-  const { isConnected, address } = useAccount();
 
+const Campaigns = () => {
+  const initialState = {
+    media: JSON.parse(localStorage.getItem("media") || '["twitter"]'),
+    client: localStorage.getItem("client") || "",
+    campaign_name: localStorage.getItem("campaign_name") || "",
+    success_factor: localStorage.getItem("success_factor") || "best",
+    start_time: moment(localStorage.getItem("start_time") || moment()).format(),
+    end_time: moment(localStorage.getItem("end_time") || moment()).format(),
+    content: localStorage.getItem("content") || "",
+    default: false,
+    files: [],
+    post_link: localStorage.getItem("post_link") || "",
+  };
+
+  const { isConnected, address } = useAccount();
+  const [disableSubmit, setDisableSubmit] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [error, setError] = useState("");
   const [balance, setBalance] = useState("");
@@ -64,6 +78,7 @@ const Campaigns = () => {
   };
 
   const onFormDataChange = (newValue, key) => {
+    localStorage.setItem(key, newValue);
     setFormData((prev) => ({
       ...prev,
       [key]: newValue,
@@ -71,13 +86,6 @@ const Campaigns = () => {
   };
 
   const onSubmit = async () => {
-    // const allowedLimit = allowedContentSize(formData.media);
-    // if (formData.content.length > allowedLimit) {
-    //   setError(
-    //     `Length of campaign content cannot be more than ${allowedLimit}`
-    //   );
-    //   return;
-    // }
     if (
       !formData.media ||
       !formData.client ||
@@ -91,6 +99,7 @@ const Campaigns = () => {
       return;
     }
 
+    setDisableSubmit(true);
     const body = new FormData();
     for (const name in formData) {
       if (name !== "files") body.append(name, formData[name]);
@@ -111,7 +120,7 @@ const Campaigns = () => {
     if (res.ok) {
       alert("Campaign saved successfully");
       // setSuccess("Campaign saved successfully");
-      setFormData(initialState);
+      setFormData(newState);
       setCount((prev) => prev + 1);
       // setError("");
     } else {
@@ -121,6 +130,7 @@ const Campaigns = () => {
       // );
       // setSuccess("");
     }
+    setDisableSubmit(false);
   };
 
   const renderForm = () => {
@@ -304,7 +314,12 @@ const Campaigns = () => {
           </Grid>
 
           <Grid item md={3} xs={12} sx={{ textAlign: "right" }}>
-            <Button variant="contained" component="label" onClick={onSubmit}>
+            <Button
+              variant="contained"
+              disabled={disableSubmit}
+              component="label"
+              onClick={onSubmit}
+            >
               Submit
             </Button>
           </Grid>
