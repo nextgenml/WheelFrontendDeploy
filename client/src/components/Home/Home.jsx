@@ -14,6 +14,7 @@ export default function Home() {
   const { address } = useAccount();
   const [stats, setStats] = useState({});
   const [paymentStats, setPaymentStats] = useState({});
+  const navigate = useNavigate();
   const fetchData = async () => {
     const data = await getHomePageStats();
     setStats(data);
@@ -23,7 +24,6 @@ export default function Home() {
     setPaymentStats(data.stats);
   };
 
-  const navigate = useNavigate();
   useEffect(() => {
     fetchData();
     fetchStatsData();
@@ -110,29 +110,23 @@ export default function Home() {
               <Button
                 variant="contained"
                 className={styles.appBtn}
-                onClick={() => {
-                  return window.open(
-                    "/spin-wheel",
-                    "Windows",
-                    "width=650,height=350,toolbar=no,menubar=no,scrollbars=yes,resizable=yes,location=no,directories=no,status=no,addressbar=no"
-                  );
-                }}
+                onClick={() => navigate("spin-wheel")}
               >
                 LAUNCH WHEEL
               </Button>
               <Button
                 variant="contained"
-                href="/tokens"
                 target="_blank"
                 className={styles.appBtn}
+                onClick={() => navigate("/tokens")}
               >
                 Allocation
               </Button>
               <Button
                 variant="contained"
-                href="/referrals"
                 target="_blank"
                 className={styles.appBtn}
+                onClick={() => navigate("/referrals")}
               >
                 Referrals
               </Button>
@@ -140,25 +134,25 @@ export default function Home() {
             <Box display="flex" alignItems="center">
               <Button
                 variant="contained"
-                href="/social-sharing"
                 target="_blank"
                 className={styles.appBtn}
+                onClick={() => navigate("/social-sharing")}
               >
                 Work Area
               </Button>
               <Button
                 variant="contained"
-                href="/payments"
                 target="_blank"
                 className={styles.appBtn}
+                onClick={() => navigate("/payments")}
               >
                 Earnings
               </Button>
               <Button
                 variant="contained"
-                href="/posted-blogs"
                 target="_blank"
                 className={styles.appBtn}
+                onClick={() => navigate("/posted-blogs")}
               >
                 Posted Blogs
               </Button>

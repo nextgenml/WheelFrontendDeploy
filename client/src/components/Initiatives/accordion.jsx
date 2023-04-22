@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Grid, Button, Link } from "@mui/material";
 import { useAccount } from "wagmi";
+import { useNavigate } from "react-router";
 
 let borderStyle = {
   backgroundColor: "#fb9c01",
@@ -23,6 +24,7 @@ export default function AccordionElement({
   extVideoUrl,
 }) {
   const { isConnected } = useAccount();
+  const navigate = useNavigate();
   return (
     <Accordion disabled={disableCondition} sx={{ ...borderStyle }}>
       <AccordionSummary
@@ -44,7 +46,7 @@ export default function AccordionElement({
             <Grid item md={6}>
               <Typography>{subTitle}</Typography>
             </Grid>
-            <Grid item md={6}>
+            <Grid item md={6} sx={{ overflow: "hidden" }}>
               <img
                 src={imageUrl}
                 width={1024}
@@ -54,12 +56,12 @@ export default function AccordionElement({
               />
               {isConnected && (
                 <>
-                  <Link
-                    href={extArticleUrl}
-                    target="_blank"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <Button variant="contained" sx={{ mt: 2 }}>
+                  <Link target="_blank" style={{ textDecoration: "none" }}>
+                    <Button
+                      variant="contained"
+                      sx={{ mt: 2 }}
+                      onClick={() => navigate(extArticleUrl)}
+                    >
                       BLOG
                     </Button>
                   </Link>
