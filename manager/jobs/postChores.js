@@ -28,14 +28,13 @@ const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
 const { updateWallets } = require("../wallet");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
-const { NXML_BLOG_CAMPAIGN } = require("../../constants");
 const config = require("../../config/env");
 
 const createPostChores = async (campaigns) => {
   try {
     for (const campaign of campaigns) {
       console.log("campaign.campaign", campaign.campaign);
-      if (campaign.campaign === NXML_BLOG_CAMPAIGN) continue;
+      if (campaign.post_link) continue;
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];
       let noOfPosts = successCriteria.POST;
@@ -171,7 +170,7 @@ schedule.scheduleJob(rule, async () => {
   await initiateAlgorithm();
 });
 
-// initiateAlgorithm();
+initiateAlgorithm();
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));

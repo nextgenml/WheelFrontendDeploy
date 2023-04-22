@@ -57,6 +57,41 @@ const createValidationChore = async (choreId) => {
   }
 };
 
+const createCompletedPostChore = async (
+  detailsId,
+  walletId,
+  startTime,
+  endTime,
+  content,
+  postLink
+) => {
+  const chore = await choresRepo.createChore({
+    campaignDetailsId: detailsId,
+    walletId,
+    mediaType: "twitter",
+    choreType: "post",
+    validFrom: startTime,
+    validTo: endTime,
+    value: process.env.COST_PER_CHORE,
+    content,
+  });
+
+  const split = postLink.split("/");
+  const followLink = split.slice(0, split.length - 2).join("/");
+  const postId = split[split.length - 1];
+
+  await choresRepo.markChoreAsCompleted({
+    linkToPost: postLink,
+    mediaPostId: postId,
+    followLink,
+    createdAt: moment().subtract(1, "hour").format(DATE_TIME_FORMAT),
+    id: chore[1].insertId,
+    walletId: walletId,
+    campaignDetailsId: detailsId,
+    choreType: "post",
+  });
+};
 module.exports = {
   createValidationChore,
+  createCompletedPostChore,
 };

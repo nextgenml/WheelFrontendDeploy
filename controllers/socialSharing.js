@@ -5,11 +5,15 @@ const campaign1Repo = require("../repository/campaign");
 const uuid = require("uuid");
 const logger = require("../logger");
 const { roundTo2Decimals } = require("../utils");
-const { createValidationChore } = require("../manager/chores");
+const {
+  createValidationChore,
+  createCompletedPostChore,
+} = require("../manager/chores");
 const { createOtherChores } = require("../manager/jobs/otherChores");
 require("../manager/jobs/postChores");
 require("../manager/jobs/validationChore");
-
+const moment = require("moment");
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const getSocialSharingStats = async (req, res) => {
   try {
     const { mediaType, walletId } = req.query;
@@ -103,20 +107,30 @@ const saveCampaign = async (req, res) => {
   let insertId = -1;
   try {
     const { body, files } = req;
+    const { walletId } = req.query;
+    insertId = (
+      await campaignRepo.saveCampaign({ ...body, wallet_id: walletId })
+    ).insertId;
+    const mediaType = (body.media || "").split(",")[0];
 
-    insertId = (await campaignRepo.saveCampaign(body)).insertId;
-    const mediaTypes = (body.media || "").split(",");
-
-    for (const mediaType of mediaTypes) {
-      const collection_id = uuid.v4();
-      await campaignRepo.saveCampaignDetails({
-        ...body,
-        campaign_id: insertId,
-        content_type: "text",
-        collection_id,
-        media_type: mediaType,
-        image_urls: (files || []).map((x) => x.path.split("/")[1]).join(","),
-      });
+    const collection_id = uuid.v4();
+    const details = await campaignRepo.saveCampaignDetails({
+      ...body,
+      campaign_id: insertId,
+      content_type: "text",
+      collection_id,
+      media_type: mediaType,
+      image_urls: (files || []).map((x) => x.path.split("/")[1]).join(","),
+    });
+    if (body.post_link) {
+      await createCompletedPostChore(
+        details[1].insertId,
+        walletId,
+        moment(body.start_time).format(DATE_TIME_FORMAT),
+        moment(body.end_time).format(DATE_TIME_FORMAT),
+        body.content,
+        body.post_link
+      );
     }
     res.json({
       message: "done",

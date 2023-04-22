@@ -35,6 +35,7 @@ const initialState = {
   content: "",
   default: false,
   files: [],
+  post_link: "",
 };
 const Campaigns = () => {
   const { isConnected, address } = useAccount();
@@ -100,10 +101,13 @@ const Campaigns = () => {
         body.append(`file-${i}`, file, file.name);
       });
     body.append("wallet_id", address);
-    const res = await fetch(`${config.API_ENDPOINT}/save-campaign`, {
-      method: "POST",
-      body,
-    });
+    const res = await fetch(
+      `${config.API_ENDPOINT}/save-campaign?walletId=${address}`,
+      {
+        method: "POST",
+        body,
+      }
+    );
     if (res.ok) {
       alert("Campaign saved successfully");
       // setSuccess("Campaign saved successfully");
@@ -198,7 +202,6 @@ const Campaigns = () => {
                 }
               >
                 <MenuItem value="twitter">Twitter</MenuItem>
-                <MenuItem value="facebook">Facebook</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -232,14 +235,7 @@ const Campaigns = () => {
           </Grid>
 
           <Grid item md={12} xs={12}>
-            <InputLabel sx={{ mb: 1 }}>Campaign Content*</InputLabel>
-
-            {/* <RichTextEditor
-              onChange={(content) => onFormDataChange(content, "content")}
-              initialHtml=""
-              readOnly={false}
-            /> */}
-
+            <InputLabel sx={{ mb: 1 }}>Campaign/Tweet Content*</InputLabel>
             <TextField
               multiline
               fullWidth
@@ -247,6 +243,17 @@ const Campaigns = () => {
               value={formData.content}
               onChange={(e) => onFormDataChange(e.target.value, "content")}
               inputProps={{ maxLength: 280 }}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <InputLabel sx={{ mb: 1 }}>
+              Tweet Link (Optional). If provided, our users will promote your
+              tweet organically
+            </InputLabel>
+            <TextField
+              fullWidth
+              value={formData.post_link}
+              onChange={(e) => onFormDataChange(e.target.value, "post_link")}
             />
           </Grid>
           <Grid item md={6} xs={12}>
