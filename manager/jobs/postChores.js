@@ -33,7 +33,7 @@ const config = require("../../config/env");
 const createPostChores = async (campaigns) => {
   try {
     for (const campaign of campaigns) {
-      console.log("campaign.campaign", campaign.campaign);
+      // console.log("campaign.campaign", campaign.campaign);
       if (campaign.post_link) continue;
       const successCriteria =
         config.SUCCESS_FACTOR[campaign.success_factor.toUpperCase()];

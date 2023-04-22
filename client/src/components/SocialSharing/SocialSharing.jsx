@@ -156,14 +156,14 @@ const SocialSharing = () => {
             </Card>
           </Grid>
           <Grid item md={6} sm={4} textAlign={"right"}>
-          <Button
-                variant="contained"
-                href="/user-campaigns"
-                target="_blank"
-                sx={{mr: 2}}
-              >
-                Campaigns
-              </Button>
+            <Button
+              variant="contained"
+              href="/user-campaigns"
+              target="_blank"
+              sx={{ mr: 2 }}
+            >
+              Campaigns
+            </Button>
             <Instructions
               generatedAlias={walletDetails.alias}
               address={address}
@@ -178,7 +178,7 @@ const SocialSharing = () => {
               variant="fullWidth"
             >
               <Tab label={`Twitter`} value="twitter" />
-              <Tab label="Facebook" value="facebook" />
+              {/* <Tab label="Facebook" value="facebook" /> */}
             </TabList>
           </Box>
 
