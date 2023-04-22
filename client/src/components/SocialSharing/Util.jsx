@@ -24,13 +24,13 @@ export const getChoreDesc = (chore) => {
     case "post":
       return (
         <Typography variant="body1">
-          - Post this content exactly like shared below
+          - <b>Post</b> this content exactly like shared below
         </Typography>
       );
     case "like":
       return (
         <Typography variant="body1">
-          - Click on the link below to like the{" "}
+          - Click on the link below to <b>like</b> the{" "}
           <Link href={chore.link_to_post} target={chore.link_to_post}>
             Post
           </Link>
@@ -39,7 +39,7 @@ export const getChoreDesc = (chore) => {
     case "retweet":
       return (
         <Typography variant="body1">
-          - Click on the link below to retweet the{" "}
+          - Click on the link below to <b>retweet</b> the{" "}
           <Link href={chore.link_to_post} target={chore.link_to_post}>
             Post
           </Link>
@@ -48,7 +48,7 @@ export const getChoreDesc = (chore) => {
     case "comment":
       return (
         <Typography variant="body1">
-          - Click on the link below to comment on the{" "}
+          - Click on the link below to <b>comment</b> on the{" "}
           <Link href={chore.link_to_post} target={chore.link_to_post}>
             Post
           </Link>
@@ -57,13 +57,13 @@ export const getChoreDesc = (chore) => {
     case "follow":
       return (
         <Typography variant="body1">
-          - Follow the user in the link below
+          - <b>Follow</b> the user in the link below
         </Typography>
       );
     case "validate":
       return (
         <Typography variant="body1">
-          - Validate this work by going to this{" "}
+          - <b>Validate</b> this work by going to this{" "}
           <Link href={chore.link_to_post} target={chore.link_to_post}>
             Post
           </Link>{" "}
