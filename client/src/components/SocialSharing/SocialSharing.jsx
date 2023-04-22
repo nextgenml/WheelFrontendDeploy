@@ -155,20 +155,6 @@ const SocialSharing = () => {
               </Box>
             </Card>
           </Grid>
-          <Grid item md={6} sm={4} textAlign={"right"}>
-            <Button
-              variant="contained"
-              href="/user-campaigns"
-              target="_blank"
-              sx={{ mr: 2 }}
-            >
-              Campaigns
-            </Button>
-            <Instructions
-              generatedAlias={walletDetails.alias}
-              address={address}
-            />
-          </Grid>
         </Grid>
 
         <TabContext value={tabValue} sx={{ mt: 4 }}>
