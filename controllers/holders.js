@@ -1,8 +1,27 @@
+const Web3 = require("web3");
 const logger = require("../logger");
 const { validateAtHandles, replaceTrailingSlash } = require("../manager/blogs");
 const holderRepo = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
+const { config } = require("dotenv");
+const { utils } = require("ethers");
 
+const login = async (req, res) => {
+  const { address, signature } = req.body;
+  w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
+
+  const actualAddress = utils.verifyMessage(
+    "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    signature
+  );
+  if (actualAddress !== address) {
+    res.status(401).json({ error: "Invalid signature" });
+    return;
+  }
+  res.send({
+    token: "asdfasf",
+  });
+};
 const saveSocialLinks = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -72,4 +91,5 @@ const getDetails = async (req, res) => {
 module.exports = {
   saveSocialLinks,
   getDetails,
+  login,
 };
