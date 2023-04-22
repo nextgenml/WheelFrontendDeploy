@@ -30,3 +30,5 @@ logs/app.log
 
 .env
 config/config.json
+
+uploads/
