@@ -35,18 +35,14 @@ import Invites from "./components/Invites/Invites";
 
 function App() {
   const location = useLocation();
-  const [socialSharing, setSocialSharing] = useState(false);
-  const whiteBgPages = ["/promotions", "/tokens", "/referrals"];
 
   useEffect(() => {
-    const includes = true; //whiteBgPages.includes(location.pathname);
-    document.body.style.backgroundColor = includes ? "white" : "black";
-    setSocialSharing(true);
+    document.body.style.backgroundColor = "white";
   }, [location.pathname]);
 
   return (
     <>
-      <Header socialSharing={false} whiteBg={socialSharing} />
+      <Header />
       <Routes>
         <Route
           path="/"
