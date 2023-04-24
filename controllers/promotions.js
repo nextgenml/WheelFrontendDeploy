@@ -4,18 +4,14 @@ const promotionsRepo = require("../repository/promotions");
 
 const updateBlogCount = async (req, res) => {
   try {
-    if (!req.body.walletId)
-      return res.status(400).json({
-        statusCode: 400,
-        message: "Unauthorized",
-      });
-    await promotionsRepo.updateBlogCount(req.body.walletId);
+    await promotionsRepo.updateBlogCount(req.query.walletId);
     return res.status(200).json({
       message: "done",
     });
   } catch (error) {}
 };
 const savePromotionRequest = async (req, res) => {
+  req.body.payer_wallet_id = req.query.walletId;
   try {
     if (
       !req.body.payer_wallet_id ||
@@ -50,7 +46,7 @@ const approvePromotionRequest = async (req, res) => {
         message: "Insufficient data",
       });
 
-    if (req.body.walletId !== config.ADMIN_WALLET_1)
+    if (req.query.walletId !== config.ADMIN_WALLET_1)
       return res.status(401).json({
         statusCode: 401,
         message: "Unauthorized",
@@ -69,7 +65,7 @@ const approvePromotionRequest = async (req, res) => {
 };
 const markAsDoneByUser = async (req, res) => {
   try {
-    if (!req.body.requestId || !req.body.walletId)
+    if (!req.body.requestId || !req.query.walletId)
       return res.status(400).json({
         statusCode: 400,
         message: "Insufficient data",
@@ -77,7 +73,7 @@ const markAsDoneByUser = async (req, res) => {
 
     await promotionsRepo.updatePromotion(
       req.body.requestId,
-      req.body.walletId,
+      req.query.walletId,
       req.body.paid
     );
     return res.status(200).json({
@@ -95,11 +91,6 @@ const getAppliedRequests = async (req, res) => {
   try {
     const { walletId, pageNo, pageSize } = req.query;
 
-    if (!walletId)
-      return res.status(401).json({
-        statusCode: 401,
-        message: "Unauthorized",
-      });
     const [data, total_count] = await promotionsRepo.getAppliedPromotions(
       walletId,
       parseInt(pageSize) || 10,
@@ -146,11 +137,6 @@ const getAppliedRequestsAdmin = async (req, res) => {
 const eligibleForCustomBlogs = async (req, res) => {
   try {
     const { walletId } = req.query;
-    if (!walletId)
-      return res.status(401).json({
-        statusCode: 401,
-        message: "Unauthorized",
-      });
     const [isEligible, _, __, ___] = await promotionsRepo.blogStats(walletId);
     return res.status(200).json({
       isEligible,

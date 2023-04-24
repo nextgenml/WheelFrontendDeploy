@@ -61,19 +61,43 @@ function App() {
         <Route path="/claim-distribution" element={<ClaimRedistribution />} />
         <Route path="/spin-wheel" element={<SpinAndWin />} />
 
-        <Route path="/nxml-blog-chat/:initiative" element={<NXMLChat />} />
-        <Route path="/promotions" element={<Promotions />} />
+        <Route
+          path="/nxml-blog-chat/:initiative"
+          element={<PrivateRoute component={<NXMLChat />} />}
+        />
+        <Route
+          path="/promotions"
+          element={<PrivateRoute component={<Promotions />} />}
+        />
         <Route path="/tokens" element={<Tokens />} />
         <Route
           path="/referrals"
           element={<PrivateRoute component={<Referrals />} />}
         />
-        <Route path="/social-sharing" element={<SocialSharing />} />
-        <Route path="/user-campaigns" element={<Campaigns />} />
-        <Route path="/user-profile" element={<Profile />} />
-        <Route path="/user-quizzes" element={<Quizzes />} />
-        <Route path="/posted-blogs" element={<PostedBlogs />} />
-        <Route path="/payments" element={<TotalEarnings />} />
+        <Route
+          path="/social-sharing"
+          element={<PrivateRoute component={<SocialSharing />} />}
+        />
+        <Route
+          path="/user-campaigns"
+          element={<PrivateRoute component={<Campaigns />} />}
+        />
+        <Route
+          path="/user-profile"
+          element={<PrivateRoute component={<Profile />} />}
+        />
+        <Route
+          path="/user-quizzes"
+          element={<PrivateRoute component={<Quizzes />} />}
+        />
+        <Route
+          path="/posted-blogs"
+          element={<PrivateRoute component={<PostedBlogs />} />}
+        />
+        <Route
+          path="/payments"
+          element={<PrivateRoute component={<TotalEarnings />} />}
+        />
         <Route
           path="/referrals/inviteCodes/:code"
           element={<PrivateRoute component={<Invites />} />}
