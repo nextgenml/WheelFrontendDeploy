@@ -3,9 +3,18 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import { fetchHolderNonceAPI, loginHolderAPI } from "../../API/Holder";
+import {
+  getAuthToken,
+  getLoggedInAddress,
+  removeAuthToken,
+  removeLoggedInId,
+  setAuthToken,
+  setLoggedInAddress,
+} from "../../API";
 const LoginHandler = () => {
   const { isConnected, address } = useAccount();
   const [connected, setConnected] = useState(isConnected);
+  const [connectedAddress, setConnectedAddress] = useState(address);
 
   async function signNonce(nonce) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -13,7 +22,7 @@ const LoginHandler = () => {
     try {
       const signature = await signer.signMessage(nonce);
       const add = await signer.getAddress();
-      console.log("signature", signature, add);
+      //   console.log("signature", signature, add);
       return { address: add, signature };
     } catch {
       alert(
@@ -29,21 +38,34 @@ const LoginHandler = () => {
     if (result.address) {
       const data = await loginHolderAPI(result);
       if (data) {
-        localStorage.setItem("auth_jwt_token", data.token);
+        setAuthToken(data.token);
+        setLoggedInAddress(result.address);
+        window.location.reload();
       }
     }
   };
   const logout = () => {
-    localStorage.removeItem("auth_jwt_token");
-    // window.location.reload();
+    removeAuthToken();
+    removeLoggedInId();
+    window.location.reload();
   };
   const checkIfSignatureRequired = () => {
-    if (!localStorage.getItem("auth_jwt_token")) {
+    const token = getAuthToken();
+    if (!token) {
       requestSignature();
     }
   };
 
   useEffect(() => {
+    if (isConnected) {
+      if (address !== connectedAddress || getLoggedInAddress() !== address) {
+        removeLoggedInId();
+        removeAuthToken();
+        setConnectedAddress(address);
+        requestSignature();
+        return;
+      }
+    }
     if (isConnected && !connected) {
       requestSignature();
       setConnected(true);
@@ -53,7 +75,7 @@ const LoginHandler = () => {
     } else if (isConnected) {
       checkIfSignatureRequired();
     }
-  }, [isConnected]);
+  }, [isConnected, address]);
 
   return null;
 };

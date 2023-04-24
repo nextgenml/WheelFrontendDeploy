@@ -11,7 +11,6 @@ const validateWalletId = async (req, res, next) => {
 
 const validateLoginSession = async (req, res, next) => {
   const token = req.headers.authorization;
-  console.log("token", token);
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).json({
@@ -20,7 +19,7 @@ const validateLoginSession = async (req, res, next) => {
           "Invalid session. Please disconnect and reconnect your metamask wallet again",
       });
     }
-
+    console.log("logged in wallet", decoded.walletId);
     req.query.walletId = decoded.walletId;
     return next();
   });

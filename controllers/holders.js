@@ -22,7 +22,6 @@ const getNonce = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { address, signature } = req.body;
-    console.log("req.body", req.body);
     if (!signature) return res.status(401).json({ error: "Invalid signature" });
 
     w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
@@ -97,7 +96,6 @@ const saveSocialLinks = async (req, res) => {
 const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
-    console.log("walletId", walletId);
     const holder = await holderRepo.getById(walletId);
     return res.json({
       facebookLink: holder?.facebook_link || "",

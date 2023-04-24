@@ -44,7 +44,7 @@ export const loginHolderAPI = async (payload) => {
     body: JSON.stringify(payload),
   });
   if (res.ok) {
-    alert("Login successful");
+    // alert("Login successful");
     return await res.json();
   } else {
     const error = await res.json();
