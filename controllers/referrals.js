@@ -10,6 +10,8 @@ const { formatTransactionId } = require("../utils/spinwheelUtil");
 require("../manager/jobs/referrals");
 const get = async (req, res) => {
   try {
+    const user = req.session;
+    console.log("user", user);
     const { walletId, pageNo, pageSize } = req.query;
 
     let [data, total_count] = [null, null];

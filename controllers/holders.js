@@ -5,27 +5,46 @@ const holderRepo = require("../repository/holder");
 const referralsRepo = require("../repository/referrals");
 const { config } = require("dotenv");
 const { utils } = require("ethers");
+const jwt = require("jsonwebtoken");
 
+const getNonce = async (req, res) => {
+  try {
+    const { walletId } = req.query;
+    const nonce = await holderRepo.getInviteCode(walletId);
+    res.send({
+      nonce,
+    });
+  } catch (error) {
+    logger.info(`getNonce: ${error}`);
+    res.status(400).json({ error: error.message });
+  }
+};
 const login = async (req, res) => {
   try {
     const { address, signature } = req.body;
+    console.log("req.body", req.body);
     if (!signature) return res.status(401).json({ error: "Invalid signature" });
 
     w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
 
-    console.log("address, signature", address, signature);
-    const actualAddress = utils.verifyMessage(
-      "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-      signature
-    );
-    if (actualAddress !== address) {
-      res.status(401).json({ error: "Invalid signature" });
-      return;
-    }
+    const nonce = await holderRepo.getInviteCode(address);
+    const actualAddress = utils.verifyMessage(nonce, signature);
+
+    console.log("actualAddress", actualAddress, "address", address, nonce);
+    if (actualAddress !== address)
+      return res.status(401).json({ error: "Invalid signature" });
+
+    const payload = { walletId: address };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "3d",
+    });
     res.send({
-      token: "asdfasf",
+      message: "login successful",
+      token,
     });
   } catch (error) {
+    logger.info(`login: ${error}`);
+
     res.status(400).json({ error: "Login Failed" });
   }
 };
@@ -78,6 +97,7 @@ const saveSocialLinks = async (req, res) => {
 const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
+    console.log("walletId", walletId);
     const holder = await holderRepo.getById(walletId);
     return res.json({
       facebookLink: holder?.facebook_link || "",
@@ -99,4 +119,5 @@ module.exports = {
   saveSocialLinks,
   getDetails,
   login,
+  getNonce,
 };

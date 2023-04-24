@@ -35,7 +35,7 @@ const PrivateRoute = ({ component }) => {
     }
   }
   useEffect(() => {
-    login();
+    // login();
   }, []);
   if (isConnected) return <>{component}</>;
   else

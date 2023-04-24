@@ -3,6 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 const { static } = require("express");
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");

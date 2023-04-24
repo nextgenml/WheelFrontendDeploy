@@ -82,7 +82,7 @@ export default function ReferralList({
           <TableHead>
             <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
               {headers.map((h) => {
-                return <TableCell>{h}</TableCell>;
+                return <TableCell key={h}>{h}</TableCell>;
               })}
               {isAdmin && <TableCell></TableCell>}
             </TableRow>

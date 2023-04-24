@@ -19,10 +19,12 @@ import { useAccount } from "wagmi";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
-import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 import InternalApps from "./InternalApps";
 import { useNavigate } from "react-router";
+import LoginHandler from "../LoginHandler/LoginHandler";
+import config from "../../config";
+import { getAPICall } from "../../API";
 
 export default function Header() {
   const { isConnected, address } = useAccount();
@@ -32,7 +34,10 @@ export default function Header() {
   const [socialLinks, setSocialLinks] = useState<any>({});
   const navigate = useNavigate();
   const fetchHolder = async () => {
-    const data = await fetchHolderAPI(address);
+    const data = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/holders/details`,
+      true
+    );
     setSocialLinks(data);
     setBlogDate(data.pointRewardsStartAt);
   };
@@ -175,6 +180,7 @@ export default function Header() {
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
       {renderBlogTimer()}
+      <LoginHandler />
       {showSaveLinks && (
         <SaveSocialLinks
           onClose={(saved: boolean) => {

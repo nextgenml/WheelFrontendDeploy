@@ -83,14 +83,14 @@ export default function InternalApps() {
         }}
       >
         {publicApps.map((a) => (
-          <MenuItem onClick={() => handleClose(a.path)}>
+          <MenuItem onClick={() => handleClose(a.path)} key={a.name}>
             <ListItemIcon>{a.icon}</ListItemIcon>
             {a.name}
           </MenuItem>
         ))}
         {isConnected &&
           connectedApps.map((a) => (
-            <MenuItem onClick={() => handleClose(a.path)}>
+            <MenuItem onClick={() => handleClose(a.path)} key={a.name}>
               <ListItemIcon>{a.icon}</ListItemIcon>
               {a.name}
             </MenuItem>
