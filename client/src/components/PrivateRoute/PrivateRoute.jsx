@@ -8,17 +8,6 @@ const PrivateRoute = ({ component }) => {
   const { isConnected, address } = useAccount();
 
   async function signNonce(nonce) {
-    // const provider = window.ethereum;
-    // if (!provider) {
-    //   throw new Error("Metamask is not installed or not connected");
-    // }
-
-    // const accounts = await provider.request({ method: "eth_requestAccounts" });
-    // const signature = await provider.request({
-    //   method: "eth_sign",
-    //   params: [accounts[0], nonce],
-    // });
-
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = await provider.getSigner();
     const signature = await signer.signMessage(nonce);

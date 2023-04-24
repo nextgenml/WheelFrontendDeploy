@@ -7,23 +7,27 @@ const { config } = require("dotenv");
 const { utils } = require("ethers");
 
 const login = async (req, res) => {
-  const { address, signature } = req.body;
-  if (!signature) return res.status(401).json({ error: "Invalid signature" });
+  try {
+    const { address, signature } = req.body;
+    if (!signature) return res.status(401).json({ error: "Invalid signature" });
 
-  w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
+    w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
 
-  console.log("address, signature", address, signature);
-  const actualAddress = utils.verifyMessage(
-    "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
-    signature
-  );
-  if (actualAddress !== address) {
-    res.status(401).json({ error: "Invalid signature" });
-    return;
+    console.log("address, signature", address, signature);
+    const actualAddress = utils.verifyMessage(
+      "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      signature
+    );
+    if (actualAddress !== address) {
+      res.status(401).json({ error: "Invalid signature" });
+      return;
+    }
+    res.send({
+      token: "asdfasf",
+    });
+  } catch (error) {
+    res.status(400).json({ error: "Login Failed" });
   }
-  res.send({
-    token: "asdfasf",
-  });
 };
 const saveSocialLinks = async (req, res) => {
   try {
