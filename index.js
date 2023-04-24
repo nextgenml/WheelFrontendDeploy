@@ -109,25 +109,62 @@ app.post(
 );
 
 // social sharing routes
-app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
-app.get("/social-sharing-chores", socialSharingController.getChoresByType);
-app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
-app.get("/campaigns", socialSharingController.getCampaigns);
-app.post("/update-campaign", socialSharingController.updateCampaign);
+app.get(
+  "/social-sharing-stats",
+  validateLoginSession,
+  socialSharingController.getSocialSharingStats
+);
+app.get(
+  "/social-sharing-chores",
+  validateLoginSession,
+  socialSharingController.getChoresByType
+);
+app.post(
+  "/save-campaign",
+  validateLoginSession,
+  upload.any(),
+  socialSharingController.saveCampaign
+);
+app.get(
+  "/campaigns",
+  validateLoginSession,
+  socialSharingController.getCampaigns
+);
+app.post(
+  "/update-campaign",
+  validateLoginSession,
+  socialSharingController.updateCampaign
+);
 
 // quizzes routes
-app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
-app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
-app.post("/save-quiz-answers", quizController.saveAnswers);
-app.get("/quizzes", quizController.getAllQuizzes);
+app.post(
+  "/upload-quizzes",
+  validateLoginSession,
+  upload.any(),
+  quizController.uploadQuiz
+);
+app.get(
+  "/quizzes-by-level",
+  validateLoginSession,
+  quizController.getQuestionsByLevel
+);
+app.post(
+  "/save-quiz-answers",
+  validateLoginSession,
+  quizController.saveAnswers
+);
+app.get("/quizzes", validateLoginSession, quizController.getAllQuizzes);
 
 // wallet routes
-app.get("/get-wallet-details", walletController.getWalletDetails);
-app.post("/update-alias", walletController.updateAlias);
+app.post("/update-alias", validateLoginSession, walletController.updateAlias);
 
 // Token routes
 app.get("/get-user-tokens", tokenController.getUserTokens);
-app.get("/admin-token-stats", validateWalletId, tokenController.getAdminStats);
+app.get(
+  "/admin-token-stats",
+  validateLoginSession,
+  tokenController.getAdminStats
+);
 
 app.use("/", require("./routes/index"));
 
