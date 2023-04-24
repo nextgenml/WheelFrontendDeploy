@@ -8,8 +8,11 @@ const { utils } = require("ethers");
 
 const login = async (req, res) => {
   const { address, signature } = req.body;
+  if (!signature) return res.status(401).json({ error: "Invalid signature" });
+
   w3 = new Web3(new Web3.providers.HttpProvider(config.WEB3_PROVIDER_URL));
 
+  console.log("address, signature", address, signature);
   const actualAddress = utils.verifyMessage(
     "0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
     signature
