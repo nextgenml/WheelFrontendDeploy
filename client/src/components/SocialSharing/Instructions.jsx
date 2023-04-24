@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import config from "../../config";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { customFetch } from "../../API/index.js";
 const Instructions = ({ generatedAlias, address }) => {
   const [open, setOpen] = React.useState(false);
   const [alias, setAlias] = React.useState(generatedAlias || "");
@@ -38,7 +39,7 @@ const Instructions = ({ generatedAlias, address }) => {
   };
 
   const onSubmit = async () => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/update-alias?walletId=${address}`,
       {
         method: "POST",

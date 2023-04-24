@@ -18,13 +18,14 @@ import styles from "./SocialSharing.module.css";
 // import { convert } from "html-to-text";
 import Chore from "./Chore";
 import { markChoreAsDoneAPI, validateChoreAPI } from "../../API/SocialSharing";
+import { customFetch } from "../../API/index.js";
 
 const ChoresContent = ({ tab, walletId, menuOption }) => {
   const [chores, setChores] = useState();
   const [filter, setFilter] = useState("todo");
 
   const fetchStats = async () => {
-    const res = await fetch(
+    const res = await customFetch(
       `${
         config.API_ENDPOINT
       }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}`,

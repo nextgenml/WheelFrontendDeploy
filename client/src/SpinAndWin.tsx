@@ -18,6 +18,7 @@ import {
   Typography,
   FormControl,
 } from "@mui/material";
+import { customFetch } from "./API";
 
 const SPIN_TYPES = [
   ["daily", "Daily"],
@@ -98,7 +99,7 @@ export default function SpinAndWin() {
         walletAddress: (address || "").toString(),
       });
 
-    const winners_data_res = await fetch(url, {
+    const winners_data_res = await customFetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -118,7 +119,7 @@ export default function SpinAndWin() {
         walletAddress: (address || "").toString(),
       });
 
-    let spinner_data_res = await fetch(spinnerURL, {
+    let spinner_data_res = await customFetch(spinnerURL, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +227,7 @@ export default function SpinAndWin() {
                 border: "1px solid #d5d0d0",
                 padding: "8px",
                 borderRadius: "8px",
-                display: "flex"
+                display: "flex",
               }}
               className="flex flex-row  items-center justify-center mt-8 lg:justify-end w-full"
             >

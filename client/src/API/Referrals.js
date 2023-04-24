@@ -1,5 +1,5 @@
 import config from "../config.js";
-import { getAPICall, writeAPICall } from "./index.js";
+import { customFetch, getAPICall, writeAPICall } from "./index.js";
 
 export const fetchReferralsAPI = async (walletId, pageNo, pageSize) => {
   return getAPICall(
@@ -15,7 +15,7 @@ export const saveReferralAPI = async (walletId, payload) => {
 };
 
 export const updateReferralAPI = async (walletId, id, payload) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/referrals/${id}?walletId=${walletId}`,
     {
       method: "PUT",

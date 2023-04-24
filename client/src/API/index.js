@@ -26,12 +26,12 @@ const addHeaders = (options) => {
 };
 
 export const customFetch = async (url, options = {}) => {
-  return fetch(url, addHeaders(options));
+  return customFetch(url, addHeaders(options));
 };
 export const getAPICall = async (url, skipMessage = false, headers = {}) => {
   const token = getAuthToken();
   //   if (!token) return;
-  const res = await fetch(url, {
+  const res = await customFetch(url, {
     headers: {
       ...headers,
       Authorization: token,
@@ -57,7 +57,7 @@ export const writeAPICall = async (
 ) => {
   const token = getAuthToken();
 
-  const res = await fetch(url, {
+  const res = await customFetch(url, {
     method,
     body: JSON.stringify(payload),
     headers: {

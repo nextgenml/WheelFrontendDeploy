@@ -1,7 +1,8 @@
 import config from "../config.js";
+import { customFetch } from "./index.js";
 
 export const saveSocialLinksAPI = async (walletId, payload) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/holders/social-links?walletId=${walletId}`,
     {
       method: "POST",
@@ -23,7 +24,7 @@ export const saveSocialLinksAPI = async (walletId, payload) => {
   }
 };
 export const fetchHolderNonceAPI = async (walletId) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/holders/nonce?walletId=${walletId}`
   );
   if (res.ok) {
@@ -38,7 +39,7 @@ export const fetchHolderNonceAPI = async (walletId) => {
 };
 
 export const loginHolderAPI = async (payload) => {
-  const res = await fetch(`${config.API_ENDPOINT}/api/v1/holders/login`, {
+  const res = await customFetch(`${config.API_ENDPOINT}/api/v1/holders/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

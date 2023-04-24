@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import config from "../../config.js";
 import { useAccount } from "wagmi";
 import PromotionsList from "./PromotionsList";
+import { customFetch } from "../../API/index.js";
 
 const initialState = {
   eth_amount: 0,
@@ -68,7 +69,7 @@ const Promotions = () => {
     formData.payer_wallet_id = address;
     formData.receiver_wallet_id = config.PROMOTIONS_RECEIVER_WALLET;
 
-    const res = await fetch(`${config.API_ENDPOINT}/save-promotion`, {
+    const res = await customFetch(`${config.API_ENDPOINT}/save-promotion`, {
       method: "POST",
       body: JSON.stringify(formData),
       headers: {

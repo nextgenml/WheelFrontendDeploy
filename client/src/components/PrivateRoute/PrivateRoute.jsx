@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { useAccount } from "wagmi";
-import { getAuthToken } from "../../API";
+import { getAuthToken } from "../../API/index.js";
 
 const PrivateRoute = ({ component }) => {
   const { isConnected } = useAccount();

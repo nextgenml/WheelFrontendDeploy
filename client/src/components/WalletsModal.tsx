@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
+import { customFetch } from "../API";
 
 interface Props {
   data: any;
@@ -18,7 +19,7 @@ const WalletsModal = (props: Props) => {
 
   const [wallets, setWallets] = useState([]);
   const fetchData = async () => {
-    const winners_data_res = await fetch(
+    const winners_data_res = await customFetch(
       `/spin-participants?day=${data.day}&spin_no=${data.spin}&type=${data.type}`,
       {
         method: "GET",

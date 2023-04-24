@@ -24,7 +24,7 @@ import InternalApps from "./InternalApps";
 import { useNavigate } from "react-router";
 import LoginHandler from "../LoginHandler/LoginHandler";
 import config from "../../config";
-import { getAPICall } from "../../API";
+import { getAPICall } from "../../API/index.js";
 
 export default function Header() {
   const { isConnected, address } = useAccount();

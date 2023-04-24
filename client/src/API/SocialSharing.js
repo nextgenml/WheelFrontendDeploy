@@ -1,7 +1,8 @@
 import config from "../config.js";
+import { customFetch } from "./index.js";
 
 export const getContentFromChatGptAPI = async (payload) => {
-  const res = await fetch(`${config.CHATGPT_ENDPOINT}/collections`, {
+  const res = await customFetch(`${config.CHATGPT_ENDPOINT}/collections`, {
     method: "POST",
     body: JSON.stringify(payload),
     headers: {
@@ -20,7 +21,7 @@ export const getContentFromChatGptAPI = async (payload) => {
 };
 
 export const markChoreAsDoneAPI = async (walletId, choreId, payload) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/socialSharing/chores/${choreId}/done?walletId=${walletId}`,
     {
       method: "PUT",
@@ -42,7 +43,7 @@ export const markChoreAsDoneAPI = async (walletId, choreId, payload) => {
 };
 
 export const validateChoreAPI = async (walletId, choreId, action, payload) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/socialSharing/chores/${choreId}/validate/${action}?walletId=${walletId}`,
     {
       method: "PUT",

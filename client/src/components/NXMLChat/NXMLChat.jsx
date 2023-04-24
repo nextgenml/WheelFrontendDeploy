@@ -67,7 +67,7 @@ const BlogForm = () => {
   async function get_gpt_data(input, raw) {
     try {
       const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
-      let response = await fetch(url, {
+      let response = await customFetch(url, {
         headers: {
           accept: "*/*",
           "accept-language": "en-US,en;q=0.9",
@@ -112,7 +112,7 @@ const BlogForm = () => {
         : `${config.API_ENDPOINT}/get-blog-data?searchWalletAdd=${
             reset || !walletAdd ? "" : walletAdd
           }&offset=${offset}&walletId=${address}`;
-    let response = await fetch(url, {
+    let response = await customFetch(url, {
       headers: {
         accept: "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -144,7 +144,7 @@ const BlogForm = () => {
       walletId: address,
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
-    let response = await fetch(url, {
+    let response = await customFetch(url, {
       headers: {
         accept: "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -176,7 +176,7 @@ const BlogForm = () => {
 
   const getBlogStats = async () => {
     if (isCustom) {
-      const res1 = await fetch(
+      const res1 = await customFetch(
         `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
       );
       const data = await res1.json();
@@ -184,7 +184,7 @@ const BlogForm = () => {
     }
   };
   const getPromotionBlogs = async () => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/promoted-blogs/?walletId=${address}`
     );
     if (res.ok) {

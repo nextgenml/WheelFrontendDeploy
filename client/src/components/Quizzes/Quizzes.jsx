@@ -10,6 +10,7 @@ import Tab from "@mui/material/Tab";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import Loading from "../loading";
 import Questions from "./Questions";
+import { customFetch } from "../../API/index.js";
 
 const Quizzes = () => {
   const { isConnected, address } = useAccount();
@@ -20,14 +21,14 @@ const Quizzes = () => {
   const [width, setWidth] = useState(window.innerWidth);
 
   const fetchQuizzes = async () => {
-    const res1 = await fetch(
+    const res1 = await customFetch(
       `${config.API_ENDPOINT}/quizzes?wallet_id=${address}`
     );
     const data1 = await res1.json();
     setQuizzes(data1);
   };
   const fetchData = async (submission) => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/quizzes-by-level?level=${tabValue}&wallet_id=${address}`
     );
     const data = await res.json();

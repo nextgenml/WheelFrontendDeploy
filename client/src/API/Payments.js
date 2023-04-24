@@ -21,7 +21,7 @@ export const fetchPaymentsAPI = async (walletId, query) => {
 };
 
 export const fetchPaymentStatsAPI = async (walletId) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/payments/stats?walletId=${walletId}`
   );
   if (res.ok) {

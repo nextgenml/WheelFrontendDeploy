@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { useAccount } from "wagmi";
 import moment from "moment";
+import { customFetch } from "../../API/index.js";
 
 const headers = [
   "Token",
@@ -51,7 +52,7 @@ const Tokens = () => {
   const fetchAdminData = async () => {
     let url = `${config.API_ENDPOINT}/admin-token-stats?walletId=${address}`;
 
-    const res1 = await fetch(url);
+    const res1 = await customFetch(url);
     if (res1.ok) {
       const { data } = await res1.json();
       setAdminStats(data);
@@ -62,7 +63,7 @@ const Tokens = () => {
   const fetchData = async () => {
     let url = `${config.API_ENDPOINT}/get-user-tokens?walletId=${address}&search=${search}`;
 
-    const res1 = await fetch(url);
+    const res1 = await customFetch(url);
     if (res1.ok) {
       const data = await res1.json();
       setTokens(data.data);

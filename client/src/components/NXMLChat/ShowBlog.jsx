@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import config from "../../config";
 import { useState } from "react";
+import { customFetch } from "../../API/index.js";
 
 function ShowBlog({ onClose, currentRow, hideUpdate }) {
   const [blog, setBlog] = useState(currentRow.blog);
@@ -22,7 +23,7 @@ function ShowBlog({ onClose, currentRow, hideUpdate }) {
       blog: blog,
     };
     const url = `${config.API_ENDPOINT}/update-blog-data`;
-    let response = await fetch(url, {
+    let response = await customFetch(url, {
       headers: {
         accept: "*/*",
         "accept-language": "en-US,en;q=0.9",

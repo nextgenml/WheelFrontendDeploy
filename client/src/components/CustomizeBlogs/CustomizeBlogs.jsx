@@ -10,6 +10,7 @@ import styles from "./CustomizeBlogs.module.css";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import config from "../../config";
+import { customFetch } from "../../API/index.js";
 
 export default function CustomizeBlogs() {
   const { isConnected, address } = useAccount();
@@ -24,7 +25,7 @@ export default function CustomizeBlogs() {
   ]);
 
   const checkEligibility = async () => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/custom-blogs-eligibility?walletId=${address}`
     );
     if (res.ok) {
@@ -35,7 +36,7 @@ export default function CustomizeBlogs() {
 
   const getBlogStats = async () => {
     if (eligible) {
-      const res1 = await fetch(
+      const res1 = await customFetch(
         `${config.API_ENDPOINT}/blog-stats?walletId=${address}`
       );
       const data = await res1.json();

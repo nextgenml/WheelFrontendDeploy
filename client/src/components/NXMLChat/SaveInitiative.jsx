@@ -11,6 +11,7 @@ import config from "../../config";
 import { updateBlogCount } from "../../Utils/Blog";
 import { Checkbox, TextField } from "@mui/material";
 import { updateInCache } from "./BlogUtil";
+import { customFetch } from "../../API/index.js";
 
 const SaveInitiative = ({
   prompt,
@@ -215,7 +216,7 @@ const SaveInitiative = ({
   };
 
   const copyImage = async (imgUrl) => {
-    const blob = await fetch(imgUrl).then((resp) => resp.blob());
+    const blob = await customFetch(imgUrl).then((resp) => resp.blob());
     navigator.clipboard.write([
       new ClipboardItem({
         "image/png": blob,
@@ -230,7 +231,7 @@ const SaveInitiative = ({
   };
   async function get_gpt_data(input, callFor) {
     const url = "https://backend.chatbot.nexgenml.com/collections";
-    let response = await fetch(url, {
+    let response = await customFetch(url, {
       headers: {
         accept: "*/*",
         "accept-language": "en-US,en;q=0.9",
@@ -406,7 +407,7 @@ const SaveInitiative = ({
         });
       }
       const url = `${config.API_ENDPOINT}/save-blog-data`;
-      let response = await fetch(url, {
+      let response = await customFetch(url, {
         method: "POST",
         body: formData,
       });

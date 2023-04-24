@@ -10,7 +10,7 @@ import {
   removeLoggedInId,
   setAuthToken,
   setLoggedInAddress,
-} from "../../API";
+} from "../../API/index.js";
 const LoginHandler = () => {
   const { isConnected, address } = useAccount();
   const [connected, setConnected] = useState(isConnected);

@@ -42,7 +42,7 @@ export default function CampaignsList({ address, count }) {
   const [totalCount, setTotalCount] = React.useState(0);
   const [search, setSearch] = React.useState("");
   const fetchData = async () => {
-    const res1 = await fetch(
+    const res1 = await customFetch(
       `${config.API_ENDPOINT}/campaigns?walletId=${address}&search=${search}&pageNo=${page}&pageSize=${rowsPerPage}`
     );
     const data = await res1.json();
@@ -72,7 +72,7 @@ export default function CampaignsList({ address, count }) {
   );
 
   const onUpdate = async (action, isRecursive, campaignId) => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/update-campaign?walletId=${address}&userAction=${action}&campaignId=${campaignId}&isRecursive=${isRecursive}`,
       {
         method: "POST",
