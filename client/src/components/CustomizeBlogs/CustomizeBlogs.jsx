@@ -11,12 +11,14 @@ import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import config from "../../config";
 import { customFetch } from "../../API/index.js";
+import { useNavigate } from "react-router";
 
 export default function CustomizeBlogs() {
   const { isConnected, address } = useAccount();
   const [context, setContext] = useState(null);
   const [eligible, setEligible] = useState(false);
   const [blogStats, setBlogStats] = useState({});
+  const navigate = useNavigate();
   const [prompts, setPrompts] = useState([
     {
       id: 1,
@@ -107,9 +109,8 @@ export default function CustomizeBlogs() {
                       component="label"
                       disabled={!context}
                       onClick={() =>
-                        window.open(
-                          `/nxml-blog-chat/blog-customization?context=list 10 ways ${context}`,
-                          "_blank"
+                        navigate(
+                          `/nxml-blog-chat/blog-customization?context=list 10 ways ${context}`
                         )
                       }
                     >
@@ -142,9 +143,9 @@ export default function CustomizeBlogs() {
                           .filter((p) => !!p.value)
                           .map((x) => x.value)
                           .join("||");
-                        window.open(
-                          `/nxml-blog-chat/blog-customization?prompts=${promptString}`,
-                          "_blank"
+
+                        navigate(
+                          `/nxml-blog-chat/blog-customization?prompts=${promptString}`
                         );
                       }}
                     >
@@ -167,18 +168,13 @@ export default function CustomizeBlogs() {
           <Grid item md={2}>
             <Button
               variant="contained"
-              onClick={() =>
-                window.open(`/nxml-blog-chat/promote-blogs`, "_blank")
-              }
+              onClick={() => navigate("/nxml-blog-chat/promote-blogs")}
             >
               Promote Blogs
             </Button>
           </Grid>
           <Grid item md={2}>
-            <Button
-              variant="contained"
-              onClick={() => window.open(`/promotions`, "_blank")}
-            >
+            <Button variant="contained" onClick={() => navigate("/promotions")}>
               Promotion Requests
             </Button>
           </Grid>
@@ -186,10 +182,7 @@ export default function CustomizeBlogs() {
             <Button
               variant="contained"
               onClick={() =>
-                window.open(
-                  `/nxml-blog-chat/blog-customization?view=1`,
-                  "_blank"
-                )
+                navigate("/nxml-blog-chat/blog-customization?view=1")
               }
             >
               View Customized Blogs

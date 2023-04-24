@@ -69,7 +69,7 @@ export default function Header() {
   // { link: "buy-nexgen", title: "BUY" },
 
   const headerLinks = [
-    { link: "", title: "HOME" },
+    { link: "/", title: "HOME" },
     { link: "goals", title: "GOALS" },
     { link: "values", title: "VALUES" },
     { link: "services", title: "SERVICES" },
