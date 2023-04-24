@@ -108,7 +108,6 @@ export default function SpinAndWin() {
 
     const winners_data = await winners_data_res.json();
     setWinnersData(winners_data.data);
-    console.log(`WINNERS DATA: ${winners_data.data}`);
     setNextTypeAt(winners_data.next_spin_at);
   };
   const fetchSpinnerData = async () => {
@@ -158,11 +157,6 @@ export default function SpinAndWin() {
     if (canRun && spins_remaining > 0) {
       let end_time = new Date();
 
-      console.log(
-        "fetching new ....... 1",
-        spin_delay,
-        end_time.getSeconds() + spin_delay
-      );
       end_time?.setSeconds(end_time.getSeconds() + spin_delay);
       setTimerEndDate(end_time);
       setTimerStartDate(new Date());

@@ -26,7 +26,7 @@ const addHeaders = (options) => {
 };
 
 export const customFetch = async (url, options = {}) => {
-  return customFetch(url, addHeaders(options));
+  return fetch(url, addHeaders(options));
 };
 export const getAPICall = async (url, skipMessage = false, headers = {}) => {
   const token = getAuthToken();
