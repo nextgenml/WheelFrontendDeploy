@@ -6,6 +6,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  TablePagination,
 } from "@mui/material";
 // import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
@@ -19,27 +20,33 @@ import styles from "./SocialSharing.module.css";
 import Chore from "./Chore";
 import { markChoreAsDoneAPI, validateChoreAPI } from "../../API/SocialSharing";
 import { customFetch } from "../../API/index.js";
+import { getTotalCountOfTab } from "./Util";
 
-const ChoresContent = ({ tab, walletId, menuOption }) => {
+const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
   const [chores, setChores] = useState();
   const [filter, setFilter] = useState("todo");
-
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
   const fetchStats = async () => {
+    setLoading(true);
     const res = await customFetch(
       `${
         config.API_ENDPOINT
-      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}`,
+      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}&pageNo=${page}&pageSize=10`,
       {
         method: "GET",
       }
     );
     const data = await res.json();
     setChores(data.data);
+    setLoading(false);
   };
   useEffect(() => {
     fetchStats();
-  }, [menuOption, filter]);
-
+  }, [menuOption, filter, page]);
+  useEffect(() => {
+    setPage(0);
+  }, [menuOption]);
   const markAsDone = async (choreId, payload) => {
     const res = await markChoreAsDoneAPI(walletId, choreId, payload);
     if (res) {
@@ -83,6 +90,7 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
         </div>
       );
   };
+  if (loading) return <Loading loading />;
   return chores ? (
     <>
       <FormControl sx={{ ml: 2 }}>
@@ -101,6 +109,14 @@ const ChoresContent = ({ tab, walletId, menuOption }) => {
           <FormControlLabel value="all" control={<Radio />} label="All" />
         </RadioGroup>
       </FormControl>
+      <TablePagination
+        rowsPerPageOptions={[]}
+        component="div"
+        count={getTotalCountOfTab(stats, menuOption)}
+        rowsPerPage={10}
+        page={page}
+        onPageChange={(e, val) => setPage(val)}
+      />
       {renderContent()}
     </>
   ) : (

@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 
-import { Card, Grid, Typography, Button } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import styles from "./SocialSharing.module.css";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 
 // import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
@@ -16,7 +15,6 @@ import { useEffect, useState } from "react";
 import config from "../../config";
 import Loading from "../loading";
 import { useAccount } from "wagmi";
-import Instructions from "./Instructions";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import { customFetch } from "../../API/index.js";
@@ -25,7 +23,6 @@ const SocialSharing = () => {
   const { isConnected, address } = useAccount();
   const [stats, setStats] = useState();
   const [menuOption, setMenuOption] = useState("new");
-  const [walletDetails, setWalletDetails] = useState({});
   const fetchStats = async (tab, menuOption) => {
     const res = await customFetch(
       `${
@@ -35,18 +32,6 @@ const SocialSharing = () => {
     const data = await res.json();
     setStats(data);
   };
-
-  const getWalletDetails = async () => {
-    const res = await customFetch(
-      `${config.API_ENDPOINT}/get-wallet-details?walletId=${address}`
-    );
-    const data = await res.json();
-    setWalletDetails(data);
-  };
-
-  useEffect(() => {
-    getWalletDetails();
-  }, []);
 
   useEffect(() => {
     fetchStats(tabValue, "new");
@@ -182,6 +167,7 @@ const SocialSharing = () => {
                   tab={"twitter"}
                   walletId={address}
                   menuOption={menuOption}
+                  stats={stats}
                 />
               </Grid>
             </Grid>

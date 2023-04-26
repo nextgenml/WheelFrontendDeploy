@@ -86,21 +86,37 @@ const getSocialSharingStats = async (req, res) => {
 
 const getChoresByType = async (req, res) => {
   try {
-    const { mediaType, walletId, type, filter } = req.query;
+    let { mediaType, walletId, type, filter, pageNo, pageSize } = req.query;
+    const offset = pageNo * pageSize;
+    pageSize = parseInt(pageSize);
     let data = [];
     switch (type) {
       case "new":
-        data = await choresRepo.getTodayChores(walletId, mediaType, filter);
+        data = await choresRepo.getTodayChores(
+          walletId,
+          mediaType,
+          filter,
+          offset,
+          pageSize
+        );
         break;
       case "old":
-        data = await choresRepo.getOldChores(walletId, mediaType, filter);
+        data = await choresRepo.getOldChores(
+          walletId,
+          mediaType,
+          filter,
+          offset,
+          pageSize
+        );
         break;
       default:
         data = await choresRepo.getChoresByType(
           walletId,
           mediaType,
           type,
-          filter
+          filter,
+          offset,
+          pageSize
         );
         break;
     }

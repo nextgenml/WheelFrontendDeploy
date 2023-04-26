@@ -75,3 +75,13 @@ export const getChoreDesc = (chore) => {
       return null;
   }
 };
+
+export const getTotalCountOfTab = (stats, menuOption) => {
+  if (!stats) return 0;
+  switch (menuOption) {
+    case "New":
+      return stats.newTotalCount;
+    default:
+      return stats[`${menuOption.toLowerCase()}Count`];
+  }
+};

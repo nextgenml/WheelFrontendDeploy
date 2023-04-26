@@ -206,10 +206,16 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
   return [results[0].sum || 0, results[0].count || 0];
 };
 
-const getTodayChores = async (walletId, mediaType, filter) => {
+const getTodayChores = async (
+  walletId,
+  mediaType,
+  filter,
+  offset,
+  pageSize
+) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.valid_from >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and c.valid_to >= ? and cd.is_active = 1 
-  and (completed_by_user = ? or 1 = ?) order by c.id desc`;
+  and (completed_by_user = ? or 1 = ?) order by c.id desc limit ? offset ?`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -218,14 +224,16 @@ const getTodayChores = async (walletId, mediaType, filter) => {
     moment().format(DATE_TIME_FORMAT),
     filter === "completed" ? 1 : 0,
     filter === "all" ? 1 : 0,
+    pageSize,
+    offset,
   ]);
 
   return results;
 };
-const getOldChores = async (walletId, mediaType, filter) => {
+const getOldChores = async (walletId, mediaType, filter, offset, pageSize) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.valid_from < ? and c.valid_to >= ? and c.wallet_id = ? and c.media_type = ? and c.is_completed = 0 and cd.is_active = 1 
-  and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
+  and (completed_by_user = ? or 1 = ?) order by c.id desc limit ? offset ?;`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -234,6 +242,9 @@ const getOldChores = async (walletId, mediaType, filter) => {
     mediaType,
     filter === "completed" ? 1 : 0,
     filter === "all" ? 1 : 0,
+    pageSize,
+
+    offset,
   ]);
 
   return results;
@@ -247,10 +258,17 @@ const getChoresById = async (choreId) => {
   return results[0];
 };
 
-const getChoresByType = async (walletId, mediaType, choreType, filter) => {
+const getChoresByType = async (
+  walletId,
+  mediaType,
+  choreType,
+  filter,
+  offset,
+  pageSize
+) => {
   const query = `select c.*, cd.image_urls from chores c inner join campaign_details cd on cd.id = c.campaign_detail_id
   where c.wallet_id = ? and c.media_type = ? and c.chore_type = ? and c.valid_to >= ? and c.is_completed = 0 and cd.is_active = 1 
-  and (completed_by_user = ? or 1 = ?) order by c.id desc;`;
+  and (completed_by_user = ? or 1 = ?) order by c.id desc limit ? offset ?;`;
 
   const results = await runQueryAsync(query, [
     walletId,
@@ -259,6 +277,9 @@ const getChoresByType = async (walletId, mediaType, choreType, filter) => {
     moment().format(DATE_TIME_FORMAT),
     filter === "completed" ? 1 : 0,
     filter === "all" ? 1 : 0,
+    pageSize,
+
+    offset,
   ]);
 
   return results;
