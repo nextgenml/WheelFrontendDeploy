@@ -3,6 +3,7 @@ import { useState } from "react";
 import config from "../../config";
 import styles from "./Profile.module.css";
 import { useAccount } from "wagmi";
+import { customFetch } from "../../API/index.js";
 
 const Profile = () => {
   const [file, setFile] = useState();

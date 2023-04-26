@@ -24,6 +24,7 @@ import moment from "moment";
 import { useAccount } from "wagmi";
 import { fetchBalance } from "@wagmi/core";
 import CampaignsList from "./CampaignsList";
+import { customFetch } from "../../API";
 
 const newState = {
   media: ["twitter"],
@@ -110,7 +111,7 @@ const Campaigns = () => {
         body.append(`file-${i}`, file, file.name);
       });
     body.append("wallet_id", address);
-    const res = await custom(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/save-campaign?walletId=${address}`,
       {
         method: "POST",

@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import styles from "./Campaigns.module.css";
 import SearchIcon from "@mui/icons-material/Search";
+import { customFetch } from "../../API/index.js";
 
 const headers = [
   "Client Name",
