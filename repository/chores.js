@@ -169,7 +169,7 @@ const getTodayTotal = async (walletId) => {
 };
 // stats for left navigation
 const getTodayChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -178,10 +178,10 @@ const getTodayChoresTotal = async (walletId, mediaType) => {
     mediaType,
   ]);
 
-  return results[0].sum || 0;
+  return [results[0].sum || 0, results[0].count || 0];
 };
 const getOldChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -190,11 +190,11 @@ const getOldChoresTotal = async (walletId, mediaType) => {
     mediaType,
   ]);
 
-  return results[0].sum || 0;
+  return [results[0].sum || 0, results[0].count || 0];
 };
 
 const getTotalByChore = async (walletId, mediaType, choreType) => {
-  const query = `select sum(value) as sum from chores where wallet_id = ? and media_type = ? and chore_type = ? and is_completed = 0 and valid_to >= ?`;
+  const query = `select sum(value) as sum, count(1) as count from chores where wallet_id = ? and media_type = ? and chore_type = ? and is_completed = 0 and valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
     walletId,
@@ -203,7 +203,7 @@ const getTotalByChore = async (walletId, mediaType, choreType) => {
     moment().format(DATE_TIME_FORMAT),
   ]);
 
-  return results[0].sum || 0;
+  return [results[0].sum || 0, results[0].count || 0];
 };
 
 const getTodayChores = async (walletId, mediaType, filter) => {
