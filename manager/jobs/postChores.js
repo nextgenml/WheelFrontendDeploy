@@ -149,7 +149,6 @@ const initiateAlgorithm = async () => {
   // await updateWallets(new Date());
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
-  console.log("campaigns", campaigns);
   // await checkIfPostsChoreCompleted(postedCampaigns, endTime);
   // await checkIfOtherChoresCompleted(postedCampaigns, endTime);
   // await checkIfFollowComplete();
