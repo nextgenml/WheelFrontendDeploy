@@ -29,18 +29,13 @@ const getUserBlogStats = async (req, res) => {
 
 const updateBlogData = async (req, res) => {
   try {
-    let { validatedFlag, walletId, paidFlag, transactionID } = req.body;
+    let { validatedFlag, paidFlag, transactionID } = req.body;
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
       return res.status(400).json({
         statusCode: 400,
         msg: "Insufficient data",
       });
     }
-    // if (walletId !== config.ADMIN_WALLET_1)
-    //   return res.status(401).json({
-    //     statusCode: 401,
-    //     msg: "Unauthorized",
-    //   });
 
     await blogsRepo.updateBlogData(req.body);
     return res.status(200).json({
@@ -58,9 +53,7 @@ const updateBlogData = async (req, res) => {
 const getCustomBlogs = async (req, res) => {
   try {
     const { walletId, pageSize, pageNo, search } = req.query;
-
-    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
-
+    console.log("walletId", walletId);
     const [totalResult, data] = await blogsRepo.getCustomBlogs(
       walletId,
       walletId === config.ADMIN_WALLET_1,
@@ -157,7 +150,8 @@ const saveBlogData = async (req, res) => {
       image_urls.push(file.filename);
     });
 
-    const { wallet_address, initiative, prompt, blog } = req.body;
+    let { wallet_address, initiative, prompt, blog } = req.body;
+    wallet_address = req.query.walletId;
 
     if (!wallet_address || !initiative || !prompt || !blog) {
       return res.status(400).json({ msg: "Invalid data" });

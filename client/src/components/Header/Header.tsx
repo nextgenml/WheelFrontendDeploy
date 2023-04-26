@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Stack,
   Typography,
@@ -19,16 +19,14 @@ import { useAccount } from "wagmi";
 import TimeSpentCounter from "../../Utils/TimeSpentCounter";
 // @ts-ignore
 import styles from "./Header.module.css";
-import { fetchHolderAPI } from "../../API/Holder.js";
 import SaveSocialLinks from "./SaveSocialLinks";
 import InternalApps from "./InternalApps";
 import { useNavigate } from "react-router";
+import LoginHandler from "../LoginHandler/LoginHandler";
+import config from "../../config";
+import { getAPICall } from "../../API/index.js";
 
-interface Props {
-  socialSharing: boolean;
-  whiteBg: boolean;
-}
-export default function Header(props: Props) {
+export default function Header() {
   const { isConnected, address } = useAccount();
   const [blogDate, setBlogDate] = useState<string | null>(null);
   const [openDrawer, setState] = useState<boolean>(false);
@@ -36,7 +34,10 @@ export default function Header(props: Props) {
   const [socialLinks, setSocialLinks] = useState<any>({});
   const navigate = useNavigate();
   const fetchHolder = async () => {
-    const data = await fetchHolderAPI(address);
+    const data = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/holders/details`,
+      true
+    );
     setSocialLinks(data);
     setBlogDate(data.pointRewardsStartAt);
   };
@@ -67,20 +68,13 @@ export default function Header(props: Props) {
   // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
   // { link: "buy-nexgen", title: "BUY" },
 
-  const headerLinks = props.socialSharing
-    ? [
-        { link: "", title: "HOME" },
-        { route: "", title: "CHORES" },
-        { route: "user-campaigns", title: "CAMPAIGNS" },
-        { route: "user-quizzes", title: "QUIZZES" },
-      ]
-    : [
-        { link: "", title: "HOME" },
-        { link: "goals", title: "GOALS" },
-        { link: "values", title: "VALUES" },
-        { link: "services", title: "SERVICES" },
-        { link: "utilities", title: "UTILITIES" },
-      ];
+  const headerLinks = [
+    { link: "/", title: "HOME" },
+    { link: "goals", title: "GOALS" },
+    { link: "values", title: "VALUES" },
+    { link: "services", title: "SERVICES" },
+    { link: "utilities", title: "UTILITIES" },
+  ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
@@ -131,7 +125,7 @@ export default function Header(props: Props) {
           .map((h) => {
             return (
               <a
-                href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                href={h.link}
                 style={{
                   textDecoration: "none",
                   whiteSpace: "nowrap",
@@ -186,6 +180,7 @@ export default function Header(props: Props) {
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
       {renderBlogTimer()}
+      <LoginHandler />
       {showSaveLinks && (
         <SaveSocialLinks
           onClose={(saved: boolean) => {
@@ -212,7 +207,7 @@ export default function Header(props: Props) {
               return (
                 <a
                   // onClick={() => navigate(h.route || `/#${h.link}`)}
-                  href={h.link ? `/#${h.link}` : `/${h.route || ""}`}
+                  href={h.link}
                   rel="noopener noreferrer"
                   key={h.title}
                   style={{ whiteSpace: "nowrap", color: "black" }}

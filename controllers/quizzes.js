@@ -9,7 +9,13 @@ const moment = require("moment");
 const uploadQuiz = async (req, res) => {
   try {
     const { files } = req;
-
+    const { walletId } = req.query;
+    if (walletId !== config.ADMIN_WALLET) {
+      return res.status(400).json({
+        statusCode: 401,
+        message: "Unauthorized",
+      });
+    }
     if (!files || !files[0])
       return res.status(400).json({
         statusCode: 400,
@@ -77,17 +83,17 @@ const uploadQuiz = async (req, res) => {
 
 const getQuestionsByLevel = async (req, res) => {
   try {
-    const { level, wallet_id } = req.query;
-    if (!wallet_id)
+    const { level, walletId } = req.query;
+    if (!walletId)
       return res.status(400).json({
         statusCode: 400,
         message: "wallet id is missing",
       });
 
-    const data = await quizRepo.getQuestionsByLevel(level, wallet_id);
+    const data = await quizRepo.getQuestionsByLevel(level, walletId);
 
     let intersection, is_admin;
-    if (wallet_id === config.ADMIN_WALLET) {
+    if (walletId === config.ADMIN_WALLET) {
       is_admin = true;
       const walletsGroup = [];
       for (const question of data) {
@@ -124,16 +130,16 @@ const getQuestionsByLevel = async (req, res) => {
 const saveAnswers = async (req, res) => {
   try {
     const { answers } = req.body;
-    const { wallet_id } = req.query;
+    const { walletId } = req.query;
 
-    if (!wallet_id || !answers)
+    if (!walletId || !answers)
       return res.status(400).json({
         statusCode: 400,
         message: "wallet id or answers are missing",
       });
 
     for (const answer of answers) {
-      await quizRepo.createQuizSubmission(answer, wallet_id);
+      await quizRepo.createQuizSubmission(answer, walletId);
     }
     res.json({
       message: "Quiz answers saved!",
@@ -149,16 +155,10 @@ const saveAnswers = async (req, res) => {
 
 const getAllQuizzes = async (req, res) => {
   try {
-    const { wallet_id } = req.query;
-
-    if (!wallet_id)
-      return res.status(400).json({
-        statusCode: 400,
-        message: "wallet is missing",
-      });
+    const { walletId } = req.query;
 
     const { quizzes, completedQuizzes } = await quizRepo.getAllQuizzes(
-      wallet_id
+      walletId
     );
 
     let totalReward = 0;

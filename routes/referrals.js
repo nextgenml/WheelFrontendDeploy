@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const referralsController = require("../controllers/referrals");
-const { validateWalletId } = require("./auth");
+const { validateLoginSession, extractWallet } = require("./auth");
 
-router.post("/", validateWalletId, referralsController.create);
-router.put("/:id", validateWalletId, referralsController.update);
-router.get("/", validateWalletId, referralsController.get);
-router.get("/top", referralsController.topReferrals);
+router.post("/", validateLoginSession, referralsController.create);
+router.put("/:id", validateLoginSession, referralsController.update);
+router.get("/", validateLoginSession, referralsController.get);
+router.get("/top", extractWallet, referralsController.topReferrals);
 module.exports = router;

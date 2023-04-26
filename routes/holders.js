@@ -1,11 +1,13 @@
 const router = require("express").Router();
 const holdersController = require("../controllers/holders");
-const { validateWalletId } = require("./auth");
+const { validateWalletId, validateLoginSession } = require("./auth");
 
 router.post(
   "/social-links",
-  validateWalletId,
+  validateLoginSession,
   holdersController.saveSocialLinks
 );
-router.get("/details", validateWalletId, holdersController.getDetails);
+router.post("/login", holdersController.login);
+router.get("/details", validateLoginSession, holdersController.getDetails);
+router.get("/nonce", validateWalletId, holdersController.getNonce);
 module.exports = router;

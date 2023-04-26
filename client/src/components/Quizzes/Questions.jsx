@@ -12,6 +12,7 @@ import styles from "./Quizzes.module.css";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import { customFetch } from "../../API/index.js";
 // import moment from "moment";
 
 const Questions = ({ quiz, walletId, fetchData }) => {
@@ -32,7 +33,7 @@ const Questions = ({ quiz, walletId, fetchData }) => {
       alert("Please answer all questions");
       return;
     }
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/save-quiz-answers?wallet_id=${walletId}`,
       {
         method: "POST",

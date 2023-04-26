@@ -21,6 +21,7 @@ import {
   Box,
 } from "@mui/material";
 import styles from "./Promotions.module.css";
+import { customFetch } from "../../API/index.js";
 
 const headers = [
   "Receiver Wallet",
@@ -50,7 +51,7 @@ export default function PromotionsList({ address, count }) {
       url = `${config.API_ENDPOINT}/promotions-admin?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
     else
       url = `${config.API_ENDPOINT}/get-promotions?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`;
-    const res1 = await fetch(url);
+    const res1 = await customFetch(url);
     if (res1.ok) {
       const data = await res1.json();
       setPromotions(data.data);
@@ -74,7 +75,7 @@ export default function PromotionsList({ address, count }) {
   };
 
   const onUpdate = async (status, reason, requestId) => {
-    const res = await fetch(`${config.API_ENDPOINT}/approve-promotion`, {
+    const res = await customFetch(`${config.API_ENDPOINT}/approve-promotion`, {
       method: "POST",
       body: JSON.stringify({
         walletId: address,
@@ -105,17 +106,20 @@ export default function PromotionsList({ address, count }) {
   };
 
   const onUserUpdate = async (requestId, paid) => {
-    const res = await fetch(`${config.API_ENDPOINT}/mark-promotion-done-user`, {
-      method: "POST",
-      body: JSON.stringify({
-        walletId: address,
-        requestId,
-        paid,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await customFetch(
+      `${config.API_ENDPOINT}/mark-promotion-done-user`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          walletId: address,
+          requestId,
+          paid,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (res.ok) {
       alert("Saved successfully");
     } else {

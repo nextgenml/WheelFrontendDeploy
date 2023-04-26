@@ -14,7 +14,7 @@ const Profile = () => {
   const onSubmit = async () => {
     const body = new FormData();
     body.append("file", file);
-    const res = await fetch(`${config.API_ENDPOINT}/upload-quizzes`, {
+    const res = await customFetch(`${config.API_ENDPOINT}/upload-quizzes`, {
       method: "POST",
       body,
     });

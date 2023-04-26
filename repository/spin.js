@@ -32,7 +32,6 @@ const createSpin = async (nextSpin) => {
     spinDay,
     nextSpin.id,
   ]);
-  console.log("insertId", insertId);
   const spin = `select * from spins where id = ?;`;
 
   let users = await runQueryAsync(spin, [insertId]);

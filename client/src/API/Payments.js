@@ -1,7 +1,8 @@
 import config from "../config.js";
+import { customFetch } from "./index.js";
 
 export const fetchPaymentsAPI = async (walletId, query) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/payments?` +
       new URLSearchParams({
         walletId,
@@ -20,7 +21,7 @@ export const fetchPaymentsAPI = async (walletId, query) => {
 };
 
 export const fetchPaymentStatsAPI = async (walletId) => {
-  const res = await fetch(
+  const res = await customFetch(
     `${config.API_ENDPOINT}/api/v1/payments/stats?walletId=${walletId}`
   );
   if (res.ok) {

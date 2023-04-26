@@ -3,6 +3,7 @@ const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 const { static } = require("express");
+
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -20,15 +21,19 @@ const walletController = require("./controllers/wallet");
 const tokenController = require("./controllers/token");
 const promotionsController = require("./controllers/promotions");
 const blogsController = require("./controllers/blogs");
-const { validateWalletId } = require("./routes/auth");
+const {
+  validateWalletId,
+  validateLoginSession,
+  extractWallet,
+} = require("./routes/auth");
 
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
-app.get("/spinner-data", spinWheelController.spinnerData);
+app.get("/spinner-data", extractWallet, spinWheelController.spinnerData);
 
-app.get("/winners-data", spinWheelController.winnerData);
+app.get("/winners-data", extractWallet, spinWheelController.winnerData);
 
 app.get("/participants-data", spinWheelController.participantsData);
 
@@ -39,44 +44,127 @@ app.get("/time-now", (req, res) => {
 });
 
 // blog routes
-app.post("/save-promotion", promotionsController.savePromotionRequest);
-app.post("/approve-promotion", promotionsController.approvePromotionRequest);
-app.get("/get-promotions", promotionsController.getAppliedRequests);
-app.get("/promotions-admin", promotionsController.getAppliedRequestsAdmin);
-app.post("/mark-promotion-done-user", promotionsController.markAsDoneByUser);
-app.get("/get-custom-blogs", blogsController.getCustomBlogs);
-app.get("/promoted-blogs", blogsController.getPromotedBlogs);
-app.get("/promoted-blog-stats", blogsController.getBlogStats);
-app.get("/blog-stats", blogsController.getUserBlogStats);
-app.post("/update-blog-count", promotionsController.updateBlogCount);
+app.post(
+  "/save-promotion",
+  validateLoginSession,
+  promotionsController.savePromotionRequest
+);
+app.post(
+  "/approve-promotion",
+  validateLoginSession,
+  promotionsController.approvePromotionRequest
+);
+app.get(
+  "/get-promotions",
+  validateLoginSession,
+  promotionsController.getAppliedRequests
+);
+app.get(
+  "/promotions-admin",
+  validateLoginSession,
+  promotionsController.getAppliedRequestsAdmin
+);
+app.post(
+  "/mark-promotion-done-user",
+  validateLoginSession,
+  promotionsController.markAsDoneByUser
+);
+app.get(
+  "/get-custom-blogs",
+  validateLoginSession,
+  blogsController.getCustomBlogs
+);
+app.get(
+  "/promoted-blogs",
+  validateLoginSession,
+  blogsController.getPromotedBlogs
+);
+app.get(
+  "/promoted-blog-stats",
+  validateLoginSession,
+  blogsController.getBlogStats
+);
+app.get("/blog-stats", validateLoginSession, blogsController.getUserBlogStats);
+app.post(
+  "/update-blog-count",
+  validateLoginSession,
+  promotionsController.updateBlogCount
+);
 app.get(
   "/custom-blogs-eligibility",
+  validateLoginSession,
   promotionsController.eligibleForCustomBlogs
 );
-app.put("/update-blog-data", blogsController.updateBlogData);
-app.get("/get-blog-data", blogsController.getBlogData);
-app.post("/save-blog-data", upload.any(), blogsController.saveBlogData);
+app.put(
+  "/update-blog-data",
+  validateLoginSession,
+  blogsController.updateBlogData
+);
+app.get("/get-blog-data", validateLoginSession, blogsController.getBlogData);
+app.post(
+  "/save-blog-data",
+  validateLoginSession,
+  upload.any(),
+  blogsController.saveBlogData
+);
 
 // social sharing routes
-app.get("/social-sharing-stats", socialSharingController.getSocialSharingStats);
-app.get("/social-sharing-chores", socialSharingController.getChoresByType);
-app.post("/save-campaign", upload.any(), socialSharingController.saveCampaign);
-app.get("/campaigns", socialSharingController.getCampaigns);
-app.post("/update-campaign", socialSharingController.updateCampaign);
+app.get(
+  "/social-sharing-stats",
+  validateLoginSession,
+  socialSharingController.getSocialSharingStats
+);
+app.get(
+  "/social-sharing-chores",
+  validateLoginSession,
+  socialSharingController.getChoresByType
+);
+app.post(
+  "/save-campaign",
+  validateLoginSession,
+  upload.any(),
+  socialSharingController.saveCampaign
+);
+app.get(
+  "/campaigns",
+  validateLoginSession,
+  socialSharingController.getCampaigns
+);
+app.post(
+  "/update-campaign",
+  validateLoginSession,
+  socialSharingController.updateCampaign
+);
 
 // quizzes routes
-app.post("/upload-quizzes", upload.any(), quizController.uploadQuiz);
-app.get("/quizzes-by-level", quizController.getQuestionsByLevel);
-app.post("/save-quiz-answers", quizController.saveAnswers);
-app.get("/quizzes", quizController.getAllQuizzes);
+app.post(
+  "/upload-quizzes",
+  validateLoginSession,
+  upload.any(),
+  quizController.uploadQuiz
+);
+app.get(
+  "/quizzes-by-level",
+  validateLoginSession,
+  quizController.getQuestionsByLevel
+);
+app.post(
+  "/save-quiz-answers",
+  validateLoginSession,
+  quizController.saveAnswers
+);
+app.get("/quizzes", validateLoginSession, quizController.getAllQuizzes);
 
 // wallet routes
-app.get("/get-wallet-details", walletController.getWalletDetails);
-app.post("/update-alias", walletController.updateAlias);
+app.post("/update-alias", validateLoginSession, walletController.updateAlias);
 
 // Token routes
 app.get("/get-user-tokens", tokenController.getUserTokens);
-app.get("/admin-token-stats", validateWalletId, tokenController.getAdminStats);
+app.get(
+  "/admin-token-stats",
+  validateLoginSession,
+  tokenController.getAdminStats
+);
 
 app.use("/", require("./routes/index"));
 

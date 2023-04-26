@@ -5,11 +5,12 @@ import { Grid, Link } from "@mui/material";
 import { useEffect, useState } from "react";
 import config from "../../config";
 import moment from "moment";
+import { customFetch } from "../../API/index.js";
 
 function BlogStats({ onClose, blogId, address }) {
   const [stats, setStats] = useState([]);
   const fetchData = async () => {
-    const res = await fetch(
+    const res = await customFetch(
       `${config.API_ENDPOINT}/promoted-blog-stats?walletId=${address}&blogId=${blogId}`
     );
     const { data } = await res.json();

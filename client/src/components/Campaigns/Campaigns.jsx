@@ -110,7 +110,7 @@ const Campaigns = () => {
         body.append(`file-${i}`, file, file.name);
       });
     body.append("wallet_id", address);
-    const res = await fetch(
+    const res = await custom(
       `${config.API_ENDPOINT}/save-campaign?walletId=${address}`,
       {
         method: "POST",
