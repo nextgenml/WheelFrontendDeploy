@@ -233,7 +233,7 @@ const validateChore = async (req, res) => {
     const campaign = await campaign1Repo.getCampaignForChore(choreId);
     if (action === "approve") {
       if (campaign.is_recursive_algo)
-        await createOtherChores(
+        createOtherChores(
           [
             {
               ...campaign,
