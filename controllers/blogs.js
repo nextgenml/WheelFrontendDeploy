@@ -87,7 +87,6 @@ const getPromotedBlogs = async (req, res) => {
   try {
     const { walletId } = req.query;
 
-    if (!walletId) return res.status(400).json({ msg: "Invalid data" });
     const [data, total] = await blogsManager.getPromotedBlogs(walletId);
     return res.json({ data, total });
   } catch (error) {
