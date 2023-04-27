@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
-import { ethers } from "ethers";
 import { fetchHolderNonceAPI, loginHolderAPI } from "../../API/Holder";
 import {
   getAuthToken,
