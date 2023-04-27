@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { ethers } from "ethers";
 import { fetchHolderNonceAPI, loginHolderAPI } from "../../API/Holder";
 import {
@@ -15,16 +15,14 @@ const LoginHandler = () => {
   const { isConnected, address } = useAccount();
   const [connected, setConnected] = useState(isConnected);
   const [connectedAddress, setConnectedAddress] = useState(address);
+  const signer = useSignMessage();
 
   async function signNonce(nonce) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
     try {
-      const signature = await signer.signMessage(nonce);
-      const add = await signer.getAddress();
-      //   console.log("signature", signature, add);
-      return { address: add, signature };
-    } catch {
+      const signature = await signer.signMessageAsync({ message: nonce });
+      return { address: address, signature };
+    } catch (ex) {
+      console.log(ex);
       alert(
         "Login to NexgenMl is failed. Please refresh the page and sign the message using metamask"
       );
