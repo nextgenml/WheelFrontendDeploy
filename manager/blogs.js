@@ -208,9 +208,30 @@ const isPostedLinkValid = async (handle, link, type, errors) => {
     )
       errors.push(`${type} link is not from author profile.`);
     if (!(await isUrlValid(link))) errors.push(`Invalid ${type} link`);
+    isValidDomain(type, link);
+  } else {
+    errors.push(`${type} link or handle is missing`);
   }
 };
 
+const isValidDomain = (type, link, errors) => {
+  switch (type) {
+    case "Medium":
+      if (!link.includes("medium.com"))
+        errors.push("Link is not medium posted blog");
+      break;
+    case "Twitter":
+      if (!link.includes("twitter.com"))
+        errors.push("Link is not twitter posted blog");
+      break;
+    case "LinkedIn":
+      if (!link.includes("linkedin.com"))
+        errors.push("Link is not linkedIn posted blog");
+      break;
+    default:
+      break;
+  }
+};
 const validateAtHandles = (links) => {
   const { facebookLink, mediumLink, linkedinLink, twitterLink, telegramLink } =
     links;
