@@ -162,7 +162,13 @@ const areLinksValid = async (walletId, links) => {
 
   const account = await holderRepo.getById(walletId);
 
-  if (!account)
+  if (
+    !account ||
+    !account.twitter_link ||
+    !account.medium_link ||
+    !account.linkedin_link ||
+    !account.facebook_link
+  )
     return {
       message: ["Account is missing"],
       valid: false,
