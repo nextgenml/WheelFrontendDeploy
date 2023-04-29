@@ -33,6 +33,8 @@ const config = {
   // Token allocation
   TOKEN_MONTHLY_ALLOCATION: JSON.parse(process.env.TOKEN_MONTHLY_ALLOCATION),
   MAX_SUPPLY: process.env.MAX_SUPPLY,
+  CHATGPT_FREE_KEYS: JSON.parse(process.env.CHATGPT_FREE_KEYS),
+  CHATGPT_PAID_KEYS: JSON.parse(process.env.CHATGPT_PAID_KEYS),
 };
 
 module.exports = config;
