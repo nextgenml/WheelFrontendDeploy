@@ -1,6 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 const config = require("../config/env");
 const { createChatgptLog } = require("../repository/chatgpt_log");
+const logger = require("../logger");
 const FreeKeys = config.CHATGPT_FREE_KEYS;
 const PaidKeys = config.CHATGPT_PAID_KEYS;
 
@@ -89,7 +90,8 @@ const chatGptResponse = async (req, res) => {
     createChatgptLog(walletId, req.body.msg);
     res.send({ result: data });
   } catch (e) {
-    console.error(e);
+    logger.error(`error in chatGptResponse: ${e}`);
+    res.send({ result: data });
   }
 };
 module.exports = {
