@@ -20,4 +20,11 @@ router.get(
   validateAdmin,
   holdersController.searchHolders
 );
+
+router.put(
+  "/",
+  validateLoginSession,
+  validateAdmin,
+  holdersController.saveHolderByAdmin
+);
 module.exports = router;

@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Typography,
   Button,
@@ -19,13 +20,14 @@ import {
 } from "@mui/material";
 import styles from "./Holders.module.css";
 import { searchHoldersAPI } from "../../API/Holder";
+import EditHolder from "./EditHolder";
 
-const headers = ["Wallet Id", "Minimum Balance For AI", "Is Banned"];
+const headers = ["Wallet Id", "Minimum Balance to use AI", "Is Banned", ""];
 
 export default function Holders() {
   const [holders, setHolders] = React.useState([]);
   const [search, setSearch] = React.useState("");
-
+  const [currentRow, setCurrentRow] = React.useState(null);
   const fetchData = async () => {
     const res = await searchHoldersAPI(search);
     if (res) {
@@ -84,13 +86,25 @@ export default function Holders() {
                 >
                   <TableCell>{row.wallet_id}</TableCell>
                   <TableCell>{row.minimum_balance_for_ai}</TableCell>
-                  <TableCell>{row.is_banned}</TableCell>
+                  <TableCell>{row.is_banned === 0 ? "No" : "Yes"}</TableCell>
+                  <TableCell>
+                    {<EditIcon onClick={() => setCurrentRow(row)} />}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Paper>
+      {currentRow && (
+        <EditHolder
+          currentRow={currentRow}
+          onClose={(saved) => {
+            setCurrentRow(null);
+            if (saved) fetchData();
+          }}
+        />
+      )}
     </>
   );
 }

@@ -11,6 +11,8 @@ const searchHolders = async (req, res) => {
   try {
     const { search } = req.query;
     const holder = await holderRepo.getById(search);
+    holder.minimum_balance_for_ai ||=
+      process.env.MINIMUM_BALANCE_TO_USE_CONVERSE_AI;
     res.send(holder);
   } catch (error) {
     logger.info(`searchHolders: ${error}`);
@@ -124,7 +126,22 @@ const getDetails = async (req, res) => {
   }
 };
 
+const saveHolderByAdmin = async (req, res) => {
+  try {
+    await holderRepo.saveHolderByAdmin(req.body);
+    return res.json({
+      message: "Holder details updated successfully",
+    });
+  } catch (error) {
+    logger.info(`saveHolderByAdmin: ${error}`);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
+  saveHolderByAdmin,
   saveSocialLinks,
   getDetails,
   login,
