@@ -7,6 +7,17 @@ const { config } = require("dotenv");
 const { utils } = require("ethers");
 const jwt = require("jsonwebtoken");
 
+const searchHolders = async (req, res) => {
+  try {
+    const { search } = req.query;
+    const holder = await holderRepo.getById(search);
+    res.send(holder);
+  } catch (error) {
+    logger.info(`searchHolders: ${error}`);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const getNonce = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -118,4 +129,5 @@ module.exports = {
   getDetails,
   login,
   getNonce,
+  searchHolders,
 };
