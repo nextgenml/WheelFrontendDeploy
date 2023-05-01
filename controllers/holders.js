@@ -110,6 +110,9 @@ const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
     const holder = await holderRepo.getById(walletId);
+    if (holder)
+      holder.minimum_balance_for_ai ||=
+        process.env.MINIMUM_BALANCE_TO_USE_CONVERSE_AI;
     return res.json({
       facebookLink: holder?.facebook_link || "",
       mediumLink: holder?.medium_link || "",
@@ -117,6 +120,7 @@ const getDetails = async (req, res) => {
       twitterLink: holder?.twitter_link || "",
       telegramLink: holder?.telegram_link || "",
       pointRewardsStartAt: holder?.social_links_updated_at,
+      ...holder,
     });
   } catch (error) {
     logger.info(`saveSocialLinks: ${error}`);

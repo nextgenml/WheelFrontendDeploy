@@ -105,12 +105,6 @@ export default function InternalApps() {
               {a.name}
             </MenuItem>
           ))}
-
-        {console.log(
-          "config.ADMIN_WALLET === address",
-          config.ADMIN_WALLET,
-          address
-        )}
         {isConnected &&
           config.ADMIN_WALLET === address &&
           adminApps.map((a) => (
