@@ -1,6 +1,6 @@
 FROM node:16
 
-ENV TZ=America/Chicago
+ENV TZ=UTC
 
 WORKDIR /app
 
