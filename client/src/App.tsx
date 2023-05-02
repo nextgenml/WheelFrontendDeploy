@@ -32,6 +32,7 @@ import Referrals from "./components/Referrals/Referrals";
 import PostedBlogs from "./components/PostedBlogs/PostedBlogs";
 import TotalEarnings from "./components/TotalEarnings/TotalEarnings";
 import Invites from "./components/Invites/Invites";
+import Holders from "./components/Holders/Holders";
 
 function App() {
   const location = useLocation();
@@ -101,6 +102,10 @@ function App() {
         <Route
           path="/referrals/inviteCodes/:code"
           element={<PrivateRoute component={<Invites />} />}
+        />
+        <Route
+          path="/holders"
+          element={<PrivateRoute component={<Holders />} />}
         />
       </Routes>
       <Footer />

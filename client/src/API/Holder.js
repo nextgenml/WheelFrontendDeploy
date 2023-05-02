@@ -38,6 +38,21 @@ export const fetchHolderNonceAPI = async (walletId) => {
   }
 };
 
+export const searchHoldersAPI = async (walletId) => {
+  const res = await customFetch(
+    `${config.API_ENDPOINT}/api/v1/holders/search?search=${walletId}`
+  );
+  if (res.ok) {
+    return await res.json();
+  } else {
+    const error = await res.json();
+    alert(
+      error.message || "Something went wrong. Please try again after sometime"
+    );
+    return {};
+  }
+};
+
 export const loginHolderAPI = async (payload) => {
   const res = await customFetch(`${config.API_ENDPOINT}/api/v1/holders/login`, {
     method: "POST",

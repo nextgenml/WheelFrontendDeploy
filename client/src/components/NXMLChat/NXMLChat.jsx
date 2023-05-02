@@ -65,9 +65,9 @@ const BlogForm = () => {
     }
   }
 
-  async function get_gpt_data(input, raw) {
+  async function get_gpt_data(input) {
     try {
-      const url = `https://backend.chatbot.nexgenml.com/collections?raw=${raw}`;
+      const url = `${config.API_ENDPOINT}/api/v1/contentProducer`;
       let response = await customFetch(url, {
         headers: {
           accept: "*/*",

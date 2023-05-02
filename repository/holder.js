@@ -166,6 +166,14 @@ const getUniqueName = async (walletId) => {
   }
 };
 
+const saveHolderByAdmin = async (data) => {
+  const query = `update holders set minimum_balance_for_ai = ?, is_banned = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [
+    data.minimum_balance_for_ai,
+    data.is_banned,
+    data.wallet_id,
+  ]);
+};
 const saveSocialLinks = async (
   walletId,
   facebookLink,
@@ -248,4 +256,5 @@ module.exports = {
   saveSocialLinks,
   getByTwitter,
   getByInviteCode,
+  saveHolderByAdmin,
 };

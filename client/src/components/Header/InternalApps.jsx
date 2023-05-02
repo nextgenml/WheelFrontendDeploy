@@ -12,7 +12,10 @@ import GroupWorkIcon from "@mui/icons-material/GroupWork";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import BookIcon from "@mui/icons-material/Book";
+import PersonIcon from "@mui/icons-material/Person";
+import config from "../../config";
 export default function InternalApps() {
+  const { address } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -64,6 +67,13 @@ export default function InternalApps() {
       icon: <TokenIcon />,
     },
   ];
+  const adminApps = [
+    {
+      name: "Holders",
+      path: "/holders",
+      icon: <PersonIcon />,
+    },
+  ];
   return (
     <div>
       <Button
@@ -90,6 +100,14 @@ export default function InternalApps() {
         ))}
         {isConnected &&
           connectedApps.map((a) => (
+            <MenuItem onClick={() => handleClose(a.path)} key={a.name}>
+              <ListItemIcon>{a.icon}</ListItemIcon>
+              {a.name}
+            </MenuItem>
+          ))}
+        {isConnected &&
+          config.ADMIN_WALLET === address &&
+          adminApps.map((a) => (
             <MenuItem onClick={() => handleClose(a.path)} key={a.name}>
               <ListItemIcon>{a.icon}</ListItemIcon>
               {a.name}

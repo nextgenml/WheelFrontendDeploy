@@ -7,6 +7,19 @@ const { config } = require("dotenv");
 const { utils } = require("ethers");
 const jwt = require("jsonwebtoken");
 
+const searchHolders = async (req, res) => {
+  try {
+    const { search } = req.query;
+    const holder = await holderRepo.getById(search);
+    holder.minimum_balance_for_ai ||=
+      process.env.MINIMUM_BALANCE_TO_USE_CONVERSE_AI;
+    res.send(holder);
+  } catch (error) {
+    logger.info(`searchHolders: ${error}`);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 const getNonce = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -97,6 +110,9 @@ const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
     const holder = await holderRepo.getById(walletId);
+    if (holder)
+      holder.minimum_balance_for_ai ||=
+        process.env.MINIMUM_BALANCE_TO_USE_CONVERSE_AI;
     return res.json({
       facebookLink: holder?.facebook_link || "",
       mediumLink: holder?.medium_link || "",
@@ -104,6 +120,7 @@ const getDetails = async (req, res) => {
       twitterLink: holder?.twitter_link || "",
       telegramLink: holder?.telegram_link || "",
       pointRewardsStartAt: holder?.social_links_updated_at,
+      ...holder,
     });
   } catch (error) {
     logger.info(`saveSocialLinks: ${error}`);
@@ -113,9 +130,25 @@ const getDetails = async (req, res) => {
   }
 };
 
+const saveHolderByAdmin = async (req, res) => {
+  try {
+    await holderRepo.saveHolderByAdmin(req.body);
+    return res.json({
+      message: "Holder details updated successfully",
+    });
+  } catch (error) {
+    logger.info(`saveHolderByAdmin: ${error}`);
+    return res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
+  saveHolderByAdmin,
   saveSocialLinks,
   getDetails,
   login,
   getNonce,
+  searchHolders,
 };

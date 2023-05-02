@@ -230,7 +230,7 @@ const SaveInitiative = ({
     else return "#Nexgenml\n" + result;
   };
   async function get_gpt_data(input, callFor) {
-    const url = "https://backend.chatbot.nexgenml.com/collections";
+    const url = `${config.API_ENDPOINT}/api/v1/contentProducer`;
     let response = await customFetch(url, {
       headers: {
         accept: "*/*",
