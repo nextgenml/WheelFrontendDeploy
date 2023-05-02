@@ -41,7 +41,8 @@ const getPromotedBlogs = async (promotedWallets, walletId) => {
   const query2 =
     "select promoted_blog_id from saved_prompts where wallet_address = ?";
   const data2 = await runQueryAsync(query2, [walletId]);
-  const promotedIds = [...data2.map((x) => x.promoted_blog_id), -1];
+  let promotedIds = [...data2.map((x) => x.promoted_blog_id), -1];
+  promotedIds = promotedIds.filter((x) => !!x);
   console.log("promotedIds", promotedIds);
 
   const query =
