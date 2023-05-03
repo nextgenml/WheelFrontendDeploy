@@ -3,6 +3,14 @@ const { v4: uuidv4 } = require("uuid");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const moment = require("moment");
 
+const getAdhocSpinParticipants = async (from, to, min) => {
+  const query = `select wallet_address from saved_prompts where create_date >= ? and create_date <= ? and validated_flag = 1 group by wallet_address having count(1) > ?`;
+  return await runQueryAsync(query, [
+    moment(from).startOf("day").format(DATE_TIME_FORMAT),
+    moment(to).endOf("day").format(DATE_TIME_FORMAT),
+    min,
+  ]);
+};
 const getBlogStats = async (blogId) => {
   const query =
     "select mediumurl, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
@@ -237,4 +245,5 @@ module.exports = {
   totalBloggers,
   getAllBlogs,
   blogsOn,
+  getAdhocSpinParticipants,
 };

@@ -27,6 +27,20 @@ const getUserBlogStats = async (req, res) => {
   }
 };
 
+const getAdhocSpinParticipants = async (req, res) => {
+  try {
+    const data = await blogsRepo.getAdhocSpinParticipants(
+      req.query.from,
+      req.query.to,
+      req.query.min
+    );
+
+    return res.json({ data: data.map((x) => x.wallet_address) });
+  } catch (error) {
+    logger.error(`scheduled spins get: ${error}`);
+    return res.status(500).json({ msg: error.message });
+  }
+};
 const updateBlogData = async (req, res) => {
   try {
     let { validatedFlag, paidFlag, transactionID } = req.body;
@@ -257,4 +271,5 @@ module.exports = {
   getBlogStats,
   getUserBlogStats,
   homePageStats,
+  getAdhocSpinParticipants,
 };

@@ -14,16 +14,30 @@ import {
   Select,
   FormControl,
   InputLabel,
+  Stack,
 } from "@mui/material";
 import config from "../../config";
 import { useState } from "react";
-import { writeAPICall } from "../../API/index.js";
+import { getAPICall, writeAPICall } from "../../API/index.js";
 import styles from "./ScheduledSpins.module.css";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import moment from "moment";
 
 const SPIN_TYPES = ["weekly", "biweekly", "monthly", "yearly", "adhoc"];
 function ScheduledSpinForm({ onClose, currentRow }) {
   const [rowData, setRowData] = useState(currentRow);
-
+  const [fromDate, setFromDate] = useState(moment());
+  const [toDate, setToDate] = useState(moment());
+  const [minBlogsCount, setMinBlogsCount] = useState(0);
+  const fetchParticipants = async () => {
+    const url = `${config.API_ENDPOINT}/api/v1/blogs/adhoc_spin/participants?from=${fromDate}&to=${toDate}&min=${minBlogsCount}`;
+    const data = await getAPICall(url);
+    setRowData((prev) => ({
+      ...prev,
+      participants: data.data.join(","),
+    }));
+  };
   const onUpdate = async () => {
     const url = `${config.API_ENDPOINT}/api/v1/scheduledSpins/`;
     if (rowData.id > 0) await writeAPICall(url + rowData.id, rowData, "PUT");
@@ -60,6 +74,79 @@ function ScheduledSpinForm({ onClose, currentRow }) {
               ))}
             </Select>
           </FormControl>
+          {rowData.type === "adhoc" && (
+            <Box>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Stack
+                  spacing={3}
+                  sx={{ m: 3, mt: 0 }}
+                  direction={"row"}
+                  alignContent={"center"}
+                  justifyItems={"center"}
+                >
+                  <DatePicker
+                    inputFormat="DD/MM/YYYY"
+                    label={"Select From Date"}
+                    value={fromDate}
+                    onChange={(value) => setFromDate(value)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={"Select From Date"}
+                        className={styles.datePickerText}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        autoComplete="off"
+                        inputProps={{
+                          ...params.inputProps,
+                          placeholder: "dd/mm/yyyy",
+                        }}
+                      />
+                    )}
+                  />
+                  <DatePicker
+                    inputFormat="DD/MM/YYYY"
+                    label={"Select To Date"}
+                    value={toDate}
+                    onChange={(value) => setToDate(value)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={"Select To Date"}
+                        className={styles.datePickerText}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        autoComplete="off"
+                        inputProps={{
+                          ...params.inputProps,
+                          placeholder: "dd/mm/yyyy",
+                        }}
+                      />
+                    )}
+                  />
+                  <TextField
+                    value={minBlogsCount}
+                    label="Blogs Count"
+                    onChange={(e) => setMinBlogsCount(e.target.value)}
+                  />
+                  <Button variant="outlined" onClick={fetchParticipants}>
+                    Submit
+                  </Button>
+                </Stack>
+              </LocalizationProvider>
+              <TextField
+                value={rowData.participants}
+                fullWidth
+                label={`Adhoc spin participants. Total(${
+                  (rowData.participants || "").split(",").length
+                })`}
+                readonly
+              />
+            </Box>
+          )}
+
           <TextField
             value={rowData.run_at}
             fullWidth

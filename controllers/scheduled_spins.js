@@ -1,10 +1,5 @@
-const config = require("../config/env");
 const logger = require("../logger");
-const blogsManager = require("../manager/blogs");
-const { validatePayment } = require("../manager/payments");
-const blogsRepo = require("../repository/blogs");
 const spinRepo = require("../repository/scheduledSpin");
-const moment = require("moment");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
 require("../manager/jobs/validateOldBlogs");
