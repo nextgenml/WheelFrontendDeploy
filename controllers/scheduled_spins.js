@@ -13,7 +13,10 @@ const get = async (req, res) => {
   try {
     const { pageNo, pageSize } = req.query;
 
-    const [data, count] = await spinRepo.getSpins(pageSize * pageNo, pageSize);
+    const [data, count] = await spinRepo.getSpins(
+      parseInt(pageSize * pageNo),
+      parseInt(pageSize)
+    );
 
     return res.json({ data, count });
   } catch (error) {

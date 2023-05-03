@@ -73,6 +73,11 @@ export default function InternalApps() {
       path: "/holders",
       icon: <PersonIcon />,
     },
+    {
+      name: "Spins",
+      path: "/scheduled_spins",
+      icon: <AttractionsIcon />,
+    },
   ];
   return (
     <div>
