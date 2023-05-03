@@ -57,7 +57,7 @@ const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
 
 const choreAlreadyExists = async (walletId, choreType, refChoreId) => {
   const query =
-    "select 1 from chores where chore_type = ? and wallet_id = ? and refChoreId = ?";
+    "select 1 from chores where chore_type = ? and wallet_id = ? and ref_chore_id = ?";
   const results = await runQueryAsync(query, [choreType, walletId, refChoreId]);
   return results.length > 0;
 };
