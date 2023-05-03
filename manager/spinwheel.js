@@ -114,7 +114,11 @@ const createParticipants = async (nextSpin) => {
       nextSpin.spinNo += 1;
       page += currParticipants.length > size ? 2 : 1;
     }
-    await processPrizesV1(winners, async (id) => await markWinnerAsPaid(id));
+    await processPrizesV1(
+      winners,
+      nextSpin.currency,
+      async (id) => await markWinnerAsPaid(id)
+    );
     logger.info(`spin completed for a type: ${nextSpin.type}`);
   } catch (error) {
     logger.error(

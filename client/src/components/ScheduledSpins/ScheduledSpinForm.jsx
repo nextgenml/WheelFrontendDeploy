@@ -25,6 +25,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import moment from "moment";
 
 const SPIN_TYPES = ["weekly", "biweekly", "monthly", "yearly", "adhoc"];
+const CURRENCIES = ["eeth", "nml"];
 function ScheduledSpinForm({ onClose, currentRow }) {
   const [rowData, setRowData] = useState(currentRow);
   const [fromDate, setFromDate] = useState(moment());
@@ -54,7 +55,12 @@ function ScheduledSpinForm({ onClose, currentRow }) {
     >
       <DialogTitle>Update Spin</DialogTitle>
       <DialogContent>
-        <Box className={styles.formInputBox}>
+        <Box
+          className={styles.formInputBox}
+          sx={{
+            "& .MuiTextField-root": { m: 1 },
+          }}
+        >
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Type</InputLabel>
             <Select
@@ -191,6 +197,25 @@ function ScheduledSpinForm({ onClose, currentRow }) {
               }))
             }
           />
+          <FormControl fullWidth sx={{ m: 1 }}>
+            <InputLabel id="demo-simple-select-label">Currency</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={rowData.currency}
+              label="Currency"
+              onChange={(e) =>
+                setRowData((prev) => ({
+                  ...prev,
+                  currency: e.target.value,
+                }))
+              }
+            >
+              {CURRENCIES.map((x) => (
+                <MenuItem value={x}>{x}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
         <FormGroup sx={{ m: 3 }}>
           <FormControlLabel
@@ -198,7 +223,6 @@ function ScheduledSpinForm({ onClose, currentRow }) {
               <Checkbox
                 checked={rowData.is_active === 1}
                 onChange={(e) => {
-                  console.log(" e.target.value,", e.target.checked);
                   setRowData((prev) => ({
                     ...prev,
                     is_active: e.target.checked ? 1 : 0,

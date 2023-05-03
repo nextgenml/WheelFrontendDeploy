@@ -3,6 +3,7 @@ const ethers = require("ethers");
 const config = require("../config/env");
 const logger = require("../logger");
 const { timer } = require("../utils");
+const { transferNML } = require("./transferNML");
 // provider: Infura or Etherscan will be automatically chosen
 let provider = new ethers.providers.JsonRpcProvider(config.RPC_URL);
 // Sender private key:
@@ -33,11 +34,14 @@ const distributeReward = async (address, amount) => {
   }
 };
 
-const processPrizesV1 = async (winners, callback) => {
+const processPrizesV1 = async (winners, currency, callback) => {
   // return;
   for (const item of winners) {
     logger.info(`transfer to ${item.walletId}, reward: ${item.prize}`);
-    const success = await distributeReward(item.walletId, item.prize);
+    let success;
+    if (currency === "nml")
+      success = await transferNML(item.walletId, item.prize);
+    else success = await distributeReward(item.walletId, item.prize);
     if (success) {
       await callback(item.id);
       await timer(10000);
