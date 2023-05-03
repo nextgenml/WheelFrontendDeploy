@@ -107,6 +107,10 @@ function App() {
           path="/holders"
           element={<PrivateRoute component={<Holders />} />}
         />
+        <Route
+          path="/scheduled_spins"
+          element={<PrivateRoute component={<TotalEarnings />} />}
+        />
       </Routes>
       <Footer />
     </>

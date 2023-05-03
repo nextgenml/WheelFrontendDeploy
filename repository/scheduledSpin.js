@@ -7,6 +7,13 @@ const getAllSpins = async () => {
   return await executeQueryAsync(query);
 };
 
+const getSpins = async (offset, pageSize) => {
+  const query = "select * from scheduled_spins limit ? offset ?";
+  const data = await runQueryAsync(query, [pageSize, offset]);
+  const countQ = "select count(1) as count from scheduled_spins";
+  const count = await runQueryAsync(countQ, []);
+  return [data, count[0].count];
+};
 const getSpinById = async (id) => {
   const query = "select * from scheduled_spins where id = ?;";
   const results = await runQueryAsync(query, [id]);
@@ -37,4 +44,5 @@ module.exports = {
   recentDailyLaunchAt,
   getScheduledSpin,
   getSpinById,
+  getSpins,
 };
