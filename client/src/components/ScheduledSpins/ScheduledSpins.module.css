@@ -20,3 +20,6 @@
 .datePickerText {
   width: 200px;
 }
+.formInputBox > * {
+  margin: 18px;
+}

@@ -14,6 +14,42 @@ const getSpins = async (offset, pageSize) => {
   const count = await runQueryAsync(countQ, []);
   return [data, count[0].count];
 };
+const createSpin = async (data) => {
+  const query = `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes, participants) values (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const winnerPrizes = (data.winner_prizes || "")
+    .split(",")
+    .map((x) => x.trim());
+  await runQueryAsync(query, [
+    data.type,
+    data.is_active,
+    data.run_at,
+    data.spin_day,
+    data.min_wallet_amount,
+    winnerPrizes.length,
+    20,
+    winnerPrizes.join(","),
+    data.participants,
+  ]);
+};
+
+const updateSpin = async (data) => {
+  const query = `update scheduled_spins set type = ?, is_active = ?, run_at = ?, spin_day = ?, min_wallet_amount = ?, no_of_winners = ?, spin_delay = ?, winner_prizes = ?, participants = ? where id = ?`;
+  const winnerPrizes = (data.winner_prizes || "")
+    .split(",")
+    .map((x) => x.trim());
+  await runQueryAsync(query, [
+    data.type,
+    data.is_active,
+    data.run_at,
+    data.spin_day,
+    data.min_wallet_amount,
+    winnerPrizes.length,
+    20,
+    winnerPrizes.join(","),
+    data.participants,
+    data.id,
+  ]);
+};
 const getSpinById = async (id) => {
   const query = "select * from scheduled_spins where id = ?;";
   const results = await runQueryAsync(query, [id]);
@@ -45,4 +81,6 @@ module.exports = {
   getScheduledSpin,
   getSpinById,
   getSpins,
+  createSpin,
+  updateSpin,
 };

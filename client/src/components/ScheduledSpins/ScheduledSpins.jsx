@@ -7,10 +7,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Typography, TablePagination } from "@mui/material";
+import { Typography, TablePagination, Button } from "@mui/material";
 import styles from "./ScheduledSpins.module.css";
 import { fetchSpinsAPI } from "../../API/ScheduledSpins";
-
+import ScheduledSpinForm from "./ScheduledSpinForm";
+import EditIcon from "@mui/icons-material/Edit";
 const headers = [
   "Type",
   "Run At",
@@ -19,6 +20,7 @@ const headers = [
   "No of winners",
   "Winner Prizes",
   "Is Active",
+  "",
 ];
 
 export default function ScheduledSpins() {
@@ -26,6 +28,7 @@ export default function ScheduledSpins() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
+  const [currentRow, setCurrentRow] = React.useState(null);
 
   const fetchData = async () => {
     const res = await fetchSpinsAPI(page, rowsPerPage);
@@ -52,6 +55,13 @@ export default function ScheduledSpins() {
         <TableContainer component={Paper} sx={{ p: 2 }}>
           <Typography variant="h6" className={styles.tableHeader}>
             Configure Spins
+            <Button
+              variant="outlined"
+              sx={{ ml: 4 }}
+              onClick={() => setCurrentRow({})}
+            >
+              Create New
+            </Button>
           </Typography>
 
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -77,6 +87,9 @@ export default function ScheduledSpins() {
                   <TableCell>{row.no_of_winners}</TableCell>
                   <TableCell>{row.winner_prizes}</TableCell>
                   <TableCell>{row.is_active}</TableCell>
+                  <TableCell>
+                    <EditIcon onClick={() => setCurrentRow(row)} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -92,6 +105,15 @@ export default function ScheduledSpins() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {currentRow && (
+        <ScheduledSpinForm
+          currentRow={currentRow}
+          onClose={(saved) => {
+            setCurrentRow(null);
+            if (saved) fetchData();
+          }}
+        />
+      )}
     </>
   );
 }

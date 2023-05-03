@@ -25,6 +25,29 @@ const get = async (req, res) => {
   }
 };
 
+const create = async (req, res) => {
+  try {
+    await spinRepo.createSpin(req.body);
+
+    return res.json({ message: "Spin created successfully" });
+  } catch (error) {
+    logger.error(`scheduled spins get: ${error}`);
+    return res.status(500).json({ msg: error.message });
+  }
+};
+const update = async (req, res) => {
+  try {
+    await spinRepo.updateSpin(req.body);
+
+    return res.json({ message: "Spin created successfully" });
+  } catch (error) {
+    logger.error(`scheduled spins get: ${error}`);
+    return res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
+  update,
   get,
+  create,
 };
