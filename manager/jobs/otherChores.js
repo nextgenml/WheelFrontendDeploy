@@ -9,6 +9,7 @@ const {
   getHoldersByWalletId,
   getNextUserForChore,
   isEligibleForChore,
+  choreAlreadyExists,
 } = require("../../repository/holder");
 
 const { createChore } = require("../../repository/chores");
@@ -68,21 +69,29 @@ const createOtherChores = async (campaigns, sourceChoreType, args = {}) => {
                 config.OTHER_CHORE_VALID_DAYS,
                 "days"
               );
-              await createChore({
-                campaignDetailsId: campaignPost.campaign_detail_id,
-                walletId: nextUser.wallet_id,
-                mediaType: campaignPost.media_type,
-                choreType: action,
-                validFrom: startTime.format(DATE_TIME_FORMAT),
-                validTo: endTime.format(DATE_TIME_FORMAT),
-                value: campaign.reward,
-                ref_chore_id: campaignPost.id,
-                linkToPost: args["postLink"] || campaignPost.link_to_post,
-                mediaPostId: args["mediaPostId"] || campaignPost.media_post_id,
-                commentSuggestions: comments,
-                content: args["content"] || campaign.content,
-              });
-              noOfPosts -= 1;
+              const duplicate = await choreAlreadyExists(
+                nextUser.wallet_id,
+                action,
+                campaignPost.id
+              );
+              if (!duplicate) {
+                await createChore({
+                  campaignDetailsId: campaignPost.campaign_detail_id,
+                  walletId: nextUser.wallet_id,
+                  mediaType: campaignPost.media_type,
+                  choreType: action,
+                  validFrom: startTime.format(DATE_TIME_FORMAT),
+                  validTo: endTime.format(DATE_TIME_FORMAT),
+                  value: campaign.reward,
+                  ref_chore_id: campaignPost.id,
+                  linkToPost: args["postLink"] || campaignPost.link_to_post,
+                  mediaPostId:
+                    args["mediaPostId"] || campaignPost.media_post_id,
+                  commentSuggestions: comments,
+                  content: args["content"] || campaign.content,
+                });
+                noOfPosts -= 1;
+              }
             } else {
               skippedUsers.push(nextUser.wallet_id);
             }

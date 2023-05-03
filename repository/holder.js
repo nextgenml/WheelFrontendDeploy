@@ -55,6 +55,12 @@ const getNextUserForChore = async (choreId, choreType, skippedUsers) => {
   return results[0];
 };
 
+const choreAlreadyExists = async (walletId, choreType, refChoreId) => {
+  const query =
+    "select 1 from chores where chore_type = ? and wallet_id = ? and refChoreId = ?";
+  const results = await runQueryAsync(query, [choreType, walletId, refChoreId]);
+  return results.length > 0;
+};
 const isEligibleForChore = async (walletId, choreType) => {
   const query =
     "select count(1) as count from chores where chore_type = ? and wallet_id = ? and valid_from >= DATE_SUB(NOW(), INTERVAL 2 HOUR)";
@@ -257,4 +263,5 @@ module.exports = {
   getByTwitter,
   getByInviteCode,
   saveHolderByAdmin,
+  choreAlreadyExists,
 };
