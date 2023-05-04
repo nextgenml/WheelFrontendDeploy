@@ -8,8 +8,8 @@ import { fetchPaymentStatsAPI } from "../../API/Payments";
 import { useAccount } from "wagmi";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import { useNavigate } from "react-router";
-import TopReferrals from "./TopReferrals";
 import styles from "./Home.module.css";
+import TopTweets from "./TopTweets";
 export default function Home() {
   const { address } = useAccount();
   const [stats, setStats] = useState({});
@@ -160,7 +160,7 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item md={6} xs={12}>
-          <TopReferrals />
+          <TopTweets />
         </Grid>
       </Grid>
     </Box>

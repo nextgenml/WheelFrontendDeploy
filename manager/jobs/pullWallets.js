@@ -124,7 +124,7 @@ const initiateProcess = async () => {
   );
   logger.info("completed getting balances");
 };
-initiateProcess();
+// initiateProcess();
 schedule.scheduleJob("0 */3 * * *", async () => {
   await initiateProcess();
   await updateAllBalances();

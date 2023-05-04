@@ -258,6 +258,14 @@ const getChoresById = async (choreId) => {
   return results[0];
 };
 
+const getTopTweets = async () => {
+  const query = `select link_to_post, max(mark_as_done_at) as completed_at from chores 
+  where completed_by_user = 1 and link_to_post is not null
+  group by link_to_post
+  order by 2 limit 10;`;
+
+  return await runQueryAsync(query, []);
+};
 const getChoresByType = async (
   walletId,
   mediaType,
@@ -286,12 +294,13 @@ const getChoresByType = async (
 };
 
 const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
-  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ?, link_to_post = ? where id  = ? and wallet_id = ?;`;
+  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ?, link_to_post = ?, mark_as_done_at = ? where id  = ? and wallet_id = ?;`;
 
   return await runQueryAsync(query, [
     data.comment,
     data.commentLink,
     data.postLink,
+    moment().format(DATE_TIME_FORMAT),
     choreId,
     walletId,
   ]);
@@ -336,4 +345,5 @@ module.exports = {
   getActiveChoresCount,
   getCampaignPost,
   getChoresById,
+  getTopTweets,
 };
