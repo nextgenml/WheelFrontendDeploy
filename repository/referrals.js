@@ -49,10 +49,8 @@ const update = async (id, paid) => {
   return await runQueryAsync(query, [paid, id]);
 };
 const topReferrals = async () => {
-  const query = `select referer as wallet_id, count(1) as count from referrals where criteria_met = 1 and criteria_met_at >= ? group by referer order by 2 desc limit 10`;
-  return await runQueryAsync(query, [
-    moment().startOf("month").format(DATE_TIME_FORMAT),
-  ]);
+  const query = `select referer as wallet_id, count(1) as count from referrals where criteria_met = 1 group by referer order by 2 desc limit 10`;
+  return await runQueryAsync(query, []);
 };
 module.exports = {
   topReferrals,
