@@ -1,4 +1,5 @@
 const logger = require("../logger");
+const { nextSpinDetails } = require("../manager/scheduledSpins");
 const spinRepo = require("../repository/scheduledSpin");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
@@ -41,8 +42,19 @@ const update = async (req, res) => {
   }
 };
 
+const nextSpin = async (req, res) => {
+  try {
+    const nextSpin = await nextSpinDetails();
+    const data = await spinRepo.getSpinById(nextSpin.id);
+    return res.json({ data });
+  } catch (error) {
+    logger.error(`scheduled spins get: ${error}`);
+    return res.status(500).json({ msg: error.message });
+  }
+};
 module.exports = {
   update,
   get,
   create,
+  nextSpin,
 };
