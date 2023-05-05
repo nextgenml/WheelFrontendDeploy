@@ -18,16 +18,23 @@ import { useAccount } from "wagmi";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import { customFetch } from "../../API/index.js";
+import { useSearchParams } from "react-router-dom";
+
 const SocialSharing = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
   const [tabValue, setTabValue] = React.useState("twitter");
   const { isConnected, address } = useAccount();
   const [stats, setStats] = useState();
   const [menuOption, setMenuOption] = useState("new");
+
   const fetchStats = async (tab, menuOption) => {
     const res = await customFetch(
       `${
         config.API_ENDPOINT
-      }/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption.toLowerCase()}`
+      }/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption.toLowerCase()}&viewAs=${
+        searchParams.get("viewAs") || ""
+      }`
     );
     const data = await res.json();
     setStats(data);

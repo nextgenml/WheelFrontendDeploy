@@ -133,6 +133,21 @@ const getById = async (wallet_id) => {
   return results[0];
 };
 
+const getHolders = async (offset, pageSize, viewAs) => {
+  const query = `select * from holders where twitter_link is not null and (1 = ? or wallet_id = ?) limit ? offset ?;`;
+
+  const results = await runQueryAsync(query, [
+    viewAs ? 0 : 1,
+    viewAs,
+    pageSize,
+    offset,
+  ]);
+  const query1 = `select count(1) as count from holders where twitter_link is not null and (1 = ? or wallet_id = ?)`;
+
+  const results1 = await runQueryAsync(query1, [viewAs ? 0 : 1, viewAs]);
+  return [results, results1[0].count];
+};
+
 const getByInviteCode = async (code) => {
   const query = `select * from holders where invite_code = ?;`;
 
@@ -264,4 +279,5 @@ module.exports = {
   getByInviteCode,
   saveHolderByAdmin,
   choreAlreadyExists,
+  getHolders,
 };

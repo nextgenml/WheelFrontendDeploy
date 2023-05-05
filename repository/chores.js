@@ -123,6 +123,21 @@ const markChoresAsPaid = async (ids) => {
   return await runQueryAsync(query, [ids]);
 };
 
+const getTotalChoresAssigned = async (walletId) => {
+  const query = `select count(1) sum from chores where wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results[0].sum;
+};
+const getTotalChoresCompleted = async (walletId) => {
+  const query = `select count(1) sum from chores where wallet_id = ? and completed_by_user = 1`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results[0].sum;
+};
+
 // stats for top bar money stats
 const getTotalEarnings = async (walletId) => {
   const query = `select is_paid, sum(value) as sum from chores where is_completed = 1 and wallet_id = ? group by is_paid`;
@@ -346,4 +361,6 @@ module.exports = {
   getCampaignPost,
   getChoresById,
   getTopTweets,
+  getTotalChoresAssigned,
+  getTotalChoresCompleted,
 };

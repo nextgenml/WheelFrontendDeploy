@@ -9,17 +9,18 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Typography, TablePagination, Link } from "@mui/material";
 import styles from "./SocialSharingAdmin.module.css";
-import { fetchSpinsAPI } from "../../API/ScheduledSpins";
 import LaunchIcon from "@mui/icons-material/Launch";
+import { getAPICall } from "../../API";
+import config from "../../config";
 
 const headers = [
   "Wallet Id",
   "# chores Assigned",
   "# chores completed",
-  "# likes completed",
-  "# retweets completed",
-  "# follows completed",
-  "# validations completed",
+  "# likes Assigned",
+  "# retweets Assigned",
+  "# follows Assigned",
+  "# validations Assigned",
   "Overall paid",
   "Overall unpaid",
   "Today paid",
@@ -35,7 +36,9 @@ export default function SocialSharingAdmin() {
   const [totalCount, setTotalCount] = React.useState(0);
 
   const fetchData = async () => {
-    const res = await fetchSpinsAPI(page, rowsPerPage);
+    const res = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/chores/adminStats?pageNo=${page}&pageSize=${rowsPerPage}`
+    );
     if (res.data) {
       setRecords(res.data);
       setTotalCount(res.count);
@@ -78,14 +81,19 @@ export default function SocialSharingAdmin() {
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
-                  <TableCell>{row.type}</TableCell>
-                  <TableCell>{row.run_at}</TableCell>
-                  <TableCell>{row.spin_day}</TableCell>
-                  <TableCell>{row.min_wallet_amount}</TableCell>
-                  <TableCell>{row.no_of_winners}</TableCell>
-                  <TableCell>{row.currency}</TableCell>
-                  <TableCell>{row.winner_prizes}</TableCell>
-                  <TableCell>{row.is_active}</TableCell>
+                  <TableCell>{row.wallet_id}</TableCell>
+                  <TableCell>{row.totalAssigned}</TableCell>
+                  <TableCell>{row.totalCompleted}</TableCell>
+                  <TableCell>{row.likeCount}</TableCell>
+                  <TableCell>{row.retweetCount}</TableCell>
+                  <TableCell>{row.followCount}</TableCell>
+                  <TableCell>{row.validateCount}</TableCell>
+
+                  <TableCell>{row.totalPaid}</TableCell>
+                  <TableCell>{row.totalUnpaid}</TableCell>
+                  <TableCell>{row.todayPaid}</TableCell>
+                  <TableCell>{row.todayUnpaid}</TableCell>
+                  <TableCell>{row.todayMax}</TableCell>
                   <TableCell>
                     <Link
                       target="_blank"

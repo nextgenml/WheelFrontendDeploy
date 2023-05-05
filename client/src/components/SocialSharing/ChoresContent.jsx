@@ -21,8 +21,11 @@ import Chore from "./Chore";
 import { markChoreAsDoneAPI, validateChoreAPI } from "../../API/SocialSharing";
 import { customFetch } from "../../API/index.js";
 import { getTotalCountOfTab } from "./Util";
+import { useSearchParams } from "react-router-dom";
 
 const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
   const [chores, setChores] = useState();
   const [filter, setFilter] = useState("todo");
   const [page, setPage] = useState(0);
@@ -32,7 +35,9 @@ const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
     const res = await customFetch(
       `${
         config.API_ENDPOINT
-      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}&pageNo=${page}&pageSize=10`,
+      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}&pageNo=${page}&pageSize=10&viewAs=${
+        searchParams.get("viewAs") || ""
+      }`,
       {
         method: "GET",
       }

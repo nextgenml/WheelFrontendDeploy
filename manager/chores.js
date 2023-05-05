@@ -3,6 +3,7 @@ const holderRepo = require("../repository/holder");
 const campaignRepo = require("../repository/campaign");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { roundTo2Decimals } = require("../utils");
 const createValidationChore = async (choreId) => {
   const chore = await choresRepo.getChoresById(choreId);
   if (!["comment", "post"].includes(chore.chore_type)) return;
@@ -91,7 +92,74 @@ const createCompletedPostChore = async (
     choreType: "post",
   });
 };
+
+const dashboardStats = async (mediaType, walletId) => {
+  const [
+    totalAssigned,
+    totalCompleted,
+    totalUnpaid,
+    totalPaid,
+    todayUnpaid,
+    todayPaid,
+    todayLost,
+    todayMax,
+    newTotal,
+    newTotalCount,
+    old,
+    oldCount,
+    like,
+    likeCount,
+    retweet,
+    retweetCount,
+    comment,
+    commentCount,
+    follow,
+    followCount,
+    validate,
+    validateCount,
+  ] = (
+    await Promise.all([
+      choresRepo.getTotalChoresAssigned(walletId),
+      choresRepo.getTotalChoresCompleted(walletId),
+      choresRepo.getTotalEarnings(walletId),
+      choresRepo.getTodayEarnings(walletId),
+      choresRepo.getTodayLost(walletId),
+      choresRepo.getTodayTotal(walletId),
+      choresRepo.getTodayChoresTotal(walletId, mediaType),
+      choresRepo.getOldChoresTotal(walletId, mediaType),
+      ...["like", "retweet", "comment", "follow", "validate"].map((chore) =>
+        choresRepo.getTotalByChore(walletId, mediaType, chore)
+      ),
+    ])
+  ).flat();
+
+  return {
+    totalAssigned,
+    totalCompleted,
+    totalUnpaid: roundTo2Decimals(totalUnpaid),
+    totalPaid: roundTo2Decimals(totalPaid),
+    todayUnpaid: roundTo2Decimals(todayUnpaid),
+    todayPaid: roundTo2Decimals(todayPaid),
+    todayLost: roundTo2Decimals(todayLost),
+    todayMax: roundTo2Decimals(todayMax),
+    newTotal: roundTo2Decimals(newTotal),
+    newTotalCount,
+    old: roundTo2Decimals(old),
+    oldCount,
+    like: roundTo2Decimals(like),
+    likeCount,
+    retweet: roundTo2Decimals(retweet),
+    retweetCount,
+    comment: roundTo2Decimals(comment),
+    commentCount,
+    follow: roundTo2Decimals(follow),
+    followCount,
+    validate: roundTo2Decimals(validate),
+    validateCount,
+  };
+};
 module.exports = {
   createValidationChore,
   createCompletedPostChore,
+  dashboardStats,
 };

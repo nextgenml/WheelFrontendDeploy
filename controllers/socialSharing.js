@@ -8,73 +8,22 @@ const { roundTo2Decimals } = require("../utils");
 const {
   createValidationChore,
   createCompletedPostChore,
+  dashboardStats,
 } = require("../manager/chores");
 const { createOtherChores } = require("../manager/jobs/otherChores");
 require("../manager/jobs/postChores");
 require("../manager/jobs/validationChore");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const config = require("../config/env");
 const getSocialSharingStats = async (req, res) => {
   try {
-    const { mediaType, walletId } = req.query;
+    let { mediaType, walletId, viewAs } = req.query;
 
-    const [
-      totalUnpaid,
-      totalPaid,
-      todayUnpaid,
-      todayPaid,
-      todayLost,
-      todayMax,
-      newTotal,
-      newTotalCount,
-      old,
-      oldCount,
-      like,
-      likeCount,
-      retweet,
-      retweetCount,
-      comment,
-      commentCount,
-      follow,
-      followCount,
-      validate,
-      validateCount,
-    ] = (
-      await Promise.all([
-        choresRepo.getTotalEarnings(walletId),
-        choresRepo.getTodayEarnings(walletId),
-        choresRepo.getTodayLost(walletId),
-        choresRepo.getTodayTotal(walletId),
-        choresRepo.getTodayChoresTotal(walletId, mediaType),
-        choresRepo.getOldChoresTotal(walletId, mediaType),
-        ...["like", "retweet", "comment", "follow", "validate"].map((chore) =>
-          choresRepo.getTotalByChore(walletId, mediaType, chore)
-        ),
-      ])
-    ).flat();
+    walletId = viewAs && config.ADMIN_WALLET === walletId ? viewAs : walletId;
+    const stats = await dashboardStats(mediaType, walletId);
 
-    res.json({
-      totalUnpaid: roundTo2Decimals(totalUnpaid),
-      totalPaid: roundTo2Decimals(totalPaid),
-      todayUnpaid: roundTo2Decimals(todayUnpaid),
-      todayPaid: roundTo2Decimals(todayPaid),
-      todayLost: roundTo2Decimals(todayLost),
-      todayMax: roundTo2Decimals(todayMax),
-      newTotal: roundTo2Decimals(newTotal),
-      newTotalCount,
-      old: roundTo2Decimals(old),
-      oldCount,
-      like: roundTo2Decimals(like),
-      likeCount,
-      retweet: roundTo2Decimals(retweet),
-      retweetCount,
-      comment: roundTo2Decimals(comment),
-      commentCount,
-      follow: roundTo2Decimals(follow),
-      followCount,
-      validate: roundTo2Decimals(validate),
-      validateCount,
-    });
+    res.json(stats);
   } catch (ex) {
     logger.error(`error occurred in getSocialSharingStats api: ${ex}`);
     return res.status(400).json({
@@ -86,9 +35,12 @@ const getSocialSharingStats = async (req, res) => {
 
 const getChoresByType = async (req, res) => {
   try {
-    let { mediaType, walletId, type, filter, pageNo, pageSize } = req.query;
+    let { mediaType, walletId, type, filter, pageNo, pageSize, viewAs } =
+      req.query;
     const offset = pageNo * pageSize;
     pageSize = parseInt(pageSize);
+    walletId = viewAs && config.ADMIN_WALLET === walletId ? viewAs : walletId;
+
     let data = [];
     switch (type) {
       case "new":
