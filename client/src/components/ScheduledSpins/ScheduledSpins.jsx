@@ -180,7 +180,7 @@ export default function ScheduledSpins() {
                   <TableCell>{row.spin_day}</TableCell>
                   <TableCell>{row.min_wallet_amount}</TableCell>
                   <TableCell>{row.no_of_winners}</TableCell>
-                  <TableCell>{nextSpin.currency}</TableCell>
+                  <TableCell>{row.currency}</TableCell>
                   <TableCell>{row.winner_prizes}</TableCell>
                   <TableCell>{row.is_active}</TableCell>
                   <TableCell>
