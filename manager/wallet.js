@@ -48,7 +48,7 @@ const fetchDataFromContract = () => {
     running = false;
   }, 10000);
 };
-fetchDataFromContract();
+// fetchDataFromContract();
 
 module.exports = {
   updateWallets,

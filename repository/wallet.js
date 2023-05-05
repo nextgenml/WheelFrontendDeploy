@@ -27,7 +27,7 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
     ), balance_wallets as (
     select distinct tw.wallet_id from temp_wallets tw 
     inner join holders h on h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
-    where nml_balance > ?
+    where nml_balance > ? and (1 = ? or is_diamond = 1)
     )
     select * from balance_wallets order by 1 desc limit ? offset ?;`;
 
@@ -35,6 +35,7 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
     process.env.NML_CONTRACT_ADDRESS,
     start,
     nextSpin.minWalletValue,
+    nextSpin.isDiamond ? 0 : 1,
     size,
     offset,
   ]);

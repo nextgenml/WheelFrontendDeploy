@@ -15,7 +15,7 @@ const getSpins = async (offset, pageSize) => {
   return [data, count[0].count];
 };
 const createSpin = async (data) => {
-  const query = `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes, participants, currency) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  const query = `insert into scheduled_spins(type, is_active, run_at, spin_day, min_wallet_amount, no_of_winners, spin_delay, winner_prizes, participants, currency, is_diamond) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   const winnerPrizes = (data.winner_prizes || "")
     .split(",")
     .map((x) => x.trim());
@@ -30,11 +30,12 @@ const createSpin = async (data) => {
     winnerPrizes.join(","),
     data.participants,
     data.currency,
+    data.is_diamond,
   ]);
 };
 
 const updateSpin = async (data) => {
-  const query = `update scheduled_spins set type = ?, is_active = ?, run_at = ?, spin_day = ?, min_wallet_amount = ?, no_of_winners = ?, spin_delay = ?, winner_prizes = ?, participants = ?, currency = ? where id = ?`;
+  const query = `update scheduled_spins set type = ?, is_active = ?, run_at = ?, spin_day = ?, min_wallet_amount = ?, no_of_winners = ?, spin_delay = ?, winner_prizes = ?, participants = ?, currency = ?, is_diamond = ? where id = ?`;
   const winnerPrizes = (data.winner_prizes || "")
     .split(",")
     .map((x) => x.trim());
@@ -49,6 +50,7 @@ const updateSpin = async (data) => {
     winnerPrizes.join(","),
     data.participants,
     data.currency,
+    data.is_diamond,
     data.id,
   ]);
 };

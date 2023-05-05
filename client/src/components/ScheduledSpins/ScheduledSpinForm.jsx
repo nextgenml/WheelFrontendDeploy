@@ -221,6 +221,22 @@ function ScheduledSpinForm({ onClose, currentRow }) {
           <FormControlLabel
             control={
               <Checkbox
+                checked={rowData.is_diamond === 1}
+                onChange={(e) => {
+                  setRowData((prev) => ({
+                    ...prev,
+                    is_diamond: e.target.checked ? 1 : 0,
+                  }));
+                }}
+              />
+            }
+            label="Is Diamond Spin"
+          />
+        </FormGroup>
+        <FormGroup sx={{ m: 3 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
                 checked={rowData.is_active === 1}
                 onChange={(e) => {
                   setRowData((prev) => ({
