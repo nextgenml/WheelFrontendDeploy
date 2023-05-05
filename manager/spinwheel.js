@@ -68,7 +68,7 @@ const createParticipants = async (nextSpin) => {
         size,
         nextSpin
       );
-
+      // console.log("currParticipants", currParticipants);
       if (currParticipants.length === 0) {
         logger.info(
           `there are no participants for ${nextSpin.id}, page: ${page}`

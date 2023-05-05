@@ -18,9 +18,21 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
   }
 
   const start = moment(nextSpin.prevLaunchAt).format(DATE_TIME_FORMAT);
-  const query = `select wallet_id, sum(value) as total_value from wallets where created_at > ? and value >= ? group by wallet_id order by 2 desc limit ? OFFSET ?;`;
+  const query = `with temp_wallets as (
+    select distinct (case 
+    when from_wallet = ? then to_wallet
+    else from_wallet
+    end) as wallet_id from token_transactions 
+    where created_at > ? and token = 'nml'
+    ), balance_wallets as (
+    select distinct tw.wallet_id from temp_wallets tw 
+    inner join holders h on h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
+    where nml_balance > ?
+    )
+    select * from balance_wallets order by 1 desc limit ? offset ?;`;
 
   const spins = await runQueryAsync(query, [
+    process.env.NML_CONTRACT_ADDRESS,
     start,
     nextSpin.minWalletValue,
     size,
@@ -29,7 +41,6 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
   return spins.map((spin) => {
     return {
       walletId: spin.wallet_id,
-      value: spin.total_value,
     };
   });
 };
