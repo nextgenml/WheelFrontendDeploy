@@ -226,7 +226,7 @@ export default function ScheduledSpins() {
                   >
                     <TableCell>{row.type}</TableCell>
                     <TableCell>{row.spin_day}</TableCell>
-                    <TableCell>{row.run_at}</TableCell>
+                    <TableCell>{row.spin_at}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

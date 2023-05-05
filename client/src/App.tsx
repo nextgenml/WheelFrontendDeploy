@@ -34,6 +34,7 @@ import TotalEarnings from "./components/TotalEarnings/TotalEarnings";
 import Invites from "./components/Invites/Invites";
 import Holders from "./components/Holders/Holders";
 import ScheduledSpins from "./components/ScheduledSpins/ScheduledSpins";
+import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdmin";
 
 function App() {
   const location = useLocation();
@@ -111,6 +112,10 @@ function App() {
         <Route
           path="/scheduled_spins"
           element={<PrivateRoute component={<ScheduledSpins />} />}
+        />
+        <Route
+          path="/social-sharing-admin"
+          element={<PrivateRoute component={<SocialSharingAdmin />} />}
         />
       </Routes>
       <Footer />
