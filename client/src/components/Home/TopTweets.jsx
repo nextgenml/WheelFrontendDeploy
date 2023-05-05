@@ -20,9 +20,16 @@ export default function TopTweets() {
     );
     setRecords(data.data);
   };
+
   React.useEffect(() => {
     topRecords();
+    const interval = setInterval(() => {
+      topRecords();
+    }, 10000);
+
+    return () => clearInterval(interval); // clear interval on unmount
   }, []);
+
   return (
     <Paper elevation={0}>
       <TableContainer sx={{ p: 2 }}>
