@@ -14,6 +14,13 @@ const createTransaction = async (data, value, token) => {
   ]);
 };
 
+const isSellingExists = async (walletId) => {
+  const query = `select 1 from token_transactions where from_wallet = ? and token = 'nml'`;
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results.length > 0;
+};
 module.exports = {
+  isSellingExists,
   createTransaction,
 };

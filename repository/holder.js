@@ -16,6 +16,11 @@ const createHolderV1 = async (walletId) => {
   }
 };
 
+const getNMLHolders = async () => {
+  const query = `select wallet_id from holders where nml_balance > 0`;
+
+  return await runQueryAsync(query, []);
+};
 const getHoldersMeta = async () => {
   const query = `select max(id) as max_id, min(id) as min_id from holders`;
 
@@ -30,6 +35,11 @@ const getHolderByPage = async (minId, maxId) => {
 const updateHolderBalance = async (walletId, balance, token) => {
   const query = `update holders set ${token}_balance = ? where wallet_id = ?`;
   return await runQueryAsync(query, [balance, walletId]);
+};
+
+const updateHolderDiamondStatus = async (walletId, status) => {
+  const query = `update holders set is_diamond = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [status, walletId]);
 };
 
 const nextUserForPost = async (campaignId, skippedUsers) => {
@@ -280,4 +290,6 @@ module.exports = {
   saveHolderByAdmin,
   choreAlreadyExists,
   getHolders,
+  getNMLHolders,
+  updateHolderDiamondStatus,
 };
