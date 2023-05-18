@@ -184,7 +184,7 @@ const getTodayTotal = async (walletId) => {
 };
 // stats for left navigation
 const getTodayChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and completed_by_user = 0  and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -196,7 +196,7 @@ const getTodayChoresTotal = async (walletId, mediaType) => {
   return [results[0].sum || 0, results[0].count || 0];
 };
 const getOldChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and completed_by_user = 0  and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -209,7 +209,7 @@ const getOldChoresTotal = async (walletId, mediaType) => {
 };
 
 const getTotalByChore = async (walletId, mediaType, choreType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where wallet_id = ? and media_type = ? and chore_type = ? and is_completed = 0 and valid_to >= ?`;
+  const query = `select sum(value) as sum, count(1) as count from chores where wallet_id = ? and media_type = ? and chore_type = ? and completed_by_user = 0 and is_completed = 0 and valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
     walletId,
@@ -277,7 +277,7 @@ const getTopTweets = async () => {
   const query = `select link_to_post, max(mark_as_done_at) as completed_at from chores 
   where completed_by_user = 1 and link_to_post is not null
   group by link_to_post
-  order by 2 limit 10;`;
+  order by 2 desc limit 10;`;
 
   return await runQueryAsync(query, []);
 };

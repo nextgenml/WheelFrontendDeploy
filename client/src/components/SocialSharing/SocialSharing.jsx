@@ -28,20 +28,18 @@ const SocialSharing = () => {
   const [stats, setStats] = useState();
   const [menuOption, setMenuOption] = useState("new");
 
-  const fetchStats = async (tab, menuOption) => {
+  const fetchStats = async (tab) => {
     const res = await customFetch(
-      `${
-        config.API_ENDPOINT
-      }/social-sharing-stats?mediaType=${tab}&walletId=${address}&type=${menuOption.toLowerCase()}&viewAs=${
-        searchParams.get("viewAs") || ""
-      }`
+      `${config.API_ENDPOINT}/social-sharing-stats?mediaType=${
+        tab || tabValue
+      }&walletId=${address}&viewAs=${searchParams.get("viewAs") || ""}`
     );
     const data = await res.json();
     setStats(data);
   };
 
   useEffect(() => {
-    fetchStats(tabValue, "new");
+    fetchStats(tabValue);
   }, [tabValue]);
 
   const renderContent = () => {
@@ -175,6 +173,7 @@ const SocialSharing = () => {
                   walletId={address}
                   menuOption={menuOption}
                   stats={stats}
+                  fetchStats={fetchStats}
                 />
               </Grid>
             </Grid>
