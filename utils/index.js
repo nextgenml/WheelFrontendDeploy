@@ -1,4 +1,5 @@
 const { default: axios } = require("axios");
+const fetch = require("node-fetch");
 
 function stringToDate(date_str) {
   let date = new Date();
@@ -88,15 +89,35 @@ const intersectionOfArrays = (lists) => {
 
 const isUrlValid = async (url) => {
   let result = false;
+  // try {
+  //   const res = await axios.get(url);
+  //   if (res.status === 200) result = true;
+  //   else {
+  //     console.log("status", res.status);
+  //   }
+  // } catch (error) {
+  //   console.log("error", url, error.message);
+  // }
+  // return result;
+
   try {
-    const res = await axios.get(url);
-    if (res.status === 200) result = true;
-    else {
-      console.log("status", res.status);
+    const response = await fetch(url, { redirect: "manual" });
+
+    if (response.status === 200) {
+      result = true;
+      console.log(`${url} is up and running.`);
+    } else if (response.status === 302) {
+      // Handle redirect manually
+      const redirectUrl = response.headers.get("location");
+      console.log(`Redirected to: ${redirectUrl}`);
+      result = true;
+    } else {
+      console.log(`${url} is returning a status code of ${response.status}.`);
     }
   } catch (error) {
     console.log("error", url, error.message);
   }
+  console.log("result", result);
   return result;
 };
 
