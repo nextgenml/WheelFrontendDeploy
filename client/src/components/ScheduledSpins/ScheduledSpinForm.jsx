@@ -145,10 +145,17 @@ function ScheduledSpinForm({ onClose, currentRow }) {
               <TextField
                 value={rowData.participants}
                 fullWidth
+                multiline
+                minRows={4}
                 label={`Adhoc spin participants. Total(${
                   (rowData.participants || "").split(",").length
                 })`}
-                readonly
+                onChange={(e) =>
+                  setRowData((prev) => ({
+                    ...prev,
+                    participants: e.target.value,
+                  }))
+                }
               />
             </Box>
           )}
