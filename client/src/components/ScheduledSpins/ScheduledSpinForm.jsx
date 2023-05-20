@@ -24,7 +24,14 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import moment from "moment";
 
-const SPIN_TYPES = ["weekly", "biweekly", "monthly", "yearly", "adhoc"];
+const SPIN_TYPES = [
+  "weekly",
+  "biweekly",
+  "monthly",
+  "yearly",
+  "adhoc",
+  "daily",
+];
 const CURRENCIES = ["eeth", "nml"];
 function ScheduledSpinForm({ onClose, currentRow }) {
   const [rowData, setRowData] = useState(currentRow);
