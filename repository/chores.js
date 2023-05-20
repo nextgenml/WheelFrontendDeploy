@@ -275,7 +275,7 @@ const getChoresById = async (choreId) => {
 
 const getTopTweets = async () => {
   const query = `select link_to_post, max(mark_as_done_at) as completed_at from chores 
-  where completed_by_user = 1 and link_to_post is not null
+  where completed_by_user = 1 and link_to_post is not null and mark_as_done_at is not null
   group by link_to_post
   order by 2 desc limit 10;`;
 

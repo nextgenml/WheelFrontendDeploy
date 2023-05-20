@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import { Link, Typography } from "@mui/material";
 import { getAPICall } from "../../API";
 import config from "../../config";
-const headers = ["Tweet"];
+const headers = ["Tweet", "TimeStamp"];
 
 export default function TopTweets() {
   const [referrals, setRecords] = React.useState([]);
@@ -57,6 +57,7 @@ export default function TopTweets() {
                     {row.link_to_post}
                   </Link>
                 </TableCell>
+                <TableCell>{row.completed_at}</TableCell>
               </TableRow>
             ))}
           </TableBody>

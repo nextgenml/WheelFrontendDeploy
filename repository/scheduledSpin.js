@@ -8,7 +8,8 @@ const getAllSpins = async () => {
 };
 
 const getSpins = async (offset, pageSize) => {
-  const query = "select * from scheduled_spins limit ? offset ?";
+  const query =
+    "select * from scheduled_spins limit ? offset ? order by id desc";
   const data = await runQueryAsync(query, [pageSize, offset]);
   const countQ = "select count(1) as count from scheduled_spins";
   const count = await runQueryAsync(countQ, []);
