@@ -421,12 +421,12 @@ const BlogForm = () => {
 
                       {!isCustom && <th scope="col">Paid Amount</th>}
                       {isCustom && <th scope="col">Promote blog</th>}
-                      {isAdmin && (
+                      {/* {isAdmin && (
                         <>
                           <th scope="col">Validated Flag</th>
                           <th scope="col">Paid Flag</th>
                         </>
-                      )}
+                      )} */}
                     </tr>
                   </thead>
                   <tbody>
@@ -477,50 +477,6 @@ const BlogForm = () => {
                                 />
                               </div>
                             </td>
-                          )}
-                          {isAdmin && (
-                            <>
-                              <td className="text-center">
-                                <div className="form-check form-switch">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    id={`validated_flag${index}`}
-                                    key={index}
-                                    checked={user.validated_flag}
-                                    onChange={(e) =>
-                                      updateData(
-                                        user,
-                                        user.paid_flag,
-                                        e.target.checked,
-                                        user.promoted
-                                      )
-                                    }
-                                  />
-                                </div>
-                              </td>
-                              <td className="text-center">
-                                <div className="form-check form-switch">
-                                  <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    id={`paid_flag${index}`}
-                                    key={index}
-                                    checked={user.paid_flag}
-                                    onChange={(e) =>
-                                      updateData(
-                                        user,
-                                        e.target.checked,
-                                        user.validated_flag,
-                                        user.promoted
-                                      )
-                                    }
-                                  />
-                                </div>
-                              </td>
-                            </>
                           )}
                         </tr>
                       );

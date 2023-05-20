@@ -55,7 +55,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                     Rank
                   </th>
                   <th scope="col" className="text-sm font-medium  px-6 py-4">
-                    ETH
+                    Prize
                   </th>
                 </tr>
               </thead>
@@ -102,7 +102,7 @@ Telgram: https://t.me/+JMGorMX41tM2NGIx
                           {row.rank}
                         </td>
                         <td className="text-sm font-medium  px-6 py-4">
-                          ETH {row.prize}
+                          {parseInt(row.prize) > 2 ? "NML" : "ETH"} {row.prize}
                         </td>
                       </tr>
                     );
