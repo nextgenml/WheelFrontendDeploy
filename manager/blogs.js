@@ -207,7 +207,8 @@ const isPostedLinkValid = async (handle, link, type, errors) => {
       !link.toLowerCase().includes(handle.toLowerCase().replace("@", ""))
     )
       errors.push(`${type} link is not from author profile.`);
-    if (!(await isUrlValid(link))) errors.push(`Invalid ${type} link`);
+    if (type != "Medium" && !(await isUrlValid(link)))
+      errors.push(`Invalid ${type} link`);
     isValidDomain(type, link, errors);
   } else {
     errors.push(`${type} link or handle is missing`);
