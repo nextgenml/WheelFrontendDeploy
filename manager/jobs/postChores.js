@@ -26,7 +26,6 @@ const {
 const { createFollowChores, checkIfFollowComplete } = require("./followChores");
 const { transferRewards } = require("./transferRewards");
 const { convert } = require("html-to-text");
-const { updateWallets } = require("../wallet");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const config = require("../../config/env");
 
@@ -146,7 +145,6 @@ rule.minute = minutes;
 const initiateAlgorithm = async () => {
   logger.info("started chores work distribution");
   const endTime = moment().subtract(10, "seconds").toISOString();
-  // await updateWallets(new Date());
   const postedCampaigns = await getPostedCampaigns();
   const campaigns = await getActiveCampaigns();
   // await checkIfPostsChoreCompleted(postedCampaigns, endTime);

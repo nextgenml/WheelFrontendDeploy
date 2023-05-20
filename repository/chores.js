@@ -123,6 +123,21 @@ const markChoresAsPaid = async (ids) => {
   return await runQueryAsync(query, [ids]);
 };
 
+const getTotalChoresAssigned = async (walletId) => {
+  const query = `select count(1) sum from chores where wallet_id = ?`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results[0].sum;
+};
+const getTotalChoresCompleted = async (walletId) => {
+  const query = `select count(1) sum from chores where wallet_id = ? and completed_by_user = 1`;
+
+  const results = await runQueryAsync(query, [walletId]);
+
+  return results[0].sum;
+};
+
 // stats for top bar money stats
 const getTotalEarnings = async (walletId) => {
   const query = `select is_paid, sum(value) as sum from chores where is_completed = 1 and wallet_id = ? group by is_paid`;
@@ -169,7 +184,7 @@ const getTodayTotal = async (walletId) => {
 };
 // stats for left navigation
 const getTodayChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from >= ? and valid_to >= ? and wallet_id = ? and media_type = ? and completed_by_user = 0  and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -181,7 +196,7 @@ const getTodayChoresTotal = async (walletId, mediaType) => {
   return [results[0].sum || 0, results[0].count || 0];
 };
 const getOldChoresTotal = async (walletId, mediaType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and is_completed = 0`;
+  const query = `select sum(value) as sum, count(1) as count from chores where valid_from < ? and valid_to >= ? and wallet_id = ? and media_type = ? and completed_by_user = 0  and is_completed = 0`;
 
   const results = await runQueryAsync(query, [
     moment().startOf("day").format(DATE_TIME_FORMAT),
@@ -194,7 +209,7 @@ const getOldChoresTotal = async (walletId, mediaType) => {
 };
 
 const getTotalByChore = async (walletId, mediaType, choreType) => {
-  const query = `select sum(value) as sum, count(1) as count from chores where wallet_id = ? and media_type = ? and chore_type = ? and is_completed = 0 and valid_to >= ?`;
+  const query = `select sum(value) as sum, count(1) as count from chores where wallet_id = ? and media_type = ? and chore_type = ? and completed_by_user = 0 and is_completed = 0 and valid_to >= ?`;
 
   const results = await runQueryAsync(query, [
     walletId,
@@ -258,6 +273,14 @@ const getChoresById = async (choreId) => {
   return results[0];
 };
 
+const getTopTweets = async () => {
+  const query = `select link_to_post, max(mark_as_done_at) as completed_at from chores 
+  where completed_by_user = 1 and link_to_post is not null
+  group by link_to_post
+  order by 2 desc limit 10;`;
+
+  return await runQueryAsync(query, []);
+};
 const getChoresByType = async (
   walletId,
   mediaType,
@@ -286,12 +309,13 @@ const getChoresByType = async (
 };
 
 const markChoreAsCompletedByUser = async (walletId, choreId, data) => {
-  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ?, link_to_post = ? where id  = ? and wallet_id = ?;`;
+  const query = `update chores set completed_by_user = 1, target_post = ?, target_post_link = ?, link_to_post = ?, mark_as_done_at = ? where id  = ? and wallet_id = ?;`;
 
   return await runQueryAsync(query, [
     data.comment,
     data.commentLink,
     data.postLink,
+    moment().format(DATE_TIME_FORMAT),
     choreId,
     walletId,
   ]);
@@ -336,4 +360,7 @@ module.exports = {
   getActiveChoresCount,
   getCampaignPost,
   getChoresById,
+  getTopTweets,
+  getTotalChoresAssigned,
+  getTotalChoresCompleted,
 };

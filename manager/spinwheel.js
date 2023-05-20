@@ -68,7 +68,7 @@ const createParticipants = async (nextSpin) => {
         size,
         nextSpin
       );
-
+      // console.log("currParticipants", currParticipants);
       if (currParticipants.length === 0) {
         logger.info(
           `there are no participants for ${nextSpin.id}, page: ${page}`
@@ -114,7 +114,11 @@ const createParticipants = async (nextSpin) => {
       nextSpin.spinNo += 1;
       page += currParticipants.length > size ? 2 : 1;
     }
-    await processPrizesV1(winners, async (id) => await markWinnerAsPaid(id));
+    await processPrizesV1(
+      winners,
+      nextSpin.currency,
+      async (id) => await markWinnerAsPaid(id)
+    );
     logger.info(`spin completed for a type: ${nextSpin.type}`);
   } catch (error) {
     logger.error(

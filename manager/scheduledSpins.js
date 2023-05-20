@@ -53,6 +53,7 @@ const nextSpinDetails = async (type) => {
         minWalletValue: spin.min_wallet_amount,
         participants: (spin.participants || "").split(","),
         spinNo,
+        isDiamond: spin.is_diamond,
       });
     }
   }

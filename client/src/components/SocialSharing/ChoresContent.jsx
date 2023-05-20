@@ -21,18 +21,23 @@ import Chore from "./Chore";
 import { markChoreAsDoneAPI, validateChoreAPI } from "../../API/SocialSharing";
 import { customFetch } from "../../API/index.js";
 import { getTotalCountOfTab } from "./Util";
+import { useSearchParams } from "react-router-dom";
 
-const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
+const ChoresContent = ({ tab, walletId, menuOption, stats, fetchStats }) => {
+  // eslint-disable-next-line no-unused-vars
+  const [searchParams, _] = useSearchParams();
   const [chores, setChores] = useState();
   const [filter, setFilter] = useState("todo");
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const fetchStats = async () => {
+  const fetchChores = async () => {
     setLoading(true);
     const res = await customFetch(
       `${
         config.API_ENDPOINT
-      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}&pageNo=${page}&pageSize=10`,
+      }/social-sharing-chores?mediaType=${tab}&walletId=${walletId}&type=${menuOption.toLowerCase()}&filter=${filter}&pageNo=${page}&pageSize=10&viewAs=${
+        searchParams.get("viewAs") || ""
+      }`,
       {
         method: "GET",
       }
@@ -42,7 +47,7 @@ const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
     setLoading(false);
   };
   useEffect(() => {
-    fetchStats();
+    fetchChores();
   }, [menuOption, filter, page]);
   useEffect(() => {
     setPage(0);
@@ -53,6 +58,7 @@ const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
       const chore = chores.filter((c) => c.id === choreId)[0];
       chore.completed_by_user = 1;
       setChores([...chores]);
+      fetchStats();
     }
   };
 
@@ -112,7 +118,7 @@ const ChoresContent = ({ tab, walletId, menuOption, stats }) => {
       <TablePagination
         rowsPerPageOptions={[]}
         component="div"
-        count={getTotalCountOfTab(stats, menuOption)}
+        count={getTotalCountOfTab(stats, menuOption) || 0}
         rowsPerPage={10}
         page={page}
         onPageChange={(e, val) => setPage(val)}

@@ -24,7 +24,7 @@ import Campaigns from "./components/Campaigns/Campaigns";
 import Profile from "./components/Profile/Profile";
 import Quizzes from "./components/Quizzes/Quizzes";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Promotions from "./components/Promotions/Promotions";
 import Tokens from "./components/Tokens/Tokens";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
@@ -33,6 +33,8 @@ import PostedBlogs from "./components/PostedBlogs/PostedBlogs";
 import TotalEarnings from "./components/TotalEarnings/TotalEarnings";
 import Invites from "./components/Invites/Invites";
 import Holders from "./components/Holders/Holders";
+import ScheduledSpins from "./components/ScheduledSpins/ScheduledSpins";
+import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdmin";
 
 function App() {
   const location = useLocation();
@@ -106,6 +108,14 @@ function App() {
         <Route
           path="/holders"
           element={<PrivateRoute component={<Holders />} />}
+        />
+        <Route
+          path="/scheduled_spins"
+          element={<PrivateRoute component={<ScheduledSpins />} />}
+        />
+        <Route
+          path="/social-sharing-admin"
+          element={<PrivateRoute component={<SocialSharingAdmin />} />}
         />
       </Routes>
       <Footer />

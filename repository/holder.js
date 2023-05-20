@@ -16,6 +16,11 @@ const createHolderV1 = async (walletId) => {
   }
 };
 
+const getNMLHolders = async () => {
+  const query = `select wallet_id from holders where nml_balance > 0`;
+
+  return await runQueryAsync(query, []);
+};
 const getHoldersMeta = async () => {
   const query = `select max(id) as max_id, min(id) as min_id from holders`;
 
@@ -30,6 +35,11 @@ const getHolderByPage = async (minId, maxId) => {
 const updateHolderBalance = async (walletId, balance, token) => {
   const query = `update holders set ${token}_balance = ? where wallet_id = ?`;
   return await runQueryAsync(query, [balance, walletId]);
+};
+
+const updateHolderDiamondStatus = async (walletId, status) => {
+  const query = `update holders set is_diamond = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [status, walletId]);
 };
 
 const nextUserForPost = async (campaignId, skippedUsers) => {
@@ -131,6 +141,21 @@ const getById = async (wallet_id) => {
 
   const results = await runQueryAsync(query, [wallet_id]);
   return results[0];
+};
+
+const getHolders = async (offset, pageSize, viewAs) => {
+  const query = `select * from holders where twitter_link is not null and (1 = ? or wallet_id = ?) limit ? offset ?;`;
+
+  const results = await runQueryAsync(query, [
+    viewAs ? 0 : 1,
+    viewAs,
+    pageSize,
+    offset,
+  ]);
+  const query1 = `select count(1) as count from holders where twitter_link is not null and (1 = ? or wallet_id = ?)`;
+
+  const results1 = await runQueryAsync(query1, [viewAs ? 0 : 1, viewAs]);
+  return [results, results1[0].count];
 };
 
 const getByInviteCode = async (code) => {
@@ -264,4 +289,7 @@ module.exports = {
   getByInviteCode,
   saveHolderByAdmin,
   choreAlreadyExists,
+  getHolders,
+  getNMLHolders,
+  updateHolderDiamondStatus,
 };

@@ -69,9 +69,19 @@ export default function InternalApps() {
   ];
   const adminApps = [
     {
-      name: "Holders",
+      name: "Holders Admin",
       path: "/holders",
       icon: <PersonIcon />,
+    },
+    {
+      name: "Spins Admin",
+      path: "/scheduled_spins",
+      icon: <AttractionsIcon />,
+    },
+    {
+      name: "Work Area Admin",
+      path: "/social-sharing-admin",
+      icon: <GroupWorkIcon />,
     },
   ];
   return (

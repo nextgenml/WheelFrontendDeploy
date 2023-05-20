@@ -47,7 +47,7 @@ export default function PostedBlogs() {
 
   const [blogs, setBlogs] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(15);
   const [totalCount, setTotalCount] = React.useState(0);
   const [saveBlog, setSaveBlog] = React.useState(null);
   const [saveLinks, setSaveLinks] = React.useState(null);
@@ -57,7 +57,7 @@ export default function PostedBlogs() {
       finalWallet,
       page,
       rowsPerPage,
-      moment(selectedDate.toString()).format('YYYY-MM-DD') || queryDate
+      moment(selectedDate.toString()).format("YYYY-MM-DD") || queryDate
     );
     if (res.blogs) {
       setBlogs(res.blogs);
@@ -149,7 +149,7 @@ export default function PostedBlogs() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25, 50]}
+          rowsPerPageOptions={[5, 15, 25, 50]}
           component="div"
           count={totalCount}
           rowsPerPage={rowsPerPage}

@@ -16,6 +16,7 @@ const { pullWallets, getContract } = require("../../script/pullTransfers");
 const { getBalances } = require("../../script/walletBalance");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
+const { updateDiamondHolders } = require("./updateDiamondHolder");
 const formatBalance = (value, decimals) => {
   return (
     parseInt(
@@ -128,6 +129,7 @@ const initiateProcess = async () => {
 schedule.scheduleJob("0 */3 * * *", async () => {
   await initiateProcess();
   await updateAllBalances();
+  await updateDiamondHolders();
 });
 process.on("SIGINT", () => {
   console.log("closing");
