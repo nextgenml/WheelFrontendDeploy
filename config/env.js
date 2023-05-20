@@ -35,7 +35,6 @@ const config = {
   MAX_SUPPLY: process.env.MAX_SUPPLY,
   CHATGPT_FREE_KEYS: JSON.parse(process.env.CHATGPT_FREE_KEYS),
   CHATGPT_PAID_KEYS: JSON.parse(process.env.CHATGPT_PAID_KEYS),
-  WHEEL_BAN_WALLETS: JSON.parse(process.env.WHEEL_BAN_WALLETS),
 };
 
 module.exports = config;

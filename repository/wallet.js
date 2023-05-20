@@ -2,7 +2,6 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { getSpinById } = require("./scheduledSpin");
-const config = require("../config/env");
 
 const createWallet = async (walletId, value, token) => {
   const query = `insert into wallets (wallet_id, value, created_at, token) values(?, ?, now(), ?);`;
@@ -28,7 +27,7 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
     ), balance_wallets as (
     select distinct tw.wallet_id from temp_wallets tw 
     inner join holders h on h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
-    where nml_balance > ? and (1 = ? or is_diamond = 1) and h.wallet_id not in (?)
+    where nml_balance > ? and (1 = ? or is_diamond = 1)
     )
     select * from balance_wallets order by 1 desc limit ? offset ?;`;
 
@@ -37,7 +36,6 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
     start,
     nextSpin.minWalletValue,
     nextSpin.isDiamond ? 0 : 1,
-    config.WHEEL_BAN_WALLETS,
     size,
     offset,
   ]);
