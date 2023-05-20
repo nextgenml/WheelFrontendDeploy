@@ -16,9 +16,9 @@ import config from "../../config";
 const headers = [
   "Wallet Id",
   "# chores Assigned",
-  "# chores completed",
   "# likes Assigned",
   "# retweets Assigned",
+  "# comments Assigned",
   "# follows Assigned",
   "# validations Assigned",
   "Overall paid",
@@ -82,10 +82,17 @@ export default function SocialSharingAdmin() {
                   }}
                 >
                   <TableCell>{row.wallet_id}</TableCell>
-                  <TableCell>{row.totalAssigned}</TableCell>
-                  <TableCell>{row.totalCompleted}</TableCell>
+                  <TableCell>
+                    {row.likeCount +
+                      row.retweetCount +
+                      row.commentCount +
+                      row.validateCount +
+                      row.followCount}
+                  </TableCell>
+                  {/* <TableCell>{row.totalCompleted}</TableCell> */}
                   <TableCell>{row.likeCount}</TableCell>
                   <TableCell>{row.retweetCount}</TableCell>
+                  <TableCell>{row.commentCount}</TableCell>
                   <TableCell>{row.followCount}</TableCell>
                   <TableCell>{row.validateCount}</TableCell>
 
