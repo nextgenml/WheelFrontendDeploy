@@ -12,6 +12,7 @@ import styles from "./SocialSharingAdmin.module.css";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { getAPICall } from "../../API";
 import config from "../../config";
+import Loading from "../loading";
 
 const headers = [
   "Wallet Id",
@@ -34,8 +35,9 @@ export default function SocialSharingAdmin() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
-
+  const [loading, setLoading] = React.useState(false);
   const fetchData = async () => {
+    setLoading(true);
     const res = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/chores/adminStats?pageNo=${page}&pageSize=${rowsPerPage}`
     );
@@ -43,6 +45,7 @@ export default function SocialSharingAdmin() {
       setRecords(res.data);
       setTotalCount(res.count);
     }
+    setLoading(false);
   };
 
   React.useEffect(() => {
@@ -57,6 +60,7 @@ export default function SocialSharingAdmin() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  if (loading) return <Loading loading />;
   return (
     <>
       <Paper sx={{ width: "100%", mb: 2, mt: 2 }}>
