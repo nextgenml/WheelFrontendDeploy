@@ -1,64 +1,64 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAccount, useSignMessage } from "wagmi";
 import { fetchHolderNonceAPI, loginHolderAPI } from "../../API/Holder";
-import {
-  getAuthToken,
-  getLoggedInAddress,
-  removeAuthToken,
-  removeLoggedInId,
-  setAuthToken,
-  setLoggedInAddress,
-} from "../../API/index.js";
+import { getAPICall, removeAuthToken, setAuthToken } from "../../API/index.js";
+import config from "../../config";
+import { writeAPICall } from "../../API/index.js";
 const LoginHandler = () => {
   const { isConnected, address } = useAccount();
   const [connected, setConnected] = useState(isConnected);
-  const [connectedAddress, setConnectedAddress] = useState(address);
+  const connectedAddress = useRef(address);
   const signer = useSignMessage();
 
   async function signNonce(nonce) {
     try {
+      console.log("called signNonce");
       const signature = await signer.signMessageAsync({ message: nonce });
       return { address: address, signature };
     } catch (ex) {
-      console.log(ex);
-      alert(
-        "Login to NexgenMl is failed. Please refresh the page and sign the message using metamask"
-      );
+      // alert(
+      //   "Invalid session. Please disconnect and reconnect your metamask wallet again"
+      // );
+      console.error("error in signNonce", ex);
     }
   }
 
   const requestSignature = async () => {
+    console.log("called requestSignature");
     const { nonce } = await fetchHolderNonceAPI(address);
     const result = await signNonce(nonce);
 
-    if (result.address) {
+    if (result && result.address) {
       const data = await loginHolderAPI(result);
       if (data) {
-        setAuthToken(data.token);
-        setLoggedInAddress(result.address);
+        setAuthToken(true);
         window.location.reload();
       }
     }
   };
-  const logout = () => {
+  const logout = async () => {
     removeAuthToken();
-    removeLoggedInId();
+    await writeAPICall(
+      `${config.API_ENDPOINT}/api/v1/holders/logout`,
+      {},
+      "DELETE",
+      true
+    );
     window.location.reload();
   };
-  const checkIfSignatureRequired = () => {
-    const token = getAuthToken();
-    if (!token) {
-      requestSignature();
-    }
+  const checkIfSignatureRequired = async () => {
+    const res = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/holders/signingRequired`
+    );
+    if (!res.success) requestSignature();
   };
 
   useEffect(() => {
+    console.log("isConnected", isConnected, "address", address);
     if (isConnected) {
-      if (address !== connectedAddress || getLoggedInAddress() !== address) {
-        removeLoggedInId();
-        removeAuthToken();
-        setConnectedAddress(address);
+      if (address !== connectedAddress.current) {
+        connectedAddress.current = address;
         requestSignature();
         return;
       }

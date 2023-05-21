@@ -20,7 +20,7 @@ const validateAdmin = async (req, res, next) => {
 };
 
 const validateLoginSession = async (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.cookies.auth_token;
   if (!token)
     return res.status(401).json({
       statusCode: 400,
@@ -42,7 +42,7 @@ const validateLoginSession = async (req, res, next) => {
 };
 
 const extractWallet = async (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.cookies.auth_token;
   if (token)
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (!err) {
