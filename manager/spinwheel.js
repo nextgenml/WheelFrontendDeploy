@@ -54,9 +54,9 @@ const initiateNextSpin = () => {
           currentSpinId = nextSpin.id;
           lastUpdatedAt = moment(updateAt).format(DATE_TIME_FORMAT);
           logger.info(
-            `scheduled next spin cycle, ${JSON.stringify(
-              nextSpin
-            )}, ${waitingTime}`
+            `scheduled next spin cycle, ${JSON.stringify(nextSpin)}, ${
+              waitingTime / 1000
+            } sec`
           );
         }
       } else if (currentSpinTimeout) deleteScheduledJob();
