@@ -22,7 +22,7 @@ const createSpin = async (data) => {
     .map((x) => x.trim());
   await runQueryAsync(query, [
     data.type,
-    data.is_active,
+    data.is_active || 0,
     data.run_at,
     data.spin_day,
     data.min_wallet_amount,
