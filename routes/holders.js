@@ -12,7 +12,6 @@ router.post(
   holdersController.saveSocialLinks
 );
 router.post("/login", holdersController.login);
-router.delete("/logout", holdersController.logout);
 router.get("/details", validateLoginSession, holdersController.getDetails);
 router.get("/nonce", validateWalletId, holdersController.getNonce);
 router.get(
@@ -21,11 +20,7 @@ router.get(
   validateAdmin,
   holdersController.searchHolders
 );
-router.get(
-  "/signingRequired",
-  validateLoginSession,
-  holdersController.isSigningRequired
-);
+
 router.put(
   "/",
   validateLoginSession,

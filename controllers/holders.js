@@ -24,8 +24,6 @@ const getNonce = async (req, res) => {
   try {
     const { walletId } = req.query;
     const nonce = await holderRepo.getInviteCode(walletId);
-    res.clearCookie("auth_token");
-
     res.send({
       nonce,
     });
@@ -52,7 +50,6 @@ const login = async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "3d",
     });
-    res.cookie("auth_token", token, { secure: false });
     res.send({
       message: "login successful",
       token,
@@ -61,18 +58,6 @@ const login = async (req, res) => {
     logger.info(`login: ${error}`);
 
     res.status(400).json({ error: "Login Failed" });
-  }
-};
-const logout = async (req, res) => {
-  try {
-    res.clearCookie("auth_token");
-    res.send({
-      message: "Logout successful",
-    });
-  } catch (error) {
-    logger.info(`logout: ${error}`);
-
-    res.status(400).json({ error: "logout Failed" });
   }
 };
 const saveSocialLinks = async (req, res) => {
@@ -121,11 +106,6 @@ const saveSocialLinks = async (req, res) => {
   }
 };
 
-const isSigningRequired = async (req, res) => {
-  res.send({
-    success: true,
-  });
-};
 const getDetails = async (req, res) => {
   try {
     const { walletId } = req.query;
@@ -171,6 +151,4 @@ module.exports = {
   login,
   getNonce,
   searchHolders,
-  logout,
-  isSigningRequired,
 };

@@ -29,7 +29,14 @@ export const customFetch = async (url, options = {}) => {
   return fetch(url, addHeaders(options));
 };
 export const getAPICall = async (url, skipMessage = false, headers = {}) => {
-  const res = await customFetch(url, headers);
+  const token = getAuthToken();
+  //   if (!token) return;
+  const res = await customFetch(url, {
+    headers: {
+      ...headers,
+      Authorization: token,
+    },
+  });
   if (res.ok) {
     return await res.json();
   } else {

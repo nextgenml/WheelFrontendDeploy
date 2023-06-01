@@ -3,7 +3,6 @@ const path = require("path");
 const cors = require("cors");
 const multer = require("multer");
 const { static } = require("express");
-const cookieParser = require("cookie-parser");
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -22,10 +21,13 @@ const walletController = require("./controllers/wallet");
 const tokenController = require("./controllers/token");
 const promotionsController = require("./controllers/promotions");
 const blogsController = require("./controllers/blogs");
-const { validateLoginSession, extractWallet } = require("./routes/auth");
+const {
+  validateWalletId,
+  validateLoginSession,
+  extractWallet,
+} = require("./routes/auth");
 
 const app = express();
-app.use(cookieParser());
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
@@ -171,10 +173,6 @@ app.use(express.static(path.join(__dirname, "/client/build")));
 app.use("/images/", static("./uploads/"));
 
 app.get("*", (req, res) => {
-  // const clientPath =
-  //   process.env.NODE_ENV == "test"
-  //     ? path.join(__dirname, "client", "public", "index.html")
-  //     : path.join(__dirname, "client", "build", "index.html");
   res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });
 
