@@ -8,7 +8,10 @@ const {
 const { nextSpinDetails } = require("./scheduledSpins.js");
 const { createSpin, markSpinAsDone } = require("../repository/spin.js");
 const moment = require("moment");
-const { updateLaunchDate } = require("../repository/scheduledSpin.js");
+const {
+  updateLaunchDate,
+  recentUpdatedAt,
+} = require("../repository/scheduledSpin.js");
 const { currSpinParticipants } = require("../repository/wallet.js");
 const { timer, generateRandomNumber } = require("../utils/index.js");
 const logger = require("../logger.js");
@@ -16,10 +19,11 @@ const { processPrizesV1 } = require("./rewardTransferV1.js");
 const participantsRepo = require("../repository/spinParticipants.js");
 const blogsRepo = require("../repository/blogs.js");
 const { hasPostedValidBlogs } = require("./blogs.js");
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper.js");
 
 let currentSpinTimeout = null;
 let currentSpinId = null;
-
+let lastUpdatedAt = null;
 const initiateNextSpin = () => {
   let running = false;
   logger.info("spin process started");
@@ -31,8 +35,13 @@ const initiateNextSpin = () => {
       const nextSpin = await nextSpinDetails();
 
       if (nextSpin) {
+        const updateAt = await recentUpdatedAt();
+        // console.log("updateAt", updateAt, lastUpdatedAt);
         // after scheduling a spin, if some update happens in the DB
-        if (currentSpinId && currentSpinId !== nextSpin.id)
+        if (
+          (currentSpinId && currentSpinId !== nextSpin.id) ||
+          updateAt != lastUpdatedAt
+        )
           deleteScheduledJob();
 
         if (!currentSpinTimeout) {
@@ -43,6 +52,7 @@ const initiateNextSpin = () => {
             waitingTime
           );
           currentSpinId = nextSpin.id;
+          lastUpdatedAt = moment(updateAt).format(DATE_TIME_FORMAT);
           logger.info(
             `scheduled next spin cycle, ${JSON.stringify(
               nextSpin
@@ -68,10 +78,11 @@ const createParticipants = async (nextSpin) => {
         size,
         nextSpin
       );
+
       // console.log("currParticipants", currParticipants);
-      if (currParticipants.length === 0) {
+      if (currParticipants.length <= config.MIN_WALLETS_COUNT) {
         logger.info(
-          `there are no participants for ${nextSpin.id}, page: ${page}`
+          `there are no participants for ${nextSpin.id}, of type ${nextSpin.type}, page: ${page}, insufficient participants: ${currParticipants.length}`
         );
         break;
       }
@@ -87,7 +98,9 @@ const createParticipants = async (nextSpin) => {
         }
       }
 
-      logger.info(`currParticipants length: ${currParticipants.length}`);
+      logger.info(
+        `Running spin for ${nextSpin.type} with ${currParticipants.length} participants`
+      );
 
       const spin = await createSpin(nextSpin);
 
@@ -160,6 +173,7 @@ const processWinners = async (group, nextSpin) => {
 };
 
 const deleteScheduledJob = () => {
+  logger.info("clearing scheduled job because of new next spin");
   clearTimeout(currentSpinTimeout);
   currentSpinTimeout = null;
   currentSpinId = null;

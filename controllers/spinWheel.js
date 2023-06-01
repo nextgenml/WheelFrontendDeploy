@@ -58,8 +58,6 @@ const spinnerData = async (req, res) => {
         next_spin_type: nextSpin?.type,
       };
     }
-    logger.info(JSON.stringify(data));
-
     res.json({
       ...data,
       start_time: current_time,

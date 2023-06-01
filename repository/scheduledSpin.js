@@ -36,7 +36,7 @@ const createSpin = async (data) => {
 };
 
 const updateSpin = async (data) => {
-  const query = `update scheduled_spins set type = ?, is_active = ?, run_at = ?, spin_day = ?, min_wallet_amount = ?, no_of_winners = ?, spin_delay = ?, winner_prizes = ?, participants = ?, currency = ?, is_diamond = ? where id = ?`;
+  const query = `update scheduled_spins set type = ?, is_active = ?, run_at = ?, spin_day = ?, min_wallet_amount = ?, no_of_winners = ?, spin_delay = ?, winner_prizes = ?, participants = ?, currency = ?, is_diamond = ?, updated_at = ? where id = ?`;
   const winnerPrizes = (data.winner_prizes || "")
     .split(",")
     .map((x) => x.trim());
@@ -52,8 +52,14 @@ const updateSpin = async (data) => {
     data.participants,
     data.currency,
     data.is_diamond,
+    moment().format(DATE_TIME_FORMAT),
     data.id,
   ]);
+};
+const recentUpdatedAt = async () => {
+  const query = `select max(updated_at) as updated_at from scheduled_spins`;
+  const results = await runQueryAsync(query, []);
+  return moment(results[0].updated_at).format(DATE_TIME_FORMAT);
 };
 const getSpinById = async (id) => {
   const query = "select * from scheduled_spins where id = ?;";
@@ -88,4 +94,5 @@ module.exports = {
   getSpins,
   createSpin,
   updateSpin,
+  recentUpdatedAt,
 };
