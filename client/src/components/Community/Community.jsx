@@ -62,7 +62,7 @@ export default function Community() {
               />
             </IconButton>
           </a>
-          <a href="#" target="_blank">
+          {/* <a href="#" target="_blank">
             <IconButton>
               <InstagraIcon
                 sx={{
@@ -71,8 +71,11 @@ export default function Community() {
                 }}
               />
             </IconButton>
-          </a>
-          <a href="https://www.youtube.com/channel/UCsAKUeJJzRG0TLveljIi96g" target="_blank">
+          </a> */}
+          <a
+            href="https://www.youtube.com/channel/UCsAKUeJJzRG0TLveljIi96g"
+            target="_blank"
+          >
             <IconButton>
               <YouTubeIcon
                 sx={{

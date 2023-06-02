@@ -14,6 +14,15 @@ import { getAPICall } from "../../API";
 import config from "../../config";
 import Loading from "../loading";
 
+import SearchIcon from "@mui/icons-material/Search";
+import {
+  Button,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  Box,
+  FormControl,
+} from "@mui/material";
 const headers = [
   "Wallet Id",
   "# chores Assigned",
@@ -36,10 +45,12 @@ export default function SocialSharingAdmin() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+
   const fetchData = async () => {
     setLoading(true);
     const res = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/chores/adminStats?pageNo=${page}&pageSize=${rowsPerPage}`
+      `${config.API_ENDPOINT}/api/v1/chores/adminStats?pageNo=${page}&pageSize=${rowsPerPage}&search=${search}`
     );
     if (res.data) {
       setRecords(res.data);
@@ -68,7 +79,32 @@ export default function SocialSharingAdmin() {
           <Typography variant="h6" className={styles.tableHeader}>
             Configure Spins
           </Typography>
-
+          <Box display={"flex"} alignItems={"center"}>
+            <FormControl
+              sx={{
+                m: 1,
+                mb: 2,
+                width: "50ch",
+                marginLeft: "auto !important",
+              }}
+              variant="outlined"
+            >
+              <InputLabel>Search using wallet id</InputLabel>
+              <OutlinedInput
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+                label="Search using wallet id"
+              />
+            </FormControl>
+            <Button variant="outlined" onClick={fetchData}>
+              Search
+            </Button>
+          </Box>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
