@@ -82,7 +82,7 @@ export default function ScheduledSpins() {
     const res = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/scheduledSpins/next`
     );
-    if (res.data) {
+    if (res) {
       setNextSpin(res.data);
     }
   };
@@ -118,7 +118,8 @@ export default function ScheduledSpins() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {nextSpin && (
+              {console.log("nextSpin", nextSpin)}
+              {nextSpin ? (
                 <TableRow
                   key={nextSpin.id}
                   sx={{
@@ -141,6 +142,10 @@ export default function ScheduledSpins() {
                     />
                   </TableCell>
                 </TableRow>
+              ) : (
+                <Typography sx={{ textAlign: "center", m: 2 }}>
+                  There is no next spin configured
+                </Typography>
               )}
             </TableBody>
           </Table>

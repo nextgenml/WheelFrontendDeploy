@@ -57,6 +57,7 @@ export default function SpinAndWin() {
     next_spin_type: "",
   });
   const [nextUsersCount, setNextUsersCount] = useState(0);
+
   useEffect(() => {
     fetchWinners();
   }, [typeValue]);
@@ -143,6 +144,7 @@ export default function SpinAndWin() {
       end_time: new Date(spinner_data["end_time"]),
       spins_remaining: spinner_data.no_of_winners - wCount,
       spin_delay: spinner_data.spin_delay,
+
       canRun:
         spinner_data &&
         spinner_data.participants &&
@@ -198,13 +200,15 @@ export default function SpinAndWin() {
                 No Spin As Minimum Wallet Requirement Is Not Met
               </p>
             )}
-            <CustomCountDown
-              on_Complete={onCountDownComplete}
-              start_date={timer_start_date}
-              end_date={timer_end_date ? timer_end_date : new Date()}
-              spinType={spinTypes.next_spin_type}
-              nextUsersCount={nextUsersCount}
-            />
+            {spinTypes.next_spin_type && (
+              <CustomCountDown
+                on_Complete={onCountDownComplete}
+                start_date={timer_start_date}
+                end_date={timer_end_date ? timer_end_date : new Date()}
+                spinType={spinTypes.next_spin_type}
+                nextUsersCount={nextUsersCount}
+              />
+            )}
           </div>
 
           <div
