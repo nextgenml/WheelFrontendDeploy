@@ -43,17 +43,50 @@ const validateLoginSession = async (req, res, next) => {
 
 const extractWallet = async (req, res, next) => {
   const token = req.headers.authorization;
-  if (token)
+  if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (!err) {
         console.log("extracted wallet", decoded.walletId);
         req.query.walletId = decoded.walletId;
         return next();
+      } else {
+        return res.status(401).json({
+          statusCode: 400,
+          message:
+            "Invalid session. Please disconnect and reconnect your metamask wallet again",
+        });
       }
     });
+  } else {
+    console.log("checking token", failed);
+
+    return res.status(401).json({
+      statusCode: 400,
+      message:
+        "Invalid session. Please disconnect and reconnect your metamask wallet again",
+    });
+  }
 };
 
+const extractWalletSoft = async (req, res, next) => {
+  const token = req.headers.authorization;
+  req.query.walletId = "";
+  if (token) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (!err) {
+        console.log("extracted wallet", decoded.walletId);
+        req.query.walletId = decoded.walletId;
+        return next();
+      } else {
+        return next();
+      }
+    });
+  } else {
+    return next();
+  }
+};
 module.exports = {
+  extractWalletSoft,
   validateWalletId,
   validateLoginSession,
   extractWallet,

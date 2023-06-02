@@ -21,19 +21,15 @@ const walletController = require("./controllers/wallet");
 const tokenController = require("./controllers/token");
 const promotionsController = require("./controllers/promotions");
 const blogsController = require("./controllers/blogs");
-const {
-  validateWalletId,
-  validateLoginSession,
-  extractWallet,
-} = require("./routes/auth");
+const { validateLoginSession, extractWalletSoft } = require("./routes/auth");
 
 const app = express();
 
 app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
-app.get("/spinner-data", extractWallet, spinWheelController.spinnerData);
+app.get("/spinner-data", extractWalletSoft, spinWheelController.spinnerData);
 
-app.get("/winners-data", extractWallet, spinWheelController.winnerData);
+app.get("/winners-data", extractWalletSoft, spinWheelController.winnerData);
 
 app.get("/participants-data", spinWheelController.participantsData);
 
