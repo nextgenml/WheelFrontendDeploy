@@ -19,21 +19,55 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
   }
 
   const start = moment(nextSpin.prevLaunchAt).format(DATE_TIME_FORMAT);
-  const query = `with temp_wallets as (
-    select distinct (case 
-    when from_wallet = ? then to_wallet
-    else from_wallet
-    end) as wallet_id from token_transactions 
-    where created_at > ? and token = 'nml'
-    ), balance_wallets as (
-    select distinct tw.wallet_id from temp_wallets tw 
-    inner join holders h on h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
-    where nml_balance > ? and (1 = ? or is_diamond = 1) and h.wallet_id not in (?)
-    )
-    select * from balance_wallets order by 1 desc limit ? offset ?;`;
 
+  const query =
+    process.env.NODE_ENV === "production"
+      ? `
+    SELECT DISTINCT
+      tw.wallet_id
+      FROM
+          (
+              SELECT DISTINCT
+                  CASE
+                      WHEN from_wallet = ? THEN to_wallet
+                      ELSE from_wallet
+                  END AS wallet_id
+              FROM
+                  token_transactions
+              WHERE
+                  created_at > ? AND token = 'nml'
+          ) AS tw
+      INNER JOIN
+          holders h ON h.wallet_id = tw.wallet_id
+      WHERE
+          nml_balance > ? AND (1 = ? OR is_diamond = 1) AND h.wallet_id NOT IN (?)
+      ORDER BY
+          wallet_id DESC
+      LIMIT ? OFFSET ?;
+`
+      : `SELECT DISTINCT
+          tw.wallet_id
+          FROM
+              (
+                  SELECT DISTINCT
+                      CASE
+                          WHEN from_wallet = ? THEN to_wallet
+                          ELSE from_wallet
+                      END AS wallet_id
+                  FROM
+                      token_transactions
+                  WHERE
+                      created_at > ? AND token = 'nml'
+              ) AS tw
+          INNER JOIN
+              holders h ON h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
+          WHERE
+              nml_balance > ? AND (1 = ? OR is_diamond = 1) AND h.wallet_id NOT IN (?)
+          ORDER BY
+              wallet_id DESC
+          LIMIT ? OFFSET ?;`;
   const spins = await runQueryAsync(query, [
-    process.env.NML_CONTRACT_ADDRESS,
+    process.env.UNISWAP_NML_EXCHANGE_WALLET_ID,
     start,
     nextSpin.minWalletValue,
     nextSpin.isDiamond ? 0 : 1,
