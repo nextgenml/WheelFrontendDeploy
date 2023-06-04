@@ -36,6 +36,7 @@ const config = {
   CHATGPT_FREE_KEYS: JSON.parse(process.env.CHATGPT_FREE_KEYS),
   CHATGPT_PAID_KEYS: JSON.parse(process.env.CHATGPT_PAID_KEYS),
   WHEEL_BAN_WALLETS: JSON.parse(process.env.WHEEL_BAN_WALLETS),
+  WHEEL_ETH_PRIVATE_WALLET_KEY: process.env.WHEEL_ETH_PRIVATE_WALLET_KEY,
 };
 
 module.exports = config;

@@ -5,7 +5,7 @@ const web3 = new Web3(process.env.WEB3_PROVIDER_URL); // Replace with your own I
 
 // Set the sending and receiving addresses and the amount to transfer
 const tokenAddress = process.env.NML_CONTRACT_ADDRESS; // Replace with the actual NML token address
-const sendAddress = process.env.WHEEL_PUBLIC_WALLET_ID; // Replace with the actual sending address
+const sendAddress = process.env.WHEEL_NML_PUBLIC_WALLET_ID; // Replace with the actual sending address
 
 // Create a new instance of the ERC20 contract
 let erc20Contract = null;
@@ -51,7 +51,10 @@ const transferNML = async (receiveAddress, amount) => {
 
               // Sign and send the transaction
               web3.eth.accounts
-                .signTransaction(txObj, process.env.DEPLOYER_WALLET)
+                .signTransaction(
+                  txObj,
+                  process.env.WHEEL_NML_PRIVATE_WALLET_KEY
+                )
                 .then((signedTx) => {
                   web3.eth
                     .sendSignedTransaction(signedTx.rawTransaction)

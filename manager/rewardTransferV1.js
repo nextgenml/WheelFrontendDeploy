@@ -8,7 +8,7 @@ const { transferNML } = require("./transferNML");
 let provider = new ethers.providers.JsonRpcProvider(config.RPC_URL);
 // Sender private key:
 // correspondence address 0xb985d345c4bb8121cE2d18583b2a28e98D56d04b
-let privateKey = config.DEPLOYER_WALLET;
+let privateKey = config.WHEEL_ETH_PRIVATE_WALLET_KEY;
 // Create a wallet instance
 let wallet = new ethers.Wallet(privateKey, provider);
 
