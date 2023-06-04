@@ -54,6 +54,7 @@ const nextSpinDetails = async (type) => {
         participants: (spin.participants || "").split(","),
         spinNo,
         isDiamond: spin.is_diamond,
+        currency: spin.currency,
       });
     }
   }

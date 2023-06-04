@@ -37,7 +37,9 @@ const distributeReward = async (address, amount) => {
 const processPrizesV1 = async (winners, currency, callback) => {
   // return;
   for (const item of winners) {
-    logger.info(`transfer to ${item.walletId}, reward: ${item.prize}`);
+    logger.info(
+      `transfer to ${item.walletId}, reward: ${item.prize}, currency: ${currency}`
+    );
     let success;
     if (currency === "nml")
       success = await transferNML(item.walletId, item.prize);
