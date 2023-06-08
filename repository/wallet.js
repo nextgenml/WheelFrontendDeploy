@@ -20,7 +20,7 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
 
   const start = moment(nextSpin.prevLaunchAt).format(DATE_TIME_FORMAT);
 
-  const query = `select h.wallet_id from nml_holders h inner join nml_token_transactions tt on tt.wallet_id = h.wallet_id where h.balance >= ? and (1 = ? OR is_diamond = 1) and tt.created_at >= ? and h.wallet_id not in (?) limit ? offset ?`;
+  const query = `select distinct h.wallet_id from nml_holders h inner join nml_token_transactions tt on tt.wallet_id = h.wallet_id where h.balance >= ? and (1 = ? OR is_diamond = 1) and tt.created_at >= ? and h.wallet_id not in (?) order by wallet_id limit ? offset ?`;
   const spins = await runQueryAsync(query, [
     nextSpin.minWalletValue,
     nextSpin.isDiamond ? 0 : 1,
@@ -29,6 +29,7 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
     size,
     offset,
   ]);
+  // console.log("offset", offset);
   return spins.map((spin) => {
     return {
       walletId: spin.wallet_id,

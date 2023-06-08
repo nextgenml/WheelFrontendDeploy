@@ -79,7 +79,7 @@ const createParticipants = async (nextSpin) => {
         nextSpin
       );
 
-      // console.log("currParticipants", currParticipants);
+      console.log("currParticipants", currParticipants.length);
       if (currParticipants.length <= config.MIN_WALLETS_COUNT) {
         logger.info(
           `there are no participants for ${nextSpin.id}, of type ${nextSpin.type}, page: ${page}, insufficient participants: ${currParticipants.length}`
@@ -99,7 +99,7 @@ const createParticipants = async (nextSpin) => {
       }
 
       logger.info(
-        `Running spin for ${nextSpin.type} with ${currParticipants.length} participants`
+        `Running spin for ${nextSpin.type} with ${currParticipants.length} participants, spinNo: ${nextSpin.spinNo}`
       );
 
       const spin = await createSpin(nextSpin);
