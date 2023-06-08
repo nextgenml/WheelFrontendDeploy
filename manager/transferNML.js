@@ -11,7 +11,7 @@ const sendAddress = process.env.WHEEL_NML_PUBLIC_WALLET_ID; // Replace with the 
 let erc20Contract = null;
 getContract(tokenAddress, "nmlAbi.json").then((contract) => {
   erc20Contract = contract;
-  transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 500000000);
+  // transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 500000000);
 });
 
 const transferNML = async (receiveAddress, amount) => {
@@ -70,8 +70,8 @@ const transferNML = async (receiveAddress, amount) => {
       //           });
       //       });
       //   });
-      const gasPrice = await web3.eth.getGasPrice();
-      console.log("gasPrice", gasPrice);
+      // const gasPrice = await web3.eth.getGasPrice();
+      // console.log("gasPrice", gasPrice);
       const txObj = {
         from: sendAddress,
         to: tokenAddress,
