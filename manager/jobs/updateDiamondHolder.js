@@ -9,6 +9,10 @@ const updateDiamondHolders = async () => {
       holder.wallet_id,
       exists ? 0 : 1
     );
+    await holderRepo.updateNMLHolderDiamondStatus(
+      holder.wallet_id,
+      exists ? 0 : 1
+    );
   }
 };
 

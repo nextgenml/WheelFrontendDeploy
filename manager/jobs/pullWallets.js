@@ -153,7 +153,7 @@ const initiateProcess = async () => {
   await updateAllBalances();
   await updateDiamondHolders();
 };
-initiateProcess();
+// initiateProcess();
 schedule.scheduleJob("0 */3 * * *", async () => {
   await initiateProcess();
 });

@@ -29,7 +29,7 @@ const createNMLHolderV1 = async (walletId) => {
 };
 
 const getNMLHolders = async () => {
-  const query = `select wallet_id from holders where nml_balance > 0`;
+  const query = `select wallet_id from nml_holders where balance > 0`;
 
   return await runQueryAsync(query, []);
 };
@@ -56,6 +56,10 @@ const updateNMLBalance = async (walletId, balance) => {
 
 const updateHolderDiamondStatus = async (walletId, status) => {
   const query = `update holders set is_diamond = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [status, walletId]);
+};
+const updateNMLHolderDiamondStatus = async (walletId, status) => {
+  const query = `update nml_holders set is_diamond = ? where wallet_id = ?`;
   return await runQueryAsync(query, [status, walletId]);
 };
 
@@ -311,4 +315,5 @@ module.exports = {
   updateHolderDiamondStatus,
   createNMLHolderV1,
   updateNMLBalance,
+  updateNMLHolderDiamondStatus,
 };

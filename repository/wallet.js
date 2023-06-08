@@ -20,57 +20,11 @@ const currSpinParticipants = async (offset, size, nextSpin) => {
 
   const start = moment(nextSpin.prevLaunchAt).format(DATE_TIME_FORMAT);
 
-  const query =
-    process.env.NODE_ENV === "production"
-      ? `
-    SELECT DISTINCT
-      tw.wallet_id
-      FROM
-          (
-              SELECT DISTINCT
-                  CASE
-                      WHEN from_wallet = ? THEN to_wallet
-                      ELSE from_wallet
-                  END AS wallet_id
-              FROM
-                  token_transactions
-              WHERE
-                  created_at > ? AND token = 'nml'
-          ) AS tw
-      INNER JOIN
-          holders h ON h.wallet_id = tw.wallet_id
-      WHERE
-          nml_balance > ? AND (1 = ? OR is_diamond = 1) AND h.wallet_id NOT IN (?)
-      ORDER BY
-          wallet_id DESC
-      LIMIT ? OFFSET ?;
-`
-      : `SELECT DISTINCT
-          tw.wallet_id
-          FROM
-              (
-                  SELECT DISTINCT
-                      CASE
-                          WHEN from_wallet = ? THEN to_wallet
-                          ELSE from_wallet
-                      END AS wallet_id
-                  FROM
-                      token_transactions
-                  WHERE
-                      created_at > ? AND token = 'nml'
-              ) AS tw
-          INNER JOIN
-              holders h ON h.wallet_id COLLATE utf8mb4_unicode_ci = tw.wallet_id COLLATE utf8mb4_unicode_ci
-          WHERE
-              nml_balance > ? AND (1 = ? OR is_diamond = 1) AND h.wallet_id NOT IN (?)
-          ORDER BY
-              wallet_id DESC
-          LIMIT ? OFFSET ?;`;
+  const query = `select h.wallet_id from nml_holders h inner join nml_token_transactions tt on tt.wallet_id = h.wallet_id where h.balance >= ? and (1 = ? OR is_diamond = 1) and tt.created_at >= ? and h.wallet_id not in (?) limit ? offset ?`;
   const spins = await runQueryAsync(query, [
-    process.env.UNISWAP_NML_EXCHANGE_WALLET_ID,
-    start,
     nextSpin.minWalletValue,
     nextSpin.isDiamond ? 0 : 1,
+    start,
     config.WHEEL_BAN_WALLETS,
     size,
     offset,
