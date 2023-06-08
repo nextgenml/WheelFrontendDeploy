@@ -78,7 +78,7 @@ const transferNML = async (receiveAddress, amount) => {
         data: erc20Contract.methods
           .transfer(receiveAddress, amount.toString())
           .encodeABI(),
-        gas: gasPrice,
+        gas: 100000,
       };
       web3.eth.accounts
         .signTransaction(txObj, process.env.WHEEL_NML_PRIVATE_WALLET_KEY)
