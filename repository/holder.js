@@ -16,6 +16,18 @@ const createHolderV1 = async (walletId) => {
   }
 };
 
+const createNMLHolderV1 = async (walletId) => {
+  const existsQuery = `select id from nml_holders where wallet_id = ?`;
+
+  const existsResults = await runQueryAsync(existsQuery, [walletId]);
+
+  if (!existsResults.length) {
+    const query = `insert into nml_holders (wallet_id) values(?);`;
+
+    return await runQueryAsync(query, [walletId]);
+  }
+};
+
 const getNMLHolders = async () => {
   const query = `select wallet_id from holders where nml_balance > 0`;
 
@@ -34,6 +46,11 @@ const getHolderByPage = async (minId, maxId) => {
 };
 const updateHolderBalance = async (walletId, balance, token) => {
   const query = `update holders set ${token}_balance = ? where wallet_id = ?`;
+  return await runQueryAsync(query, [balance, walletId]);
+};
+
+const updateNMLBalance = async (walletId, balance) => {
+  const query = `update nml_holders set balance = ? where wallet_id = ?`;
   return await runQueryAsync(query, [balance, walletId]);
 };
 
@@ -292,4 +309,6 @@ module.exports = {
   getHolders,
   getNMLHolders,
   updateHolderDiamondStatus,
+  createNMLHolderV1,
+  updateNMLBalance,
 };

@@ -5,18 +5,25 @@ const {
   getHoldersMeta,
   getHolderByPage,
   updateHolderBalance,
+  createNMLHolderV1,
+  updateNMLBalance,
 } = require("../../repository/holder");
 const {
   getTokens,
   updateBlockNumber,
   updateLastRunAt,
 } = require("../../repository/token");
-const { createTransaction } = require("../../repository/token_transactions");
+const {
+  createTransaction,
+  createNMLTransaction,
+} = require("../../repository/token_transactions");
 const { pullWallets, getContract } = require("../../script/pullTransfers");
 const { getBalances } = require("../../script/walletBalance");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../../constants/momentHelper");
 const { updateDiamondHolders } = require("./updateDiamondHolder");
+const _ = require("lodash");
+
 const formatBalance = (value, decimals) => {
   return (
     parseInt(
@@ -32,15 +39,27 @@ const storeTransactions = async (token, transactions, blockEndNumber) => {
     let formattedValue = formatBalance(value, token.decimals);
 
     promises.push(createTransaction(transaction, formattedValue, token.token));
+    if (token.token == "nml")
+      promises.push(
+        createNMLTransaction(
+          to === process.env.UNISWAP_NML_EXCHANGE_WALLET_ID ? from : to
+        )
+      );
 
     if (to !== token.contract_address) {
-      promises.push(createHolderV1(to));
+      // promises.push(createHolderV1(to));
       walletIds.push(to);
     }
     if (from !== token.contract_address) {
-      promises.push(createHolderV1(from));
+      // promises.push(createHolderV1(from));
       walletIds.push(from);
     }
+  }
+
+  const uniqueWallets = _.uniq(walletIds);
+  for (const w of uniqueWallets) {
+    promises.push(createHolderV1(w));
+    if (token.token == "nml") promises.push(createNMLHolderV1(w));
   }
   console.log("awaiting promises", promises.length);
   await Promise.all(promises);
@@ -81,6 +100,8 @@ const updateBalances = async (walletIds, token) => {
         formatBalance(b.balance, token.decimals),
         token.token
       );
+      if (token.token === "nml")
+        updateNMLBalance(b.walletId, formatBalance(b.balance, token.decimals));
     }
 
     min_id = current_max_id;
@@ -109,6 +130,11 @@ const updateAllBalances = async () => {
           formatBalance(b.balance, token.decimals),
           token.token
         );
+        if (token.token === "nml")
+          updateNMLBalance(
+            b.walletId,
+            formatBalance(b.balance, token.decimals)
+          );
       }
 
       min_id = current_max_id;
@@ -124,12 +150,12 @@ const initiateProcess = async () => {
     "Completed pulling wallets from smart contract and getting balances"
   );
   logger.info("completed getting balances");
-};
-// initiateProcess();
-schedule.scheduleJob("0 */3 * * *", async () => {
-  await initiateProcess();
   await updateAllBalances();
   await updateDiamondHolders();
+};
+initiateProcess();
+schedule.scheduleJob("0 */3 * * *", async () => {
+  await initiateProcess();
 });
 process.on("SIGINT", () => {
   console.log("closing");
