@@ -9,13 +9,14 @@ const sendAddress = process.env.WHEEL_NML_PUBLIC_WALLET_ID; // Replace with the 
 
 // Create a new instance of the ERC20 contract
 let erc20Contract = null;
-getContract(tokenAddress, "nmlAbi.json").then(
-  (contract) => (erc20Contract = contract)
-);
+getContract(tokenAddress, "nmlAbi.json").then((contract) => {
+  erc20Contract = contract;
+  transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 500000000);
+});
 
 const transferNML = async (receiveAddress, amount) => {
   try {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       // Get the decimal places of the token
       // erc20Contract.methods
       //   .decimals()
@@ -69,12 +70,15 @@ const transferNML = async (receiveAddress, amount) => {
       //           });
       //       });
       //   });
+      const gasPrice = await web3.eth.getGasPrice();
+      console.log("gasPrice", gasPrice);
       const txObj = {
         from: sendAddress,
         to: tokenAddress,
         data: erc20Contract.methods
           .transfer(receiveAddress, amount.toString())
           .encodeABI(),
+        gas: gasPrice,
       };
       web3.eth.accounts
         .signTransaction(txObj, process.env.WHEEL_NML_PRIVATE_WALLET_KEY)
@@ -95,7 +99,6 @@ const transferNML = async (receiveAddress, amount) => {
     logger.error(`error in transferring nml: ${error}`);
   }
 };
-
 module.exports = {
   transferNML,
 };
