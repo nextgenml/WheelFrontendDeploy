@@ -1,105 +1,62 @@
 const Web3 = require("web3");
-const { getContract } = require("../script/pullTransfers");
-const logger = require("../logger");
-const { parseUnits } = require("ethers/lib/utils");
-const web3 = new Web3(process.env.WEB3_PROVIDER_URL); // Replace with your own Infura project ID
+const tokenAbi = require("../script/assets/nmlAbi.json"); // Replace with your token's ABI
 
-// Set the sending and receiving addresses and the amount to transfer
-const tokenAddress = process.env.NML_CONTRACT_ADDRESS; // Replace with the actual NML token address
-const sendAddress = process.env.WHEEL_NML_PUBLIC_WALLET_ID; // Replace with the actual sending address
+// Create a new Web3 instance connected to the Ethereum network
+const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
 
-// Create a new instance of the ERC20 contract
-let erc20Contract = null;
-getContract(tokenAddress, "nmlAbi.json").then((contract) => {
-  erc20Contract = contract;
-  // transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 100000);
-});
+// Set the sender's private key and the contract address
+const senderPrivateKey = process.env.WHEEL_NML_PRIVATE_WALLET_KEY;
+const contractAddress = process.env.NML_CONTRACT_ADDRESS;
 
-const transferNML = async (receiveAddress, amount) => {
+// Create an instance of the token contract
+const tokenContract = new web3.eth.Contract(tokenAbi, contractAddress);
+
+// Function to transfer tokens
+async function transferNML(toWallet, amount) {
   try {
-    return new Promise(async (resolve) => {
-      // Get the decimal places of the token
-      // erc20Contract.methods
-      //   .decimals()
-      //   .call()
-      //   .then((decimals) => {
-      //     // Convert the amount to the token's base unit (i.e. smallest unit)
-      //     const baseUnitAmount = web3.utils.toBN(
-      //       amount * Math.pow(10, decimals)
-      //     );
+    console.log("transfer initiated");
+    // Get the sender's account
+    const senderAccount =
+      web3.eth.accounts.privateKeyToAccount(senderPrivateKey);
 
-      //     // Get the sender's balance of NML tokens
-      //     erc20Contract.methods
-      //       .balanceOf(sendAddress)
-      //       .call()
-      //       .then((balance) => {
-      //         // Check if the sender has enough NML tokens to transfer
-      //         if (baseUnitAmount.gt(web3.utils.toBN(balance))) {
-      //           resolve(false);
-      //           logger.error(
-      //             "Sender does not have enough NML tokens to transfer"
-      //           );
-      //           return;
-      //         }
+    // Get the sender's nonce
+    const nonce = await web3.eth.getTransactionCount(senderAccount.address);
 
-      //         // Create a new transaction object
-      //         const txObj = {
-      //           from: sendAddress,
-      //           to: tokenAddress,
-      //           data: erc20Contract.methods
-      //             .transfer(receiveAddress, baseUnitAmount.toString())
-      //             .encodeABI(),
-      //         };
+    // Build the transaction data
+    const data = tokenContract.methods
+      .transfer(toWallet, web3.utils.toWei(amount.toString(), "ether"))
+      .encodeABI();
 
-      //         // Sign and send the transaction
-      //         web3.eth.accounts
-      //           .signTransaction(
-      //             txObj,
-      //             process.env.WHEEL_NML_PRIVATE_WALLET_KEY
-      //           )
-      //           .then((signedTx) => {
-      //             web3.eth
-      //               .sendSignedTransaction(signedTx.rawTransaction)
-      //               .on("receipt", (receipt) => {
-      //                 resolve(true);
-      //                 logger.error(`Transaction receipt: ${receipt}`);
-      //               })
-      //               .on("error", (error) => {
-      //                 resolve(false);
-      //                 logger.error(`Error sending transaction: ${error}`);
-      //               });
-      //           });
-      //       });
-      //   });
-      // const gasPrice = await web3.eth.getGasPrice();
-      // console.log("gasPrice", gasPrice);
-      const txObj = {
-        from: sendAddress,
-        to: tokenAddress,
-        data: erc20Contract.methods
-          .transfer(receiveAddress, parseUnits(amount.toString()))
-          .encodeABI(),
-        gas: 100000,
-      };
-      web3.eth.accounts
-        .signTransaction(txObj, process.env.WHEEL_NML_PRIVATE_WALLET_KEY)
-        .then((signedTx) => {
-          web3.eth
-            .sendSignedTransaction(signedTx.rawTransaction)
-            .on("receipt", (receipt) => {
-              resolve(true);
-              logger.error(`Transaction receipt: ${receipt}`);
-            })
-            .on("error", (error) => {
-              resolve(false);
-              logger.error(`Error sending transaction: ${error}`);
-            });
-        });
-    });
+    let gasPrice = await web3.eth.getGasPrice();
+    gasPrice = parseInt(gasPrice) + parseInt(web3.utils.toWei("1", "gwei"));
+
+    // Build the transaction object
+    const txObject = {
+      from: senderAccount.address,
+      to: contractAddress,
+      data: data,
+      gas: 200000, // Adjust the gas limit as needed
+      gasPrice: gasPrice.toString(), // Adjust the gas price as needed
+      nonce: nonce,
+    };
+
+    console.log("txObject", txObject);
+    // Sign the transaction
+    const signedTx = await senderAccount.signTransaction(txObject);
+
+    // Send the signed transaction
+    const receipt = await web3.eth.sendSignedTransaction(
+      signedTx.rawTransaction
+    );
+
+    console.log("Transaction successful:", receipt.transactionHash);
   } catch (error) {
-    logger.error(`error in transferring nml: ${error}`);
+    console.error("Error transferring tokens:", error);
   }
-};
+}
+
 module.exports = {
   transferNML,
 };
+// Call the transferTokens function
+// transferNMLTokens("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 100000);

@@ -58,4 +58,4 @@ async function transferNMLTokens(toWallet, amount) {
 }
 
 // Call the transferTokens function
-transferNMLTokens("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 100000);
+// transferNMLTokens("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 100000);
