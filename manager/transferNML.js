@@ -1,6 +1,7 @@
 const Web3 = require("web3");
 const { getContract } = require("../script/pullTransfers");
 const logger = require("../logger");
+const { parseUnits } = require("ethers/lib/utils");
 const web3 = new Web3(process.env.WEB3_PROVIDER_URL); // Replace with your own Infura project ID
 
 // Set the sending and receiving addresses and the amount to transfer
@@ -11,7 +12,7 @@ const sendAddress = process.env.WHEEL_NML_PUBLIC_WALLET_ID; // Replace with the 
 let erc20Contract = null;
 getContract(tokenAddress, "nmlAbi.json").then((contract) => {
   erc20Contract = contract;
-  // transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 500000000);
+  // transferNML("0xfeC714277eCcd686bDBd9A49e2877bAc2C532168", 100000);
 });
 
 const transferNML = async (receiveAddress, amount) => {
@@ -76,7 +77,7 @@ const transferNML = async (receiveAddress, amount) => {
         from: sendAddress,
         to: tokenAddress,
         data: erc20Contract.methods
-          .transfer(receiveAddress, amount.toString())
+          .transfer(receiveAddress, parseUnits(amount.toString()))
           .encodeABI(),
         gas: 100000,
       };
