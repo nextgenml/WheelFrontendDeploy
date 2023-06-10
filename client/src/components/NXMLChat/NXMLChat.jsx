@@ -15,7 +15,7 @@ import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
 import { getCachedPrompt, getCachedPrompts } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
-
+import { fetchBalance } from "@wagmi/core";
 const BlogForm = () => {
   const { initiative } = useParams();
   const blogCached = !!localStorage.getItem(`${initiative}_generated_data`);
@@ -25,6 +25,19 @@ const BlogForm = () => {
   const { address, isConnected } = useAccount();
   const isAdmin = address === config.ADMIN_WALLET_1;
 
+  const [balance, setBalance] = useState("");
+  const updateBalance = async () => {
+    const balance = await fetchBalance({
+      address: address,
+      token: process.env.REACT_APP_NML_CONTRACT_ADDRESS,
+    });
+    setBalance(balance);
+  };
+  useEffect(() => {
+    if (address) updateBalance();
+  }, [address]);
+
+  console.log("balance", balance);
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
@@ -313,6 +326,18 @@ const BlogForm = () => {
     return (
       <Typography variant="h6" sx={{ mb: 20 }}>
         Please connect your wallet
+      </Typography>
+    );
+
+  if (
+    !balance ||
+    parseInt(balance.formatted) <
+      process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING
+  )
+    return (
+      <Typography variant="h6" sx={{ m: 4 }}>
+        Minimum {process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING} NML
+        tokens required to do blogging
       </Typography>
     );
   if (showInitiatives && loading)
