@@ -24,7 +24,9 @@ async function transferNMLTokens(toWallet, amount) {
 
     console.log("nonce", nonce);
     // Build the transaction data
-    const data = tokenContract.methods.transfer(toWallet, amount).encodeABI();
+    const data = tokenContract.methods
+      .transfer(toWallet, web3.utils.toWei(amount.toString(), "ether"))
+      .encodeABI();
     console.log("data", data);
     let gasPrice = await web3.eth.getGasPrice();
     gasPrice = parseInt(gasPrice) + parseInt(web3.utils.toWei("1", "gwei"));
