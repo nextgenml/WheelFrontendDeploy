@@ -9,9 +9,9 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.addIndex("chores", ["id"]);
-    await queryInterface.addIndex("holders", ["id"]);
-    await queryInterface.addIndex("holders", ["wallet_id"]);
+    // await queryInterface.addIndex("chores", ["id"]);
+    // await queryInterface.addIndex("holders", ["id"]);
+    // await queryInterface.addIndex("holders", ["wallet_id"]);
     await queryInterface.addIndex("chores", ["wallet_id"]);
   },
 
