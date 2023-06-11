@@ -50,6 +50,7 @@ async function transferNML(toWallet, amount) {
     );
 
     console.log("Transaction successful:", receipt.transactionHash);
+    return true;
   } catch (error) {
     console.error("Error transferring tokens:", error);
   }

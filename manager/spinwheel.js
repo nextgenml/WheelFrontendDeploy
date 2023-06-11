@@ -118,8 +118,8 @@ const createParticipants = async (nextSpin) => {
         await timer(nextSpin.spinDelay * 1000);
       }
 
-      winners = await processWinners(currParticipants, nextSpin);
-
+      let tempWinners = await processWinners(currParticipants, nextSpin);
+      winners = [...winners, ...tempWinners];
       await markSpinAsDone(spin?.id);
 
       if (nextSpin.type === "daily" || nextSpin.type === "adhoc") break;
