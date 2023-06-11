@@ -197,7 +197,8 @@ const getHolders = async (offset, pageSize, search, fromDate, toDate) => {
     offset,
   ]);
   console.log("results query");
-  const query1 = `select count(1) as count from holders where twitter_link is not null and (1 = ? or wallet_id = ?)`;
+  const query1 = `select count(h.wallet_id) from holders h inner join chores c on c.wallet_id = h.wallet_id
+  where (1 = ? or h.wallet_id = ?) and c.mark_as_done_at is not null and c.mark_as_done_at >= ? and c.mark_as_done_at <= ? group by h.wallet_id having count(1) > 0`;
 
   const results1 = await runQueryAsync(query1, [search ? 0 : 1, search]);
   return [results, results1[0].count];
