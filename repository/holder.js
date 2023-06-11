@@ -2,6 +2,10 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const { uniqueNamesGenerator, names } = require("unique-names-generator");
 const config = require("../config/env");
 const uuid = require("uuid");
+const moment = require("moment");
+
+const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
+const { dbConnection } = require("../dbconnect");
 // Created during tokens pulling implementation
 const createHolderV1 = async (walletId) => {
   const existsQuery = `select id from holders where wallet_id = ?`;
@@ -164,18 +168,38 @@ const getById = async (wallet_id) => {
   return results[0];
 };
 
-const getHolders = async (offset, pageSize, viewAs) => {
-  const query = `select * from holders where twitter_link is not null and (1 = ? or wallet_id = ?) limit ? offset ?;`;
+const getHolders = async (offset, pageSize, search, fromDate, toDate) => {
+  console.log("fromDate, toDate", fromDate, toDate);
 
+  // const start = moment(fromDate).format(DATE_TIME_FORMAT);
+  // const end = moment(toDate).format(DATE_TIME_FORMAT);
+  const query = `select h.wallet_id from holders h inner join chores c on c.wallet_id = h.wallet_id
+  where (1 = ? or h.wallet_id = ?) and c.mark_as_done_at is not null and c.mark_as_done_at >= ? and c.mark_as_done_at <= ? group by h.wallet_id having count(1) > 0
+   limit ? offset ?;`;
+
+  console.log(
+    "running query",
+    dbConnection.format(query, [
+      search ? 0 : 1,
+      search,
+      fromDate,
+      toDate,
+      pageSize,
+      offset,
+    ])
+  );
   const results = await runQueryAsync(query, [
-    viewAs ? 0 : 1,
-    viewAs,
+    search ? 0 : 1,
+    search,
+    fromDate,
+    toDate,
     pageSize,
     offset,
   ]);
+  console.log("results query");
   const query1 = `select count(1) as count from holders where twitter_link is not null and (1 = ? or wallet_id = ?)`;
 
-  const results1 = await runQueryAsync(query1, [viewAs ? 0 : 1, viewAs]);
+  const results1 = await runQueryAsync(query1, [search ? 0 : 1, search]);
   return [results, results1[0].count];
 };
 

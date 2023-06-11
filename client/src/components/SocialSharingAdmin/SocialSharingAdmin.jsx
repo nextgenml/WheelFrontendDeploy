@@ -7,22 +7,30 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Typography, TablePagination, Link } from "@mui/material";
+import {
+  Typography,
+  TablePagination,
+  Link,
+  Stack,
+  TextField,
+  Button,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  FormControl,
+  Box,
+} from "@mui/material";
 import styles from "./SocialSharingAdmin.module.css";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { getAPICall } from "../../API";
 import config from "../../config";
 import Loading from "../loading";
-
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  Button,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment,
-  Box,
-  FormControl,
-} from "@mui/material";
+
+import moment from "moment";
+import { DATE_TIME_FORMAT } from "../../Utils/index.js";
 const headers = [
   "Wallet Id",
   "# chores Assigned",
@@ -46,11 +54,23 @@ export default function SocialSharingAdmin() {
   const [totalCount, setTotalCount] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [search, setSearch] = React.useState("");
+  const [fromDate, setFromDate] = React.useState(moment());
+  const [toDate, setToDate] = React.useState(moment());
 
   const fetchData = async () => {
     setLoading(true);
+    const query = new URLSearchParams({
+      pageNo: page,
+      pageSize: rowsPerPage,
+      search,
+      fromDate: moment(fromDate.toString())
+        .startOf("day")
+        .format(DATE_TIME_FORMAT),
+      toDate: moment(toDate.toString()).endOf("day").format(DATE_TIME_FORMAT),
+    });
+
     const res = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/chores/adminStats?pageNo=${page}&pageSize=${rowsPerPage}&search=${search}`
+      `${config.API_ENDPOINT}/api/v1/chores/adminStats?` + query
     );
     if (res.data) {
       setRecords(res.data);
@@ -80,6 +100,61 @@ export default function SocialSharingAdmin() {
             Configure Spins
           </Typography>
           <Box display={"flex"} alignItems={"center"}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Stack
+                spacing={3}
+                sx={{ m: 3, mt: 0 }}
+                direction={"row"}
+                alignContent={"center"}
+                justifyItems={"center"}
+              >
+                <DatePicker
+                  inputFormat="DD/MM/YYYY"
+                  label={"Select From Date"}
+                  value={fromDate}
+                  onChange={(value) => setFromDate(value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={"Select From Date"}
+                      className={styles.datePickerText}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      autoComplete="off"
+                      inputProps={{
+                        ...params.inputProps,
+                        placeholder: "dd/mm/yyyy",
+                      }}
+                    />
+                  )}
+                />
+                <DatePicker
+                  inputFormat="DD/MM/YYYY"
+                  label={"Select To Date"}
+                  value={toDate}
+                  onChange={(value) => setToDate(value)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={"Select To Date"}
+                      className={styles.datePickerText}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      autoComplete="off"
+                      inputProps={{
+                        ...params.inputProps,
+                        placeholder: "dd/mm/yyyy",
+                      }}
+                    />
+                  )}
+                />
+                <Button variant="outlined" onClick={fetchData}>
+                  Submit
+                </Button>
+              </Stack>
+            </LocalizationProvider>
             <FormControl
               sx={{
                 m: 1,

@@ -20,11 +20,13 @@ const topTweets = async (req, res) => {
 
 const adminStats = async (req, res) => {
   try {
-    const { pageSize, pageNo, search } = req.query;
+    const { pageSize, pageNo, search, fromDate, toDate } = req.query;
     const [holders, count] = await holdersRepo.getHolders(
       parseInt(pageSize * pageNo),
       parseInt(pageSize),
-      search
+      search,
+      fromDate,
+      toDate
     );
     const result = [];
 
