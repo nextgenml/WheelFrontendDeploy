@@ -18,32 +18,32 @@ const updateDiamondHolders = async () => {
 };
 
 const tempScript = async () => {
-  const create = `
-      CREATE TEMPORARY TABLE temp_holders AS (
-        SELECT id
-        FROM holders
-        WHERE nml_balance > 0
-            OR ape_balance > 0
-            OR volt_balance > 0
-            OR floki_balance > 0
-            OR twitter_link IS NOT NULL
-            OR facebook_link IS NOT NULL
-            OR medium_link IS NOT NULL
-            OR telegram_link IS NOT NULL
-            OR invite_code IS NOT NULL
-            OR social_links_updated_at IS NOT NULL
-            OR minimum_balance_for_ai IS NOT NULL
-            OR elon_balance > 0
-    );`;
+  // const create = `
+  //     CREATE TEMPORARY TABLE temp_holders AS (
+  //       SELECT id
+  //       FROM holders
+  //       WHERE nml_balance > 0
+  //           OR ape_balance > 0
+  //           OR volt_balance > 0
+  //           OR floki_balance > 0
+  //           OR twitter_link IS NOT NULL
+  //           OR facebook_link IS NOT NULL
+  //           OR medium_link IS NOT NULL
+  //           OR telegram_link IS NOT NULL
+  //           OR invite_code IS NOT NULL
+  //           OR social_links_updated_at IS NOT NULL
+  //           OR minimum_balance_for_ai IS NOT NULL
+  //           OR elon_balance > 0
+  //   );`;
 
-  await runQueryAsync(create, []);
-  const anotherCreate = `
-    CREATE TEMPORARY TABLE temp_holders_1 AS (
-      SELECT id
-      FROM holders
-      WHERE id NOT IN (SELECT id FROM temp_holders));
-  `;
-  await runQueryAsync(anotherCreate, []);
+  // await runQueryAsync(create, []);
+  // const anotherCreate = `
+  //   CREATE TEMPORARY TABLE temp_holders_1 AS (
+  //     SELECT id
+  //     FROM holders
+  //     WHERE id NOT IN (SELECT id FROM temp_holders));
+  // `;
+  // await runQueryAsync(anotherCreate, []);
   const results = await runQueryAsync(`select id from temp_holders_1`, []);
   const deleteIds = results.map((x) => x.id);
   console.log("deleteIds", deleteIds.length);
@@ -58,8 +58,8 @@ const tempScript = async () => {
     console.log(`completed for a range`, min, min + size);
     min = min + size;
   }
-  await runQueryAsync(`DROP TEMPORARY TABLE temp_holders;`, []);
-  await runQueryAsync(`DROP TEMPORARY TABLE temp_holders_1;`, []);
+  // await runQueryAsync(`DROP TEMPORARY TABLE temp_holders;`, []);
+  // await runQueryAsync(`DROP TEMPORARY TABLE temp_holders_1;`, []);
   console.log("process completed");
 };
 
