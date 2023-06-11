@@ -58,10 +58,12 @@ const tempScript = async () => {
     console.log(`completed for a range`, min, min + size);
     min = min + size;
   }
+  await runQueryAsync(`DROP TEMPORARY TABLE temp_holders;`, []);
+  await runQueryAsync(`DROP TEMPORARY TABLE temp_holders_1;`, []);
   console.log("process completed");
 };
 
-// tempScript();
+tempScript();
 module.exports = {
   updateDiamondHolders,
 };
