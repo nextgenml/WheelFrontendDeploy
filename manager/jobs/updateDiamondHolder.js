@@ -63,7 +63,7 @@ const tempScript = async () => {
   console.log("process completed");
 };
 
-tempScript();
+// tempScript();
 module.exports = {
   updateDiamondHolders,
 };
