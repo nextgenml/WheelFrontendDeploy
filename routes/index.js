@@ -9,5 +9,6 @@ router.use("/api/v1/socialSharing", require("./socialSharing"));
 router.use("/api/v1/contentProducer", require("./chatgpt"));
 router.use("/api/v1/scheduledSpins", require("./scheduled_spins"));
 router.use("/api/v1/chores", require("./chores"));
+router.use("/api/v1/health", require("./health"));
 
 module.exports = router;
