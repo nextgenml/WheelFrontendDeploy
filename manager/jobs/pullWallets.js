@@ -150,13 +150,13 @@ const initiateProcess = async () => {
     "Completed pulling wallets from smart contract and getting balances"
   );
   logger.info("completed getting balances");
-  await updateAllBalances();
+  // await updateAllBalances();
   await updateDiamondHolders();
 };
-// initiateProcess();
-schedule.scheduleJob("0 */3 * * *", async () => {
-  await initiateProcess();
-});
+initiateProcess();
+// schedule.scheduleJob("0 */3 * * *", async () => {
+//   await initiateProcess();
+// });
 process.on("SIGINT", () => {
   console.log("closing");
   schedule.gracefulShutdown().then(() => process.exit(0));
