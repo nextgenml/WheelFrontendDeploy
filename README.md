@@ -12,8 +12,11 @@ Token Urls
 4. https://etherscan.io/token/0x7db5af2b9624e1b3b4bb69d6debd9ad1016a58ac#code
 5. https://etherscan.io/token/0x4d224452801aced8b2f0aebe155379bb5d594381
 6. https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
-   Sample transfer transaction:
 
+contextual chatgpt API integration
+https://medium.com/codingthesmartway-com-blog/how-to-use-openais-chatgpt-api-in-node-js-3f01c1f8d473
+
+Sample transfer transaction:
 {
 address: '0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac',
 blockHash: '0x678bab53a8f7e8c94a5494e4e45e93897b61cb6ecd013f799bd5f429be43f862',
