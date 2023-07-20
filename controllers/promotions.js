@@ -1,6 +1,8 @@
 const config = require("../config/env");
 const logger = require("../logger");
 const promotionsRepo = require("../repository/promotions");
+const holdersRepo = require("../repository/holder");
+const { isEligibleForBlogging } = require("../manager/promotions");
 
 const updateBlogCount = async (req, res) => {
   try {
@@ -137,8 +139,8 @@ const getAppliedRequestsAdmin = async (req, res) => {
 const eligibleForCustomBlogs = async (req, res) => {
   try {
     const { walletId } = req.query;
-    const [isEligible, _, __, ___] = await promotionsRepo.blogStats(walletId);
-    return res.status(200).json({
+    const isEligible = await isEligibleForBlogging(walletId);
+    return res.json({
       isEligible,
     });
   } catch (error) {

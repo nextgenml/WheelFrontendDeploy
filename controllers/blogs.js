@@ -4,7 +4,9 @@ const blogsManager = require("../manager/blogs");
 const { validatePayment } = require("../manager/payments");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
+const holdersRepo = require("../repository/holder");
 const moment = require("moment");
+const { isEligibleForBlogging } = require("../manager/promotions");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
 require("../manager/jobs/validateOldBlogs");
@@ -172,9 +174,7 @@ const saveBlogData = async (req, res) => {
 
     // Blogs limit validation
     if (initiative === "blog-customization") {
-      const [valid, message, _, __] = await promotionsRepo.blogStats(
-        wallet_address
-      );
+      const valid = await isEligibleForBlogging(wallet_address);
       if (!valid) return res.status(401).json({ msg: message });
     }
 

@@ -58,6 +58,7 @@ const BlogForm = () => {
   );
   const [refreshCount, setRefreshCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [allowBlogging, setAllowBlogging] = useState(isPromote);
   let reset = 0;
 
   // Toast alert
@@ -209,7 +210,6 @@ const BlogForm = () => {
     }
   };
 
-  console.log("prompts", prompts);
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
     const cachedPrompts = getCachedPrompts(initiative);
@@ -322,6 +322,22 @@ const BlogForm = () => {
     }
   };
   const finalPrompts = isPromote ? promotedBlogs : prompts;
+
+  const checkEligibility = async () => {
+    const res = await customFetch(
+      `${config.API_ENDPOINT}/custom-blogs-eligibility?walletId=${address}`
+    );
+    if (res.ok) {
+      const { isEligible } = await res.json();
+      setAllowBlogging(isEligible);
+    }
+  };
+
+  useEffect(() => {
+    if (!isPromote) {
+      checkEligibility();
+    }
+  }, [initiative]);
   if (!isConnected)
     return (
       <Typography variant="h6" sx={{ mb: 20 }}>
@@ -329,11 +345,7 @@ const BlogForm = () => {
       </Typography>
     );
 
-  if (
-    !balance ||
-    parseInt(balance.formatted) <
-      process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING
-  )
+  if (!allowBlogging)
     return (
       <Typography variant="h6" sx={{ m: 4 }}>
         Minimum {process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING} NML
@@ -375,11 +387,13 @@ const BlogForm = () => {
                 className="text-center"
                 sx={{ mb: 2 }}
               >
-                Paid Plan for promotions - {blogStats.totalCountP}
+                Paid Plan for promotions -{" "}
+                {blogStats.totalCountP > 0 ? blogStats.totalCountP : 9999999}
                 <br />
                 Completed Promotions - {blogStats.usedCountP}
                 <br />
-                Paid Plan for blogs - {blogStats.totalCountB}
+                Paid Plan for blogs -{" "}
+                {blogStats.totalCountB > 0 ? blogStats.totalCountB : 9999999}
                 <br />
                 Completed blogs - {blogStats.usedCountB}
                 <br />
