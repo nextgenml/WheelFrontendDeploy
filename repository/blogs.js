@@ -13,7 +13,7 @@ const getAdhocSpinParticipants = async (from, to, min) => {
 };
 const getBlogStats = async (blogId) => {
   const query =
-    "select mediumurl, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
+    "select mediumurl, create_date, twitterurl, facebookurl, linkedinurl from saved_prompts where promoted_blog_id = ? order by create_date desc";
   return await runQueryAsync(query, [blogId]);
 };
 

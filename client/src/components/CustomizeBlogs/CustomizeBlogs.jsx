@@ -86,7 +86,7 @@ export default function CustomizeBlogs() {
         {eligible && (
           <Box>
             <Typography variant="body2" sx={{ mb: 2 }}>
-              Paid Plan for blogs - {blogStats.totalCountB}
+              Paid Plan for blogs - {blogStats.totalCountB || 9999999}
               <br />
               Completed blogs - {blogStats.usedCountB}
               <br />
