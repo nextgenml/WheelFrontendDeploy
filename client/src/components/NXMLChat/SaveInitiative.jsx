@@ -12,7 +12,6 @@ import { updateBlogCount } from "../../Utils/Blog";
 import { Checkbox, TextField } from "@mui/material";
 import { updateInCache } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
-import { copyImageToClipboard } from "copy-image-clipboard";
 import PromotedImages from "./PromotedImages";
 
 const SaveInitiative = ({
