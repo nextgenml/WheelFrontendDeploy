@@ -12,6 +12,8 @@ import { updateBlogCount } from "../../Utils/Blog";
 import { Checkbox, TextField } from "@mui/material";
 import { updateInCache } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
+import { copyImageToClipboard } from "copy-image-clipboard";
+import PromotedImages from "./PromotedImages";
 
 const SaveInitiative = ({
   prompt,
@@ -615,7 +617,7 @@ const SaveInitiative = ({
                 ))}
             </div>
           </div>
-          {initiative == "blog-customization" && (
+          {initiative === "blog-customization" && (
             <div className="col-sm-12">
               <input
                 className="form-control form-control-lg"
@@ -642,6 +644,9 @@ const SaveInitiative = ({
                 ))}
             </div>
           </div>
+          {isPromote && promotedBlog && (
+            <PromotedImages promotedBlog={promotedBlog} />
+          )}
           <div className="col-sm-12">
             <button
               type="button"
