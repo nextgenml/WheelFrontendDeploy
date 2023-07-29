@@ -299,10 +299,15 @@ const SaveInitiative = ({
     return url.protocol === "http:" || url.protocol === "https:";
   };
 
+  const getPrompt = () => {
+    if (isCustom) return prompt;
+    else
+      return "Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.";
+  };
   useEffect(() => {
     if (!cachedData.hashes && result && result !== "populating blog") {
       get_gpt_data(
-        "provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        `provide 10 trending twitter # hashword for '${getPrompt()}'`,
         "hashwords"
       );
     }
@@ -311,7 +316,7 @@ const SaveInitiative = ({
   useEffect(() => {
     if (!cachedData.keywords && hashword) {
       get_gpt_data(
-        "provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        `provide 10 trending keywords for '${getPrompt()}'`,
         "keywords"
       );
     }
