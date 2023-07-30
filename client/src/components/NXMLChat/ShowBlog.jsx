@@ -15,33 +15,36 @@ import { useState } from "react";
 import { customFetch } from "../../API/index.js";
 import ModalImage from "react-modal-image";
 import { ToastContainer, toast } from "react-toastify";
-function ShowBlog({ onClose, currentRow, hideUpdate }) {
+function ShowBlog({ onClose, currentRow, hideUpdate, getUserData }) {
   const [blog, setBlog] = useState(currentRow.blog);
   const [images, setImages] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
   const onUpdate = async () => {
-    let data = {
-      transactionID: currentRow.transactionID,
-      validatedFlag: currentRow.validated_flag,
-      paidFlag: currentRow.paid_flag,
-      promoted: currentRow.promoted,
-      blog: blog,
-    };
+    const formData = new FormData();
+    formData.append("transactionID", currentRow.transactionID);
+    formData.append("validatedFlag", currentRow.validated_flag);
+    formData.append("paidFlag", currentRow.paid_flag);
+    formData.append("promoted", currentRow.promoted);
+    formData.append("blog", blog);
+
+    if (images && images.length > 0) {
+      Array.from(images).forEach((file, i) => {
+        formData.append(`file-${i}`, file, file.name);
+      });
+    }
     const url = `${config.API_ENDPOINT}/update-blog-data`;
     let response = await customFetch(url, {
-      headers: {
-        accept: "*/*",
-        "accept-language": "en-US,en;q=0.9",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
       method: "PUT",
+      body: formData,
     });
 
+    let res = await response.text();
+    let data = JSON.parse(res);
     if (response.ok) {
-      alert("updated successfully");
+      notify(data.msg, "success");
+      getUserData();
     } else {
-      alert("Something went wrong. Please try again after sometime");
+      notify(data.msg, "danger");
     }
   };
   const notify = (msg, toastType) => {

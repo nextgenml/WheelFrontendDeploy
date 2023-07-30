@@ -46,6 +46,12 @@ const getAdhocSpinParticipants = async (req, res) => {
 const updateBlogData = async (req, res) => {
   try {
     let { validatedFlag, paidFlag, transactionID } = req.body;
+    const { files } = req;
+    const image_urls = [];
+
+    files.forEach((file) => {
+      image_urls.push(file.filename);
+    });
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
       return res.status(400).json({
         statusCode: 400,
@@ -53,7 +59,10 @@ const updateBlogData = async (req, res) => {
       });
     }
 
-    await blogsRepo.updateBlogData(req.body);
+    await blogsRepo.updateBlogData({
+      ...req.body,
+      image_urls: image_urls.join(","),
+    });
     return res.status(200).json({
       msg: "Updated successfully",
     });
