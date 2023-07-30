@@ -7,13 +7,18 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Grid,
+  Typography,
 } from "@mui/material";
 import config from "../../config";
 import { useState } from "react";
 import { customFetch } from "../../API/index.js";
-
+import ModalImage from "react-modal-image";
+import { ToastContainer, toast } from "react-toastify";
 function ShowBlog({ onClose, currentRow, hideUpdate }) {
   const [blog, setBlog] = useState(currentRow.blog);
+  const [images, setImages] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const onUpdate = async () => {
     let data = {
       transactionID: currentRow.transactionID,
@@ -39,6 +44,35 @@ function ShowBlog({ onClose, currentRow, hideUpdate }) {
       alert("Something went wrong. Please try again after sometime");
     }
   };
+  const notify = (msg, toastType) => {
+    if (toastType === "success") {
+      toast.success(msg);
+    } else if (toastType === "info") {
+      toast.info(msg);
+    } else {
+      toast.error(msg);
+    }
+  };
+  const onFileUpload = async (e) => {
+    setImages(e.target.files);
+    let flag = 1;
+    let images = [];
+    for (let i = 0; i < e.target.files.length; i++) {
+      if (!e.target.files[i].type.includes("image")) {
+        flag = 0;
+        notify("Please select valid file!", "error");
+      }
+      if (Math.round(e.target.files[i].size / 1024) > 500) {
+        flag = 0;
+        notify("Size is too big!", "error");
+      }
+      if (flag > 0) {
+        images.push(URL.createObjectURL(e.target.files[i]));
+      }
+      flag = 1;
+    }
+    setUploadedImages(images);
+  };
   return (
     <Dialog
       onClose={() => onClose()}
@@ -57,6 +91,50 @@ function ShowBlog({ onClose, currentRow, hideUpdate }) {
             onChange={(e) => setBlog(e.target.value)}
           />
         </Box>
+        <Box>
+          <Typography variant="subtitle1">Blog Images</Typography>
+          <div className="col-sm-12" sx={{ mb: 3 }}>
+            <input
+              className="form-control form-control-lg"
+              id={`customImage`}
+              multiple
+              type="file"
+              accept="image/*"
+              onChange={onFileUpload}
+            />
+          </div>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {
+              <div className="col-sm-12">
+                <div className="row">
+                  {uploadedImages.length
+                    ? uploadedImages.map((item, i) => (
+                        <div className="col m-2" key={i}>
+                          <ModalImage
+                            // small={`/images/blogImages/${initiative}/${item}`}
+                            small={`${item}`}
+                            large={`${item}`}
+                            alt={item}
+                          />
+                        </div>
+                      ))
+                    : (currentRow.image_urls || "").split(",").map((item) => {
+                        return (
+                          <Grid item md={4} sm={12}>
+                            <ModalImage
+                              // small={`/images/blogImages/${initiative}/${item}`}
+                              small={`${config.API_ENDPOINT}/images/${item}`}
+                              large={`${config.API_ENDPOINT}/images/${item}`}
+                              alt={item}
+                            />
+                          </Grid>
+                        );
+                      })}
+                </div>
+              </div>
+            }
+          </Grid>
+        </Box>
       </DialogContent>
 
       <DialogActions>
@@ -69,6 +147,7 @@ function ShowBlog({ onClose, currentRow, hideUpdate }) {
           </Button>
         )}
       </DialogActions>
+      <ToastContainer />
     </Dialog>
   );
 }
