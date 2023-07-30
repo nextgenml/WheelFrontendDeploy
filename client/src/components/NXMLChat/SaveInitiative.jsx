@@ -15,7 +15,7 @@ import { customFetch } from "../../API/index.js";
 import PromotedImages from "./PromotedImages";
 
 const SaveInitiative = ({
-  prompt,
+  inputPrompt,
   content,
   isPromote,
   promotedWallet,
@@ -27,6 +27,7 @@ const SaveInitiative = ({
   cachedData,
   promotedBlog,
 }) => {
+  const [prompt, setPrompt] = useState(inputPrompt);
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(!!cachedData.blog);
@@ -435,7 +436,18 @@ const SaveInitiative = ({
       <form>
         <div className="row g-3 m-3">
           <div className="col-sm-12">
-            <span>{prompt}</span>
+            {isCustom ? (
+              <TextField
+                id="outlined-basic"
+                label="Prompt*"
+                variant="outlined"
+                fullWidth
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+            ) : (
+              <span>{prompt}</span>
+            )}
           </div>
           {!isPromote && (
             <div className="col-sm-12">

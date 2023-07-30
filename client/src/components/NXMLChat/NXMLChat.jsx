@@ -292,7 +292,7 @@ const BlogForm = () => {
       return promotedBlogs.map((blog, index) => (
         <Initiative
           key={index}
-          prompt={blog.prompt}
+          inputPrompt={blog.prompt}
           content={blog.blog}
           promotedBlog={blog}
           isPromote
@@ -308,7 +308,7 @@ const BlogForm = () => {
           {prompts.map((prompt, index) => (
             <Initiative
               key={index}
-              prompt={prompt}
+              inputPrompt={prompt}
               index={index}
               isCustom={isCustom}
               isBlogPage={isBlogPage}
