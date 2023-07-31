@@ -49,7 +49,7 @@ const updateBlogData = async (req, res) => {
     const { files } = req;
     const image_urls = [];
 
-    files.forEach((file) => {
+    (files || []).forEach((file) => {
       image_urls.push(file.filename);
     });
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
@@ -70,7 +70,7 @@ const updateBlogData = async (req, res) => {
     logger.error(`error occurred in updateBlogData api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      msg: error,
+      msg: error.message,
     });
   }
 };

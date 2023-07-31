@@ -22,9 +22,9 @@ function ShowBlog({ onClose, currentRow, hideUpdate, getUserData }) {
   const onUpdate = async () => {
     const formData = new FormData();
     formData.append("transactionID", currentRow.transactionID);
-    formData.append("validatedFlag", currentRow.validated_flag);
-    formData.append("paidFlag", currentRow.paid_flag);
-    formData.append("promoted", currentRow.promoted);
+    formData.append("validatedFlag", currentRow.validated_flag || 0);
+    formData.append("paidFlag", currentRow.paid_flag || 0);
+    formData.append("promoted", currentRow.promoted || 0);
     formData.append("blog", blog);
 
     if (images && images.length > 0) {
