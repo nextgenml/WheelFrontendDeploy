@@ -582,7 +582,7 @@ const SaveInitiative = ({
               id="hashword"
               placeholder="#nextgenml"
               value={isPromote ? promotedBlog.hashword : hashword}
-              readOnly
+              onChange={(e) => sethashWord(e.target.value)}
               style={{ height: "100px" }}
             ></textarea>
           </div>
@@ -593,7 +593,7 @@ const SaveInitiative = ({
               id="keyword"
               placeholder="Nexgenml"
               value={isPromote ? promotedBlog.keyword : keyWord}
-              readOnly
+              onChange={(e) => setkeyWord(e.target.value)}
               style={{ height: "100px" }}
             ></textarea>
           </div>
