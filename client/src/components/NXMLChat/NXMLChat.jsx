@@ -231,11 +231,17 @@ const BlogForm = () => {
       return;
     }
 
-    const queryPrompts = (searchParams.get("prompts") || "")
-      .split("||")
-      .filter((x) => !!x);
+    let queryPrompts = [];
+    const isManualPrompts = (searchParams.get("prompts") || "") === "manual";
+    if (isManualPrompts) {
+      queryPrompts = ["", "", "", "", "", "", "", "", "", "", "", ""];
+    } else
+      queryPrompts = (searchParams.get("prompts") || "")
+        .split("||")
+        .filter((x) => !!x);
+
     if (Array.isArray(queryPrompts) && queryPrompts.length)
-      setPrompts(queryPrompts.filter((x) => !!x));
+      setPrompts(queryPrompts);
     else {
       setLoading(true);
       get_gpt_data(

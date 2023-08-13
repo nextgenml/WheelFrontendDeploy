@@ -162,6 +162,25 @@ export default function CustomizeBlogs() {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid container spacing={2} sx={{ mt: 3 }}>
+              <Grid item md={6}>
+                <Grid container spacing={2}>
+                  <Grid item md={12} display={"flex"}>
+                    <Button
+                      variant="contained"
+                      component="label"
+                      onClick={() =>
+                        navigate(
+                          `/nxml-blog-chat/blog-customization?prompts=manual`
+                        )
+                      }
+                    >
+                      Generate your own blogs
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
           </Box>
         )}
         <Grid container sx={{ mt: 6 }}>
