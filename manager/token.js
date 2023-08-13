@@ -2,6 +2,7 @@ const config = require("../config/env");
 const { getTopTokenHolders } = require("../repository/holder");
 const tokenRepo = require("../repository/token");
 const { getMaxSupply } = require("../script/walletBalance");
+const { sendEmail } = require("../utils/mailer");
 const { formatBalance } = require("./jobs/pullWallets");
 const { processPrizesV1 } = require("./rewardTransferV1");
 
@@ -87,7 +88,9 @@ const initiatePrizesDistribution = async (args) => {
   const success = (walletId) => {
     console.log(`token prize distribution done for ${walletId}`);
   };
+  const failedWalletIds = [];
   const failure = (walletId) => {
+    failedWalletIds.push(failedWalletIds);
     console.log(`token prize distribution failed for ${walletId}`);
   };
   for (const holder of holders) {
@@ -97,6 +100,17 @@ const initiatePrizesDistribution = async (args) => {
       "nml",
       success,
       failure
+    );
+  }
+  if (failedWalletIds.length) {
+    await sendEmail(
+      `Allocation ${token} holders transfer failed for the following wallets`,
+      failedWalletIds.join(", ")
+    );
+  } else {
+    await sendEmail(
+      `Allocation ${token} holders transfer successful`,
+      "Thank you"
     );
   }
 };
