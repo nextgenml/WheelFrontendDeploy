@@ -317,7 +317,16 @@ const updateJoinedInviteCode = async (id, inviteCode) => {
   const query = `update holders set joined_invite_code = ? where id = ?`;
   return await runQueryAsync(query, [inviteCode, id]);
 };
+
+const getTopTokenHolders = async (token, winners) => {
+  const query = `select wallet_id from holders where token = ? order by ${token}_balance desc limit ?;`;
+
+  const results = await runQueryAsync(query, [winners]);
+  return results;
+};
+
 module.exports = {
+  getTopTokenHolders,
   updateJoinedInviteCode,
   getInviteCode,
   getById,

@@ -44,6 +44,7 @@ const getAdminStats = async (req, res) => {
 const initiatePrizes = async (req, res) => {
   try {
     console.log("reached here");
+    tokenManager.initiatePrizesDistribution(req.body);
     res.json({
       success: true,
     });
