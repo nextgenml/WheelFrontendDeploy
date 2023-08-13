@@ -83,6 +83,11 @@ export default function InternalApps() {
       path: "/social-sharing-admin",
       icon: <GroupWorkIcon />,
     },
+    {
+      name: "Allocation Admin",
+      path: "/allocations-admin",
+      icon: <TokenIcon />,
+    },
   ];
   return (
     <div>
