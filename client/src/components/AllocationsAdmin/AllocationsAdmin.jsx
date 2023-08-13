@@ -51,7 +51,6 @@ const AllocationAdmin = () => {
       alert(
         "Process is initiated. All transfers will be completed in 15-20 mins"
       );
-      setFormData(initialState);
     } else {
       alert("Something went wrong. Please try again after sometime");
     }

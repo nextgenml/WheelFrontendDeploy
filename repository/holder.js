@@ -319,9 +319,9 @@ const updateJoinedInviteCode = async (id, inviteCode) => {
 };
 
 const getTopTokenHolders = async (token, winners) => {
-  const query = `select wallet_id from holders where token = ? order by ${token}_balance desc limit ?;`;
+  const query = `select wallet_id from holders order by ${token}_balance desc limit ?;`;
 
-  const results = await runQueryAsync(query, [winners]);
+  const results = await runQueryAsync(query, [parseInt(winners)]);
   return results;
 };
 
