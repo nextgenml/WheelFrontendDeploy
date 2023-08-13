@@ -59,7 +59,7 @@ const AllocationAdmin = () => {
 
   const renderForm = () => {
     return (
-      <Box sx={{ padding: 3 }}>
+      <Box sx={{ padding: 3, mb: 20 }}>
         <Typography variant="h4" className={styles.heading}>
           Enter token holders prizes
         </Typography>
