@@ -26,6 +26,7 @@ const SaveInitiative = ({
   isBlogPage,
   cachedData,
   promotedBlog,
+  isManual,
 }) => {
   const [prompt, setPrompt] = useState(inputPrompt);
   const { initiative } = useParams();
@@ -307,7 +308,12 @@ const SaveInitiative = ({
       return "Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.";
   };
   useEffect(() => {
-    if (!cachedData.hashes && result && result !== "populating blog") {
+    if (
+      !isManual &&
+      !cachedData.hashes &&
+      result &&
+      result !== "populating blog"
+    ) {
       get_gpt_data(
         `provide 10 trending twitter # hashword for '${getPrompt()}'`,
         "hashwords"
@@ -316,7 +322,7 @@ const SaveInitiative = ({
   }, [result]);
 
   useEffect(() => {
-    if (!cachedData.keywords && hashword) {
+    if (!isManual && !cachedData.keywords && hashword) {
       get_gpt_data(
         `provide 10 trending keywords for '${getPrompt()}'`,
         "keywords"
@@ -381,7 +387,7 @@ const SaveInitiative = ({
       return;
     }
     if (
-      ((isChecked && !isCopyDisable) || isPromote) &&
+      ((isChecked && !isCopyDisable) || isPromote || isManual) &&
       (!mediumlink || isValidUrl(mediumlink)) &&
       (!twitterlink || isValidUrl(twitterlink)) &&
       (!facebooklink || isValidUrl(facebooklink)) &&
@@ -449,7 +455,7 @@ const SaveInitiative = ({
               <span>{prompt}</span>
             )}
           </div>
-          {!isPromote && (
+          {!isPromote && !isManual && (
             <div className="col-sm-12">
               <Checkbox
                 onClick={() => setIsChecked(!isChecked)}
@@ -494,7 +500,7 @@ const SaveInitiative = ({
             <button
               type="button"
               className="btn btn-success"
-              disabled={!isPromote && isCopyDisable}
+              disabled={!isPromote && !isManual && isCopyDisable}
               onClick={() => {
                 navigator.clipboard.writeText(result || content);
                 notify("Copied", "info");

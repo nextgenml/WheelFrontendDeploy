@@ -22,6 +22,7 @@ const BlogForm = () => {
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
   const isBlogPage = !isCustom && !isPromote;
+  const [isManual, setManual] = useState(false);
   const { address, isConnected } = useAccount();
   const isAdmin = address === config.ADMIN_WALLET_1;
 
@@ -37,7 +38,6 @@ const BlogForm = () => {
     if (address) updateBalance();
   }, [address]);
 
-  console.log("balance", balance);
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
@@ -234,6 +234,7 @@ const BlogForm = () => {
     let queryPrompts = [];
     const isManualPrompts = (searchParams.get("prompts") || "") === "manual";
     if (isManualPrompts) {
+      setManual(true);
       queryPrompts = ["", "", "", "", "", "", "", "", "", "", "", ""];
     } else
       queryPrompts = (searchParams.get("prompts") || "")
@@ -318,6 +319,7 @@ const BlogForm = () => {
               index={index}
               isCustom={isCustom}
               isBlogPage={isBlogPage}
+              isManual={isManual}
               getUserData={get_user_data}
               getBlogStats={getBlogStats}
               cachedData={getCachedPrompt(initiative, index, isBlogPage)}
