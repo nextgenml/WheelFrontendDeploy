@@ -198,6 +198,11 @@ const SaveInitiative = ({
   };
 
   const onFileUpload = async (e) => {
+    if (e.target.files.length > 4) {
+      alert("Upto 4 images are only supported");
+      e.preventDefault();
+      return;
+    }
     setblogImagesFiles(e.target.files);
     let flag = 1;
     let images = [];
