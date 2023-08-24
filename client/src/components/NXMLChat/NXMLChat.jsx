@@ -13,18 +13,21 @@ import { Box, Typography, Link, Button } from "@mui/material";
 import BlogStats from "./BlogStats";
 import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
-import { getCachedPrompt, getCachedPrompts } from "./BlogUtil";
+import { getCacheKey, getCachedPrompt, getCachedPrompts } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
 import { fetchBalance } from "@wagmi/core";
 const BlogForm = () => {
   const { initiative } = useParams();
-  const blogCached = !!localStorage.getItem(`${initiative}_generated_data`);
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
   const isBlogPage = !isCustom && !isPromote;
-  const [isManual, setManual] = useState(false);
+  const [searchParams, _] = useSearchParams();
   const { address, isConnected } = useAccount();
   const isAdmin = address === config.ADMIN_WALLET_1;
+  const isManual = (searchParams.get("prompts") || "") === "manual";
+  const cacheKey = getCacheKey(initiative, isManual);
+  console.log("cacheKey", cacheKey);
+  const blogCached = !!localStorage.getItem(`${cacheKey}_generated_data`);
 
   const [balance, setBalance] = useState("");
   const updateBalance = async () => {
@@ -48,7 +51,6 @@ const BlogForm = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [isSubmit, setIsSubmit] = useState(true);
   // eslint-disable-next-line no-unused-vars
-  const [searchParams, _] = useSearchParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
@@ -106,7 +108,7 @@ const BlogForm = () => {
           return prev;
         }, {});
         localStorage.setItem(
-          `${initiative}_generated_data`,
+          `${cacheKey}_generated_data`,
           JSON.stringify(hash)
         );
       } else {
@@ -207,15 +209,12 @@ const BlogForm = () => {
       notify("Something went wrong. Please try later", "danger");
     }
   };
-  const isManualPrompts = (searchParams.get("prompts") || "") === "manual";
-
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
-    const cachedPrompts = getCachedPrompts(initiative);
+    const cachedPrompts = getCachedPrompts(cacheKey);
     if (cachedPrompts) {
       setPrompts(cachedPrompts);
       setLoading(false);
-      setManual(isManualPrompts);
       return;
     }
     getBlogStats();
@@ -232,8 +231,7 @@ const BlogForm = () => {
     }
 
     let queryPrompts = [];
-    if (isManualPrompts) {
-      setManual(true);
+    if (isManual) {
       queryPrompts = ["", "", "", "", "", "", "", "", "", "", "", ""];
     } else
       queryPrompts = (searchParams.get("prompts") || "")
@@ -248,10 +246,7 @@ const BlogForm = () => {
         };
         return prev;
       }, {});
-      localStorage.setItem(
-        `${initiative}_generated_data`,
-        JSON.stringify(hash)
-      );
+      localStorage.setItem(`${cacheKey}_generated_data`, JSON.stringify(hash));
     } else {
       setLoading(true);
       get_gpt_data(
@@ -292,7 +287,7 @@ const BlogForm = () => {
             variant="contained"
             onClick={() => {
               setShowInitiatives(true);
-              localStorage.removeItem(`${initiative}_generated_data`);
+              localStorage.removeItem(`${cacheKey}_generated_data`);
               setLoading(true);
               setRefreshCount((prev) => prev + 1);
             }}
@@ -315,6 +310,7 @@ const BlogForm = () => {
           promotedWallet={blog.wallet_address}
           promotedId={blog.id}
           cachedData={{}}
+          cacheKey={cacheKey}
         />
       ));
     else {
@@ -331,7 +327,8 @@ const BlogForm = () => {
               isManual={isManual}
               getUserData={get_user_data}
               getBlogStats={getBlogStats}
-              cachedData={getCachedPrompt(initiative, index, isBlogPage)}
+              cachedData={getCachedPrompt(cacheKey, index)}
+              cacheKey={cacheKey}
             />
           ))}
         </>

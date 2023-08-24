@@ -27,6 +27,7 @@ const SaveInitiative = ({
   cachedData,
   promotedBlog,
   isManual,
+  cacheKey,
 }) => {
   const [prompt, setPrompt] = useState(inputPrompt || cachedData.prompt || "");
   const { initiative } = useParams();
@@ -261,7 +262,7 @@ const SaveInitiative = ({
         }
         sethashWord(sanitizeResponse(resData.substr(indexOfone)));
 
-        updateInCache(initiative, "hashes", resData.substr(indexOfone), index);
+        updateInCache(cacheKey, "hashes", resData.substr(indexOfone), index);
       } else if (callFor === "keywords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.substr(resData.indexOf("1. "));
@@ -270,7 +271,7 @@ const SaveInitiative = ({
         }
         setkeyWord(sanitizeResponse(indexOfone, "keywords"));
 
-        updateInCache(initiative, "keywords", indexOfone, index);
+        updateInCache(cacheKey, "keywords", indexOfone, index);
       } else {
         const resultTemp = (
           isCustom
@@ -284,7 +285,7 @@ const SaveInitiative = ({
           await updateBlogCount(address);
           getBlogStats();
         }
-        updateInCache(initiative, "blog", resultTemp, index);
+        updateInCache(cacheKey, "blog", resultTemp, index);
       }
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -451,7 +452,7 @@ const SaveInitiative = ({
                 value={prompt}
                 onChange={(e) => {
                   setPrompt(e.target.value);
-                  updateInCache(initiative, "prompt", e.target.value, index);
+                  updateInCache(cacheKey, "prompt", e.target.value, index);
                 }}
               />
             ) : (
@@ -475,7 +476,7 @@ const SaveInitiative = ({
               readOnly={isPromote}
               onChange={(e) => {
                 setResult(e.target.value);
-                updateInCache(initiative, "blog", e.target.value, index);
+                updateInCache(cacheKey, "blog", e.target.value, index);
               }}
               value={isPromote ? content : result}
               style={{ height: "100px" }}
@@ -524,7 +525,7 @@ const SaveInitiative = ({
               value={mediumlink}
               onChange={(e) => {
                 setmediumLink(e.target.value);
-                updateInCache(initiative, "medium", e.target.value, index);
+                updateInCache(cacheKey, "medium", e.target.value, index);
               }}
             />
           </div>
@@ -537,7 +538,7 @@ const SaveInitiative = ({
               value={twitterlink}
               onChange={(e) => {
                 settwitterLink(e.target.value);
-                updateInCache(initiative, "twitter", e.target.value, index);
+                updateInCache(cacheKey, "twitter", e.target.value, index);
               }}
             />
           </div>
@@ -550,7 +551,7 @@ const SaveInitiative = ({
               value={facebooklink}
               onChange={(e) => {
                 setfacebookLink(e.target.value);
-                updateInCache(initiative, "facebook", e.target.value, index);
+                updateInCache(cacheKey, "facebook", e.target.value, index);
               }}
             />
           </div>
@@ -563,7 +564,7 @@ const SaveInitiative = ({
               value={linkedinlink}
               onChange={(e) => {
                 setlinkedinLink(e.target.value);
-                updateInCache(initiative, "linkedin", e.target.value, index);
+                updateInCache(cacheKey, "linkedin", e.target.value, index);
               }}
             />
           </div>
@@ -596,7 +597,7 @@ const SaveInitiative = ({
               value={isPromote ? promotedBlog.hashword : hashword}
               onChange={(e) => {
                 sethashWord(e.target.value);
-                updateInCache(initiative, "hashes", e.target.value, index);
+                updateInCache(cacheKey, "hashes", e.target.value, index);
               }}
               style={{ height: "100px" }}
             ></textarea>
@@ -610,7 +611,7 @@ const SaveInitiative = ({
               value={isPromote ? promotedBlog.keyword : keyWord}
               onChange={(e) => {
                 setkeyWord(e.target.value);
-                updateInCache(initiative, "keywords", e.target.value, index);
+                updateInCache(cacheKey, "keywords", e.target.value, index);
               }}
               style={{ height: "100px" }}
             ></textarea>
