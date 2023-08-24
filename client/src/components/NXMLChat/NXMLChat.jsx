@@ -99,18 +99,16 @@ const BlogForm = () => {
         let data = process_data(await response.json());
         setPrompts(data);
 
-        if (isBlogPage) {
-          const hash = data.reduce((prev, curr, i) => {
-            prev[i] = {
-              prompt: curr,
-            };
-            return prev;
-          }, {});
-          localStorage.setItem(
-            `${initiative}_generated_data`,
-            JSON.stringify(hash)
-          );
-        }
+        const hash = data.reduce((prev, curr, i) => {
+          prev[i] = {
+            prompt: curr,
+          };
+          return prev;
+        }, {});
+        localStorage.setItem(
+          `${initiative}_generated_data`,
+          JSON.stringify(hash)
+        );
       } else {
         notify("Something went wrong. Please try again later", "error");
       }
@@ -209,6 +207,7 @@ const BlogForm = () => {
       notify("Something went wrong. Please try later", "danger");
     }
   };
+  const isManualPrompts = (searchParams.get("prompts") || "") === "manual";
 
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
@@ -216,6 +215,7 @@ const BlogForm = () => {
     if (cachedPrompts) {
       setPrompts(cachedPrompts);
       setLoading(false);
+      setManual(isManualPrompts);
       return;
     }
     getBlogStats();
@@ -232,7 +232,6 @@ const BlogForm = () => {
     }
 
     let queryPrompts = [];
-    const isManualPrompts = (searchParams.get("prompts") || "") === "manual";
     if (isManualPrompts) {
       setManual(true);
       queryPrompts = ["", "", "", "", "", "", "", "", "", "", "", ""];
@@ -241,9 +240,19 @@ const BlogForm = () => {
         .split("||")
         .filter((x) => !!x);
 
-    if (Array.isArray(queryPrompts) && queryPrompts.length)
+    if (Array.isArray(queryPrompts) && queryPrompts.length) {
       setPrompts(queryPrompts);
-    else {
+      const hash = queryPrompts.reduce((prev, curr, i) => {
+        prev[i] = {
+          prompt: curr,
+        };
+        return prev;
+      }, {});
+      localStorage.setItem(
+        `${initiative}_generated_data`,
+        JSON.stringify(hash)
+      );
+    } else {
       setLoading(true);
       get_gpt_data(
         searchParams.get("context") ||

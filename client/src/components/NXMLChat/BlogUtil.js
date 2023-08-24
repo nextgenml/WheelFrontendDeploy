@@ -34,7 +34,6 @@ export const updateInCache = (initiative, key, data, index) => {
 
 export const getCachedPrompt = (initiative, index, isBlogPage) => {
   try {
-    if (!isBlogPage) return {};
     const cachedData = localStorage.getItem(`${initiative}_generated_data`);
 
     if (cachedData) {
@@ -44,5 +43,5 @@ export const getCachedPrompt = (initiative, index, isBlogPage) => {
   } catch (error) {
     console.log("error in getCachedPrompt", error);
   }
-  return {}
+  return {};
 };

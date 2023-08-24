@@ -28,7 +28,7 @@ const SaveInitiative = ({
   promotedBlog,
   isManual,
 }) => {
-  const [prompt, setPrompt] = useState(inputPrompt);
+  const [prompt, setPrompt] = useState(inputPrompt || cachedData.prompt || "");
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(!!cachedData.blog);
@@ -260,13 +260,8 @@ const SaveInitiative = ({
           indexOfone = resData.indexOf("#");
         }
         sethashWord(sanitizeResponse(resData.substr(indexOfone)));
-        if (isBlogPage)
-          updateInCache(
-            initiative,
-            "hashes",
-            resData.substr(indexOfone),
-            index
-          );
+
+        updateInCache(initiative, "hashes", resData.substr(indexOfone), index);
       } else if (callFor === "keywords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.substr(resData.indexOf("1. "));
@@ -274,8 +269,8 @@ const SaveInitiative = ({
           indexOfone = resData;
         }
         setkeyWord(sanitizeResponse(indexOfone, "keywords"));
-        if (isBlogPage)
-          updateInCache(initiative, "keywords", indexOfone, index);
+
+        updateInCache(initiative, "keywords", indexOfone, index);
       } else {
         const resultTemp = (
           isCustom
@@ -289,7 +284,7 @@ const SaveInitiative = ({
           await updateBlogCount(address);
           getBlogStats();
         }
-        if (isBlogPage) updateInCache(initiative, "blog", resultTemp, index);
+        updateInCache(initiative, "blog", resultTemp, index);
       }
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -454,7 +449,10 @@ const SaveInitiative = ({
                 variant="outlined"
                 fullWidth
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  updateInCache(initiative, "prompt", e.target.value, index);
+                }}
               />
             ) : (
               <span>{prompt}</span>
@@ -475,7 +473,10 @@ const SaveInitiative = ({
               className="form-control"
               placeholder="Blog Content"
               readOnly={isPromote}
-              onChange={(e) => setResult(e.target.value)}
+              onChange={(e) => {
+                setResult(e.target.value);
+                updateInCache(initiative, "blog", e.target.value, index);
+              }}
               value={isPromote ? content : result}
               style={{ height: "100px" }}
               disabled={isPromote}
@@ -593,7 +594,10 @@ const SaveInitiative = ({
               id="hashword"
               placeholder="#nextgenml"
               value={isPromote ? promotedBlog.hashword : hashword}
-              onChange={(e) => sethashWord(e.target.value)}
+              onChange={(e) => {
+                sethashWord(e.target.value);
+                updateInCache(initiative, "hashes", e.target.value, index);
+              }}
               style={{ height: "100px" }}
             ></textarea>
           </div>
@@ -604,7 +608,10 @@ const SaveInitiative = ({
               id="keyword"
               placeholder="Nexgenml"
               value={isPromote ? promotedBlog.keyword : keyWord}
-              onChange={(e) => setkeyWord(e.target.value)}
+              onChange={(e) => {
+                setkeyWord(e.target.value);
+                updateInCache(initiative, "keywords", e.target.value, index);
+              }}
               style={{ height: "100px" }}
             ></textarea>
           </div>
