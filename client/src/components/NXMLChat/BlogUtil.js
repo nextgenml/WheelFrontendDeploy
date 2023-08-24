@@ -46,9 +46,11 @@ export const getCachedPrompt = (initiative, index) => {
   return {};
 };
 
-export const getCacheKey = (initiative, isManual) => {
-  if (isManual) {
-    return `${initiative}-manual`;
+export const getCacheKey = (initiative, prompts, context) => {
+  if (prompts) {
+    return `${initiative}-${prompts}`;
+  } else if (context) {
+    return `${initiative}-${context}`;
   } else {
     return initiative;
   }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -25,8 +26,12 @@ const BlogForm = () => {
   const { address, isConnected } = useAccount();
   const isAdmin = address === config.ADMIN_WALLET_1;
   const isManual = (searchParams.get("prompts") || "") === "manual";
-  const cacheKey = getCacheKey(initiative, isManual);
-  console.log("cacheKey", cacheKey);
+  const cacheKey = getCacheKey(
+    initiative,
+    searchParams.get("prompts"),
+    searchParams.get("context")
+  );
+
   const blogCached = !!localStorage.getItem(`${cacheKey}_generated_data`);
 
   const [balance, setBalance] = useState("");
@@ -209,6 +214,7 @@ const BlogForm = () => {
       notify("Something went wrong. Please try later", "danger");
     }
   };
+
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
     const cachedPrompts = getCachedPrompts(cacheKey);
@@ -383,7 +389,7 @@ const BlogForm = () => {
     );
   return (
     <Box sx={{ p: 3 }}>
-      {isBlogPage || finalPrompts.length > 0 ? (
+      {isBlogPage || (finalPrompts && finalPrompts.length > 0) ? (
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20 }}>
