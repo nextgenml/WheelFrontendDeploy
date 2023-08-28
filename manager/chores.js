@@ -4,6 +4,9 @@ const campaignRepo = require("../repository/campaign");
 const moment = require("moment");
 const { DATE_TIME_FORMAT } = require("../constants/momentHelper");
 const { roundTo2Decimals } = require("../utils");
+const uuid = require("uuid");
+const { NXML_BLOG_CAMPAIGN } = require("../constants");
+
 const createValidationChore = async (choreId) => {
   const chore = await choresRepo.getChoresById(choreId);
   if (!["comment", "post"].includes(chore.chore_type)) return;
@@ -57,7 +60,30 @@ const createValidationChore = async (choreId) => {
     }
   }
 };
+const createSystemValidationChore = async (choreId) => {
+  const chore = await choresRepo.getChoresById(choreId);
 
+  const split = chore.target_post_link.split("/");
+  const postId = split[split.length - 1];
+  const startTime = moment();
+  const endTime = moment(startTime).add(
+    process.env.VALIDATE_CHORE_VALID_DAYS,
+    "days"
+  );
+  await choresRepo.createChore({
+    campaignDetailsId: chore.campaign_detail_id,
+    walletId: process.env.VALIDATION_CHORE_PROGRAM_WALLET,
+    mediaType: chore.media_type,
+    choreType: "validate",
+    validFrom: startTime.format(DATE_TIME_FORMAT),
+    validTo: endTime.format(DATE_TIME_FORMAT),
+    value: campaign.reward,
+    ref_chore_id: chore.id,
+    linkToPost: chore.target_post_link,
+    mediaPostId: postId,
+    content: chore.target_post || chore.content,
+  });
+};
 const createCompletedPostChore = async (
   detailsId,
   walletId,
@@ -158,8 +184,64 @@ const dashboardStats = async (mediaType, walletId) => {
     validateCount,
   };
 };
+
+const createPostChoreForBlog = async (blog) => {
+  let { insertId } = await campaignRepo.saveCampaign({
+    client: "NexgenML",
+    campaign_name: NXML_BLOG_CAMPAIGN,
+    start_time: moment(),
+    end_time: moment().add(3, "months"),
+    success_factor: "best",
+    wallet_id: process.env.ADMIN_WALLET,
+    default: blog.prompt === "blog-customization" ? "false" : "true",
+    reward: process.env.COST_PER_VALIDATION_CHORE,
+    blogId: blog.id,
+    is_recursive_algo: 1,
+  });
+
+  const details = await campaignRepo.saveCampaignDetails({
+    content: blog.prompt,
+    start_time: moment(),
+    end_time: moment().add(3, "months"),
+    campaign_id: insertId,
+    content_type: "text",
+    collection_id: uuid.v4(),
+    media_type: "twitter",
+    post_link: blog.twitterurl,
+  });
+
+  if (!blog.twitterurl) return;
+
+  const split = blog.twitterurl.split("/");
+  const followLink = split.slice(0, split.length - 2).join("/");
+  const postId = split[split.length - 1];
+
+  const chore = await choresRepo.createChore({
+    campaignDetailsId: details[1].insertId,
+    walletId: process.env.ADMIN_WALLET,
+    mediaType: "twitter",
+    choreType: "post",
+    validFrom: moment().format(DATE_TIME_FORMAT),
+    validTo: moment().add(3, "months").format(DATE_TIME_FORMAT),
+    value: process.env.COST_PER_CHORE,
+    content: blog.prompt,
+  });
+
+  await choresRepo.markChoreAsCompleted({
+    linkToPost: blog.twitterurl,
+    mediaPostId: postId,
+    followLink,
+    createdAt: moment().subtract(1, "hour").format(DATE_TIME_FORMAT),
+    id: chore[1].insertId,
+    walletId: process.env.ADMIN_WALLET,
+    campaignDetailsId: details[1].insertId,
+    choreType: "post",
+  });
+};
 module.exports = {
   createValidationChore,
   createCompletedPostChore,
   dashboardStats,
+  createSystemValidationChore,
+  createPostChoreForBlog,
 };
