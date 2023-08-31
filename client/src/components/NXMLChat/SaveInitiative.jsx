@@ -12,9 +12,10 @@ import { updateBlogCount } from "../../Utils/Blog";
 import { Checkbox, TextField } from "@mui/material";
 import { updateInCache } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
+import PromotedImages from "./PromotedImages";
 
 const SaveInitiative = ({
-  prompt,
+  inputPrompt,
   content,
   isPromote,
   promotedWallet,
@@ -25,7 +26,10 @@ const SaveInitiative = ({
   isBlogPage,
   cachedData,
   promotedBlog,
+  isManual,
+  cacheKey,
 }) => {
+  const [prompt, setPrompt] = useState(inputPrompt || cachedData.prompt || "");
   const { initiative } = useParams();
   const { address } = useAccount();
   const [isChecked, setIsChecked] = useState(!!cachedData.blog);
@@ -195,6 +199,11 @@ const SaveInitiative = ({
   };
 
   const onFileUpload = async (e) => {
+    if (e.target.files.length > 4) {
+      alert("Upto 4 images are only supported");
+      e.preventDefault();
+      return;
+    }
     setblogImagesFiles(e.target.files);
     let flag = 1;
     let images = [];
@@ -252,13 +261,8 @@ const SaveInitiative = ({
           indexOfone = resData.indexOf("#");
         }
         sethashWord(sanitizeResponse(resData.substr(indexOfone)));
-        if (isBlogPage)
-          updateInCache(
-            initiative,
-            "hashes",
-            resData.substr(indexOfone),
-            index
-          );
+
+        updateInCache(cacheKey, "hashes", resData.substr(indexOfone), index);
       } else if (callFor === "keywords") {
         if (resData.includes("1. ")) {
           indexOfone = resData.substr(resData.indexOf("1. "));
@@ -266,8 +270,8 @@ const SaveInitiative = ({
           indexOfone = resData;
         }
         setkeyWord(sanitizeResponse(indexOfone, "keywords"));
-        if (isBlogPage)
-          updateInCache(initiative, "keywords", indexOfone, index);
+
+        updateInCache(cacheKey, "keywords", indexOfone, index);
       } else {
         const resultTemp = (
           isCustom
@@ -281,7 +285,7 @@ const SaveInitiative = ({
           await updateBlogCount(address);
           getBlogStats();
         }
-        if (isBlogPage) updateInCache(initiative, "blog", resultTemp, index);
+        updateInCache(cacheKey, "blog", resultTemp, index);
       }
     } else {
       notify("Something went wrong. Please try again later", "error");
@@ -299,19 +303,29 @@ const SaveInitiative = ({
     return url.protocol === "http:" || url.protocol === "https:";
   };
 
+  const getPrompt = () => {
+    if (isCustom) return prompt;
+    else
+      return "Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.";
+  };
   useEffect(() => {
-    if (!cachedData.hashes && result && result !== "populating blog") {
+    if (
+      !isManual &&
+      !cachedData.hashes &&
+      result &&
+      result !== "populating blog"
+    ) {
       get_gpt_data(
-        "provide 10 trending twitter # hashword for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        `provide 10 trending twitter # hashword for '${getPrompt()}'`,
         "hashwords"
       );
     }
   }, [result]);
 
   useEffect(() => {
-    if (!cachedData.keywords && hashword) {
+    if (!isManual && !cachedData.keywords && hashword) {
       get_gpt_data(
-        "provide 10 trending keywords for 'Improved Transparency: Blockchain technology can create an open, transparent, and secure digital ledger that can be used to store data related to social welfare programs such as benefits, healthcare, and other forms of assistance.'",
+        `provide 10 trending keywords for '${getPrompt()}'`,
         "keywords"
       );
     }
@@ -374,7 +388,7 @@ const SaveInitiative = ({
       return;
     }
     if (
-      ((isChecked && !isCopyDisable) || isPromote) &&
+      ((isChecked && !isCopyDisable) || isPromote || isManual) &&
       (!mediumlink || isValidUrl(mediumlink)) &&
       (!twitterlink || isValidUrl(twitterlink)) &&
       (!facebooklink || isValidUrl(facebooklink)) &&
@@ -429,9 +443,23 @@ const SaveInitiative = ({
       <form>
         <div className="row g-3 m-3">
           <div className="col-sm-12">
-            <span>{prompt}</span>
+            {isCustom ? (
+              <TextField
+                id="outlined-basic"
+                label="Prompt*"
+                variant="outlined"
+                fullWidth
+                value={prompt}
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  updateInCache(cacheKey, "prompt", e.target.value, index);
+                }}
+              />
+            ) : (
+              <span>{prompt}</span>
+            )}
           </div>
-          {!isPromote && (
+          {!isPromote && !isManual && (
             <div className="col-sm-12">
               <Checkbox
                 onClick={() => setIsChecked(!isChecked)}
@@ -446,7 +474,10 @@ const SaveInitiative = ({
               className="form-control"
               placeholder="Blog Content"
               readOnly={isPromote}
-              onChange={(e) => setResult(e.target.value)}
+              onChange={(e) => {
+                setResult(e.target.value);
+                updateInCache(cacheKey, "blog", e.target.value, index);
+              }}
               value={isPromote ? content : result}
               style={{ height: "100px" }}
               disabled={isPromote}
@@ -476,7 +507,7 @@ const SaveInitiative = ({
             <button
               type="button"
               className="btn btn-success"
-              disabled={!isPromote && isCopyDisable}
+              disabled={!isPromote && !isManual && isCopyDisable}
               onClick={() => {
                 navigator.clipboard.writeText(result || content);
                 notify("Copied", "info");
@@ -494,7 +525,7 @@ const SaveInitiative = ({
               value={mediumlink}
               onChange={(e) => {
                 setmediumLink(e.target.value);
-                updateInCache(initiative, "medium", e.target.value, index);
+                updateInCache(cacheKey, "medium", e.target.value, index);
               }}
             />
           </div>
@@ -507,7 +538,7 @@ const SaveInitiative = ({
               value={twitterlink}
               onChange={(e) => {
                 settwitterLink(e.target.value);
-                updateInCache(initiative, "twitter", e.target.value, index);
+                updateInCache(cacheKey, "twitter", e.target.value, index);
               }}
             />
           </div>
@@ -520,7 +551,7 @@ const SaveInitiative = ({
               value={facebooklink}
               onChange={(e) => {
                 setfacebookLink(e.target.value);
-                updateInCache(initiative, "facebook", e.target.value, index);
+                updateInCache(cacheKey, "facebook", e.target.value, index);
               }}
             />
           </div>
@@ -533,7 +564,7 @@ const SaveInitiative = ({
               value={linkedinlink}
               onChange={(e) => {
                 setlinkedinLink(e.target.value);
-                updateInCache(initiative, "linkedin", e.target.value, index);
+                updateInCache(cacheKey, "linkedin", e.target.value, index);
               }}
             />
           </div>
@@ -564,7 +595,10 @@ const SaveInitiative = ({
               id="hashword"
               placeholder="#nextgenml"
               value={isPromote ? promotedBlog.hashword : hashword}
-              readOnly
+              onChange={(e) => {
+                sethashWord(e.target.value);
+                updateInCache(cacheKey, "hashes", e.target.value, index);
+              }}
               style={{ height: "100px" }}
             ></textarea>
           </div>
@@ -575,7 +609,10 @@ const SaveInitiative = ({
               id="keyword"
               placeholder="Nexgenml"
               value={isPromote ? promotedBlog.keyword : keyWord}
-              readOnly
+              onChange={(e) => {
+                setkeyWord(e.target.value);
+                updateInCache(cacheKey, "keywords", e.target.value, index);
+              }}
               style={{ height: "100px" }}
             ></textarea>
           </div>
@@ -610,7 +647,7 @@ const SaveInitiative = ({
                 ))}
             </div>
           </div>
-          {initiative == "blog-customization" && (
+          {initiative === "blog-customization" && (
             <div className="col-sm-12">
               <input
                 className="form-control form-control-lg"
@@ -637,6 +674,9 @@ const SaveInitiative = ({
                 ))}
             </div>
           </div>
+          {isPromote && promotedBlog && (
+            <PromotedImages promotedBlog={promotedBlog} />
+          )}
           <div className="col-sm-12">
             <button
               type="button"

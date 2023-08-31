@@ -94,6 +94,7 @@ app.get(
 app.put(
   "/update-blog-data",
   validateLoginSession,
+  upload.any(),
   blogsController.updateBlogData
 );
 app.get("/get-blog-data", validateLoginSession, blogsController.getBlogData);

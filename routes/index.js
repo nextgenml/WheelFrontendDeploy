@@ -10,5 +10,6 @@ router.use("/api/v1/contentProducer", require("./chatgpt"));
 router.use("/api/v1/scheduledSpins", require("./scheduled_spins"));
 router.use("/api/v1/chores", require("./chores"));
 router.use("/api/v1/health", require("./health"));
+router.use("/api/v1/tokens", require("./tokens"));
 
 module.exports = router;

@@ -41,8 +41,23 @@ const getAdminStats = async (req, res) => {
     });
   }
 };
+const initiatePrizes = async (req, res) => {
+  try {
+    console.log("reached here");
+    tokenManager.initiatePrizesDistribution(req.body);
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    logger.error(`error in getAdminStats: ${error}`);
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   getUserTokens,
   getAdminStats,
+  initiatePrizes,
 };

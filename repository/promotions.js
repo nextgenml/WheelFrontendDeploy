@@ -129,7 +129,7 @@ const eligibleWallets = async (walletId) => {
     [[-1, ...eligibleCount.map((x) => x.payer_wallet_id)]]
   );
   console.log("promotedCount", promotedCount);
-  const result = [];
+  let result = [];
   for (var e of eligibleCount) {
     var found = false;
     for (var p of promotedCount) {
@@ -142,6 +142,12 @@ const eligibleWallets = async (walletId) => {
     // console.log("e.payer_wallet_id", e);
     if (!found) result.push(e.payer_wallet_id);
   }
+
+  const balanceHolders = await runQueryAsync(
+    `select wallet_id from holders where nml_balance >= ?`,
+    [process.env.MIN_WALLET_BALANCE_TO_DO_BLOGGING]
+  );
+  result = [...result, ...balanceHolders.map((x) => x.wallet_id)];
   console.log("result", result);
   return result;
 };

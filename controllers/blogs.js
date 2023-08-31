@@ -4,7 +4,9 @@ const blogsManager = require("../manager/blogs");
 const { validatePayment } = require("../manager/payments");
 const blogsRepo = require("../repository/blogs");
 const promotionsRepo = require("../repository/promotions");
+const holdersRepo = require("../repository/holder");
 const moment = require("moment");
+const { isEligibleForBlogging } = require("../manager/promotions");
 require("../manager/jobs/blogPayments");
 require("../manager/jobs/blogCampaigns");
 require("../manager/jobs/validateOldBlogs");
@@ -44,6 +46,12 @@ const getAdhocSpinParticipants = async (req, res) => {
 const updateBlogData = async (req, res) => {
   try {
     let { validatedFlag, paidFlag, transactionID } = req.body;
+    const { files } = req;
+    const image_urls = [];
+
+    (files || []).forEach((file) => {
+      image_urls.push(file.filename);
+    });
     if (!(validatedFlag >= 0) || !(paidFlag >= 0) || !transactionID) {
       return res.status(400).json({
         statusCode: 400,
@@ -51,7 +59,10 @@ const updateBlogData = async (req, res) => {
       });
     }
 
-    await blogsRepo.updateBlogData(req.body);
+    await blogsRepo.updateBlogData({
+      ...req.body,
+      image_urls: image_urls.join(","),
+    });
     return res.status(200).json({
       msg: "Updated successfully",
     });
@@ -59,7 +70,7 @@ const updateBlogData = async (req, res) => {
     logger.error(`error occurred in updateBlogData api: ${error}`);
     res.status(400).json({
       statusCode: 400,
-      msg: error,
+      msg: error.message,
     });
   }
 };
@@ -172,9 +183,7 @@ const saveBlogData = async (req, res) => {
 
     // Blogs limit validation
     if (initiative === "blog-customization") {
-      const [valid, message, _, __] = await promotionsRepo.blogStats(
-        wallet_address
-      );
+      const valid = await isEligibleForBlogging(wallet_address);
       if (!valid) return res.status(401).json({ msg: message });
     }
 

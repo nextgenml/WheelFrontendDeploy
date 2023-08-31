@@ -34,7 +34,12 @@ const distributeReward = async (address, amount) => {
   }
 };
 
-const processPrizesV1 = async (winners, currency, callback) => {
+const processPrizesV1 = async (
+  winners,
+  currency,
+  callback,
+  failureCallback = null
+) => {
   // return;
   for (const item of winners) {
     logger.info(
@@ -48,10 +53,12 @@ const processPrizesV1 = async (winners, currency, callback) => {
       await callback(item.id);
       await timer(10000);
       logger.info(`processPrizes reward distribution: completed: ${item.id}`);
-    } else
+    } else {
+      if (failureCallback) failureCallback(item.walletId);
       logger.error(
         `processPrizes reward distribution: failed for participant ${item.id}`
       );
+    }
   }
 };
 module.exports = { processPrizesV1 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,17 +14,25 @@ import { Box, Typography, Link, Button } from "@mui/material";
 import BlogStats from "./BlogStats";
 import ShowBlog from "./ShowBlog";
 import { updateBlogCount } from "../../Utils/Blog";
-import { getCachedPrompt, getCachedPrompts } from "./BlogUtil";
+import { getCacheKey, getCachedPrompt, getCachedPrompts } from "./BlogUtil";
 import { customFetch } from "../../API/index.js";
 import { fetchBalance } from "@wagmi/core";
 const BlogForm = () => {
   const { initiative } = useParams();
-  const blogCached = !!localStorage.getItem(`${initiative}_generated_data`);
   const isCustom = initiative === "blog-customization";
   const isPromote = initiative === "promote-blogs";
   const isBlogPage = !isCustom && !isPromote;
+  const [searchParams, _] = useSearchParams();
   const { address, isConnected } = useAccount();
   const isAdmin = address === config.ADMIN_WALLET_1;
+  const isManual = (searchParams.get("prompts") || "") === "manual";
+  const cacheKey = getCacheKey(
+    initiative,
+    searchParams.get("prompts"),
+    searchParams.get("context")
+  );
+
+  const blogCached = !!localStorage.getItem(`${cacheKey}_generated_data`);
 
   const [balance, setBalance] = useState("");
   const updateBalance = async () => {
@@ -37,7 +46,6 @@ const BlogForm = () => {
     if (address) updateBalance();
   }, [address]);
 
-  console.log("balance", balance);
   const [prompts, setPrompts] = useState([]);
   const [userData, setUserData] = useState([]);
   const [walletAdd, setWalletAdd] = useState();
@@ -48,7 +56,6 @@ const BlogForm = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [isSubmit, setIsSubmit] = useState(true);
   // eslint-disable-next-line no-unused-vars
-  const [searchParams, _] = useSearchParams();
   const [promotedBlogs, setPromotedBlogs] = useState([]);
   const [openStatsId, setOpenStatsId] = useState(0);
   const [showBlog, setShowBlog] = useState(null);
@@ -58,6 +65,7 @@ const BlogForm = () => {
   );
   const [refreshCount, setRefreshCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [allowBlogging, setAllowBlogging] = useState(isPromote);
   let reset = 0;
 
   // Toast alert
@@ -98,18 +106,16 @@ const BlogForm = () => {
         let data = process_data(await response.json());
         setPrompts(data);
 
-        if (isBlogPage) {
-          const hash = data.reduce((prev, curr, i) => {
-            prev[i] = {
-              prompt: curr,
-            };
-            return prev;
-          }, {});
-          localStorage.setItem(
-            `${initiative}_generated_data`,
-            JSON.stringify(hash)
-          );
-        }
+        const hash = data.reduce((prev, curr, i) => {
+          prev[i] = {
+            prompt: curr,
+          };
+          return prev;
+        }, {});
+        localStorage.setItem(
+          `${cacheKey}_generated_data`,
+          JSON.stringify(hash)
+        );
       } else {
         notify("Something went wrong. Please try again later", "error");
       }
@@ -209,10 +215,9 @@ const BlogForm = () => {
     }
   };
 
-  console.log("prompts", prompts);
   useEffect(() => {
     if (isBlogPage && !showInitiatives) return;
-    const cachedPrompts = getCachedPrompts(initiative);
+    const cachedPrompts = getCachedPrompts(cacheKey);
     if (cachedPrompts) {
       setPrompts(cachedPrompts);
       setLoading(false);
@@ -231,12 +236,24 @@ const BlogForm = () => {
       return;
     }
 
-    const queryPrompts = (searchParams.get("prompts") || "")
-      .split("||")
-      .filter((x) => !!x);
-    if (Array.isArray(queryPrompts) && queryPrompts.length)
-      setPrompts(queryPrompts.filter((x) => !!x));
-    else {
+    let queryPrompts = [];
+    if (isManual) {
+      queryPrompts = ["", "", "", "", "", "", "", "", "", "", "", ""];
+    } else
+      queryPrompts = (searchParams.get("prompts") || "")
+        .split("||")
+        .filter((x) => !!x);
+
+    if (Array.isArray(queryPrompts) && queryPrompts.length) {
+      setPrompts(queryPrompts);
+      const hash = queryPrompts.reduce((prev, curr, i) => {
+        prev[i] = {
+          prompt: curr,
+        };
+        return prev;
+      }, {});
+      localStorage.setItem(`${cacheKey}_generated_data`, JSON.stringify(hash));
+    } else {
       setLoading(true);
       get_gpt_data(
         searchParams.get("context") ||
@@ -276,7 +293,7 @@ const BlogForm = () => {
             variant="contained"
             onClick={() => {
               setShowInitiatives(true);
-              localStorage.removeItem(`${initiative}_generated_data`);
+              localStorage.removeItem(`${cacheKey}_generated_data`);
               setLoading(true);
               setRefreshCount((prev) => prev + 1);
             }}
@@ -292,13 +309,14 @@ const BlogForm = () => {
       return promotedBlogs.map((blog, index) => (
         <Initiative
           key={index}
-          prompt={blog.prompt}
+          inputPrompt={blog.prompt}
           content={blog.blog}
           promotedBlog={blog}
           isPromote
           promotedWallet={blog.wallet_address}
           promotedId={blog.id}
           cachedData={{}}
+          cacheKey={cacheKey}
         />
       ));
     else {
@@ -308,13 +326,15 @@ const BlogForm = () => {
           {prompts.map((prompt, index) => (
             <Initiative
               key={index}
-              prompt={prompt}
+              inputPrompt={prompt}
               index={index}
               isCustom={isCustom}
               isBlogPage={isBlogPage}
+              isManual={isManual}
               getUserData={get_user_data}
               getBlogStats={getBlogStats}
-              cachedData={getCachedPrompt(initiative, index, isBlogPage)}
+              cachedData={getCachedPrompt(cacheKey, index)}
+              cacheKey={cacheKey}
             />
           ))}
         </>
@@ -322,6 +342,22 @@ const BlogForm = () => {
     }
   };
   const finalPrompts = isPromote ? promotedBlogs : prompts;
+
+  const checkEligibility = async () => {
+    const res = await customFetch(
+      `${config.API_ENDPOINT}/custom-blogs-eligibility?walletId=${address}`
+    );
+    if (res.ok) {
+      const { isEligible } = await res.json();
+      setAllowBlogging(isEligible);
+    }
+  };
+
+  useEffect(() => {
+    if (!isPromote) {
+      checkEligibility();
+    }
+  }, [initiative]);
   if (!isConnected)
     return (
       <Typography variant="h6" sx={{ mb: 20 }}>
@@ -329,11 +365,7 @@ const BlogForm = () => {
       </Typography>
     );
 
-  if (
-    !balance ||
-    parseInt(balance.formatted) <
-      process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING
-  )
+  if (!allowBlogging)
     return (
       <Typography variant="h6" sx={{ m: 4 }}>
         Minimum {process.env.REACT_APP_MIN_WALLET_BALANCE_TO_DO_BLOGGING} NML
@@ -357,7 +389,7 @@ const BlogForm = () => {
     );
   return (
     <Box sx={{ p: 3 }}>
-      {isBlogPage || finalPrompts.length > 0 ? (
+      {isBlogPage || (finalPrompts && finalPrompts.length > 0) ? (
         renderPrompts()
       ) : (
         <Typography variant="h6" sx={{ mb: 20 }}>
@@ -375,11 +407,13 @@ const BlogForm = () => {
                 className="text-center"
                 sx={{ mb: 2 }}
               >
-                Paid Plan for promotions - {blogStats.totalCountP}
+                Paid Plan for promotions -{" "}
+                {blogStats.totalCountP > 0 ? blogStats.totalCountP : 9999999}
                 <br />
                 Completed Promotions - {blogStats.usedCountP}
                 <br />
-                Paid Plan for blogs - {blogStats.totalCountB}
+                Paid Plan for blogs -{" "}
+                {blogStats.totalCountB > 0 ? blogStats.totalCountB : 9999999}
                 <br />
                 Completed blogs - {blogStats.usedCountB}
                 <br />

@@ -86,7 +86,7 @@ export default function CustomizeBlogs() {
         {eligible && (
           <Box>
             <Typography variant="body2" sx={{ mb: 2 }}>
-              Paid Plan for blogs - {blogStats.totalCountB}
+              Paid Plan for blogs - {blogStats.totalCountB || 9999999}
               <br />
               Completed blogs - {blogStats.usedCountB}
               <br />
@@ -158,6 +158,25 @@ export default function CustomizeBlogs() {
                       className={styles.addMore}
                       onClick={handleAddMore}
                     />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: 3 }}>
+              <Grid item md={6}>
+                <Grid container spacing={2}>
+                  <Grid item md={12} display={"flex"}>
+                    <Button
+                      variant="contained"
+                      component="label"
+                      onClick={() =>
+                        navigate(
+                          `/nxml-blog-chat/blog-customization?prompts=manual`
+                        )
+                      }
+                    >
+                      Generate your own blogs
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>

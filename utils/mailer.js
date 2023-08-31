@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const logger = require("../logger");
 
-const sendEmail = async (subject, body) => {
+const sendEmail = async (subject, body, args = {}) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     host: process.env.MAILER_HOST,
@@ -19,6 +19,7 @@ const sendEmail = async (subject, body) => {
       to: process.env.NEXGEN_MAIL,
       subject,
       html: body,
+      ...args,
     });
   } catch (error) {
     logger.error(`Error sending email: error: ${error}, subject: ${subject}`);

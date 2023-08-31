@@ -13,7 +13,7 @@ const getAdhocSpinParticipants = async (from, to, min) => {
 };
 const getBlogStats = async (blogId) => {
   const query =
-    "select mediumurl, create_date from saved_prompts where promoted_blog_id = ? order by create_date desc";
+    "select mediumurl, create_date, twitterurl, facebookurl, linkedinurl from saved_prompts where promoted_blog_id = ? order by create_date desc";
   return await runQueryAsync(query, [blogId]);
 };
 
@@ -73,13 +73,14 @@ const getPromotedBlogs = async (promotedWallets, walletId) => {
 const updateBlogData = async (data) => {
   if (data.blog) {
     await runQueryAsync(
-      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, blog = ?, promoted = ? WHERE transactionID = ?`,
+      `UPDATE saved_prompts SET validated_flag = ?, paid_flag = ?, blog = ?, promoted = ?, image_urls= ? WHERE transactionID = ?`,
       // [data.validatedFlag, data.paidFlag, data.promoted, data.blog, data.transactionID]
       [
         data.validatedFlag,
         data.paidFlag,
         data.blog,
         data.promoted,
+        data.image_urls,
         data.transactionID,
       ]
     );

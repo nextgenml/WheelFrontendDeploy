@@ -35,6 +35,7 @@ import Invites from "./components/Invites/Invites";
 import Holders from "./components/Holders/Holders";
 import ScheduledSpins from "./components/ScheduledSpins/ScheduledSpins";
 import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdmin";
+import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
 
 function App() {
   const location = useLocation();
@@ -116,6 +117,10 @@ function App() {
         <Route
           path="/social-sharing-admin"
           element={<PrivateRoute component={<SocialSharingAdmin />} />}
+        />
+        <Route
+          path="/allocations-admin"
+          element={<PrivateRoute component={<AllocationAdmin />} />}
         />
       </Routes>
       <Footer />
