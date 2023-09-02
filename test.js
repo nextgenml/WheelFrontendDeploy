@@ -7,7 +7,7 @@ const config = {
 };
 
 tesseract
-  .recognize("food-bill.jpg", config)
+  .recognize("aammb.jpeg", config)
   .then((text) => {
     console.log("Result:", text);
   })
