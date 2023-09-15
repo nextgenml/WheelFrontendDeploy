@@ -79,6 +79,15 @@ const NewUserChoreForm = ({
             <Typography variant="subtitle1">
               You tweet should contain exact text:{" "}
               <b>come join nml and watch movies for a discount is missing</b>
+              <IconButton
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    "come join nml and watch movies for a discount is missing"
+                  )
+                }
+              >
+                <ContentCopyIcon fontSize="small" />
+              </IconButton>
             </Typography>
           </Grid>
 
