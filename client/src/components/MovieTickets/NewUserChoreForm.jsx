@@ -77,12 +77,13 @@ const NewUserChoreForm = ({
               ticket.
             </Typography>
             <Typography variant="subtitle1">
-              You tweet should contain exact text:{" "}
-              <b>come join nml and watch movies for a discount is missing</b>
+              You tweet should contain exact text:
+              <br />
+              <b>{process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE}</b>
               <IconButton
                 onClick={() =>
                   navigator.clipboard.writeText(
-                    "come join nml and watch movies for a discount is missing"
+                    process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE
                   )
                 }
               >

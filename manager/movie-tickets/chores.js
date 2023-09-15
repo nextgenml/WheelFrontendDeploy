@@ -31,7 +31,9 @@ const isValidLink = async (link, choreId) => {
         if (
           text
             .toLowerCase()
-            .includes("come join nml and watch movies for a discount")
+            .includes(
+              process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE.toLowerCase()
+            )
         )
           return [true, "Validated"];
         else return [false, "Tweet does not contain mandatory text provided"];

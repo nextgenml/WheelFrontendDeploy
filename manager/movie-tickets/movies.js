@@ -21,13 +21,13 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   const movieEnd = moment(movie.movie_time).add(4, "hour");
 
   errors.hall_image_issues = [];
-  if (hall_image_date) {
-    if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
-      errors.hall_image_issues.push(
-        "Hall Image is not taken during movie hours"
-      );
-    }
-  }
+  // if (hall_image_date) {
+  //   if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
+  //     errors.hall_image_issues.push(
+  //       "Hall Image is not taken during movie hours"
+  //     );
+  //   }
+  // }
   if (parsedHallData) {
     if (
       !parsedHallData.toLowerCase().includes(movie.c_hall_name.toLowerCase())
@@ -39,12 +39,12 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   }
   if (errors.hall_image_issues.length == 0) delete errors.hall_image_issues;
 
-  if (posture_image_date) {
-    if (!moment(posture_image_date).isBetween(movieStart, movieEnd)) {
-      errors.posture_image_date =
-        "Posture Image is not taken during movie hours";
-    }
-  }
+  // if (posture_image_date) {
+  //   if (!moment(posture_image_date).isBetween(movieStart, movieEnd)) {
+  //     errors.posture_image_date =
+  //       "Posture Image is not taken during movie hours";
+  //   }
+  // }
 
   errors.ticket_issues = [];
   if (ticket_image_date) {

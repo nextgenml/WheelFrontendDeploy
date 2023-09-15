@@ -81,7 +81,10 @@ const MovieTickets = () => {
         Own a memory
       </Typography>
       <Box className={styles.linkBox}>
-        <Link href="/" target="_blank">
+        <Link
+          href="https://medium.com/@krisparson6/own-a-memory-a-new-way-to-watch-free-movies-and-grow-your-dreams-e6aee1328148"
+          target="_blank"
+        >
           How to Use?
         </Link>
       </Box>
