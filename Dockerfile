@@ -1,10 +1,17 @@
 FROM node:16
 
-ENV TZ=UTC
+#RUN apk add --no-cache tzdata
+ENV TZ=America/Chicago
+
+RUN apt -y update \
+  && apt -y upgrade \
+  && apt install -y tesseract-ocr \
+  tesseract-ocr
 
 WORKDIR /app
 
 COPY package*.json ./
+
 
 RUN npm i
 
@@ -15,5 +22,5 @@ RUN cd client \
     && npm run build \
     && cd ..
 
-CMD ["npm", "run", "deploy"]
+CMD ["npm", "start"]
 
