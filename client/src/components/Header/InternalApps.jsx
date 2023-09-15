@@ -14,6 +14,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import BookIcon from "@mui/icons-material/Book";
 import PersonIcon from "@mui/icons-material/Person";
 import config from "../../config";
+import MemoryIcon from "@mui/icons-material/Memory";
 export default function InternalApps() {
   const { address } = useAccount();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,6 +30,11 @@ export default function InternalApps() {
 
   const { isConnected } = useAccount();
   const connectedApps = [
+    {
+      name: "Own a Memory",
+      path: "/own-a-memory",
+      icon: <MemoryIcon />,
+    },
     {
       name: "Campaigns",
       path: "/user-campaigns",

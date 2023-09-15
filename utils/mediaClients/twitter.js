@@ -6,13 +6,17 @@ const config = require("../../config/env.js");
 
 let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
-
+const getTweetById = async (id) => {
+  const tweet = await readOnlyClient.v2.singleTweet(id);
+  console.log("tweet", tweet);
+  return tweet;
+};
 const searchTweets = async (search, start_time, end_time) => {
   try {
     search = sanitizeTweet(search);
     console.log("searching in twitter", `"${search}" -is:retweet`);
     const jsTweets = await readOnlyClient.v2.search(`"${search}" -is:retweet`, {
-      "tweet.fields": ["conversation_id", "created_at", "attachments"],
+      "tweet.fields": ["conversation_id", "created_at", "attachments", "id"],
       expansions: ["author_id", "attachments.media_keys"],
       "user.fields": ["name"],
       "media.fields": ["url"],
@@ -173,18 +177,7 @@ const sanitizeTweet = (tweet) =>
 
 // const x = `Trying out link test 2`;
 
-// const x = `Someone call the fire department!
-// 🚒👨‍🚒 our supply is #alwaysburning.
-
-// 230 out of 420 sextillion tokens incinerated forever 🔥
-
-// https://Shibadoge.com for more details.
-
-// Stay up-to-date 💬
-// http:://t.me/ShibaDoge_Labs
-
-// Missed #Shiba? Missed #Doge?
-// Don't miss #ShibaDoge!`;
+// const x = `Embrace the challenges that come your way, for they are the stepping stones to your growth and success. 💪📷 #EmbraceTheJourney Find joy in the simple moments, where laughter and sunshine create the most beautiful memories. 📷📷`;
 
 // console.log(x.match(/\b(http|https)?(:|::)\/\/\S+/gi));
 // searchTweets(x);
@@ -193,6 +186,8 @@ const sanitizeTweet = (tweet) =>
 // retweetedUsers("1626089401788022784");
 // tweetRepliedUsers("1626089401788022784");
 // followingUsers("1452687837808107520");
+
+// getTweetById("1696232980862353566");
 module.exports = {
   searchTweets,
   tweetLikedUsers,
@@ -200,4 +195,5 @@ module.exports = {
   tweetRepliedUsers,
   getTwitterActionFunc,
   followingUsers,
+  getTweetById,
 };

@@ -17,12 +17,20 @@ import {
   InputAdornment,
   Box,
   FormControl,
+  Link,
 } from "@mui/material";
 import styles from "./Holders.module.css";
 import { searchHoldersAPI } from "../../API/Holder";
 import EditHolder from "./EditHolder";
+import config from "../../config";
 
-const headers = ["Wallet Id", "Minimum Balance to use AI", "Is Banned", ""];
+const headers = [
+  "Wallet Id",
+  "Minimum Balance to use AI",
+  "Is Banned",
+  "Own a Memory",
+  "",
+];
 
 export default function Holders() {
   const [holders, setHolders] = React.useState([]);
@@ -87,6 +95,14 @@ export default function Holders() {
                   <TableCell>{row.wallet_id}</TableCell>
                   <TableCell>{row.minimum_balance_for_ai}</TableCell>
                   <TableCell>{row.is_banned === 0 ? "No" : "Yes"}</TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/own-a-memory?viewAs=${row.wallet_id}`}
+                      target="_blank"
+                    >
+                      View
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     {<EditIcon onClick={() => setCurrentRow(row)} />}
                   </TableCell>

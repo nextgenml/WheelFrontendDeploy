@@ -11,5 +11,6 @@ router.use("/api/v1/scheduledSpins", require("./scheduled_spins"));
 router.use("/api/v1/chores", require("./chores"));
 router.use("/api/v1/health", require("./health"));
 router.use("/api/v1/tokens", require("./tokens"));
+router.use("/api/v1/movie-tickets", require("./movie-tickets"));
 
 module.exports = router;

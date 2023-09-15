@@ -13,7 +13,7 @@ const createHolderV1 = async (walletId) => {
   const existsResults = await runQueryAsync(existsQuery, [walletId]);
 
   if (!existsResults.length) {
-    const query = `insert into holders (wallet_id, alias, is_active) values(?, ?, true);`;
+    const query = `insert into holders (wallet_id, alias, is_active, created_at) values(?, ?, true, now());`;
     const randomName = ""; // await getUniqueName(walletId);
 
     return await runQueryAsync(query, [walletId, randomName]);
@@ -109,7 +109,7 @@ const createHolder = async (walletId, walletBalance) => {
   const existsResults = await runQueryAsync(existsQuery, [walletId]);
 
   if (!existsResults.length) {
-    const query = `insert into holders (wallet_id, wallet_balance, alias, is_active) values(?, ?, ?, true);`;
+    const query = `insert into holders (wallet_id, wallet_balance, alias, is_active, created_at) values(?, ?, ?, true, now());`;
     const randomName = await getUniqueName(walletId);
 
     return await runQueryAsync(query, [walletId, walletBalance, randomName]);
@@ -277,7 +277,7 @@ const saveSocialLinks = async (
       walletId,
     ]);
   } else {
-    const query = `insert into holders(wallet_id, alias, facebook_link, medium_link, linkedin_link, twitter_link, telegram_link, is_active, social_links_updated_at) values(?, ?, ?, ?, ?, ?, ?, ?, now())`;
+    const query = `insert into holders(wallet_id, alias, facebook_link, medium_link, linkedin_link, twitter_link, telegram_link, is_active, social_links_updated_at, created_at) values(?, ?, ?, ?, ?, ?, ?, ?, now(), now())`;
     const randomName = await getUniqueName(walletId);
 
     return await runQueryAsync(query, [
@@ -305,7 +305,7 @@ const getInviteCode = async (walletId) => {
     await runQueryAsync(query2, [inviteCode, holder.id]);
     return inviteCode;
   } else {
-    const query = `insert into holders(wallet_id, alias, invite_code, is_active) values(?, ?, ?, ?)`;
+    const query = `insert into holders(wallet_id, alias, invite_code, is_active, created_at) values(?, ?, ?, ?, now())`;
     const randomName = await getUniqueName(walletId);
     const inviteCode = uuid.v4();
     await runQueryAsync(query, [walletId, randomName, inviteCode, 1]);

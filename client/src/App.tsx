@@ -36,6 +36,7 @@ import Holders from "./components/Holders/Holders";
 import ScheduledSpins from "./components/ScheduledSpins/ScheduledSpins";
 import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdmin";
 import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
+import MovieTickets from "./components/MovieTickets/MovieTickets";
 
 function App() {
   const location = useLocation();
@@ -121,6 +122,10 @@ function App() {
         <Route
           path="/allocations-admin"
           element={<PrivateRoute component={<AllocationAdmin />} />}
+        />
+        <Route
+          path="/own-a-memory"
+          element={<PrivateRoute component={<MovieTickets />} />}
         />
       </Routes>
       <Footer />

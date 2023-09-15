@@ -16,7 +16,16 @@ Token Urls
 contextual chatgpt API integration
 https://medium.com/codingthesmartway-com-blog/how-to-use-openais-chatgpt-api-in-node-js-3f01c1f8d473
 
-Sample transfer transaction:
+# Prompt for chatgpt to parse movie ticket
+
+Act as a movie hall 'Ticket Checker' and looks at the following text for Movie Name, Movie Date, Movie Time, Cinema Hall, City, seat number. A cinema hall is within a city and within a cinema hall there may be multiple screens, so based on this information can you identify cinema hall name and city. A city is within a state and state is within a country. Also format the data in the following format in specified columns e.g., column moviename has Movie Name, moviedate has Movie Date, movietime has Movie Time, seatnumber has seat number, cinemahall has Cinema Hall, city has City, State has state inferred from city, country has country inferred from city and state and provide full name of the country. based on city, country, if country is india then set price to USD 8, if united states, set price to USD 21, if UK, set price to 18, rest of the countries, set price to USD 6. set USD price as inferred for avg_movie_price column.
+
+22:25 OW BO Arte ull GS 79% || Booking Confirmed @ || Jailer || U/A | Telugu | 20 || 8K Cinemas-Movie, Edison, NJ 08820 || SCAN QR CODE AT CINEMA || Tue, 22 Aug'23 Screen || 06:35 PM SCREEN 1 || Seats || EX-C10,C11 || BOOKING ID: T8ASEUP || Order ID 21763584168
+Output format in Json
+moviename | moviedate | movietime | seatnumber| cinemahall | city |state | country | UTCtime| avg_movie_price| others
+
+# Sample transfer transaction:
+
 {
 address: '0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac',
 blockHash: '0x678bab53a8f7e8c94a5494e4e45e93897b61cb6ecd013f799bd5f429be43f862',

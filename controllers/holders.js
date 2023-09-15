@@ -113,6 +113,7 @@ const getDetails = async (req, res) => {
     if (holder)
       holder.minimum_balance_for_ai ||=
         process.env.MINIMUM_BALANCE_TO_USE_CONVERSE_AI;
+    else holder = await holderRepo.createHolderV1(walletId);
     return res.json({
       facebookLink: holder?.facebook_link || "",
       mediumLink: holder?.medium_link || "",

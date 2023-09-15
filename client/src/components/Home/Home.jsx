@@ -152,9 +152,9 @@ export default function Home() {
                 variant="contained"
                 target="_blank"
                 className={styles.appBtn}
-                onClick={() => navigate("/posted-blogs")}
+                onClick={() => navigate("/own-a-memory")}
               >
-                Posted Blogs
+                Own a Memory
               </Button>
             </Box>
           </Grid>

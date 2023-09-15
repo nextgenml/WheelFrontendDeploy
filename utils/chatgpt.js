@@ -1,22 +1,42 @@
-const axios = require("axios");
+const { Configuration, OpenAIApi } = require("openai");
+const config = require("../config/env");
 
-const chatGptResponse = async (query) => {
-  let payload = { msg: query };
+function randomKey(keys) {
+  let randID = Math.floor(Math.random() * keys.length);
 
-  let res = await axios.post(
-    "https://backend.chatbot.nexgenml.com/collections",
-    payload
-  );
+  return keys[randID];
+}
 
-  let data = res.data;
-  // console.log("got response from result", data.result);
+const getData = async (messages, keys) => {
+  if (keys.length === 0)
+    throw "all keys are tried for fetching response from chatgpt";
+  const key = randomKey(keys);
+  try {
+    const configuration = new Configuration({
+      apiKey: key,
+    });
+    const openAi = new OpenAIApi(configuration);
+    const response = await openAi.createChatCompletion({
+      model: "gpt-3.5-turbo-16k",
+      messages,
+      temperature: 0.9,
+      max_tokens: 4000,
+      top_p: 1,
+    });
 
-  return data.result;
+    return response.data.choices[0].message;
+  } catch (err) {
+    console.log("get chatgpt data error", err);
+    keys = keys.filter((x) => x !== key);
+    return getData(messages, keys);
+  }
 };
 
+const chatGptResponse = async (messages) => {
+  const data = await getData(messages, config.CHATGPT_PAID_KEYS);
+  return data;
+};
+// chatGptResponse("program for swapping of numbers");
 module.exports = {
   chatGptResponse,
 };
-// chatGptResponse(
-//   "rewrite the sentence in 20 words - Axios automatically serializes JavaScript objects to JSON when passed to the post function as the second parameter; we do not need to serialize POST bodies to JSON"
-// );
