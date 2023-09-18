@@ -138,7 +138,7 @@ const parseTicket = async (text) => {
   json.avg_movie_price = avg ? avg[0] : null;
   console.log("json", json);
 
-  return json;
+  return { prompt, json };
 };
 
 const checkDuplicateTickets = async (movieId) => {

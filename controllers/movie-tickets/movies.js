@@ -82,12 +82,15 @@ const update = async (req, res) => {
     });
 
     let parsedMovieData = null,
-      parsedHallData = null;
+      parsedHallData = null,
+      chatPrompt = null;
     if (files) {
       const ticketImage = files.find((x) => x.fieldname === "ticket_image");
       if (ticketImage) {
         const text = await getTextFromImage(ticketImage.path);
-        parsedMovieData = await parseTicket(text);
+        let { prompt, json } = await parseTicket(text);
+        parsedMovieData = json;
+        chatPrompt = prompt;
       }
       const hallImage = files.find((x) => x.fieldname === "hall_image");
       if (hallImage) {
@@ -105,6 +108,7 @@ const update = async (req, res) => {
         errors,
         parsedMovieData,
         parsedHallData,
+        chatPrompt,
       });
     }
 
@@ -121,6 +125,7 @@ const update = async (req, res) => {
       isComplete,
       parsedMovieData,
       parsedHallData,
+      chatPrompt,
     });
   } catch (error) {
     logger.error(`error in user movies update - create: ${error}`);
