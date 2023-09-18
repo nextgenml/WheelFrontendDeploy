@@ -14,7 +14,7 @@ import Community from "./components/Community/Community";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import Initiatives from "./components/Initiatives/Initiatives";
-import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
+// import ClaimRedistribution from "./components/Claim Redistribution/ClaimRedistribution";
 import ConverseWithAI from "./components/ConverseWithAI/ConverseWithAI";
 import NXMLChat from "./components/NXMLChat/NXMLChat";
 // import { useAccount } from "wagmi";
@@ -63,7 +63,7 @@ function App() {
             </Container>
           }
         />
-        <Route path="/claim-distribution" element={<ClaimRedistribution />} />
+        {/* <Route path="/claim-distribution" element={<ClaimRedistribution />} /> */}
         <Route path="/spin-wheel" element={<SpinAndWin />} />
 
         <Route

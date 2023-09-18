@@ -39,7 +39,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd client && npm i && npm run build",
+    "build": "cd client && npm i --legacy-peer-dep && npm run build",
     "deploy": "npx sequelize-cli db:migrate && env-cmd -f .env pm2 start --update-env --no-daemon index.js",
     "start": "npx sequelize-cli db:migrate && env-cmd -f .env nodemon index.js",
     "start-view": "cd client && npm start"
