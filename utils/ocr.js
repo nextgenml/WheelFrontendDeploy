@@ -3,7 +3,7 @@ const tesseract = require("node-tesseract-ocr");
 const config = {
   lang: "eng",
   oem: 1,
-  psm: 3,
+  psm: 7,
 };
 
 const getTextFromImage = async (imagePath) => {
