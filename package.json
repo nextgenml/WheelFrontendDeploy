@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@google-cloud/vision": "^4.0.2",
     "axios": "^1.2.2",
     "cors": "^2.8.5",
     "csv-parser": "^3.0.0",

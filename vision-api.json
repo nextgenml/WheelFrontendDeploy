@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "node-calendar-integration",
+  "private_key_id": "cfab0d5dbe8e465dc232c9a06267cbac35bcccbe",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC9FXG7uGqWUqVH\n7CK/emrNgM9tj/IF8aGkwvL2pk9qxwSOdEw8SjQL0D/J/CeOk3yyHsZVNJFfT1Ji\npfiJH/+2ttpWo72x/Bs5DjZYjG7MrFbuQj/X9DupTB058V/RbfkIwP3olecHPQ1B\nwJbADYiu4nUIRI/CAuht5YVZz/Kf7hFFLslwTYCS2V6Utwxfj84VNyb9W8F/90jD\nsbR+U8TEkq8M6LNRDTT1z61lmDKM+r0EpNfUPXuhskqRNZoMRhU4cB85JsVg+pT+\nqGpfRkojIP3yaV+0Lvr5k3HKBksTbZdMvBEPA3U55W0qF4RKU+fUn0UcV7DsJSAP\n1+jPzfVRAgMBAAECggEAAXKMbH4S6jGGO05BdTnJ6Q4NYREuGtBQGsYD4/mhpCiw\n8LMn1BeN8TYh0y9llh/TOBWKsA+tQ/vTASrvedItCs0u7Snw9LwAQB4tvARpp81L\nyMHoxCFep9u81//wkYfbreAXah4Vf3CIqtSmvxY95cZeVDbzYO43iZc3IfaRZ9XZ\nCaIzgt1jQ7sHGEeSTB2XnZoo1moT74iO6tgZAUFuJ/NJ7lcVyQuYGGByrWiqkFPS\nvLCY4ef/E1D+NoRGpDVEH0LJvVqFol1smPy/LbXH+psofFBgIof1ABZUc7DcRkvS\nUJD2d9o3wEU58XY4gGVufCMr9Le0h5FmrfkpZbrx6QKBgQDd5yCrLlq90wKo9Mnu\nsHm782o0rycTD7QSOKuGdybDFaOcCbjIlW2x0nyMHzgZWBdJvOa4WWoPCzEFhtn8\n9iiqoUbMR1h1c4HNQP4f7NNVmxZxva53vkUA2gSUxfptmpH0RLIIlvSUg1bmVSUb\ndNg1+0LvX1x7jXsyTxJiQaaUGwKBgQDaI1SUaTZdYVQNCeFIFBkc07nNgi3Ueb60\nYAkpVXUPHAXmnJ01Ur65Zhbt7ZvahlWt5WdH40IVkGzdCbdDqM6CQ+Aym3m7Gna4\nENIqGyJpiiFOYQmmz6LHJuL6wg/O1GwqBD9HuCjUS8OkoEQSZpeBoeB8u4Fw7qy1\nAAxDr6g7AwKBgBj+rclaYVI8cHJDkHNYYX3wPyhMCmS1Qh1DUN7GkREsYM90sOG3\nIzICeZD2+0SvjX/6zSo6uB2VryHmPKuntpDxtZ3Q83/XUOmjxnwmGu/rli2dpgdK\n4U7lP9raKgkqfgI7sqoRBt+ro6AyOwnKsYfzE2kPHsWz/AqAqZtztaW9AoGAchcK\ndLj2oy51jIA/YLiKTeZ7Bn5ww/GNCcA06nZ0zBtHBs+g9bO6ZzN7CKQ+4LNj+pjC\nRPoapTatiYo8XNnccItZpn5k07RKpYi+syEQBY0mUF02dBWjOHAhRS/cnrvBetRP\n2I38ZNTflanxEIKx+S4WQIa9c7iRgfVtdLVZ0ssCgYEAyei0EEWzepFUeQL+o06f\niJzuxdnfcmJjUaTvO2Ki+ZymQoI2OoKo8usAQfgL5T0BeKjiLpd7tpYTOA18OtRt\nikxe2PxJ/qPLR6p0J/ctTqxNU5KkENfzVHc8C3BadMuXhgjN1mk3kt+BFdgpde6y\n72XkY7jNLlauPojTPnQMP0c=\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloud-vision-api-user@node-calendar-integration.iam.gserviceaccount.com",
+  "client_id": "100741657870937431195",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloud-vision-api-user%40node-calendar-integration.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
