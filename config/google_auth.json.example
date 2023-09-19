@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "plenary-byway-399502",
+  "private_key_id": "82f140138993007b1310e029bf37bb29d6c3d58e",
+  "private_key": "input private here",
+  "client_email": "dev-90@plenary-byway-399502.iam.gserviceaccount.com",
+  "client_id": "116920962834501116556",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dev-90%40plenary-byway-399502.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

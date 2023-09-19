@@ -30,5 +30,6 @@ logs/app.log
 
 .env
 config/config.json
+config/google_auth.json
 
 uploads/

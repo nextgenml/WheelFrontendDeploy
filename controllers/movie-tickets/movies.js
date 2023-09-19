@@ -8,6 +8,7 @@ const {
   checkDuplicateTickets,
 } = require("../../manager/movie-tickets/movies");
 const { choresCleanup } = require("../../manager/movie-tickets/chores");
+const { extractTextFromImage } = require("../../utils/google_vision");
 
 const list = async (req, res) => {
   try {
@@ -87,7 +88,7 @@ const update = async (req, res) => {
     if (files) {
       const ticketImage = files.find((x) => x.fieldname === "ticket_image");
       if (ticketImage) {
-        const text = await getTextFromImage(ticketImage.path);
+        const text = await extractTextFromImage(ticketImage.path);
         let { prompt, json } = await parseTicket(text);
         parsedMovieData = json;
         chatPrompt = prompt;
