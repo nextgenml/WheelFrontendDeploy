@@ -18,7 +18,7 @@ RUN npm i
 COPY . .
 
 RUN cd client \
-    && npm i \
+    && npm i --legacy-peer-dep\
     && npm run build \
     && cd ..
 
