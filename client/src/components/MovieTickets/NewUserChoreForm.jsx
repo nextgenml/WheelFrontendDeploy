@@ -76,7 +76,7 @@ const NewUserChoreForm = ({
               Make {pastLinks.total} tweets, post them on X and avail free movie
               ticket.
             </Typography>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" className={styles.tweetText}>
               You tweet should contain exact text:
               <br />
               <b>{process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE}</b>
@@ -92,14 +92,9 @@ const NewUserChoreForm = ({
             </Typography>
           </Grid>
 
-          <Grid item md={2} xs={2}>
-            <b>Date Posted</b>
-          </Grid>
-          <Grid item md={8} xs={8}>
-            <b>Twitter Link</b>
-          </Grid>
-          <Grid item md={2} xs={2}></Grid>
-
+          <Typography variant="h6" sx={{ pl: 2, mt: 3 }}>
+            <b>Chores</b>
+          </Typography>
           {pastLinks.data &&
             pastLinks.data.map((x, i) => {
               return <PostLink row={x} onSave={getPastLinks} key={i} />;
@@ -107,10 +102,10 @@ const NewUserChoreForm = ({
 
           {pastLinks.takeNewPost && (
             <>
-              <Grid item md={2} xs={2}>
-                New Post
+              <Grid item md={2} xs={12}>
+                <b>New Post</b>
               </Grid>
-              <Grid item md={8} xs={8}>
+              <Grid item md={8} xs={9}>
                 <TextField
                   id="outlined-basic"
                   label="Post Link*"
@@ -123,7 +118,7 @@ const NewUserChoreForm = ({
                 />
               </Grid>
 
-              <Grid item md={2} xs={2}>
+              <Grid item md={2} xs={3}>
                 <Button
                   variant="contained"
                   disabled={disableSubmit}

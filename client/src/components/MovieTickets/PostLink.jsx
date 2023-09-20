@@ -40,10 +40,11 @@ const PostLink = ({ row, onSave }) => {
   };
   return (
     <>
-      <Grid item md={2} xs={2}>
+      <Grid item md={2} xs={12} sx={{ pt: 1 }}>
+        <b>Date Posted: &nbsp;</b>
         {moment(row.created_at).format("YYYY-MM-DD")}
       </Grid>
-      <Grid item md={8} xs={8}>
+      <Grid item md={8} xs={9}>
         <TextField
           id="outlined-basic"
           label="Post Link*"
@@ -60,7 +61,7 @@ const PostLink = ({ row, onSave }) => {
           }}
         />
       </Grid>
-      <Grid item md={2} xs={2}>
+      <Grid item md={2} xs={3}>
         <Button
           variant="contained"
           disabled={!postLink || disableSubmit}

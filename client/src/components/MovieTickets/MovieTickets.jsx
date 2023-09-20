@@ -98,7 +98,7 @@ const MovieTickets = () => {
             holder={holder}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <NextMovieForm meta={meta} getMeta={getMeta} />
         </Grid>
         <Grid item md={12} sx={{ width: "100%" }}>
