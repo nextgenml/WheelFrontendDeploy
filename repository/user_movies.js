@@ -48,7 +48,7 @@ const updateImage = async (movieId, imageCol, imagePath) => {
 };
 
 const getLastMovie = async (walletId) => {
-  const query = `select * from user_movies where workflow_state = 'completed' and wallet_id = ? order by created_at desc limit 1;`;
+  const query = `select * from user_movies where workflow_state = 'paid' and wallet_id = ? order by created_at desc limit 1;`;
   const results = await runQueryAsync(query, [walletId]);
   return results[0];
 };
