@@ -95,7 +95,7 @@ const update = async (req, res) => {
       }
       const hallImage = files.find((x) => x.fieldname === "hall_image");
       if (hallImage) {
-        parsedHallData = await getTextFromImage(hallImage.path);
+        parsedHallData = await extractTextFromImage(hallImage.path);
         console.log("parsedHallData", parsedHallData);
         parsedHallData = parsedHallData || "x<->x";
       }
