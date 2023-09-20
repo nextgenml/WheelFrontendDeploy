@@ -251,7 +251,11 @@ export default function SpinAndWin() {
               {showStart && (
                 <Calendar
                   className={"date-calender"}
-                  onChange={(new_date: Date) => {
+                  // @ts-ignore
+                  onChange={(
+                    new_date: Date,
+                    event: React.MouseEvent<HTMLButtonElement>
+                  ) => {
                     setShowStart(false);
                     setStartDate(new_date);
                   }}
@@ -273,6 +277,7 @@ export default function SpinAndWin() {
               {showEnd && (
                 <Calendar
                   className={"date-calender"}
+                  // @ts-ignore
                   onChange={(new_date: Date) => {
                     setShowEnd(false);
                     setEndDate(new_date);
