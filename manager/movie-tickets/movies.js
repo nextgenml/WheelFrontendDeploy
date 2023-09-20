@@ -29,9 +29,13 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   //   }
   // }
   if (parsedHallData) {
-    if (
-      !parsedHallData.toLowerCase().includes(movie.c_hall_name.toLowerCase())
-    ) {
+    const keywords = movie.c_hall_name.toLowerCase().split(" ");
+    const parsed = parsedHallData.toLowerCase();
+    let matched = false;
+    keywords.forEach((k) => {
+      if (parsed.includes(k)) matched = true;
+    });
+    if (!matched) {
       errors.hall_image_issues.push(
         "Hall name is not matching with the one in the ticket uploaded"
       );
@@ -47,11 +51,11 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   // }
 
   errors.ticket_issues = [];
-  if (ticket_image_date) {
-    if (!moment(ticket_image_date).isBefore(movieEnd)) {
-      errors.ticket_issues.push("Ticket Image is not taken before movie hours");
-    }
-  }
+  // if (ticket_image_date) {
+  //   if (!moment(ticket_image_date).isBefore(movieEnd)) {
+  //     errors.ticket_issues.push("Ticket Image is not taken before movie hours");
+  //   }
+  // }
   if (parsedMovieData) {
     if (!parsedMovieData.moviename)
       errors.ticket_issues.push("Unable to capture movie name from ticket");

@@ -259,7 +259,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
                   >
                     <Button variant="outlined" component="label">
-                      Upload Cinema Hall Image
+                      Upload Theater Image
                       <input
                         type="file"
                         accept=".png,.jpg"
