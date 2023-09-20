@@ -125,7 +125,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
               <Typography
                 variant="h6"
                 className={styles.subHeading}
-                sx={{ textAlign: "center" }}
+                sx={{ textAlign: "center", mb: 2 }}
               >
                 Next Movie details
               </Typography>
@@ -134,6 +134,12 @@ const NextMovieForm = ({ meta, getMeta }) => {
                 <CheckCircleOutlineIcon fontSize="large" color="success" />{" "}
                 Movie details are successfully submitted. System will verify the
                 details and release the funds shortly
+              </Box>
+
+              <Box textAlign={"center"} sx={{ mt: 1 }}>
+                <Button variant="contained" onClick={() => setComplete(false)}>
+                  Ok
+                </Button>
               </Box>
             </Card>
           </Grid>
@@ -212,12 +218,21 @@ const NextMovieForm = ({ meta, getMeta }) => {
 
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        <img
-                          src="/movieTickets/ticket.jpeg"
-                          alt="ticket"
-                          height={200}
-                          width={300}
-                        />
+                        {formData.ticket_image ? (
+                          <img
+                            src={URL.createObjectURL(formData.ticket_image)}
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        ) : (
+                          <img
+                            src="/movieTickets/ticket.jpeg"
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        )}
                       </Grid>
                       <Grid item md={6}>
                         {imageErrors && imageErrors.ticket_issues
@@ -283,12 +298,21 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     )}
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        <img
-                          src="/movieTickets/theater.jpeg"
-                          alt="ticket"
-                          height={200}
-                          width={300}
-                        />
+                        {formData.hall_image ? (
+                          <img
+                            src={URL.createObjectURL(formData.hall_image)}
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        ) : (
+                          <img
+                            src="/movieTickets/theater.jpeg"
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        )}
                       </Grid>
                       <Grid item md={6}>
                         {imageErrors &&
@@ -326,12 +350,21 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     )}
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        <img
-                          src="/movieTickets/posture.jpeg"
-                          alt="ticket"
-                          height={200}
-                          width={300}
-                        />
+                        {formData.posture_image ? (
+                          <img
+                            src={URL.createObjectURL(formData.posture_image)}
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        ) : (
+                          <img
+                            src="/movieTickets/posture.jpeg"
+                            alt="ticket"
+                            height={200}
+                            width={300}
+                          />
+                        )}
                       </Grid>
                       <Grid item md={6}>
                         {imageErrors && imageErrors.posture_image_date && (

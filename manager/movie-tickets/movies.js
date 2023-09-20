@@ -29,8 +29,12 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   //   }
   // }
   if (parsedHallData) {
-    const keywords = movie.c_hall_name.toLowerCase().split(" ");
+    const keywords = (parsedMovieData?.cinemahall || movie.c_hall_name || "")
+      .toLowerCase()
+      .split(" ");
     const parsed = parsedHallData.toLowerCase();
+    console.log("keywords", keywords, parsed);
+
     let matched = false;
     keywords.forEach((k) => {
       if (parsed.includes(k)) matched = true;
@@ -134,7 +138,7 @@ const parseTicket = async (text) => {
       content: prompt,
     },
   ];
-  console.log("final prompt", prompt);
+  // console.log("final prompt", prompt);
   const { content } = await chatGptResponse(messages);
 
   const json = JSON.parse(content);
@@ -149,12 +153,14 @@ const checkDuplicateTickets = async (movieId) => {
   const otherTickets = await otherMovieTickets(movieId);
   const currentMovie = await getMovieByIdV2(movieId);
   for (const movie of otherTickets) {
-    const { equal } = await looksSame(
-      movie.ticket_image_path,
-      currentMovie.ticket_image_path
-    );
-    if (equal) {
-      return await rejectMovie(movieId);
+    if (movie.ticket_image_path && currentMovie.ticket_image_path) {
+      const { equal } = await looksSame(
+        movie.ticket_image_path,
+        currentMovie.ticket_image_path
+      );
+      if (equal) {
+        return await rejectMovie(movieId);
+      }
     }
   }
   // releaseFunds(currentMovie);
