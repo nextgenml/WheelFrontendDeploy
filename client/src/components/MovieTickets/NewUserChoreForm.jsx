@@ -67,7 +67,7 @@ const NewUserChoreForm = ({
       <>
         <Grid container spacing={2} className={styles.form} sx={{ mt: 2 }}>
           <Grid item md={12} xs={12}>
-            <Typography variant="h6">
+            <Typography variant="h6" className={styles.subHeading}>
               <b>
                 Completed ({pastLinks.completed} of {pastLinks.total})
               </b>
@@ -92,9 +92,16 @@ const NewUserChoreForm = ({
             </Typography>
           </Grid>
 
-          <Typography variant="h6" sx={{ pl: 2, mt: 3 }}>
-            <b>Chores</b>
-          </Typography>
+          <Grid item md={12} xs={12}>
+            <Typography
+              variant="h6"
+              sx={{ mt: 3 }}
+              className={styles.subHeading}
+            >
+              <b>Chores</b>
+            </Typography>
+          </Grid>
+
           {pastLinks.data &&
             pastLinks.data.map((x, i) => {
               return <PostLink row={x} onSave={getPastLinks} key={i} />;

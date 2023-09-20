@@ -90,7 +90,7 @@ const MovieTickets = () => {
       </Box>
 
       <Grid container>
-        <Grid item md={6}>
+        <Grid item md={6} sx={{ maxWidth: "100%" }}>
           <NewUserChoreForm
             pastLinks={meta}
             getPastLinks={getMeta}

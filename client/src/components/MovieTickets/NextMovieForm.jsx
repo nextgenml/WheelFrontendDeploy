@@ -24,7 +24,6 @@ const NextMovieForm = ({ meta, getMeta }) => {
   const [latestMovie, setLatestMovie] = useState();
   const [imageErrors, setImageErrors] = useState({});
   const [complete, setComplete] = useState(false);
-  const [parsedMovieData, setParsedMovieData] = useState(null);
   const onFormDataChange = (newValue, key) => {
     localStorage.setItem(key, newValue);
 
@@ -95,7 +94,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
     }
 
     if (res.ok) {
-      const { isComplete, parsedMovieData } = await res.json();
+      const { isComplete } = await res.json();
       setComplete(isComplete);
       alert("Saved Successfully");
       localStorage.removeItem("movieTime");
@@ -104,7 +103,6 @@ const NextMovieForm = ({ meta, getMeta }) => {
       getNewMovie();
       getMeta();
       setFormData(initialState);
-      setParsedMovieData(parsedMovieData);
     } else {
       const { errors } = await res.json();
       setImageErrors(errors);
@@ -124,7 +122,11 @@ const NextMovieForm = ({ meta, getMeta }) => {
         <Grid container spacing={2}>
           <Grid item md={12} xs={12}>
             <Card elevation={1} sx={{ p: 2 }}>
-              <Typography variant="h6" className={styles.earningsText}>
+              <Typography
+                variant="h6"
+                className={styles.subHeading}
+                sx={{ textAlign: "center" }}
+              >
                 Next Movie details
               </Typography>
 
@@ -143,8 +145,12 @@ const NextMovieForm = ({ meta, getMeta }) => {
       <Grid container spacing={2}>
         <Grid item md={12} xs={12}>
           <Card elevation={1} sx={{ p: 2 }}>
-            <Typography variant="h6" className={styles.earningsText}>
-              Next Movie details
+            <Typography
+              variant="h6"
+              className={styles.subHeading}
+              sx={{ textAlign: "center", mb: 2 }}
+            >
+              <b>Next Movie details</b>
             </Typography>
 
             <Grid container spacing={2}>
