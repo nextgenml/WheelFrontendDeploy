@@ -22,8 +22,6 @@
     "@types/react": "^18.0.25",
     "@types/react-calendar": "^3.9.0",
     "@types/react-dom": "^18.0.9",
-    "@web3modal/ethereum": "2.0.0-beta.6",
-    "@web3modal/react": "2.0.0-beta.6",
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
     "copy-image-clipboard": "^2.1.2",
@@ -53,8 +51,11 @@
     "save": "^2.9.0",
     "typescript": "^4.9.3",
     "util": "^0.12.4",
-    "wagmi": "~0.9.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/react": "^2.7.1",
+    "viem": "^1.5.3",
+    "wagmi": "^1.3.9"
   },
   "scripts": {
     "start": "env-cmd -f .env react-scripts start",
