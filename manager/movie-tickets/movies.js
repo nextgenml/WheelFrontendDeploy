@@ -29,9 +29,12 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   //   }
   // }
   if (parsedHallData) {
-    const keywords = (parsedMovieData?.cinemahall || movie.c_hall_name || "")
-      .toLowerCase()
-      .split(" ");
+    const hallName = (
+      parsedMovieData?.cinemahall ||
+      movie.c_hall_name ||
+      ""
+    ).replace(/\n/g, " ");
+    const keywords = hallName.toLowerCase().split(" ");
     const parsed = parsedHallData.toLowerCase();
     console.log("keywords", keywords, parsed);
 
