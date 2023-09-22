@@ -158,9 +158,10 @@ const parseTicket = async (text) => {
   const { content } = await chatGptResponse(messages);
 
   const json = JSON.parse(content);
+  console.log("json", json);
+
   avg = (json.avg_movie_price || "").match(/\d+/);
   json.avg_movie_price = avg ? avg[0] : null;
-  console.log("json", json);
 
   return { prompt, json };
 };

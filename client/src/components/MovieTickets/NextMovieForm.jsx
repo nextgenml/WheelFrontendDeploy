@@ -218,9 +218,19 @@ const NextMovieForm = ({ meta, getMeta }) => {
 
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        {formData.ticket_image ? (
+                        {formData.ticket_image ||
+                        latestMovie?.ticket_image_path ? (
                           <img
-                            src={URL.createObjectURL(formData.ticket_image)}
+                            src={
+                              formData.ticket_image
+                                ? URL.createObjectURL(formData.ticket_image)
+                                : `${
+                                    config.API_ENDPOINT
+                                  }/${latestMovie.ticket_image_path.replace(
+                                    "uploads",
+                                    "images"
+                                  )}`
+                            }
                             alt="ticket"
                             height={200}
                             width={300}
@@ -298,9 +308,18 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     )}
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        {formData.hall_image ? (
+                        {formData.hall_image || latestMovie?.hall_image_path ? (
                           <img
-                            src={URL.createObjectURL(formData.hall_image)}
+                            src={
+                              formData.hall_image
+                                ? URL.createObjectURL(formData.hall_image)
+                                : `${
+                                    config.API_ENDPOINT
+                                  }/${latestMovie.hall_image_path.replace(
+                                    "uploads",
+                                    "images"
+                                  )}`
+                            }
                             alt="ticket"
                             height={200}
                             width={300}
@@ -350,9 +369,19 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     )}
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                       <Grid item md={6}>
-                        {formData.posture_image ? (
+                        {formData.posture_image ||
+                        latestMovie?.posture_image_path ? (
                           <img
-                            src={URL.createObjectURL(formData.posture_image)}
+                            src={
+                              formData.posture_image
+                                ? URL.createObjectURL(formData.posture_image)
+                                : `${
+                                    config.API_ENDPOINT
+                                  }/${latestMovie.posture_image_path.replace(
+                                    "uploads",
+                                    "images"
+                                  )}`
+                            }
                             alt="ticket"
                             height={200}
                             width={300}
