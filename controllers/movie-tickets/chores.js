@@ -31,18 +31,18 @@ const get = async (req, res) => {
       holder &&
       holder.nml_balance >= parseInt(process.env.MOVIE_TICKETS_MIN_NML_BALANCE);
 
+    const isNMLHolderOnly = parseInt(process.env.MOVIE_TICKETS_FLOW_TYPE) === 2;
+
     const enableUpload = await enableReceiptsUpload(
       walletId,
       data,
-      isNmlHolder
+      isNmlHolder,
+      isNMLHolderOnly
     );
 
-    const isMandatory =
-      parseInt(process.env.MOVIE_TICKETS_CHORES_MANDATORY_FOR_NML) === 1;
-    let enableChores =
-      isMandatory ||
-      (!isNmlHolder &&
-        parseInt(process.env.MOVIE_TICKETS_ENABLE_CHORE_SECTION) === 1);
+    let enableChores = isNMLHolderOnly
+      ? isNmlHolder
+      : !isNmlHolder && parseInt(process.env.MOVIE_TICKETS_FLOW_TYPE) === 1;
 
     res.json({
       data,

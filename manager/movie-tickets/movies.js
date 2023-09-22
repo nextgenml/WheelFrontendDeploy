@@ -110,7 +110,12 @@ const updateImages = async (movieId, body, files) => {
   }
 };
 
-const enableReceiptsUpload = async (walletId, chores, isNmlHolder) => {
+const enableReceiptsUpload = async (
+  walletId,
+  chores,
+  isNmlHolder,
+  isNMLHolderOnly
+) => {
   let enableUpload = false;
   const lastMovie = await getLastMovie(walletId);
   console.log(
@@ -118,11 +123,12 @@ const enableReceiptsUpload = async (walletId, chores, isNmlHolder) => {
     isNmlHolder,
     "lastMovie",
     lastMovie,
-    process.env.MOVIE_TICKETS_CHORES_MANDATORY_FOR_NML
+    isNMLHolderOnly
   );
   if (
     isNmlHolder &&
-    parseInt(process.env.MOVIE_TICKETS_CHORES_MANDATORY_FOR_NML) === 0
+    !isNMLHolderOnly &&
+    parseInt(process.env.MOVIE_TICKETS_FLOW_TYPE) !== 2
   ) {
     if (
       !lastMovie ||
