@@ -198,6 +198,14 @@ const NextMovieForm = ({ meta, getMeta }) => {
                     xs={12}
                     sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
                   >
+                    <Typography
+                      variant="subtitle2"
+                      color={"danger"}
+                      sx={{ mb: 2, color: "red" }}
+                    >
+                      All movie tickets should be uploaded either before 1 hour
+                      or after 3 hours of the movie time
+                    </Typography>
                     <Button variant="outlined" component="label">
                       Upload receipt Image
                       <input
