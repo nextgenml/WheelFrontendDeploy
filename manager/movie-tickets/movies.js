@@ -21,6 +21,10 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   const movieEnd = moment(movie.movie_time).add(4, "hour");
 
   errors.hall_image_issues = [];
+  if (moment().isAfter(movieEnd))
+    errors.hall_image_issues.push(
+      "Images cannot be uploaded after movie hours"
+    );
   if (hall_image_date) {
     if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
       errors.hall_image_issues.push(
