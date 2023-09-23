@@ -64,6 +64,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
     const body = new FormData();
     for (const name in formData) {
       if (name.includes("_image")) {
+        console.log("formData[name]", formData[name]);
         body.append(
           `${name}_date`,
           moment(formData[name].lastModifiedDate).utc().format()

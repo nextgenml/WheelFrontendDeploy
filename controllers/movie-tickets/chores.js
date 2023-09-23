@@ -45,6 +45,8 @@ const get = async (req, res) => {
       : !isNmlHolder && parseInt(process.env.MOVIE_TICKETS_FLOW_TYPE) === 1;
 
     res.json({
+      isNMLHolderOnly,
+      isNmlHolder,
       data,
       total: process.env.MOVIE_TICKETS_TOTAL_CHORES_FOR_NEW_USER,
       completed: data.length,
