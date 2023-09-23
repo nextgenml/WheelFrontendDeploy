@@ -40,15 +40,32 @@
 // //   console.log("File created at: ", stats); // File created at:  2021-04-30T23:53:07.633Z
 // // });
 
-const fs = require("fs");
-const ExifParser = require("exif-parser");
+// const fs = require("fs");
+// const ExifParser = require("exif-parser");
 
-// Read the image file
-const imageBuffer = fs.readFileSync("1.jpeg");
+// // Read the image file
+// const imageBuffer = fs.readFileSync("1.jpeg");
 
-// Create an ExifParser instance and parse the image buffer
-const exifParser = ExifParser.create(imageBuffer);
-const exifData = exifParser.parse();
+// // Create an ExifParser instance and parse the image buffer
+// const exifParser = ExifParser.create(imageBuffer);
+// const exifData = exifParser.parse();
 
-// Now, you can access the EXIF data
-console.log("EXIF data:", exifData);
+// // Now, you can access the EXIF data
+// console.log("EXIF data:", exifData);
+const ExifReader = require("exifreader");
+
+const func = async () => {
+  const tags = await ExifReader.load("1.jpeg");
+  console.log("tags", tags);
+  // const imageDate = tags["DateTimeOriginal"].description;
+  // const unprocessedTagValue = tags["DateTimeOriginal"].value;
+
+  // console.log(
+  //   "imageDate",
+  //   imageDate,
+  //   "unprocessedTagValue",
+  //   unprocessedTagValue
+  // );
+};
+
+func();
