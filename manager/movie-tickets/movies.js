@@ -22,17 +22,17 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
 
   errors.hall_image_issues = [];
 
-  // if (hall_image_date) {
-  //   if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
-  //     errors.hall_image_issues.push(
-  //       "Hall Image is not taken during movie hours"
-  //     );
-  //   }
-  //   if (moment().isAfter(movieEnd))
-  //     errors.hall_image_issues.push(
-  //       "Images cannot be uploaded after movie hours"
-  //     );
-  // }
+  if (hall_image_date) {
+    if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
+      errors.hall_image_issues.push(
+        "Hall Image is not taken during movie hours"
+      );
+    }
+    if (moment().isAfter(movieEnd))
+      errors.hall_image_issues.push(
+        "Images cannot be uploaded after movie hours"
+      );
+  }
   if (parsedHallData) {
     const hallName = (
       parsedMovieData?.cinemahall ||
@@ -55,23 +55,23 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   }
   if (errors.hall_image_issues.length == 0) delete errors.hall_image_issues;
 
-  // if (posture_image_date) {
-  //   if (!moment(posture_image_date).isBetween(movieStart, movieEnd)) {
-  //     errors.posture_image_date =
-  //       "Posture Image is not taken during movie hours";
-  //   }
-  //   if (moment().isAfter(movieEnd))
-  //     errors.posture_image_date = "Images cannot be uploaded after movie hours";
-  // }
+  if (posture_image_date) {
+    if (!moment(posture_image_date).isBetween(movieStart, movieEnd)) {
+      errors.posture_image_date =
+        "Posture Image is not taken during movie hours";
+    }
+    if (moment().isAfter(movieEnd))
+      errors.posture_image_date = "Images cannot be uploaded after movie hours";
+  }
 
   errors.ticket_issues = [];
-  // if (ticket_image_date) {
-  //   if (!moment(ticket_image_date).isBefore(movieEnd)) {
-  //     errors.ticket_issues.push("Ticket Image is not taken before movie hours");
-  //   }
-  //   if (moment().isAfter(movieEnd))
-  //     errors.ticket_issues.push("Images cannot be uploaded after movie hours");
-  // }
+  if (ticket_image_date) {
+    if (!moment(ticket_image_date).isBefore(movieEnd)) {
+      errors.ticket_issues.push("Ticket Image is not taken before movie hours");
+    }
+    if (moment().isAfter(movieEnd))
+      errors.ticket_issues.push("Images cannot be uploaded after movie hours");
+  }
   if (parsedMovieData) {
     if (!parsedMovieData.moviename)
       errors.ticket_issues.push("Unable to capture movie name from ticket");
@@ -178,17 +178,17 @@ const parseTicket = async (text) => {
 const checkDuplicateTickets = async (movieId) => {
   const otherTickets = await otherMovieTickets(movieId);
   const currentMovie = await getMovieByIdV2(movieId);
-  // for (const movie of otherTickets) {
-  //   if (movie.ticket_image_path && currentMovie.ticket_image_path) {
-  //     const { equal } = await looksSame(
-  //       movie.ticket_image_path,
-  //       currentMovie.ticket_image_path
-  //     );
-  //     if (equal) {
-  //       return await rejectMovie(movieId);
-  //     }
-  //   }
-  // }
+  for (const movie of otherTickets) {
+    if (movie.ticket_image_path && currentMovie.ticket_image_path) {
+      const { equal } = await looksSame(
+        movie.ticket_image_path,
+        currentMovie.ticket_image_path
+      );
+      if (equal) {
+        return await rejectMovie(movieId);
+      }
+    }
+  }
   releaseFunds(currentMovie);
 };
 const releaseFunds = async (currentMovie) => {
