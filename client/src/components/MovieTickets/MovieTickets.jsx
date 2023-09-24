@@ -90,7 +90,7 @@ const MovieTickets = () => {
       </Box>
 
       <Grid container>
-        <Grid item md={6} sx={{ maxWidth: "100%" }}>
+        <Grid item md={6} sx={{ maxWidth: "100%", width: "100%" }}>
           <NewUserChoreForm
             pastLinks={meta}
             getPastLinks={getMeta}
@@ -98,7 +98,7 @@ const MovieTickets = () => {
             holder={holder}
           />
         </Grid>
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} sx={{ width: "100%" }}>
           <NextMovieForm meta={meta} getMeta={getMeta} />
         </Grid>
         <Grid item md={12} sx={{ width: "100%" }}>

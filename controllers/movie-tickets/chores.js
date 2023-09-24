@@ -47,6 +47,8 @@ const get = async (req, res) => {
     res.json({
       isNMLHolderOnly,
       isNmlHolder,
+      minNMlBalance: process.env.MOVIE_TICKETS_MIN_NML_BALANCE,
+      flowType: process.env.MOVIE_TICKETS_FLOW_TYPE,
       data,
       total: process.env.MOVIE_TICKETS_TOTAL_CHORES_FOR_NEW_USER,
       completed: data.length,

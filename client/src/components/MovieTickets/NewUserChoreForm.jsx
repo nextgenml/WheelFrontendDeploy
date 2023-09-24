@@ -141,6 +141,16 @@ const NewUserChoreForm = ({
       </>
     );
   };
+  const renderNMLMessage = () => {
+    return (
+      <Card elevation={1} sx={{ p: 2, mt: 2 }}>
+        <Typography variant="subtitle1" sx={{ color: "red" }}>
+          You need to have minimum {pastLinks.minNMlBalance} tokens in your
+          account to avail free movie tickets
+        </Typography>
+      </Card>
+    );
+  };
   return (
     <div className={styles.main}>
       <Grid container spacing={2}>
@@ -193,6 +203,7 @@ const NewUserChoreForm = ({
         </Grid>
       </Grid>
       {pastLinks && pastLinks.enableChores && renderChoreForm()}
+      {!pastLinks.isNmlHolder && pastLinks.flowType !== 1 && renderNMLMessage()}
     </div>
   );
 };
