@@ -227,7 +227,7 @@ const releaseFunds = async (currentMovie) => {
 
   if (!isNmlHolder && process.env.MOVIE_TICKETS_REWARD_CURRENCY != "nml") {
     const total = await paidMovieTicketsCount(wallet_id);
-    console.log("transferring nml isNmlHolder", isNmlHolder, total);
+    console.log("transferring nml isNmlHolder", total);
     if (total === 1) {
       data = [
         {
