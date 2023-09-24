@@ -21,16 +21,17 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
   const movieEnd = moment(movie.movie_time).add(4, "hour");
 
   errors.hall_image_issues = [];
-  if (moment().isAfter(movieEnd))
-    errors.hall_image_issues.push(
-      "Images cannot be uploaded after movie hours"
-    );
+
   if (hall_image_date) {
     if (!moment(hall_image_date).isBetween(movieStart, movieEnd)) {
       errors.hall_image_issues.push(
         "Hall Image is not taken during movie hours"
       );
     }
+    if (moment().isAfter(movieEnd))
+      errors.hall_image_issues.push(
+        "Images cannot be uploaded after movie hours"
+      );
   }
   if (parsedHallData) {
     const hallName = (
@@ -59,6 +60,10 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
       errors.posture_image_date =
         "Posture Image is not taken during movie hours";
     }
+    if (moment().isAfter(movieEnd))
+      errors.hall_image_issues.push(
+        "Images cannot be uploaded after movie hours"
+      );
   }
 
   errors.ticket_issues = [];
@@ -66,6 +71,10 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
     if (!moment(ticket_image_date).isBefore(movieEnd)) {
       errors.ticket_issues.push("Ticket Image is not taken before movie hours");
     }
+    if (moment().isAfter(movieEnd))
+      errors.hall_image_issues.push(
+        "Images cannot be uploaded after movie hours"
+      );
   }
   if (parsedMovieData) {
     if (!parsedMovieData.moviename)
@@ -229,7 +238,6 @@ const releaseFunds = async (currentMovie) => {
     }
   }
 };
-// checkDuplicateTickets(42);
 module.exports = {
   validateMovie,
   updateImages,
