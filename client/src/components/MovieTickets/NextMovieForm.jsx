@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import dayjs from "dayjs";
+import Countdown from "react-countdown";
 
 const NextMovieForm = ({ meta, getMeta }) => {
   const [searchParams, _] = useSearchParams();
@@ -131,7 +132,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
                 Next Movie details
               </Typography>
 
-              <Box>
+              <Box sx={{ p: 1 }}>
                 <CheckCircleOutlineIcon fontSize="large" color="success" />{" "}
                 Movie details are successfully submitted. System will verify the
                 details and release the funds shortly
@@ -159,7 +160,29 @@ const NextMovieForm = ({ meta, getMeta }) => {
             >
               <b>Next Movie details</b>
             </Typography>
-
+            <Box
+              display={"flex"}
+              alignItems={"center"}
+              className={styles.timeLeft}
+            >
+              <Typography variant="subtitle1">
+                Time left to upload tickets&nbsp;&nbsp;
+              </Typography>
+              <b>
+                {latestMovie && latestMovie.movie_time && (
+                  <Countdown
+                    date={
+                      Date.parse(latestMovie.movie_time) + 4 * 60 * 60 * 1000
+                    }
+                    key={Math.floor(Math.random() * 100)}
+                  >
+                    <Typography>
+                      Time limit exceeded. You cannot upload tickets now
+                    </Typography>
+                  </Countdown>
+                )}
+              </b>
+            </Box>
             <Grid container spacing={2}>
               <Grid item md={12} xs={12}>
                 <TextField

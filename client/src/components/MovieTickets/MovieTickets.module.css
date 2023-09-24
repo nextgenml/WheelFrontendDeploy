@@ -50,3 +50,9 @@
   padding-left: 8px;
   border-radius: 8px;
 }
+.timeLeft {
+  border: 1px solid lightgrey;
+  background-color: antiquewhite;
+  border-radius: 4px;
+  padding: 4px;
+}
