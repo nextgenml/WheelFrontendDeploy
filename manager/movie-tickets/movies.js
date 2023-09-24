@@ -178,17 +178,17 @@ const parseTicket = async (text) => {
 const checkDuplicateTickets = async (movieId) => {
   const otherTickets = await otherMovieTickets(movieId);
   const currentMovie = await getMovieByIdV2(movieId);
-  for (const movie of otherTickets) {
-    if (movie.ticket_image_path && currentMovie.ticket_image_path) {
-      const { equal } = await looksSame(
-        movie.ticket_image_path,
-        currentMovie.ticket_image_path
-      );
-      if (equal) {
-        return await rejectMovie(movieId);
-      }
-    }
-  }
+  // for (const movie of otherTickets) {
+  //   if (movie.ticket_image_path && currentMovie.ticket_image_path) {
+  //     const { equal } = await looksSame(
+  //       movie.ticket_image_path,
+  //       currentMovie.ticket_image_path
+  //     );
+  //     if (equal) {
+  //       return await rejectMovie(movieId);
+  //     }
+  //   }
+  // }
   // releaseFunds(currentMovie);
 };
 const releaseFunds = async (currentMovie) => {
