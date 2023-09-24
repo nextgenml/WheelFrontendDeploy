@@ -16,6 +16,7 @@ import PostLink from "./PostLink";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import moment from "moment";
 const POST_LINK_KEY = "movie_tickets_post_link";
 const NewUserChoreForm = ({
   pastLinks,
@@ -73,17 +74,24 @@ const NewUserChoreForm = ({
               </b>
             </Typography>
             <Typography variant="subtitle1">
-              Make {pastLinks.total} tweets, post them on X and avail free movie
-              ticket.
+              Unlock the magic of cinema! 🎥✨ Post {pastLinks.total} tweet with
+              the below content on X and score a FREE movie ticket! 🎟️ Don't
+              miss out on this fantastic offer!
             </Typography>
             <Typography variant="subtitle1" className={styles.tweetText}>
               You tweet should contain exact text:
               <br />
-              <b>{process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE}</b>
+              <b>
+                {process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE +
+                  "   " +
+                  moment().format("YYYY-MM-DD HH:mm:ss")}
+              </b>
               <IconButton
                 onClick={() =>
                   navigator.clipboard.writeText(
-                    process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE
+                    process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE +
+                      "   " +
+                      moment().format("YYYY-MM-DD HH:mm:ss")
                   )
                 }
               >

@@ -7,13 +7,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import styles from "./MovieTickets.module.css";
 import { customFetch } from "../../API";
 import config from "../../config";
 import { useSearchParams } from "react-router-dom";
-
-const headers = ["Movie Name", "Rewarded"];
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+const headers = ["Movie Name", "Status", "Tweet"];
 
 const stateText = (state) => {
   switch (state) {
@@ -75,6 +75,17 @@ export default function PastMovies({ count }) {
                 >
                   <TableCell>{row.movie_name}</TableCell>
                   <TableCell>{stateText(row.workflow_state)}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() =>
+                        navigator.clipboard.writeText(
+                          `🍿🎟️ Just watched ${row.movie_name.toUpperCase()} movie and got reimbursed for the ticket, small drink, and popcorn! 😄🎥 Weekly movie nights, here I come! 🙌 #MovieMagic #MoviesForFree, #DiscountedMovies, #OwnAMemory, #Memory, #Memories, #NexGenML, #Dreams, #Entertainment`
+                        )
+                      }
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
