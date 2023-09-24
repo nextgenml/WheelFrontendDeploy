@@ -61,9 +61,7 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
         "Posture Image is not taken during movie hours";
     }
     if (moment().isAfter(movieEnd))
-      errors.hall_image_issues.push(
-        "Images cannot be uploaded after movie hours"
-      );
+      errors.posture_image_date = "Images cannot be uploaded after movie hours";
   }
 
   errors.ticket_issues = [];
@@ -72,9 +70,7 @@ const validateMovie = (movie, body, parsedMovieData, parsedHallData) => {
       errors.ticket_issues.push("Ticket Image is not taken before movie hours");
     }
     if (moment().isAfter(movieEnd))
-      errors.hall_image_issues.push(
-        "Images cannot be uploaded after movie hours"
-      );
+      errors.ticket_issues.push("Images cannot be uploaded after movie hours");
   }
   if (parsedMovieData) {
     if (!parsedMovieData.moviename)
