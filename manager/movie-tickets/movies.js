@@ -202,7 +202,11 @@ const releaseFunds = async (currentMovie) => {
   const prize =
     process.env.MOVIE_TICKETS_REWARD_CURRENCY === "nml"
       ? process.env.MOVIE_TICKETS_NML_REWARD
-      : (currentMovie.avg_movie_price / process.env.ETH_VALUE).toFixed(5);
+      : (
+          parseInt(currentMovie.avg_movie_price) /
+          parseInt(process.env.ETH_VALUE)
+        ).toFixed(5);
+  console.log("prize for movie", prize);
   let data = [
     {
       walletId: wallet_id,
