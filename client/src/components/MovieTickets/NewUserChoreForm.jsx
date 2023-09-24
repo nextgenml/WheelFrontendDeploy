@@ -148,6 +148,14 @@ const NewUserChoreForm = ({
           You need to have minimum {pastLinks.minNMlBalance} tokens in your
           account to avail free movie tickets
         </Typography>
+        <Button
+          href="https://app.uniswap.org/swap?outputCurrency=0x3858dad8a5b3364be56de0566ab59e3d656c51f6&chain=mainnet"
+          target="_blank"
+          variant="contained"
+          sx={{ mt: 1 }}
+        >
+          Buy Now
+        </Button>
       </Card>
     );
   };
