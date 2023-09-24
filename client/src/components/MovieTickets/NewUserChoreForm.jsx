@@ -64,8 +64,8 @@ const NewUserChoreForm = ({
 
   const renderChoreForm = () => {
     return (
-      <>
-        <Grid container spacing={2} className={styles.form} sx={{ mt: 2 }}>
+      <Card elevation={1} sx={{ p: 2, mt: 2 }}>
+        <Grid container spacing={2} className={styles.form}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" className={styles.subHeading}>
               <b>
@@ -138,7 +138,7 @@ const NewUserChoreForm = ({
             </>
           )}
         </Grid>
-      </>
+      </Card>
     );
   };
   const renderNMLMessage = () => {
