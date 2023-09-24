@@ -25,9 +25,11 @@ const { validateLoginSession, extractWalletSoft } = require("./routes/auth");
 
 const app = express();
 
-app.use(express.json(), express.urlencoded({ extended: true }), cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb" }));
+app.use(
+  express.json({ limit: "50mb" }),
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }),
+  cors()
+);
 
 app.get("/spinner-data", extractWalletSoft, spinWheelController.spinnerData);
 
