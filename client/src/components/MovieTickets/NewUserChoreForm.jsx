@@ -211,7 +211,9 @@ const NewUserChoreForm = ({
         </Grid>
       </Grid>
       {pastLinks && pastLinks.enableChores && renderChoreForm()}
-      {!pastLinks.isNmlHolder && pastLinks.flowType !== 1 && renderNMLMessage()}
+      {!pastLinks.isNmlHolder &&
+        parseInt(pastLinks.flowType) !== 1 &&
+        renderNMLMessage()}
     </div>
   );
 };
