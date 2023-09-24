@@ -90,7 +90,7 @@ const markMovieAsPaid = async (movieId) => {
   return await runQueryAsync(query, [movieId]);
 };
 const paidMovieTicketsCount = async (walletId) => {
-  const query = `select count(1) as count from user_movies where wallet_id != ? and workflow_state != 'paid'`;
+  const query = `select count(1) as count from user_movies where wallet_id = ? and workflow_state = 'paid'`;
   const results = await runQueryAsync(query, [walletId]);
   return results[0]?.count || 0;
 };
