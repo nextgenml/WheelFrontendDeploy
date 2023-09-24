@@ -165,12 +165,13 @@ const NextMovieForm = ({ meta, getMeta }) => {
               alignItems={"center"}
               className={styles.timeLeft}
             >
-              {Date.now() <
-                Date.parse(latestMovie.movie_time) + 4 * 60 * 60 * 1000 && (
-                <Typography variant="subtitle1">
-                  Time left to upload tickets&nbsp;&nbsp;
-                </Typography>
-              )}
+              {latestMovie &&
+                Date.now() <
+                  Date.parse(latestMovie.movie_time) + 4 * 60 * 60 * 1000 && (
+                  <Typography variant="subtitle1">
+                    Time left to upload tickets&nbsp;&nbsp;
+                  </Typography>
+                )}
 
               <b>
                 {latestMovie && latestMovie.movie_time && (
