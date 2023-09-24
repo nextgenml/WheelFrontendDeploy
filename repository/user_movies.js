@@ -91,7 +91,8 @@ const markMovieAsPaid = async (movieId) => {
 };
 const paidMovieTicketsCount = async (walletId) => {
   const query = `select count(1) as count from user_movies where wallet_id != ? and workflow_state != 'paid'`;
-  return await runQueryAsync(query, [walletId]);
+  const results = await runQueryAsync(query, [walletId]);
+  return results[0]?.count || 0;
 };
 module.exports = {
   paidMovieTicketsCount,
