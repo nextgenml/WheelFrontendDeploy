@@ -189,7 +189,7 @@ const checkDuplicateTickets = async (movieId) => {
   //     }
   //   }
   // }
-  // releaseFunds(currentMovie);
+  releaseFunds(currentMovie);
 };
 const releaseFunds = async (currentMovie) => {
   const { wallet_id, id } = currentMovie;
