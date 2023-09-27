@@ -35,7 +35,7 @@ const LoginHandler = () => {
       const { nonce } = await fetchHolderNonceAPI(address);
       alert(`nonce: ${nonce}`);
       const result = await signNonce(nonce);
-      alert(`result: ${result}`);
+      alert(`result: ${JSON.stringify(result)}`);
       if (result.address) {
         const data = await loginHolderAPI(result);
         alert(`data: ${JSON.stringify(data)}}`);
