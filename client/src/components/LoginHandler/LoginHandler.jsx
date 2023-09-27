@@ -29,11 +29,14 @@ const LoginHandler = () => {
   }
 
   const requestSignature = async () => {
+    alert("requesting for nonce from server");
     const { nonce } = await fetchHolderNonceAPI(address);
+    alert("nonce", nonce);
     const result = await signNonce(nonce);
-
+    alert("result", result);
     if (result.address) {
       const data = await loginHolderAPI(result);
+      alert("data", data);
       if (data) {
         setAuthToken(data.token);
         setLoggedInAddress(result.address);
