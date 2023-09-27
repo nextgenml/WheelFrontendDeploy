@@ -38,10 +38,13 @@ const LoginHandler = () => {
       alert(`result: ${result}`);
       if (result.address) {
         const data = await loginHolderAPI(result);
-        alert(`data: ${data}`);
+        alert(`data: ${JSON.stringify(data)}}`);
         if (data) {
           setAuthToken(data.token);
+          alert(`signature key in local storage: ${getAuthToken()}`);
           setLoggedInAddress(result.address);
+          alert(`address key in local storage: ${getLoggedInAddress()}`);
+
           window.location.reload();
         }
       }
