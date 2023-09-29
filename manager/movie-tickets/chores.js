@@ -11,8 +11,8 @@ const {
 const { getTweetById } = require("../../utils/mediaClients/twitter");
 
 const isValidLink = async (link, choreId) => {
-  if (!link || !link.includes("twitter.com"))
-    return [false, "Invalid link submitted"];
+  if (link && (link.includes("twitter.com") || link.includes("x.com"))) {
+  } else return [false, "Invalid link submitted"];
 
   const isExists = await isLinkExists(link, choreId);
 

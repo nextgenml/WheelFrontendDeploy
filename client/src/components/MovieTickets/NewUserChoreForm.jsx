@@ -34,7 +34,11 @@ const NewUserChoreForm = ({
   };
 
   const onSubmit = async () => {
-    if (!postLink || !postLink.includes("twitter.com")) {
+    if (
+      postLink &&
+      (postLink.includes("twitter.com") || postLink.includes("x.com"))
+    ) {
+    } else {
       alert("Please enter valid twitter post url");
       return;
     }
