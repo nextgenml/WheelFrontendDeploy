@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import React from "react";
+// import HomePage1 from "../LoginHandler/HomePage1";
 
 const Footer = () => {
   return (
@@ -11,6 +12,7 @@ const Footer = () => {
         paddingBottom: "50px",
       }}
     >
+      {/* <HomePage1 /> */}
       <Container>
         <Box
           py="60px"
