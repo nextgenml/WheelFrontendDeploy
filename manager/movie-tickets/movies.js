@@ -142,7 +142,7 @@ const enableReceiptsUpload = async (
     if (
       !lastMovie ||
       moment().diff(moment(lastMovie.movie_time), "days") >=
-        process.env.MOVIE_TICKETS_NML_USER_DAYS_GAP_TO_AVAIL
+        parseInt(process.env.MOVIE_TICKETS_NML_USER_DAYS_GAP_TO_AVAIL) - 1
     )
       enableUpload = true;
   } else {
