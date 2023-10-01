@@ -18,7 +18,8 @@ const isValidLink = async (link, choreId) => {
 
   if (isExists) return [false, "Post link already exists"];
   const split = link.split("/");
-  const id = split[split.length - 1];
+  const id_temp = split[split.length - 1];
+  const id = id_temp.split("?")[0];
 
   if (parseInt(id) > 0) {
     try {
