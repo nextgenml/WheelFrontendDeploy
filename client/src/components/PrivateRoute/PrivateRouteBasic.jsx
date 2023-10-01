@@ -8,7 +8,9 @@ const PrivateRouteBasic = ({ component }) => {
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Please connect your wallet using metamask
+          Please connect your wallet using metamask. In case you are facing
+          issues while connecting to metamask using mobile, please close all
+          apps from background and retry
         </Typography>
 
         <Typography variant="h5" sx={{ mb: 20 }}>
