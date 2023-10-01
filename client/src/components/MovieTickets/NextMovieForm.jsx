@@ -161,6 +161,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
               sx={{ textAlign: "center", mb: 2 }}
             >
               <b>Next Movie details</b>
+              <Typography>Plan your next movie from {meta.nextPlan}</Typography>
             </Typography>
             <Box
               display={"flex"}

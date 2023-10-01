@@ -125,7 +125,8 @@ const enableReceiptsUpload = async (
   isNmlHolder,
   isNMLHolderOnly
 ) => {
-  let enableUpload = false;
+  let enableUpload = false,
+    nextPlan = null;
   const lastMovie = await getLastMovie(walletId);
   console.log(
     "isNmlHolder",
@@ -145,11 +146,27 @@ const enableReceiptsUpload = async (
         parseInt(process.env.MOVIE_TICKETS_NML_USER_DAYS_GAP_TO_AVAIL) - 1
     )
       enableUpload = true;
+    else {
+      let days = 0;
+
+      if (lastMovie.movie_time)
+        days =
+          parseInt(process.env.MOVIE_TICKETS_NML_USER_DAYS_GAP_TO_AVAIL) -
+          moment().diff(moment(lastMovie.movie_time), "days");
+      else days = 0;
+      nextPlan = moment().add(days, "days").format("DD, MMMM YYYY");
+    }
   } else {
     enableUpload =
       chores.length >= process.env.MOVIE_TICKETS_TOTAL_CHORES_FOR_NEW_USER;
+    if (!enableUpload) {
+      let days =
+        process.env.MOVIE_TICKETS_TOTAL_CHORES_FOR_NEW_USER - chores.length;
+      nextPlan = moment().add(days, "days").format("DD, MMMM YYYY");
+    }
   }
-  return enableUpload;
+  if (!nextPlan) nextPlan = moment().format("DD, MMMM YYYY");
+  return { enableUpload, nextPlan };
 };
 
 const parseTicket = async (text) => {

@@ -33,7 +33,7 @@ const get = async (req, res) => {
 
     const isNMLHolderOnly = parseInt(process.env.MOVIE_TICKETS_FLOW_TYPE) === 2;
 
-    const enableUpload = await enableReceiptsUpload(
+    const { enableUpload, nextPlan } = await enableReceiptsUpload(
       walletId,
       data,
       isNmlHolder,
@@ -56,6 +56,7 @@ const get = async (req, res) => {
       choreReward: process.env.MOVIE_TICKETS_CHORE_REWARD,
       enableChores,
       enableUpload,
+      nextPlan,
     });
   } catch (error) {
     logger.error(`error in movie ticket chores - get: ${error}`);
