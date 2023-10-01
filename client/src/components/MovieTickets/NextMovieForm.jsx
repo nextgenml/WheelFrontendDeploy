@@ -9,6 +9,7 @@ import moment from "moment";
 import { customFetch } from "../../API";
 import config from "../../config";
 import { useSearchParams } from "react-router-dom";
+import { useAccount } from "wagmi";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import dayjs from "dayjs";
@@ -16,6 +17,7 @@ import Countdown from "react-countdown";
 
 const NextMovieForm = ({ meta, getMeta }) => {
   const [searchParams, _] = useSearchParams();
+  const { address } = useAccount();
 
   const initialState = {
     movieTime: localStorage.getItem("movieTime") || dayjs(),
@@ -39,7 +41,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
     const res = await customFetch(
       `${config.API_ENDPOINT}/api/v1/movie-tickets/movies/latest?viewAs=${
         searchParams.get("viewAs") || ""
-      }`
+      }&walletId=${address}`
     );
     if (res.ok) {
       const { data } = await res.json();
@@ -79,7 +81,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
     let res;
     if (latestMovie?.id > 0) {
       res = await customFetch(
-        `${config.API_ENDPOINT}/api/v1/movie-tickets/movies/${latestMovie.id}`,
+        `${config.API_ENDPOINT}/api/v1/movie-tickets/movies/${latestMovie.id}?walletId=${address}`,
         {
           method: "PUT",
           body,
@@ -87,7 +89,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
       );
     } else {
       res = await customFetch(
-        `${config.API_ENDPOINT}/api/v1/movie-tickets/movies`,
+        `${config.API_ENDPOINT}/api/v1/movie-tickets/movies?walletId=${address}`,
         {
           method: "POST",
           body,

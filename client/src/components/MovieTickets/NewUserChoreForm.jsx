@@ -17,6 +17,8 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import RedeemIcon from "@mui/icons-material/Redeem";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import moment from "moment";
+import { useAccount } from "wagmi";
+
 const POST_LINK_KEY = "movie_tickets_post_link";
 const NewUserChoreForm = ({
   pastLinks,
@@ -24,6 +26,8 @@ const NewUserChoreForm = ({
   referralReward,
   holder,
 }) => {
+  const { address } = useAccount();
+
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [postLink, setPostLink] = useState(
     localStorage.getItem(POST_LINK_KEY) || undefined
@@ -45,7 +49,7 @@ const NewUserChoreForm = ({
 
     setDisableSubmit(true);
     const res = await customFetch(
-      `${config.API_ENDPOINT}/api/v1/movie-tickets/chores`,
+      `${config.API_ENDPOINT}/api/v1/movie-tickets/chores?walletId=${address}`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -204,7 +208,7 @@ const NewUserChoreForm = ({
                     color="primary"
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        `${config.API_ENDPOINT}/own-a-memory?inviteCode=${holder.invite_code}`
+                        `${config.API_ENDPOINT}/own-a-memory?inviteCode=${holder.invite_code}&walletId=${address}`
                       )
                     }
                   />

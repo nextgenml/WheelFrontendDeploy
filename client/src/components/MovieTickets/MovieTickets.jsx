@@ -8,6 +8,7 @@ import { customFetch, getAPICall, writeAPICall } from "../../API";
 import config from "../../config";
 import { useSearchParams } from "react-router-dom";
 import PastMovies from "./PastMovies";
+import { useAccount } from "wagmi";
 
 const MovieTickets = () => {
   const [meta, setMeta] = useState({});
@@ -15,6 +16,7 @@ const MovieTickets = () => {
   const [searchParams, _] = useSearchParams();
   const [holder, setHolder] = useState({});
   const [count, setCount] = useState(0);
+  const { address } = useAccount();
 
   useEffect(() => {
     getMeta();
@@ -26,7 +28,7 @@ const MovieTickets = () => {
   }, []);
   const fetchHolder = async () => {
     const data = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/holders/details`,
+      `${config.API_ENDPOINT}/api/v1/holders/details?walletId=${address}`,
       true
     );
     setHolder(data);
@@ -36,7 +38,7 @@ const MovieTickets = () => {
     const res = await customFetch(
       `${config.API_ENDPOINT}/api/v1/movie-tickets/chores?viewAs=${
         searchParams.get("viewAs") || ""
-      }`
+      }&walletId=${address}`
     );
     if (res.ok) {
       const data = await res.json();
@@ -49,7 +51,7 @@ const MovieTickets = () => {
     const res = await customFetch(
       `${config.API_ENDPOINT}/api/v1/movie-tickets/referrals?viewAs=${
         searchParams.get("viewAs") || ""
-      }`
+      }&walletId=${address}`
     );
     if (res.ok) {
       const data = await res.json();
@@ -60,7 +62,7 @@ const MovieTickets = () => {
   };
   const saveReferral = async () => {
     await writeAPICall(
-      `${config.API_ENDPOINT}/api/v1/movie-tickets/referrals`,
+      `${config.API_ENDPOINT}/api/v1/movie-tickets/referrals?walletId=${address}`,
       { inviteCode: searchParams.get("inviteCode") },
       "POST",
       true

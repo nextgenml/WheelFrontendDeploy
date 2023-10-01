@@ -16,26 +16,16 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-router.get("/chores", validateLoginSession, choresController.get);
-router.post("/chores", validateLoginSession, choresController.create);
-router.put("/chores/:id", validateLoginSession, choresController.update);
+router.get("/chores", choresController.get);
+router.post("/chores", choresController.create);
+router.put("/chores/:id", choresController.update);
 
-router.get("/movies/latest", validateLoginSession, moviesController.get);
-router.get("/movies", validateLoginSession, moviesController.list);
-router.post(
-  "/movies",
-  upload.any(),
-  validateLoginSession,
-  moviesController.create
-);
-router.put(
-  "/movies/:movieId",
-  upload.any(),
-  validateLoginSession,
-  moviesController.update
-);
+router.get("/movies/latest", moviesController.get);
+router.get("/movies", moviesController.list);
+router.post("/movies", upload.any(), moviesController.create);
+router.put("/movies/:movieId", upload.any(), moviesController.update);
 
-router.get("/referrals/", validateLoginSession, referralsController.get);
-router.post("/referrals/", validateLoginSession, referralsController.create);
+router.get("/referrals/", referralsController.get);
+router.post("/referrals/", referralsController.create);
 
 module.exports = router;

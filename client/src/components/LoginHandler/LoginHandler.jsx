@@ -10,7 +10,9 @@ import {
   setAuthToken,
   setLoggedInAddress,
 } from "../../API/index.js";
+import { useLocation } from "react-router";
 const LoginHandler = () => {
+  const location = useLocation();
   const { isConnected, address } = useAccount();
   const [connected, setConnected] = useState(isConnected);
   const [connectedAddress, setConnectedAddress] = useState(address);
@@ -29,6 +31,8 @@ const LoginHandler = () => {
   }
 
   const requestSignature = async () => {
+    console.log("location", location);
+    if (location.pathname.includes("own-a-memory")) return;
     try {
       // alert(`requesting for nonce from server: ${address}`);
       const { nonce } = await fetchHolderNonceAPI(address);

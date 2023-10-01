@@ -13,6 +13,8 @@ import { customFetch } from "../../API";
 import config from "../../config";
 import { useSearchParams } from "react-router-dom";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { useAccount } from "wagmi";
+
 const headers = ["Movie Name", "Status", "Tweet"];
 
 const stateText = (state) => {
@@ -30,12 +32,13 @@ const stateText = (state) => {
 export default function PastMovies({ count }) {
   const [records, setRecords] = React.useState([]);
   const [searchParams, _] = useSearchParams();
+  const { address } = useAccount();
 
   const fetchData = async () => {
     const res = await customFetch(
       `${config.API_ENDPOINT}/api/v1/movie-tickets/movies?viewAs=${
         searchParams.get("viewAs") || ""
-      }`
+      }&walletId=${address}`
     );
     if (res.ok) {
       const { data } = await res.json();

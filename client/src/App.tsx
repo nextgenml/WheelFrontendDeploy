@@ -37,6 +37,7 @@ import ScheduledSpins from "./components/ScheduledSpins/ScheduledSpins";
 import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdmin";
 import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
 import MovieTickets from "./components/MovieTickets/MovieTickets";
+import PrivateRouteBasic from "./components/PrivateRoute/PrivateRouteBasic";
 
 function App() {
   const location = useLocation();
@@ -125,7 +126,7 @@ function App() {
         />
         <Route
           path="/own-a-memory"
-          element={<PrivateRoute component={<MovieTickets />} />}
+          element={<PrivateRouteBasic component={<MovieTickets />} />}
         />
       </Routes>
       <Footer />
