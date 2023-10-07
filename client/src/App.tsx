@@ -38,6 +38,7 @@ import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdm
 import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
 import MovieTickets from "./components/MovieTickets/MovieTickets";
 import PrivateRouteBasic from "./components/PrivateRoute/PrivateRouteBasic";
+import TwitterCampaigns from "./components/Twitter/Campaigns";
 
 function App() {
   const location = useLocation();
@@ -127,6 +128,10 @@ function App() {
         <Route
           path="/own-a-memory"
           element={<PrivateRouteBasic component={<MovieTickets />} />}
+        />
+        <Route
+          path="/twitter-promotions"
+          element={<PrivateRouteBasic component={<TwitterCampaigns />} />}
         />
       </Routes>
       <Footer />
