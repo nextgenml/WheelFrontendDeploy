@@ -2,6 +2,7 @@
   padding: 16px;
 }
 .form {
+  margin-top: 0 !important;
   padding-left: 200px;
   padding-right: 200px;
 }
@@ -19,6 +20,9 @@
   .form {
     padding: 0;
   }
+  .mainForm {
+    padding: 0;
+  }
 }
 .heading {
   text-align: center;
@@ -28,4 +32,8 @@
 .campaignsTableHeader {
   text-align: center;
   padding: 24px;
+}
+.mainForm {
+  padding-left: 200px;
+  padding-right: 200px;
 }

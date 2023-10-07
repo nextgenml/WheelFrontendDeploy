@@ -39,8 +39,8 @@ const getCampaigns = async (req, res) => {
 };
 
 const getCampaignById = async (req, res) => {
-  const { campaignId, walletId } = req.query;
-  const campaign = await campaignRepo.getCampaignById(campaignId, walletId);
+  const { id, walletId } = req.query;
+  const campaign = await campaignRepo.getCampaignById(id, walletId);
   res.json({
     data: campaign,
   });
@@ -48,9 +48,9 @@ const getCampaignById = async (req, res) => {
 
 const updateCampaign = async (req, res) => {
   const { walletId } = req.query;
-  const { campaignId } = req.params;
+  const { id } = req.params;
 
-  await campaignRepo.updateCampaign(campaignId, walletId, req.body);
+  await campaignRepo.updateCampaign(id, walletId, req.body);
   res.json({
     message: "Updated successfully",
   });
@@ -58,9 +58,9 @@ const updateCampaign = async (req, res) => {
 
 const toggleCampaignState = async (req, res) => {
   const { walletId } = req.query;
-  const { campaignId } = req.params;
+  const { id } = req.params;
 
-  await campaignRepo.toggleCampaignState(campaignId, walletId, req.body.action);
+  await campaignRepo.toggleCampaignState(id, walletId, req.body.action);
   res.json({
     message: "Updated successfully",
   });

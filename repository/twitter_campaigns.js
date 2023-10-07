@@ -6,7 +6,6 @@ const moment = require("moment");
 const saveCampaign = async (walletId, data) => {
   const query = `insert into twitter_campaigns (name, content, tweet_link, no_of_users, no_of_levels, level_1_end_date, level_2_end_date, level_3_end_date, level_4_end_date, level_5_end_date, hash_tags, wallet_id, created_at) values(?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ? ,?, now());`;
 
-  console.log("data", data);
   return await runQueryAsync(query, [
     data.name,
     data.content,
@@ -32,7 +31,6 @@ const getCampaigns = async (walletId, search, pageSize, offset) => {
     walletId,
     search ? 0 : 1,
     `%${search}%`,
-    `%${search}%`,
     pageSize,
     offset,
   ]);
@@ -55,8 +53,10 @@ const getCampaigns = async (walletId, search, pageSize, offset) => {
 };
 
 const updateCampaign = async (id, walletId, data) => {
-  const query = `update twitter_campaigns set name = ?, content = ?, tweet_link = ?, no_of_users = ?, no_of_levels = ?, level_1_end_date = ?, level_2_end_date = ?, level_3_end_date = ?, level_4_end_date = ?, level_5_end_date = ?, hash_tags = ? where wallet_id = ? and id = ?;`;
+  console.log("id", id, walletId);
+  const query = `update twitter_campaigns set name = ?, content = ?, tweet_link = ?, no_of_users = ?, no_of_levels = ?, level_1_end_date = ?, level_2_end_date = ?, level_3_end_date = ?, level_4_end_date = ?, level_5_end_date = ?, hash_tags = ?, deleted_at = ? where wallet_id = ? and id = ?;`;
 
+  console.log("data.active", data.active);
   return await runQueryAsync(query, [
     data.name,
     data.content,
@@ -69,6 +69,7 @@ const updateCampaign = async (id, walletId, data) => {
     getEndOfDay(data.level_4_end_date),
     getEndOfDay(data.level_5_end_date),
     data.hash_tags,
+    parseInt(data.active) > 0 ? null : moment().format(DATE_TIME_FORMAT),
     walletId,
     id,
   ]);

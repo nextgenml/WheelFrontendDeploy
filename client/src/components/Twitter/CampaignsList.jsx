@@ -8,9 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import config from "../../config";
-import moment from "moment";
 import {
-  Button,
   Typography,
   TablePagination,
   FormControl,
@@ -18,25 +16,16 @@ import {
   OutlinedInput,
   InputAdornment,
   debounce,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 import styles from "./Twitter.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { customFetch } from "../../API/index.js";
+import EditIcon from "@mui/icons-material/Edit";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
-const headers = [
-  "Client Name",
-  "Campaign Name",
-  "Strategy",
-  "Start Time",
-  "End Time",
-  "",
-  "",
-];
+const headers = ["Campaign Name", "No of Users", "No of Levels", "", ""];
 
-export default function CampaignsList({ address, count }) {
+export default function CampaignsList({ address, count, onSelectRow }) {
   const [campaigns, setCampaigns] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -44,7 +33,7 @@ export default function CampaignsList({ address, count }) {
   const [search, setSearch] = React.useState("");
   const fetchData = async () => {
     const res1 = await customFetch(
-      `${config.API_ENDPOINT}/campaigns?walletId=${address}&search=${search}&pageNo=${page}&pageSize=${rowsPerPage}`
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns?walletId=${address}&search=${search}&pageNo=${page}&pageSize=${rowsPerPage}`
     );
     const data = await res1.json();
     setCampaigns(data.data);
@@ -72,37 +61,13 @@ export default function CampaignsList({ address, count }) {
     []
   );
 
-  const onUpdate = async (action, isRecursive, campaignId) => {
-    const res = await customFetch(
-      `${config.API_ENDPOINT}/update-campaign?walletId=${address}&userAction=${action}&campaignId=${campaignId}&isRecursive=${isRecursive}`,
-      {
-        method: "POST",
-      }
-    );
-    if (res.ok) {
-      alert("Campaign saved");
-    } else {
-      const error = await res.json();
-      alert(
-        error.message || "Something went wrong. Please try again after sometime"
-      );
-    }
-    const currentCampaign = campaigns.filter((p) => p.id === campaignId)[0];
-    currentCampaign.is_active = action === "disable" ? 0 : 1;
-    currentCampaign.is_recursive_algo = isRecursive;
-    setCampaigns([...campaigns]);
-  };
-
   return (
-    <Paper sx={{ width: "100%", mb: 2 }}>
+    <Paper sx={{ mb: 2 }}>
       <TableContainer component={Paper} sx={{ mt: 4 }}>
         <Typography variant="h6" className={styles.campaignsTableHeader}>
-          Saved Campaigns
+          Your Campaigns
         </Typography>
-        <FormControl
-          sx={{ m: 1, mb: 2, width: "25ch", float: "right" }}
-          variant="outlined"
-        >
+        <FormControl sx={{ m: 1, mb: 2, float: "right" }} variant="outlined">
           <InputLabel>Search</InputLabel>
           <OutlinedInput
             onChange={debouncedChangeHandler}
@@ -114,7 +79,7 @@ export default function CampaignsList({ address, count }) {
             label="Search"
           />
         </FormControl>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ m: 2, mr: 0, width: "97%" }} aria-label="simple table">
           <TableHead>
             <TableRow sx={{ backgroundColor: "var(--bs-gray-300)" }}>
               {headers.map((h) => {
@@ -128,59 +93,17 @@ export default function CampaignsList({ address, count }) {
                 key={row.id}
                 sx={{
                   "&:last-child td, &:last-child th": { border: 0 },
-                  backgroundColor: row.is_active ? "" : "#FFCCCB",
+                  backgroundColor: row.deleted_at ? "#FFCCCB" : "",
                 }}
               >
-                <TableCell>{row.client}</TableCell>
-                <TableCell>{row.campaign}</TableCell>
-                <TableCell>{row.success_factor}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.no_of_users}</TableCell>
+                <TableCell>{row.no_of_levels}</TableCell>
                 <TableCell>
-                  {moment(row.start_time).format("YYYY-MM-DD")}
+                  <EditIcon onClick={() => onSelectRow(row)} />
                 </TableCell>
                 <TableCell>
-                  {moment(row.end_time).format("YYYY-MM-DD")}
-                </TableCell>
-                <TableCell>
-                  {address === config.ADMIN_WALLET && (
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={row.is_recursive_algo}
-                            onChange={(e) =>
-                              onUpdate(
-                                row.is_active ? "enable" : "disable",
-                                e.target.checked,
-                                row.id
-                              )
-                            }
-                          />
-                        }
-                        label="Recursive Algo"
-                      />
-                    </FormGroup>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {row.is_active ? (
-                    <Button
-                      color="error"
-                      onClick={() =>
-                        onUpdate("disable", row.is_recursive_algo, row.id)
-                      }
-                    >
-                      Disable
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() =>
-                        onUpdate("enable", row.is_recursive_algo, row.id)
-                      }
-                      color="success"
-                    >
-                      Enable
-                    </Button>
-                  )}
+                  <QueryStatsIcon />
                 </TableCell>
               </TableRow>
             ))}
