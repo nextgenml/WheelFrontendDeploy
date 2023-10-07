@@ -1,9 +1,11 @@
 const router = require("express").Router();
-const controller = require("../controllers/twitter/campaigns");
+const controller = require("../../controllers/twitter/campaigns");
+const choresController = require("../../controllers/twitter/chores");
 
 router.post("/", controller.saveCampaign);
 router.put("/:id", controller.updateCampaign);
 router.get("/", controller.getCampaigns);
 router.get("/:id", controller.getCampaignById);
 router.delete("/:id", controller.toggleCampaignState);
+router.get("/:id/stats", choresController.campaignStats);
 module.exports = router;

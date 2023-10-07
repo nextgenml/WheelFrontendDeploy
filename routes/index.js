@@ -12,6 +12,6 @@ router.use("/api/v1/chores", require("./chores"));
 router.use("/api/v1/health", require("./health"));
 router.use("/api/v1/tokens", require("./tokens"));
 router.use("/api/v1/movie-tickets", require("./movie-tickets"));
-router.use("/api/v1/twitter/campaigns", require("./twitter_campaigns"));
+router.use("/api/v1/twitter/campaigns", require("./twitter/campaigns"));
 
 module.exports = router;
