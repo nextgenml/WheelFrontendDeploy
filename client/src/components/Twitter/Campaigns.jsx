@@ -4,8 +4,10 @@ import CampaignForm from "./CampaignForm";
 import { useAccount } from "wagmi";
 import CampaignsList from "./CampaignsList";
 import styles from "./Twitter.module.css";
+import CampaignStats from "./CampaignStats";
 const Campaigns = () => {
   const [open, setOpen] = useState(false);
+  const [openStats, setOpenStats] = useState(false);
   const { address } = useAccount();
   const [selectedRow, setSelectedRow] = useState(null);
   const [count, setCount] = useState(0);
@@ -36,7 +38,20 @@ const Campaigns = () => {
           setSelectedRow(row);
           setOpen(true);
         }}
+        onStatsRow={(row) => {
+          setSelectedRow(row);
+          setOpenStats(true);
+        }}
       />
+      {openStats && (
+        <CampaignStats
+          handleClose={() => {
+            setOpenStats(false);
+            setSelectedRow(null);
+          }}
+          campaign={selectedRow}
+        />
+      )}
     </Box>
   );
 };

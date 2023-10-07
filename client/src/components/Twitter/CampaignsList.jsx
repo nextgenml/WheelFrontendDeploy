@@ -25,7 +25,12 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
 const headers = ["Campaign Name", "No of Users", "No of Levels", "", ""];
 
-export default function CampaignsList({ address, count, onSelectRow }) {
+export default function CampaignsList({
+  address,
+  count,
+  onSelectRow,
+  onStatsRow,
+}) {
   const [campaigns, setCampaigns] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -103,7 +108,7 @@ export default function CampaignsList({ address, count, onSelectRow }) {
                   <EditIcon onClick={() => onSelectRow(row)} />
                 </TableCell>
                 <TableCell>
-                  <QueryStatsIcon />
+                  <QueryStatsIcon onClick={() => onStatsRow(row)} />
                 </TableCell>
               </TableRow>
             ))}
