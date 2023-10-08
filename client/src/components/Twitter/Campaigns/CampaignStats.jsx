@@ -13,7 +13,7 @@ import {
   TableBody,
 } from "@mui/material";
 import { useState } from "react";
-import useIsMobile from "../../Utils/Mobile";
+import useIsMobile from "../../../Utils/Mobile";
 
 const CampaignStats = ({ handleClose, campaign }) => {
   const headers = ["Level", "Expected", "Achieved", "Status"];

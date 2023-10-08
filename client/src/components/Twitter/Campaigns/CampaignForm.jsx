@@ -17,14 +17,14 @@ import {
   FormGroup,
   Checkbox,
 } from "@mui/material";
-import styles from "./Twitter.module.css";
+import styles from "./Campaigns.module.css";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import { useEffect, useState } from "react";
-import config from "../../config.js";
+import config from "../../../config.js";
 import moment from "moment";
-import { writeAPICall } from "../../API";
+import { writeAPICall } from "../../../API";
 
 const getLocalCopy = () => {
   return JSON.parse(localStorage.getItem("twitter_promotions") || "{}");

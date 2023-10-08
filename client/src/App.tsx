@@ -38,8 +38,8 @@ import SocialSharingAdmin from "./components/SocialSharingAdmin/SocialSharingAdm
 import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
 import MovieTickets from "./components/MovieTickets/MovieTickets";
 import PrivateRouteBasic from "./components/PrivateRoute/PrivateRouteBasic";
-import TwitterCampaigns from "./components/Twitter/Campaigns";
-import TwitterChores from "./components/Twitter/Chores";
+import TwitterCampaigns from "./components/Twitter/Campaigns/Campaigns";
+import TwitterChores from "./components/Twitter/Chores/Chores";
 
 function App() {
   const location = useLocation();

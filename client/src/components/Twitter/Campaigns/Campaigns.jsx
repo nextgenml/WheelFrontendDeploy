@@ -3,7 +3,7 @@ import { useState } from "react";
 import CampaignForm from "./CampaignForm";
 import { useAccount } from "wagmi";
 import CampaignsList from "./CampaignsList";
-import styles from "./Twitter.module.css";
+import styles from "./Campaigns.module.css";
 import CampaignStats from "./CampaignStats";
 const Campaigns = () => {
   const [open, setOpen] = useState(false);

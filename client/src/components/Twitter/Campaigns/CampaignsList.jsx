@@ -7,7 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import config from "../../config";
+import config from "../../../config";
 import {
   Typography,
   TablePagination,
@@ -17,9 +17,9 @@ import {
   InputAdornment,
   debounce,
 } from "@mui/material";
-import styles from "./Twitter.module.css";
+import styles from "./Campaigns.module.css";
 import SearchIcon from "@mui/icons-material/Search";
-import { customFetch } from "../../API/index.js";
+import { customFetch } from "../../../API/index.js";
 import EditIcon from "@mui/icons-material/Edit";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
