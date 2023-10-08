@@ -35,7 +35,7 @@ export default function Header() {
   const navigate = useNavigate();
   const fetchHolder = async () => {
     const data = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/holders/details`,
+      `${config.API_ENDPOINT}/api/v1/holders/details?walletId=${address}`,
       true
     );
     setSocialLinks(data);
@@ -180,7 +180,6 @@ export default function Header() {
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
       {renderBlogTimer()}
-      <LoginHandler />
       {showSaveLinks && (
         <SaveSocialLinks
           onClose={(saved: boolean) => {

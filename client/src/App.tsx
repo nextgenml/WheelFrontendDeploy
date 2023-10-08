@@ -39,6 +39,7 @@ import AllocationAdmin from "./components/AllocationsAdmin/AllocationsAdmin";
 import MovieTickets from "./components/MovieTickets/MovieTickets";
 import PrivateRouteBasic from "./components/PrivateRoute/PrivateRouteBasic";
 import TwitterCampaigns from "./components/Twitter/Campaigns";
+import TwitterChores from "./components/Twitter/Chores";
 
 function App() {
   const location = useLocation();
@@ -130,8 +131,12 @@ function App() {
           element={<PrivateRouteBasic component={<MovieTickets />} />}
         />
         <Route
-          path="/twitter-promotions"
+          path="/twitter-campaigns"
           element={<PrivateRouteBasic component={<TwitterCampaigns />} />}
+        />
+        <Route
+          path="/twitter-chores"
+          element={<PrivateRouteBasic component={<TwitterChores />} />}
         />
       </Routes>
       <Footer />
