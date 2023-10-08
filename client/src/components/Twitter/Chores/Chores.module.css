@@ -2,3 +2,22 @@
   padding-left: 200px;
   padding-right: 200px;
 }
+.tweetText {
+  margin-top: 8px !important;
+  border: 1px solid lightgrey;
+  background-color: antiquewhite;
+  border-radius: 8px;
+  padding: 8px;
+  word-wrap: break-word;
+}
+
+@media only screen and (max-width: 640px) {
+  .mainBox {
+    padding: 16px;
+  }
+}
+.listItem {
+  border-radius: 8px;
+  background-color: antiquewhite;
+  margin-bottom: 16px;
+}
