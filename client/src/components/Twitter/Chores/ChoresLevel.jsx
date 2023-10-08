@@ -4,6 +4,7 @@ import {
   ListItemText,
   Collapse,
   Grid,
+  TablePagination,
 } from "@mui/material";
 import { useState } from "react";
 import Chore from "./Chore";
@@ -13,6 +14,17 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 const ChoresLevel = () => {
   const [open, setOpen] = useState(false);
   const [chores, setChores] = useState([1, 2, 3]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalCount, setTotalCount] = useState(0);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <>
       <ListItem
@@ -32,6 +44,17 @@ const ChoresLevel = () => {
               <Chore />
             </Grid>
           ))}
+          <Grid item md={12}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, 50]}
+              component="div"
+              count={totalCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Grid>
         </Grid>
       </Collapse>
     </>
