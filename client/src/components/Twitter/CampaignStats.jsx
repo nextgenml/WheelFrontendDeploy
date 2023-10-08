@@ -1,20 +1,9 @@
 import {
-  Grid,
-  TextField,
-  FormControl,
-  InputLabel,
   Button,
-  Typography,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
-  Box,
   Dialog,
   DialogContent,
   DialogActions,
   DialogTitle,
-  FormGroup,
-  Checkbox,
   Paper,
   TableContainer,
   Table,
@@ -23,14 +12,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import styles from "./Twitter.module.css";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { useEffect, useState } from "react";
-import config from "../../config.js";
-import moment from "moment";
-import { writeAPICall } from "../../API";
+import { useState } from "react";
 import useIsMobile from "../../Utils/Mobile";
 
 const CampaignStats = ({ handleClose, campaign }) => {
