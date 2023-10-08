@@ -12,7 +12,10 @@ import ChoresLevel from "./ChoresLevel";
 import styles from "./Chores.module.css";
 const Chores = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
-  const levels = [1, 2, 3];
+  const levels = [
+    { level: 1, completed: 20, assigned: 25 },
+    { level: 2, completed: 19, assigned: 300 },
+  ];
   const fetchData = () => {};
   useEffect(() => {
     fetchData();
@@ -21,10 +24,8 @@ const Chores = () => {
     <Box className={styles.mainBox} textAlign={"center"}>
       <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
         <FormControl sx={{ width: "300px" }}>
-          <InputLabel id="demo-simple-select-label">Select Campaign</InputLabel>
+          <InputLabel>Select Campaign</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
             value={selectedCampaign}
             label="Select Campaign"
             onChange={(e) => setSelectedCampaign(e.target.value)}
@@ -39,10 +40,10 @@ const Chores = () => {
         </Button>
       </Box>
 
-      <List>
+      <List sx={{ mt: 2 }}>
         {levels &&
-          levels.map((rec) => {
-            return <ChoresLevel />;
+          levels.map((level) => {
+            return <ChoresLevel level={level} />;
           })}
       </List>
     </Box>

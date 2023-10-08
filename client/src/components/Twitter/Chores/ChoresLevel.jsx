@@ -5,13 +5,15 @@ import {
   Collapse,
   Grid,
   TablePagination,
+  Box,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import Chore from "./Chore";
 import styles from "./Chores.module.css";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-const ChoresLevel = () => {
+const ChoresLevel = ({ level }) => {
   const [open, setOpen] = useState(false);
   const [chores, setChores] = useState([1, 2, 3]);
   const [page, setPage] = useState(0);
@@ -33,7 +35,19 @@ const ChoresLevel = () => {
         className={styles.listItem}
       >
         <ListItemButton>
-          <ListItemText primary="Level" />
+          <ListItemText
+            primary={
+              <Box>
+                <Typography variant="subtitle1" fontWeight={"bold"}>
+                  Level {level.level}
+                </Typography>
+                <Typography variant="body2">
+                  Completed: <b>{level.completed} </b>| Assigned:{" "}
+                  <b>{level.assigned}</b>
+                </Typography>
+              </Box>
+            }
+          />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
       </ListItem>
