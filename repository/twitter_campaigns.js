@@ -22,6 +22,12 @@ const saveCampaign = async (walletId, data) => {
   ]);
 };
 
+const getAllActiveCampaigns = async () => {
+  let query = "select * from twitter_campaigns where deleted_at is null";
+
+  return await runQueryAsync(query, []);
+};
+
 const getCampaigns = async (walletId, search, pageSize, offset) => {
   let query =
     "select * from twitter_campaigns where (1 = ? or wallet_id = ?) and (1 = ? or name like ?) order by id desc limit ? offset ?;";
@@ -85,10 +91,10 @@ const toggleCampaignState = async (id, walletId, action) => {
   ]);
 };
 
-const getCampaignById = async (id, walletId) => {
-  const query = `select * from twitter_campaigns where wallet_id = ? and id = ?;`;
+const getCampaignById = async (id) => {
+  const query = `select * from twitter_campaigns where id = ?;`;
 
-  const results = await runQueryAsync(query, [walletId, id]);
+  const results = await runQueryAsync(query, [id]);
   return results[0];
 };
 
@@ -101,4 +107,5 @@ module.exports = {
   saveCampaign,
   getCampaigns,
   getCampaignById,
+  getAllActiveCampaigns,
 };

@@ -38,6 +38,20 @@ const getCampaigns = async (req, res) => {
   }
 };
 
+const getActiveCampaigns = async (req, res) => {
+  try {
+    const data = await campaignRepo.getAllActiveCampaigns();
+    res.json({
+      data,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      statusCode: 500,
+      message: error,
+    });
+  }
+};
+
 const getCampaignById = async (req, res) => {
   const { id, walletId } = req.query;
   const campaign = await campaignRepo.getCampaignById(id, walletId);
@@ -71,4 +85,5 @@ module.exports = {
   getCampaignById,
   updateCampaign,
   toggleCampaignState,
+  getActiveCampaigns,
 };
