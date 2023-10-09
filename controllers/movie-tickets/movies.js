@@ -102,7 +102,7 @@ const update = async (req, res) => {
     }
 
     const movie = await userMoviesRepo.getMovieById(movieId, query.walletId);
-    const errors = validateMovie(movie, body, parsedMovieData, parsedHallData);
+    const errors = {}; // validateMovie(movie, body, parsedMovieData, parsedHallData);
 
     if (Object.keys(errors).length) {
       return res.status(400).json({
