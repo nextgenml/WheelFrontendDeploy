@@ -6,6 +6,8 @@ const {
   isFirstChoreExists,
   isLinkExists,
   getChoreById,
+  getChoreCampaignCompletedStats,
+  getChoreCampaignAssignedStats,
 } = require("../../repository/twitter_chores");
 const { generateRandomNumber } = require("../../utils");
 const { chatGptResponse } = require("../../utils/chatgpt");
@@ -98,7 +100,6 @@ const getRandomHashtags = (hashtags) => {
 };
 
 const isValidLink = async (link, choreId) => {
-  console.log("link", link);
   if (link && (link.includes("twitter.com") || link.includes("x.com"))) {
   } else return [false, false, "Invalid link submitted"];
 
@@ -109,13 +110,10 @@ const isValidLink = async (link, choreId) => {
   const id_temp = split[split.length - 1];
   const id = id_temp.split("?")[0];
 
-  console.log("id", id);
   if (parseInt(id) > 0) {
     try {
       const chore = await getChoreById(choreId);
-      console.log("chore", chore);
       const tweet = await getTweetById(id);
-      console.log("tweet", tweet);
       try {
         if (tweet && tweet.errors && tweet.errors.length)
           return [false, tweet.errors[0].detail];
@@ -143,14 +141,30 @@ const isValidLink = async (link, choreId) => {
   }
 };
 
-const levelChoresCount = (noOfUsers) => {
-  const result = {};
-  [1, 2, 3, 4, 5].forEach((level) => {
-    result[`level_${level}_target`] = Math.pow(noOfUsers - 1, level);
-  });
+const getUserCampaignStats = async (campaignId, walletId) => {
+  const campaign = await campaignsRepo.getCampaignById(campaignId);
+  const result = [];
+  let level = 1;
+
+  const completed = await getChoreCampaignCompletedStats(campaignId, walletId);
+  const assigned = await getChoreCampaignAssignedStats(campaignId, walletId);
+
+  while (level <= campaign.no_of_levels) {
+    const c = completed.filter((x) => x.level === level)[0];
+    const a = assigned.filter((x) => x.level === level)[0];
+
+    result.push({
+      level,
+      completed: c?.count || 0,
+      assigned: a?.count || 0,
+    });
+    level += 1;
+  }
   return result;
 };
+
 module.exports = {
   computeChores,
   isValidLink,
+  getUserCampaignStats,
 };

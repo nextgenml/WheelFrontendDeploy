@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   FormControl,
@@ -18,19 +19,24 @@ const Chores = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [campaigns, setCampaigns] = useState([]);
   const [computing, setComputing] = useState(false);
-  const levels = [
-    { level: 1, completed: 20, assigned: 25 },
-    { level: 2, completed: 19, assigned: 300 },
-    { level: 3, completed: 19, assigned: 300 },
-    { level: 4, completed: 19, assigned: 300 },
-    { level: 5, completed: 19, assigned: 300 },
-  ];
+  const [levels, setLevels] = useState([]);
+
   const fetchCampaigns = async () => {
     const res = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/twitter/campaigns/active`
     );
     setCampaigns(res.data);
   };
+
+  const fetchStats = async () => {
+    const res = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${selectedCampaign}/stats?walletId=${address}`
+    );
+    setLevels(res.data);
+  };
+  useEffect(() => {
+    if (selectedCampaign) fetchStats();
+  }, [selectedCampaign]);
 
   useEffect(() => {
     fetchCampaigns();

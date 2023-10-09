@@ -1,8 +1,8 @@
 const choresRepo = require("../../repository/twitter_chores");
 const choresManager = require("../../manager/twitter/chores");
+const { getCampaignById } = require("../../repository/twitter_campaigns");
 
 const updateChore = async (req, res) => {
-  console.log("reached here");
   try {
     const { id } = req.params;
     const { walletId } = req.query;
@@ -30,6 +30,16 @@ const campaignStats = async (req, res) => {
   const { id } = req.params;
 
   const results = await choresRepo.getCampaignStats(id);
+  res.json({
+    data: results,
+  });
+};
+
+const userCampaignStats = async (req, res) => {
+  const { id } = req.params;
+  const { walletId } = req.query;
+
+  const results = await choresManager.getUserCampaignStats(id, walletId);
   res.json({
     data: results,
   });
@@ -79,4 +89,5 @@ module.exports = {
   computeChores,
   getChores,
   updateChore,
+  userCampaignStats,
 };

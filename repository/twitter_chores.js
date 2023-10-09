@@ -74,6 +74,15 @@ const updateLink = async (tweetLink, validated, walletId, id) => {
   const query = `update twitter_chores set tweet_link = ?, validated = ?, completed_at = now() where id = ? and wallet_id = ?`;
   return await runQueryAsync(query, [tweetLink, validated, id, walletId]);
 };
+const getChoreCampaignCompletedStats = async (campaignId, walletId) => {
+  const query = `select level, count(1) as count from twitter_chores where campaign_id = ? and wallet_id = ? and completed_at is not null group by level;`;
+  return await runQueryAsync(query, [campaignId, walletId]);
+};
+const getChoreCampaignAssignedStats = async (campaignId, walletId) => {
+  console.log("campaignId", campaignId, "walletId", walletId);
+  const query = `select level, count(1) as count from twitter_chores where campaign_id = ? and wallet_id = ? group by level;`;
+  return await runQueryAsync(query, [campaignId, walletId]);
+};
 module.exports = {
   updateLink,
   getChoreById,
@@ -84,4 +93,6 @@ module.exports = {
   isChoreExists,
   isFirstChoreExists,
   getMyChores,
+  getChoreCampaignCompletedStats,
+  getChoreCampaignAssignedStats,
 };
