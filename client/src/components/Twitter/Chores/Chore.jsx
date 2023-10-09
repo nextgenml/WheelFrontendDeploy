@@ -8,30 +8,46 @@ import moment from "moment";
 import { IconButton, TextField } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
+import { writeAPICall } from "../../../API";
+import config from "../../../config";
+import { useAccount } from "wagmi";
 
-function Chore() {
+function Chore({ chore }) {
+  const { address } = useAccount();
   const [postLink, setPostLink] = useState("");
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const onSubmit = () => {};
+
+  const onSubmit = async () => {
+    if (
+      postLink &&
+      (postLink.includes("twitter.com") || postLink.includes("x.com"))
+    ) {
+    } else {
+      alert("Please enter valid twitter post url");
+      return;
+    }
+
+    setDisableSubmit(true);
+    const res = await writeAPICall(
+      `${config.API_ENDPOINT}/api/v1/twitter/chores/${chore.id}?walletId=${address}`,
+      {
+        tweet_link: postLink,
+      },
+      "PUT"
+    );
+    if (res.ok) {
+    }
+    setDisableSubmit(false);
+  };
   return (
     <Card>
       <CardContent>
         <Typography variant="subtitle1" className={styles.tweetText}>
           You tweet should contain exact text:
           <br />
-          <b>
-            {process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE +
-              "   " +
-              moment().format("YYYY-MM-DD HH:mm:ss")}
-          </b>
+          <b>{chore.content}</b>
           <IconButton
-            onClick={() =>
-              navigator.clipboard.writeText(
-                process.env.REACT_APP_MOVIE_TICKETS_TAG_LINE +
-                  "   " +
-                  moment().format("YYYY-MM-DD HH:mm:ss")
-              )
-            }
+            onClick={() => navigator.clipboard.writeText(chore.content)}
           >
             <ContentCopyIcon fontSize="small" />
           </IconButton>

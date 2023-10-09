@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   ListItem,
   ListItemButton,
@@ -8,17 +9,34 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chore from "./Chore";
 import styles from "./Chores.module.css";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-const ChoresLevel = ({ level }) => {
+import { getAPICall } from "../../../API";
+import config from "../../../config";
+
+const ChoresLevel = ({ level, campaignId, address }) => {
   const [open, setOpen] = useState(false);
-  const [chores, setChores] = useState([1, 2, 3]);
+  const [chores, setChores] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
+
+  const fetchData = async () => {
+    const data = await getAPICall(
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaignId}/levels/${level.level}?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`
+    );
+
+    setChores(data.data);
+    setTotalCount(data.total_count);
+  };
+
+  useEffect(() => {
+    if (open && campaignId) fetchData();
+  }, [open, rowsPerPage, page]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -55,7 +73,7 @@ const ChoresLevel = ({ level }) => {
         <Grid container spacing={2}>
           {chores.map((c) => (
             <Grid item md={6} xs={12}>
-              <Chore />
+              <Chore chore={c} />
             </Grid>
           ))}
           <Grid item md={12}>

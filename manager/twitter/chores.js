@@ -4,9 +4,12 @@ const {
   isChoreExists,
   createChore,
   isFirstChoreExists,
+  isLinkExists,
+  getChoreById,
 } = require("../../repository/twitter_chores");
 const { generateRandomNumber } = require("../../utils");
 const { chatGptResponse } = require("../../utils/chatgpt");
+const { getTweetById } = require("../../utils/mediaClients/twitter");
 
 const computeChores = async (walletId, campaignId) => {
   const campaigns = await campaignsRepo.getCampaignById(campaignId);
@@ -94,6 +97,52 @@ const getRandomHashtags = (hashtags) => {
   result;
 };
 
+const isValidLink = async (link, choreId) => {
+  console.log("link", link);
+  if (link && (link.includes("twitter.com") || link.includes("x.com"))) {
+  } else return [false, false, "Invalid link submitted"];
+
+  const isExists = await isLinkExists(link, choreId);
+
+  if (isExists) return [false, false, "Post link already exists"];
+  const split = link.split("/");
+  const id_temp = split[split.length - 1];
+  const id = id_temp.split("?")[0];
+
+  console.log("id", id);
+  if (parseInt(id) > 0) {
+    try {
+      const chore = await getChoreById(choreId);
+      console.log("chore", chore);
+      const tweet = await getTweetById(id);
+      console.log("tweet", tweet);
+      try {
+        if (tweet && tweet.errors && tweet.errors.length)
+          return [false, tweet.errors[0].detail];
+
+        const { text } = tweet.data;
+        if (text.toLowerCase().includes(chore.content.toLowerCase()))
+          return [true, true, "Validated"];
+        else
+          return [
+            false,
+            false,
+            "Tweet does not contain mandatory text provided",
+          ];
+      } catch (error) {
+        return [
+          true,
+          false,
+          "Network busy. We will validate the link later",
+          error,
+        ];
+      }
+    } catch (error) {}
+  } else {
+    return [false, "Invalid link posted"];
+  }
+};
+
 const levelChoresCount = (noOfUsers) => {
   const result = {};
   [1, 2, 3, 4, 5].forEach((level) => {
@@ -103,4 +152,5 @@ const levelChoresCount = (noOfUsers) => {
 };
 module.exports = {
   computeChores,
+  isValidLink,
 };

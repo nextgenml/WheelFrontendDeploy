@@ -23,6 +23,9 @@ const Chores = () => {
   const levels = [
     { level: 1, completed: 20, assigned: 25 },
     { level: 2, completed: 19, assigned: 300 },
+    { level: 3, completed: 19, assigned: 300 },
+    { level: 4, completed: 19, assigned: 300 },
+    { level: 5, completed: 19, assigned: 300 },
   ];
   const fetchCampaigns = async () => {
     const res = await getAPICall(
@@ -77,7 +80,13 @@ const Chores = () => {
       <List sx={{ mt: 2 }}>
         {levels &&
           levels.map((level) => {
-            return <ChoresLevel level={level} />;
+            return (
+              <ChoresLevel
+                level={level}
+                campaignId={selectedCampaign}
+                address={address}
+              />
+            );
           })}
       </List>
     </Box>

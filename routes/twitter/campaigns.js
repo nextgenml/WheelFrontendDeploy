@@ -11,4 +11,5 @@ router.delete("/:id", controller.toggleCampaignState);
 router.get("/:id/stats", choresController.campaignStats);
 
 router.post("/:id/computeChores", choresController.computeChores);
+router.get("/:id/levels/:levelId", choresController.getChores);
 module.exports = router;
