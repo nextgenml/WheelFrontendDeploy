@@ -9,8 +9,6 @@ const getCampaignStats = async (campaignId) => {
   let level = 1;
 
   const completed = await getCampaignCompletedChores(campaignId);
-
-  console.log("campaign", campaign);
   while (level <= campaign.no_of_levels) {
     const c = completed.filter((x) => x.level === level)[0];
     const a = campaign[`level_${level}_target`];
