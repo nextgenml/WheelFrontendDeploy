@@ -20,7 +20,7 @@ const Chores = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [computing, setComputing] = useState(false);
   const [levels, setLevels] = useState([]);
-
+  const [closeCollapse, setCloseCollapse] = useState(0);
   const fetchCampaigns = async () => {
     const res = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/twitter/campaigns/active`
@@ -48,6 +48,8 @@ const Chores = () => {
       await writeAPICall(
         `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${selectedCampaign}/computeChores?walletId=${address}`
       );
+      fetchStats();
+      setCloseCollapse((prev) => prev + 1);
     } catch (error) {
       alert("Server error. Please try again after sometime");
     }
@@ -89,6 +91,7 @@ const Chores = () => {
                 level={level}
                 campaignId={selectedCampaign}
                 address={address}
+                closeCollapse={closeCollapse}
               />
             );
           })}

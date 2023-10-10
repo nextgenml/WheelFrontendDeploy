@@ -18,8 +18,9 @@ const computeChores = async (walletId, campaignId) => {
 
   for (const campaign of [campaigns]) {
     let level = 2;
-    const hashtags = getRandomHashtags(campaign.hashtags);
-    while (level <= campaign.no_of_users) {
+    const hashtags = getRandomHashtags(campaign.hash_tags);
+
+    while (level <= campaign.no_of_levels) {
       const otherUserChores = await getOtherUserChores(
         campaign.id,
         walletId,
@@ -87,16 +88,18 @@ const computeChores = async (walletId, campaignId) => {
 const getRandomHashtags = (hashtags) => {
   let result = "";
   if (hashtags) {
-    const tags = hashtags.split("\n");
+    let tags = hashtags.split("\n");
 
     const index = generateRandomNumber(tags.length);
-    result += hashtags[index];
-    result += ", ";
+    result += tags[index];
+    result += " ";
+
+    tags.splice(index, 1);
 
     const index2 = generateRandomNumber(tags.length);
-    result += hashtags[index2];
+    result += tags[index2];
   }
-  result;
+  return result;
 };
 
 const isValidLink = async (link, choreId) => {

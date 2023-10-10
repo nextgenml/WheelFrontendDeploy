@@ -106,7 +106,6 @@ const CampaignForm = ({ record, onClose, address, onSave }) => {
       !formData.content ||
       !formData.no_of_users ||
       !formData.no_of_levels ||
-      !formData.tweet_link ||
       !formData.hash_tags
     ) {
       alert("Please fill all mandatory fields *");
@@ -142,7 +141,12 @@ const CampaignForm = ({ record, onClose, address, onSave }) => {
     const newLevels = [...levels];
 
     newLevels.forEach((record) => {
-      record.posts = noOfUsers > 0 ? Math.pow(noOfUsers - 1, record.level) : 0;
+      record.posts =
+        noOfUsers > 0
+          ? record.level > 1
+            ? noOfUsers * Math.pow(noOfUsers - 1, record.level - 1)
+            : noOfUsers
+          : 0;
     });
 
     setLevels(newLevels);

@@ -11,8 +11,9 @@ import config from "../../../config";
 import { useAccount } from "wagmi";
 
 function Chore({ chore }) {
+  const localCopy = localStorage.getItem(`twitter_chore_${chore.id}_link`);
   const { address } = useAccount();
-  const [postLink, setPostLink] = useState("");
+  const [postLink, setPostLink] = useState(chore.tweet_link || localCopy);
   const [disableSubmit, setDisableSubmit] = useState(false);
 
   const onSubmit = async () => {
@@ -38,10 +39,12 @@ function Chore({ chore }) {
     setDisableSubmit(false);
   };
   return (
-    <Card>
+    <Card sx={{ backgroundColor: chore.tweet_link ? "#ccebcc" : "white" }}>
       <CardContent>
         <Typography variant="subtitle1" className={styles.tweetText}>
-          You tweet should contain exact text:
+          {chore.type === "comment"
+            ? "Comment with exact text provided to the provider link"
+            : "You new tweet should contain exact text provided below"}
           <br />
           <b>{chore.content}</b>
           <IconButton
@@ -56,7 +59,13 @@ function Chore({ chore }) {
           variant="outlined"
           fullWidth
           value={postLink}
-          onChange={(e) => setPostLink(e.target.value)}
+          onChange={(e) => {
+            setPostLink(e.target.value);
+            localStorage.setItem(
+              `twitter_chore_${chore.id}_link`,
+              e.target.value
+            );
+          }}
           sx={{ my: 2 }}
         />
         <Button

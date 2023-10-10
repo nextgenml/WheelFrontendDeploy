@@ -17,7 +17,7 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 import { getAPICall } from "../../../API";
 import config from "../../../config";
 
-const ChoresLevel = ({ level, campaignId, address }) => {
+const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
   const [open, setOpen] = useState(false);
   const [chores, setChores] = useState([]);
   const [page, setPage] = useState(0);
@@ -36,6 +36,10 @@ const ChoresLevel = ({ level, campaignId, address }) => {
   useEffect(() => {
     if (open && campaignId) fetchData();
   }, [open, rowsPerPage, page]);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [closeCollapse]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
