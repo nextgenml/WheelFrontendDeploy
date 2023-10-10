@@ -74,7 +74,10 @@ const update = async (req, res) => {
   try {
     const { body, files, query, params } = req;
     const { movieId } = params;
-    console.log("files", files);
+
+    console.log(
+      `walletId: ${params.walletId}, movieId: ${movieId}, body: ${body}, files: ${files}`
+    );
 
     await userMoviesRepo.update({
       ...req.body,
