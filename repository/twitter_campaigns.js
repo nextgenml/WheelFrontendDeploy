@@ -4,7 +4,7 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 
 const saveCampaign = async (walletId, data) => {
-  const query = `insert into twitter_campaigns (name, content, tweet_link, no_of_users, no_of_levels, level_1_end_date, level_2_end_date, level_3_end_date, level_4_end_date, level_5_end_date, hash_tags, wallet_id, created_at) values(?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ? ,?, now());`;
+  const query = `insert into twitter_campaigns (name, content, tweet_link, no_of_users, no_of_levels, level_1_end_date, level_2_end_date, level_3_end_date, level_4_end_date, level_5_end_date, hash_tags, wallet_id, level_1_target, level_2_target, level_3_target, level_4_target, level_5_target, created_at) values(?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ? ,?, now());`;
 
   return await runQueryAsync(query, [
     data.name,
@@ -17,8 +17,40 @@ const saveCampaign = async (walletId, data) => {
     getEndOfDay(data.level_3_end_date),
     getEndOfDay(data.level_4_end_date),
     getEndOfDay(data.level_5_end_date),
+    data.level_1_target,
+    data.level_2_target,
+    data.level_3_target,
+    data.level_4_target,
+    data.level_5_target,
     data.hash_tags,
     walletId,
+  ]);
+};
+
+const updateCampaign = async (id, walletId, data) => {
+  const query = `update twitter_campaigns set name = ?, content = ?, tweet_link = ?, no_of_users = ?, no_of_levels = ?, level_1_end_date = ?, level_2_end_date = ?, level_3_end_date = ?, level_4_end_date = ?, level_5_end_date = ?, hash_tags = ?, deleted_at = ?, level_1_target = ?, level_2_target = ?, level_3_target = ?, level_4_target = ?, level_5_target = ? where wallet_id = ? and id = ?;`;
+
+  console.log("data.active", data.active);
+  return await runQueryAsync(query, [
+    data.name,
+    data.content,
+    data.tweet_link,
+    data.no_of_users,
+    data.no_of_levels,
+    getEndOfDay(data.level_1_end_date),
+    getEndOfDay(data.level_2_end_date),
+    getEndOfDay(data.level_3_end_date),
+    getEndOfDay(data.level_4_end_date),
+    getEndOfDay(data.level_5_end_date),
+    data.hash_tags,
+    parseInt(data.active) > 0 ? null : moment().format(DATE_TIME_FORMAT),
+    data.level_1_target,
+    data.level_2_target,
+    data.level_3_target,
+    data.level_4_target,
+    data.level_5_target,
+    walletId,
+    id,
   ]);
 };
 
@@ -58,29 +90,6 @@ const getCampaigns = async (walletId, search, pageSize, offset) => {
   };
 };
 
-const updateCampaign = async (id, walletId, data) => {
-  console.log("id", id, walletId);
-  const query = `update twitter_campaigns set name = ?, content = ?, tweet_link = ?, no_of_users = ?, no_of_levels = ?, level_1_end_date = ?, level_2_end_date = ?, level_3_end_date = ?, level_4_end_date = ?, level_5_end_date = ?, hash_tags = ?, deleted_at = ? where wallet_id = ? and id = ?;`;
-
-  console.log("data.active", data.active);
-  return await runQueryAsync(query, [
-    data.name,
-    data.content,
-    data.tweet_link,
-    data.no_of_users,
-    data.no_of_levels,
-    getEndOfDay(data.level_1_end_date),
-    getEndOfDay(data.level_2_end_date),
-    getEndOfDay(data.level_3_end_date),
-    getEndOfDay(data.level_4_end_date),
-    getEndOfDay(data.level_5_end_date),
-    data.hash_tags,
-    parseInt(data.active) > 0 ? null : moment().format(DATE_TIME_FORMAT),
-    walletId,
-    id,
-  ]);
-};
-
 const toggleCampaignState = async (id, walletId, action) => {
   const query = `update twitter_campaigns set deleted_at = ? where wallet_id = ? and id = ?;`;
 
@@ -101,6 +110,10 @@ const getCampaignById = async (id) => {
 const getEndOfDay = (value) =>
   moment(value).startOf("day").format(DATE_TIME_FORMAT);
 
+const getCampaignCompletedChores = async (campaignId) => {
+  const query = `select level, count(1) as count from twitter_chores where campaign_id = ? and completed_at is not null group by level;`;
+  return await runQueryAsync(query, [campaignId]);
+};
 module.exports = {
   toggleCampaignState,
   updateCampaign,
@@ -108,4 +121,5 @@ module.exports = {
   getCampaigns,
   getCampaignById,
   getAllActiveCampaigns,
+  getCampaignCompletedChores,
 };

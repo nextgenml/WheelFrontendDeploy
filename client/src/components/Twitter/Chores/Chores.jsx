@@ -32,7 +32,7 @@ const Chores = () => {
 
   const fetchStats = async () => {
     const res = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${selectedCampaign}/stats?walletId=${address}`
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${selectedCampaign}/userStats?walletId=${address}`
     );
     setLevels(res.data);
   };

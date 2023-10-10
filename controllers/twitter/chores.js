@@ -31,14 +31,6 @@ const updateChore = async (req, res) => {
     });
   }
 };
-const campaignStats = async (req, res) => {
-  const { id } = req.params;
-
-  const results = await choresRepo.getCampaignStats(id);
-  res.json({
-    data: results,
-  });
-};
 
 const userCampaignStats = async (req, res) => {
   const { id } = req.params;
@@ -90,7 +82,6 @@ const getChores = async (req, res) => {
   }
 };
 module.exports = {
-  campaignStats,
   computeChores,
   getChores,
   updateChore,

@@ -95,12 +95,15 @@ const CampaignForm = ({ record, onClose, address, onSave }) => {
     }));
   };
 
-  console.log("formData", formData);
   const onSubmit = async () => {
     Object.keys(formData).forEach((key) => {
       if (key.endsWith("_date")) formData[key] = moment(formData[key]).format();
     });
+    levels.forEach((level) => {
+      formData[`level_${level.level}_target`] = level.posts;
+    });
     formData.active = active ? 1 : 0;
+
     if (
       !formData.name ||
       !formData.content ||

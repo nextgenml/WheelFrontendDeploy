@@ -8,8 +8,9 @@ router.get("/", controller.getCampaigns);
 router.get("/active", controller.getActiveCampaigns);
 router.get("/:id", controller.getCampaignById);
 router.delete("/:id", controller.toggleCampaignState);
+router.get("/:id/stats", controller.campaignStats);
 
-router.get("/:id/stats", choresController.userCampaignStats);
+router.get("/:id/userStats", choresController.userCampaignStats);
 router.post("/:id/computeChores", choresController.computeChores);
 router.get("/:id/levels/:levelId", choresController.getChores);
 module.exports = router;

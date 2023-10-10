@@ -1,4 +1,5 @@
 const campaignRepo = require("../../repository/twitter_campaigns");
+const campaignManager = require("../../manager/twitter/campaigns");
 
 const saveCampaign = async (req, res) => {
   try {
@@ -79,6 +80,15 @@ const toggleCampaignState = async (req, res) => {
     message: "Updated successfully",
   });
 };
+const campaignStats = async (req, res) => {
+  const { id } = req.params;
+
+  const results = await campaignManager.getCampaignStats(id);
+  res.json({
+    data: results,
+  });
+};
+
 module.exports = {
   saveCampaign,
   getCampaigns,
@@ -86,4 +96,5 @@ module.exports = {
   updateCampaign,
   toggleCampaignState,
   getActiveCampaigns,
+  campaignStats,
 };
