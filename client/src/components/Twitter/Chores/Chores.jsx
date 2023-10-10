@@ -17,7 +17,7 @@ import config from "../../../config";
 import { useAccount } from "wagmi";
 const Chores = () => {
   const { address } = useAccount();
-  const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [selectedCampaign, setSelectedCampaign] = useState(0);
   const [campaigns, setCampaigns] = useState([]);
   const [computing, setComputing] = useState(false);
   const [levels, setLevels] = useState([]);
@@ -27,6 +27,7 @@ const Chores = () => {
       `${config.API_ENDPOINT}/api/v1/twitter/campaigns/active`
     );
     setCampaigns(res.data);
+    if (!selectedCampaign) setSelectedCampaign(res.data[0].id);
   };
 
   const fetchStats = async () => {
