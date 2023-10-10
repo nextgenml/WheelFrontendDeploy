@@ -117,28 +117,23 @@ const isValidLink = async (link, choreId) => {
     try {
       const chore = await getChoreById(choreId);
       const tweet = await getTweetById(id);
-      try {
-        if (tweet && tweet.errors && tweet.errors.length)
-          return [false, tweet.errors[0].detail];
+      if (tweet && tweet.errors && tweet.errors.length)
+        return [true, false, tweet.errors[0].detail];
 
-        const { text } = tweet.data;
-        if (text.toLowerCase().includes(chore.content.toLowerCase()))
-          return [true, true, "Validated"];
-        else
-          return [
-            false,
-            false,
-            "Tweet does not contain mandatory text provided",
-          ];
-      } catch (error) {
+      const { text } = tweet.data;
+      if (text.toLowerCase().includes(chore.content.toLowerCase()))
+        return [true, true, "Validated"];
+      else
+        return [false, false, "Tweet does not contain mandatory text provided"];
+    } catch (error) {
+      if (error.data.status === 429)
         return [
           true,
           false,
-          "Network busy. We will validate the link later",
-          error,
+          "Network busy. We will validate the link later. You can continue with other tasks",
         ];
-      }
-    } catch (error) {}
+      return [false, false, error.message];
+    }
   } else {
     return [false, "Invalid link posted"];
   }

@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import styles from "./Chores.module.css";
-import { IconButton, TextField } from "@mui/material";
+import { IconButton, Link, TextField } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
 import { writeAPICall } from "../../../API";
@@ -42,9 +42,16 @@ function Chore({ chore }) {
     <Card sx={{ backgroundColor: chore.tweet_link ? "#ccebcc" : "white" }}>
       <CardContent>
         <Typography variant="subtitle1" className={styles.tweetText}>
-          {chore.type === "comment"
-            ? "Comment with exact text provided to the provider link"
-            : "You new tweet should contain exact text provided below"}
+          {chore.type === "comment" ? (
+            <>
+              Comment with exact text provided below in this tweet:{" "}
+              <Link href={chore.source_tweet_link} target="_blank">
+                Open Tweet
+              </Link>
+            </>
+          ) : (
+            "You new tweet should contain exact text provided below"
+          )}
           <br />
           <b>{chore.content}</b>
           <IconButton

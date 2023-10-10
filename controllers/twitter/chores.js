@@ -1,6 +1,5 @@
 const choresRepo = require("../../repository/twitter_chores");
 const choresManager = require("../../manager/twitter/chores");
-const { getCampaignById } = require("../../repository/twitter_campaigns");
 
 const updateChore = async (req, res) => {
   try {
@@ -16,9 +15,15 @@ const updateChore = async (req, res) => {
       });
 
     await choresRepo.updateLink(req.body.tweet_link, validated, walletId, id);
-    res.json({
-      message: "success",
-    });
+    if (!validated)
+      return res.status(400).json({
+        message,
+        error,
+      });
+    else
+      return res.json({
+        message: "success",
+      });
   } catch (error) {
     return res.status(400).json({
       statusCode: 500,
