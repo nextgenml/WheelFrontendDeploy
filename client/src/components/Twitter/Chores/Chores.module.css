@@ -15,6 +15,12 @@
   .mainBox {
     padding: 16px;
   }
+  .selectBox {
+    flex-direction: column;
+  }
+  .computeButton {
+    margin-top: 16px;
+  }
 }
 .listItem {
   border-radius: 8px;

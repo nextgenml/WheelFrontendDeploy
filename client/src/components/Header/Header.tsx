@@ -25,6 +25,7 @@ import { useNavigate } from "react-router";
 import LoginHandler from "../LoginHandler/LoginHandler";
 import config from "../../config";
 import { getAPICall } from "../../API/index.js";
+import useIsMobile from "../../Utils/Mobile";
 
 export default function Header() {
   const { isConnected, address } = useAccount();
@@ -41,6 +42,7 @@ export default function Header() {
     setSocialLinks(data);
     setBlogDate(data.pointRewardsStartAt);
   };
+  const isMobile = useIsMobile();
   useEffect(() => {
     fetchHolder();
   }, [isConnected]);
@@ -179,7 +181,7 @@ export default function Header() {
       >
         <img src="/logo.png" width="100%" alt="logo" />
       </Box>
-      {renderBlogTimer()}
+      {!isMobile && renderBlogTimer()}
       {showSaveLinks && (
         <SaveSocialLinks
           onClose={(saved: boolean) => {

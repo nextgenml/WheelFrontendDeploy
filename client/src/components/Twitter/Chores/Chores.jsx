@@ -6,6 +6,7 @@ import {
   Select,
   MenuItem,
   List,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import ChoresLevel from "./ChoresLevel";
@@ -59,7 +60,15 @@ const Chores = () => {
   console.log("selectedCampaign", selectedCampaign);
   return (
     <Box className={styles.mainBox} textAlign={"center"}>
-      <Box display={"flex"} alignItems={"center"} justifyContent={"center"}>
+      <Typography variant="h5" sx={{ mb: 4 }}>
+        <b>Chores</b>
+      </Typography>
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        className={styles.selectBox}
+      >
         <FormControl sx={{ width: "300px" }}>
           <InputLabel>Select Campaign</InputLabel>
           <Select
@@ -75,6 +84,7 @@ const Chores = () => {
         <LoadingButton
           variant="outlined"
           sx={{ ml: 2 }}
+          className={styles.computeButton}
           onClick={onCompute}
           disabled={computing || !selectedCampaign}
           loading={computing}
