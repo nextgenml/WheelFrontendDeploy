@@ -47,7 +47,7 @@ const getMyChores = async (
   offset,
   campaigner
 ) => {
-  let query = `select * from twitter_chores where (1 = ? or wallet_id = ?) and campaign_id = ? and level = ? order by id desc limit ? offset ?;`;
+  let query = `select * from twitter_chores where (1 = ? or wallet_id = ?) and campaign_id = ? and level = ? order by completed_at asc limit ? offset ?;`;
   const results = await runQueryAsync(query, [
     campaigner ? 1 : 0,
     walletId,
