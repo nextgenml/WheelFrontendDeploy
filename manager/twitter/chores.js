@@ -139,13 +139,21 @@ const isValidLink = async (link, choreId) => {
   }
 };
 
-const getUserCampaignStats = async (campaignId, walletId) => {
+const getUserCampaignStats = async (campaignId, walletId, campaigner) => {
   const campaign = await campaignsRepo.getCampaignById(campaignId);
   const result = [];
   let level = 1;
 
-  const completed = await getChoreCampaignCompletedStats(campaignId, walletId);
-  const assigned = await getChoreCampaignAssignedStats(campaignId, walletId);
+  const completed = await getChoreCampaignCompletedStats(
+    campaignId,
+    walletId,
+    campaigner
+  );
+  const assigned = await getChoreCampaignAssignedStats(
+    campaignId,
+    walletId,
+    campaigner
+  );
 
   while (level <= campaign.no_of_levels) {
     const c = completed.filter((x) => x.level === level)[0];

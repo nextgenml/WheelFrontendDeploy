@@ -16,6 +16,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import { getAPICall } from "../../../API";
 import config from "../../../config";
+import { useSearchParams } from "react-router-dom";
 
 const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
   const [open, setOpen] = useState(false);
@@ -23,10 +24,15 @@ const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
+  const [searchParams, _] = useSearchParams();
 
   const fetchData = async () => {
     const data = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaignId}/levels/${level.level}?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}`
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaignId}/levels/${
+        level.level
+      }?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&campaigner=${searchParams.get(
+        "campaigner"
+      )}`
     );
 
     setChores(data.data);

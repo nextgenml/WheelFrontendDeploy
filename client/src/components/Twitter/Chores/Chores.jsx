@@ -18,6 +18,7 @@ import config from "../../../config";
 import { useAccount } from "wagmi";
 import CampaignStats from "../Campaigns/CampaignStats";
 import MyStats from "./MyStats";
+import { useSearchParams } from "react-router-dom";
 const Chores = () => {
   const { address } = useAccount();
   const [selectedCampaign, setSelectedCampaign] = useState(0);
@@ -27,6 +28,7 @@ const Chores = () => {
   const [closeCollapse, setCloseCollapse] = useState(0);
   const [openCampStats, setOpenCampStats] = useState(false);
   const [openMyStats, setOpenMyStats] = useState(false);
+  const [searchParams, _] = useSearchParams();
 
   const fetchCampaigns = async () => {
     const res = await getAPICall(
@@ -38,7 +40,11 @@ const Chores = () => {
 
   const fetchStats = async () => {
     const res = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${selectedCampaign}/userStats?walletId=${address}`
+      `${
+        config.API_ENDPOINT
+      }/api/v1/twitter/campaigns/${selectedCampaign}/userStats?walletId=${address}&campaigner=${searchParams.get(
+        "campaigner"
+      )}`
     );
     setLevels(res.data);
   };
@@ -64,7 +70,7 @@ const Chores = () => {
 
     setComputing(false);
   };
-  console.log("selectedCampaign", selectedCampaign);
+
   return (
     <Box className={styles.mainBox} textAlign={"center"}>
       <Typography variant="h5" sx={{ mb: 4 }}>

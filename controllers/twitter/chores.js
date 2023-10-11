@@ -34,9 +34,12 @@ const updateChore = async (req, res) => {
 
 const userCampaignStats = async (req, res) => {
   const { id } = req.params;
-  const { walletId } = req.query;
-
-  const results = await choresManager.getUserCampaignStats(id, walletId);
+  const { walletId, campaigner } = req.query;
+  const results = await choresManager.getUserCampaignStats(
+    id,
+    walletId,
+    parseInt(campaigner) === 1
+  );
   res.json({
     data: results,
   });
@@ -61,14 +64,15 @@ const computeChores = async (req, res) => {
 
 const getChores = async (req, res) => {
   try {
-    const { walletId, pageNo, pageSize } = req.query;
+    const { walletId, pageNo, pageSize, campaigner } = req.query;
     const { id, levelId } = req.params;
     const data = await choresRepo.getMyChores(
       walletId,
       id,
       levelId,
       parseInt(pageSize) || 10,
-      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0)
+      (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0),
+      parseInt(campaigner) === 1
     );
     res.json({
       data: data.results,
