@@ -21,7 +21,8 @@
     padding: 0;
   }
   .mainForm {
-    padding: 0;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
   }
 }
 .heading {

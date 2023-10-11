@@ -23,7 +23,13 @@ import { customFetch } from "../../../API/index.js";
 import EditIcon from "@mui/icons-material/Edit";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 
-const headers = ["Campaign Name", "No of Users", "No of Levels", "", ""];
+const headers = [
+  "Campaign Name",
+  "No of Users",
+  "No of Levels",
+  "Edit",
+  "Stats",
+];
 
 export default function CampaignsList({
   address,

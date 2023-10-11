@@ -50,6 +50,7 @@ const Campaigns = () => {
             setSelectedRow(null);
           }}
           campaign={selectedRow}
+          address={address}
         />
       )}
     </Box>

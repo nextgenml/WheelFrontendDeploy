@@ -18,14 +18,14 @@ import useIsMobile from "../../../Utils/Mobile";
 import { getAPICall } from "../../../API";
 import config from "../../../config";
 
-const CampaignStats = ({ handleClose, campaign, address }) => {
+const MyStats = ({ handleClose, campaign, address }) => {
   const headers = ["Level", "Status", "Completed", "Target"];
   const [stats, setStats] = useState([]);
   const isMobile = useIsMobile();
 
   const fetchData = async () => {
     const data = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaign.id}/stats?walletId=${address}`
+      `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaign.id}/userStats?walletId=${address}`
     );
     setStats(data.data);
   };
@@ -61,10 +61,12 @@ const CampaignStats = ({ handleClose, campaign, address }) => {
                     >
                       <TableCell>{row.level}</TableCell>
                       <TableCell>
-                        {row.completed >= row.target ? "Completed" : "Ongoing"}
+                        {row.completed >= row.assigned
+                          ? "Completed"
+                          : "Ongoing"}
                       </TableCell>
                       <TableCell>{row.completed}</TableCell>
-                      <TableCell>{row.target}</TableCell>
+                      <TableCell>{row.assigned}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -81,4 +83,4 @@ const CampaignStats = ({ handleClose, campaign, address }) => {
     </>
   );
 };
-export default CampaignStats;
+export default MyStats;

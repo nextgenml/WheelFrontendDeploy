@@ -19,7 +19,7 @@
     flex-direction: column;
   }
   .computeButton {
-    margin-top: 16px;
+    margin-top: 16px !important;
   }
 }
 .listItem {

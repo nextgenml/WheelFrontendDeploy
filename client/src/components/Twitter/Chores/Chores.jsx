@@ -7,6 +7,7 @@ import {
   MenuItem,
   List,
   Typography,
+  Button,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import ChoresLevel from "./ChoresLevel";
@@ -15,6 +16,8 @@ import { LoadingButton } from "@mui/lab";
 import { getAPICall, writeAPICall } from "../../../API";
 import config from "../../../config";
 import { useAccount } from "wagmi";
+import CampaignStats from "../Campaigns/CampaignStats";
+import MyStats from "./MyStats";
 const Chores = () => {
   const { address } = useAccount();
   const [selectedCampaign, setSelectedCampaign] = useState(0);
@@ -22,6 +25,9 @@ const Chores = () => {
   const [computing, setComputing] = useState(false);
   const [levels, setLevels] = useState([]);
   const [closeCollapse, setCloseCollapse] = useState(0);
+  const [openCampStats, setOpenCampStats] = useState(false);
+  const [openMyStats, setOpenMyStats] = useState(false);
+
   const fetchCampaigns = async () => {
     const res = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/twitter/campaigns/active`
@@ -83,7 +89,7 @@ const Chores = () => {
           </Select>
         </FormControl>
         <LoadingButton
-          variant="outlined"
+          variant="contained"
           sx={{ ml: 2 }}
           className={styles.computeButton}
           onClick={onCompute}
@@ -92,6 +98,30 @@ const Chores = () => {
         >
           Compute my tasks
         </LoadingButton>
+      </Box>
+
+      <Box
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={{ mt: 2 }}
+      >
+        <Button
+          variant="outlined"
+          sx={{ ml: 2 }}
+          className={styles.computeButton}
+          onClick={() => setOpenCampStats(true)}
+        >
+          View Campaign Stats
+        </Button>
+        <Button
+          variant="outlined"
+          sx={{ ml: 2 }}
+          className={styles.computeButton}
+          onClick={() => setOpenMyStats(true)}
+        >
+          View My Stats
+        </Button>
       </Box>
 
       <List sx={{ mt: 2 }}>
@@ -107,6 +137,26 @@ const Chores = () => {
             );
           })}
       </List>
+
+      {openCampStats && selectedCampaign && (
+        <CampaignStats
+          handleClose={() => {
+            setOpenCampStats(false);
+          }}
+          campaign={campaigns.filter((c) => c.id === selectedCampaign)[0]}
+          address={address}
+        />
+      )}
+
+      {openMyStats && selectedCampaign && (
+        <MyStats
+          handleClose={() => {
+            setOpenMyStats(false);
+          }}
+          campaign={campaigns.filter((c) => c.id === selectedCampaign)[0]}
+          address={address}
+        />
+      )}
     </Box>
   );
 };
