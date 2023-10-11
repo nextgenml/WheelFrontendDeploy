@@ -16,19 +16,21 @@ import {
   OutlinedInput,
   InputAdornment,
   debounce,
+  Link,
 } from "@mui/material";
 import styles from "./Campaigns.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { customFetch } from "../../../API/index.js";
 import EditIcon from "@mui/icons-material/Edit";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-
+import LaunchIcon from "@mui/icons-material/Launch";
 const headers = [
   "Campaign Name",
   "No of Users",
   "No of Levels",
   "Edit",
   "Stats",
+  "View Chores",
 ];
 
 export default function CampaignsList({
@@ -115,6 +117,11 @@ export default function CampaignsList({
                 </TableCell>
                 <TableCell>
                   <QueryStatsIcon onClick={() => onStatsRow(row)} />
+                </TableCell>
+                <TableCell>
+                  <Link href="/?campaigner=1" target="_blank">
+                    <LaunchIcon />
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}

@@ -54,7 +54,7 @@ export default function Header() {
   };
 
   const renderBlogTimer = () => {
-    if (blogDate && socialLinks.facebookLink)
+    if (!isChoresApp && blogDate && socialLinks.facebookLink)
       return (
         <Box display="flex" alignItems={"center"}>
           <Typography className={styles.mintingText}>Point Reward:</Typography>
@@ -65,18 +65,17 @@ export default function Header() {
         </Box>
       );
   };
-  // { link: "roadmap", title: "ROADMAP" },
-  //{ link: "tokenomics", title: "TOKENOMICS" },
-  // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
-  // { link: "buy-nexgen", title: "BUY" },
 
-  const headerLinks = [
-    { link: "/", title: "HOME" },
-    { link: "goals", title: "GOALS" },
-    { link: "values", title: "VALUES" },
-    { link: "services", title: "SERVICES" },
-    { link: "utilities", title: "UTILITIES" },
-  ];
+  const isChoresApp = process.env.REACT_APP_PROJECT_NAME === "TWITTER_CHORES";
+  const headerLinks = isChoresApp
+    ? []
+    : [
+        { link: "/", title: "HOME" },
+        { link: "goals", title: "GOALS" },
+        { link: "values", title: "VALUES" },
+        { link: "services", title: "SERVICES" },
+        { link: "utilities", title: "UTILITIES" },
+      ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
@@ -89,26 +88,27 @@ export default function Header() {
     setState(open);
   };
   const socialLinksBtn = () => {
-    return (
-      <>
-        {isConnected && (
-          <Link
-            href="#"
-            rel="noopener noreferrer"
-            style={{
-              whiteSpace: "nowrap",
-              color: "black",
-              textAlign: "center",
-            }}
-            onClick={() => setShowSaveLinks(true)}
-          >
-            <Typography className="header-link" sx={linkStyle}>
-              SOCIAL LINKS
-            </Typography>
-          </Link>
-        )}
-      </>
-    );
+    if (!isChoresApp)
+      return (
+        <>
+          {isConnected && (
+            <Link
+              href="#"
+              rel="noopener noreferrer"
+              style={{
+                whiteSpace: "nowrap",
+                color: "black",
+                textAlign: "center",
+              }}
+              onClick={() => setShowSaveLinks(true)}
+            >
+              <Typography className="header-link" sx={linkStyle}>
+                SOCIAL LINKS
+              </Typography>
+            </Link>
+          )}
+        </>
+      );
   };
   const mobileNavLinks = () => (
     <Box

@@ -52,92 +52,101 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Container maxWidth="xl">
-              <Home />
-              <Features />
-              <Tokenomics />
-              <Initiatives />
-              {/* <BuyNextGen /> */}
-              {/* <ConverseWithAI /> */}
-              <Community />
-            </Container>
-          }
-        />
-        {/* <Route path="/claim-distribution" element={<ClaimRedistribution />} /> */}
-        <Route path="/spin-wheel" element={<SpinAndWin />} />
+        {process.env.REACT_APP_PROJECT_NAME !== "TWITTER_CHORES" && (
+          <>
+            <Route
+              path="/"
+              element={
+                <Container maxWidth="xl">
+                  <Home />
+                  <Features />
+                  <Tokenomics />
+                  <Initiatives />
+                  {/* <BuyNextGen /> */}
+                  {/* <ConverseWithAI /> */}
+                  <Community />
+                </Container>
+              }
+            />
+            {/* <Route path="/claim-distribution" element={<ClaimRedistribution />} /> */}
+            <Route path="/spin-wheel" element={<SpinAndWin />} />
 
-        <Route
-          path="/nxml-blog-chat/:initiative"
-          element={<PrivateRoute component={<NXMLChat />} />}
-        />
-        <Route
-          path="/promotions"
-          element={<PrivateRoute component={<Promotions />} />}
-        />
-        <Route path="/tokens" element={<Tokens />} />
-        <Route
-          path="/referrals"
-          element={<PrivateRoute component={<Referrals />} />}
-        />
-        <Route
-          path="/social-sharing"
-          element={<PrivateRoute component={<SocialSharing />} />}
-        />
-        <Route
-          path="/user-campaigns"
-          element={<PrivateRoute component={<Campaigns />} />}
-        />
-        <Route
-          path="/user-profile"
-          element={<PrivateRoute component={<Profile />} />}
-        />
-        <Route
-          path="/user-quizzes"
-          element={<PrivateRoute component={<Quizzes />} />}
-        />
-        <Route
-          path="/posted-blogs"
-          element={<PrivateRoute component={<PostedBlogs />} />}
-        />
-        <Route
-          path="/payments"
-          element={<PrivateRoute component={<TotalEarnings />} />}
-        />
-        <Route
-          path="/referrals/inviteCodes/:code"
-          element={<PrivateRoute component={<Invites />} />}
-        />
-        <Route
-          path="/holders"
-          element={<PrivateRoute component={<Holders />} />}
-        />
-        <Route
-          path="/scheduled_spins"
-          element={<PrivateRoute component={<ScheduledSpins />} />}
-        />
-        <Route
-          path="/social-sharing-admin"
-          element={<PrivateRoute component={<SocialSharingAdmin />} />}
-        />
-        <Route
-          path="/allocations-admin"
-          element={<PrivateRoute component={<AllocationAdmin />} />}
-        />
-        <Route
-          path="/own-a-memory"
-          element={<PrivateRouteBasic component={<MovieTickets />} />}
-        />
-        <Route
-          path="/twitter-campaigns"
-          element={<PrivateRouteBasic component={<TwitterCampaigns />} />}
-        />
-        <Route
-          path="/twitter-chores"
-          element={<PrivateRouteBasic component={<TwitterChores />} />}
-        />
+            <Route
+              path="/nxml-blog-chat/:initiative"
+              element={<PrivateRoute component={<NXMLChat />} />}
+            />
+            <Route
+              path="/promotions"
+              element={<PrivateRoute component={<Promotions />} />}
+            />
+            <Route path="/tokens" element={<Tokens />} />
+            <Route
+              path="/referrals"
+              element={<PrivateRoute component={<Referrals />} />}
+            />
+            <Route
+              path="/social-sharing"
+              element={<PrivateRoute component={<SocialSharing />} />}
+            />
+            <Route
+              path="/user-campaigns"
+              element={<PrivateRoute component={<Campaigns />} />}
+            />
+            <Route
+              path="/user-profile"
+              element={<PrivateRoute component={<Profile />} />}
+            />
+            <Route
+              path="/user-quizzes"
+              element={<PrivateRoute component={<Quizzes />} />}
+            />
+            <Route
+              path="/posted-blogs"
+              element={<PrivateRoute component={<PostedBlogs />} />}
+            />
+            <Route
+              path="/payments"
+              element={<PrivateRoute component={<TotalEarnings />} />}
+            />
+            <Route
+              path="/referrals/inviteCodes/:code"
+              element={<PrivateRoute component={<Invites />} />}
+            />
+            <Route
+              path="/holders"
+              element={<PrivateRoute component={<Holders />} />}
+            />
+            <Route
+              path="/scheduled_spins"
+              element={<PrivateRoute component={<ScheduledSpins />} />}
+            />
+            <Route
+              path="/social-sharing-admin"
+              element={<PrivateRoute component={<SocialSharingAdmin />} />}
+            />
+            <Route
+              path="/allocations-admin"
+              element={<PrivateRoute component={<AllocationAdmin />} />}
+            />
+            <Route
+              path="/own-a-memory"
+              element={<PrivateRouteBasic component={<MovieTickets />} />}
+            />
+          </>
+        )}
+
+        {process.env.REACT_APP_PROJECT_NAME === "TWITTER_CHORES" && (
+          <>
+            <Route
+              path="/twitter-campaigns"
+              element={<PrivateRouteBasic component={<TwitterCampaigns />} />}
+            />
+            <Route
+              path="/"
+              element={<PrivateRouteBasic component={<TwitterChores />} />}
+            />
+          </>
+        )}
       </Routes>
       <Footer />
     </>
