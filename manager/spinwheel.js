@@ -178,7 +178,7 @@ const deleteScheduledJob = () => {
   currentSpinTimeout = null;
   currentSpinId = null;
 };
-initiateNextSpin();
+// initiateNextSpin();
 
 const getNextSpinEligibleUsers = async () => {
   const lastSpinAt = await participantsRepo.lastSpinAt();
