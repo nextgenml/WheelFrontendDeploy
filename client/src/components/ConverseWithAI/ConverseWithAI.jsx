@@ -37,11 +37,11 @@ export default function ConverseWithAI() {
   if (!isConnected) return null;
 
   console.log("balance", balance);
-  if (
-    holder.is_banned ||
-    parseFloat(balance.formatted) < holder.minimum_balance_for_ai
-  )
-    return null;
+  // if (
+  //   holder.is_banned ||
+  //   parseFloat(balance.formatted) < holder.minimum_balance_for_ai
+  // )
+  //   return null;
   return (
     <Box my={5} id="converse_with_ai">
       <Typography

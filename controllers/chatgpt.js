@@ -26,7 +26,12 @@ function randPaidKey(exclude) {
 function getOpenAiRequest(prompt) {
   return {
     model: "text-davinci-003",
-    prompt: ("<|endoftext|>" + prompt + "\n--\nLabel:").substring(0, 255),
+    prompt: [
+      "Where was the last olympics held? Just tell me the year & country?",
+      "Which country won the most medals in that? Just tell me the country name",
+      "How many medals did they win in that? Just tell me the number",
+      "How many gold medals did they win in that? Just tell me the number",
+    ],
     temperature: 0.9,
     max_tokens: 4000,
     top_p: 1,
@@ -54,16 +59,53 @@ async function getResponse(prompt, excludeFree, excludePaid) {
     const configuration = new Configuration({
       apiKey: key,
     });
-    const openai = new OpenAIApi(configuration);
-    console.log(`create new connection`);
-    const openAIRequest = getOpenAiRequest(prompt);
 
-    console.log("[! Trying] trying paid key: ", key);
-    const completion = await openai.createCompletion(openAIRequest);
-    console.log(completion);
-    console.log("ChatGPT Status:  ", completion.status);
-    return completion.data.choices[0].text;
+    const openai = new OpenAIApi(configuration);
+    model_id = "gpt-3.5-turbo";
+    messages = [
+      {
+        role: "user",
+        content:
+          "Where was the last olympics held? Just tell me the year  & country?",
+      },
+      {
+        role: "assistant",
+        content: "\n\nThe last Olympics were held in 2021 in Tokyo, Japan.",
+      },
+      {
+        role: "user",
+        content:
+          "Which country won the most medals in that? Just tell me the country name",
+      },
+      {
+        role: "assistant",
+        content:
+          "The country that won the most medals at the 2021 Olympics in Tokyo was the United States.",
+      },
+      {
+        role: "user",
+        content:
+          "How many medals did they win in that? Just tell me the number",
+      },
+    ];
+
+    const response = await openai.createChatCompletion({
+      model: "text-davinci-003",
+      messages,
+      temperature: 0.9,
+      max_tokens: 4000,
+      top_p: 1,
+    });
+    // console.log(`create new connection`);
+    // const openAIRequest = getOpenAiRequest(prompt);
+
+    // console.log("[! Trying] trying paid key: ", key);
+    // const completion = await openai.createCompletion(openAIRequest);
+    // console.log(completion);
+    // console.log("ChatGPT Status:  ", completion.status);
+    return response;
   } catch (err) {
+    console.log("err", err);
     if (!excludeFree || excludeFree.length < FreeKeys.length) {
       let exclude = [];
       if (excludeFree) {
@@ -83,15 +125,56 @@ async function getResponse(prompt, excludeFree, excludePaid) {
     return getResponse(prompt, excludeFree, exclude);
   }
 }
+const gptAPI = async () => {
+  const configuration = new Configuration({
+    apiKey: "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",
+  });
+  const openai = new OpenAIApi(configuration);
+  model_id = "gpt-3.5-turbo";
+  messages = [
+    {
+      role: "user",
+      content:
+        "Where was the last olympics held? Just tell me the year  & country?",
+    },
+    {
+      role: "assistant",
+      content: "\n\nThe last Olympics were held in 2021 in Tokyo, Japan.",
+    },
+    {
+      role: "user",
+      content:
+        "Which country won the most medals in that? Just tell me the country name",
+    },
+    {
+      role: "assistant",
+      content:
+        "The country that won the most medals at the 2021 Olympics in Tokyo was the United States.",
+    },
+    {
+      role: "user",
+      content: "How many medals did they win in that? Just tell me the number",
+    },
+  ];
+
+  const response = await openai.createChatCompletion({
+    model: "text-davinci-003",
+    messages,
+    temperature: 0.9,
+    max_tokens: 4000,
+    top_p: 1,
+  });
+  return response;
+};
 const chatGptResponse = async (req, res) => {
   try {
     const { walletId } = req.query;
-    let data = await getResponse(req.body.msg);
+    let data = await gptAPI(req.body.msg);
     createChatgptLog(walletId, req.body.msg);
     res.send({ result: data });
   } catch (e) {
     logger.error(`error in chatGptResponse: ${e}`);
-    res.send({ result: data });
+    res.status(500).send({ error: e.message });
   }
 };
 module.exports = {
