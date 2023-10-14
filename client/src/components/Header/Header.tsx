@@ -118,7 +118,7 @@ export default function Header() {
       sx={{ width: "240px", cursor: "pointer" }}
     >
       <Box mt={-20} display="flex" justifyContent="center">
-        <img width="150px" src="/logo.png" alt="" />
+        {/* <img width="150px" src="/logo.png" alt="" /> */}
       </Box>
       {renderBlogTimer()}
       <List>
@@ -179,7 +179,7 @@ export default function Header() {
         sx={{ p: 1, cursor: "pointer" }}
         onClick={() => navigate("/")}
       >
-        <img src="/logo.png" width="100%" alt="logo" />
+        {/* <img src="/logo.png" width="100%" alt="logo" /> */}
       </Box>
       {!isMobile && renderBlogTimer()}
       {showSaveLinks && (
