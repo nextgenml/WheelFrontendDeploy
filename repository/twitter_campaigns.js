@@ -17,13 +17,13 @@ const saveCampaign = async (walletId, data) => {
     getEndOfDay(data.level_3_end_date),
     getEndOfDay(data.level_4_end_date),
     getEndOfDay(data.level_5_end_date),
+    data.hash_tags,
+    walletId,
     data.level_1_target,
     data.level_2_target,
     data.level_3_target,
     data.level_4_target,
     data.level_5_target,
-    data.hash_tags,
-    walletId,
   ]);
 };
 
