@@ -13,12 +13,12 @@ const PrivateRouteBasic = ({ component }) => {
           apps from background and retry
         </Typography>
 
-        <Typography variant="h5" sx={{ mb: 20 }}>
+        {/* <Typography variant="h5" sx={{ mb: 20 }}>
           To connect wallet, please follow steps in video:&nbsp;&nbsp;
           <Link href="https://www.youtube.com/watch?v=T_EppmwS8HM&ab_channel=nexgenML">
             Youtube
           </Link>
-        </Typography>
+        </Typography> */}
       </Box>
     );
 };

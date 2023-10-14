@@ -4,7 +4,7 @@ const { runQueryAsync } = require("../utils/spinwheelUtil");
 const moment = require("moment");
 
 const saveCampaign = async (walletId, data) => {
-  const query = `insert into twitter_campaigns (name, content, tweet_link, no_of_users, no_of_levels, level_1_end_date, level_2_end_date, level_3_end_date, level_4_end_date, level_5_end_date, hash_tags, wallet_id, level_1_target, level_2_target, level_3_target, level_4_target, level_5_target, created_at) values(?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ? ,?, now());`;
+  const query = `insert into twitter_campaigns (name, content, tweet_link, no_of_users, no_of_levels, level_1_end_date, level_2_end_date, level_3_end_date, level_4_end_date, level_5_end_date, hash_tags, wallet_id, level_1_target, level_2_target, level_3_target, level_4_target, level_5_target, created_at) values(?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ? ,?, now());`;
 
   return await runQueryAsync(query, [
     data.name,
