@@ -33,7 +33,7 @@ const computeChores = async (walletId, campaignId) => {
           const messages = [
             {
               role: "system",
-              content: `Rewrite the content: ${chore.content} and include hashtags: ${hashtags}. Do not include any special characters`,
+              content: `Rewrite the content with less than 220 characters: ${chore.content} and include hashtags: ${hashtags}. Do not include any special characters`,
             },
           ];
           const { content } = await chatGptResponse(messages);
@@ -57,7 +57,7 @@ const computeChores = async (walletId, campaignId) => {
         const messages = [
           {
             role: "system",
-            content: `Rewrite the content: ${campaign.content} and include hashtags: ${hashtags}. Do not include any special characters`,
+            content: `Rewrite the content with less than 220 characters: ${campaign.content} and include hashtags: ${hashtags}. Do not include any special characters`,
           },
         ];
         const { content } = await chatGptResponse(messages);
