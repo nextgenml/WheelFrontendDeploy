@@ -55,7 +55,8 @@ const updateCampaign = async (id, walletId, data) => {
 };
 
 const getAllActiveCampaigns = async () => {
-  let query = "select * from twitter_campaigns where deleted_at is null";
+  let query =
+    "select * from twitter_campaigns where deleted_at is null order by id desc";
 
   return await runQueryAsync(query, []);
 };
