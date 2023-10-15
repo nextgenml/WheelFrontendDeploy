@@ -1,37 +1,5 @@
 version: "3.9"
 services:
-  #app:
-  #  build: app
-  #  ports:
-  #    - 0.0.0.0:4567:8000
-  #  environment:
-  #    MYSQL_HOST: mysql
-  #    MYSQL_USER: root
-  #    MYSQL_PASSWORD: password
-  #    MYSQL_DB: nextgenml
-  #  depends_on:
-  #    - mysql
-  #    - chatgpt-backend
-  #  volumes:
-  #    - ./app/config/:/app/config/
-  #    - ./app/config.js:/app/config.js
-  #    - ./app/manager:/app/manager
-  #    - ./app/script:/app/script
-  #    - ./app/repository:/app/repository
-  #    - ./app/package.json:/app/package.json
-  #    - ./app/tmp:/app/tmp
-  #    - ./app/uploads:/app/uploads
-  #    - ./app/utils:/app/utils
-
-  #mysql:
-  #  image: mysql:5.7
-  #  container_name: mysql
-  #  environment:
-  #    MYSQL_ROOT_PASSWORD: password
-  #    MYSQL_DATABASE: nextgenml
-  #  volumes:
-  #    - mysql_volume:/var/lib/mysql
-
   prod-app:
     build: IOSite
     ports:
@@ -45,7 +13,6 @@ services:
       NODE_OPTIONS: --max-old-space-size=8192
     depends_on:
       - prod-mysql
-      - chatgpt-backend
     volumes:
       - ./IOSite/.env:/app/.env
       - ./IOSite/logs:/app/logs
@@ -76,41 +43,9 @@ services:
       MYSQL_DATABASE: nextgenml
     volumes:
       - prod_mysql_volume:/var/lib/mysql
-    
-  proxy:
-    image: nginx:alpine
-    restart: unless-stopped
-    volumes: 
-      - ./dns_config/nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./dns_config/certbot/www:/var/www/certbot/:ro
-      - ./dns_config/certbot/conf/:/etc/letsencrypt/:rw
-      - ./dns_config/nginx/error_page.html:/usr/share/nginx/html/error_page.html:ro
-    ports:
-      - 80:80 # listen for http connections
-      - 443:443 # listen for https connections
-    depends_on:
-      - prod-app
-      - chatgpt-backend
-      - chatgpt-frontend
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./dns_config/certbot/www/:/var/www/certbot/:rw
-      - ./dns_config/certbot/conf/:/etc/letsencrypt/:rw
-
-  chatgpt-backend:
-    build: chatgpt_API
-    volumes:
-      - ./chatgpt_API/app.js:/app/app.js
-      - ./chatgpt_API/utils.js:/app/utils.js
-      - ./chatgpt_API/keys.json:/app/keys.json
-
-  chatgpt-frontend:
-    build: chatgpt_frontend
-    depends_on:
-      - chatgpt-backend
+    command: --max_allowed_packet=32505856
   
 volumes:
   mysql_volume:
   prod_mysql_volume:
+  inbox_mysql_volume:
