@@ -33,7 +33,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
     setFormData((prev) => ({ ...prev, [key]: newValue }));
   };
   const [disableSubmit, setDisableSubmit] = useState(false);
-
+  const [canUpload, setCanUpload] = useState(false);
   useEffect(() => {
     getNewMovie();
   }, []);
@@ -120,6 +120,183 @@ const NextMovieForm = ({ meta, getMeta }) => {
     }));
   };
 
+  const getLocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    // Success callback function
+    async function successCallback(position) {
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+
+      const res = await customFetch(
+        `${config.API_ENDPOINT}/api/v1/movie-tickets/movies/${
+          latestMovie.id
+        }/canUpload?viewAs=${
+          searchParams.get("viewAs") || ""
+        }&walletId=${address}&lat=${latitude}&long=${longitude}`
+      );
+      if (res.ok) {
+        const { message, canUpload } = await res.json();
+        if (canUpload) {
+          setCanUpload(true);
+        } else {
+          alert(message);
+        }
+      } else {
+        alert("Something went wrong. Please try again after sometime");
+      }
+    }
+
+    // Error callback function
+    function errorCallback(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("User denied the request for Geolocation.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Location information is unavailable.");
+          break;
+        case error.TIMEOUT:
+          alert("The request to get user location timed out.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred.");
+          break;
+        default:
+          alert("Unable to get the location");
+      }
+    }
+  };
+  const hallImages = () => {
+    return (
+      <>
+        <Grid
+          item
+          md={12}
+          xs={12}
+          sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
+        >
+          <Button variant="outlined" component="label">
+            Upload Theater Image
+            <input
+              type="file"
+              accept=".png,.jpg"
+              hidden
+              onChange={(e) => onFilesChange(e, "hall_image")}
+            />
+          </Button>
+          {latestMovie?.hall_image_path && (
+            <CheckCircleOutlineIcon sx={{ ml: 1 }} color="success" />
+          )}
+          {formData.hall_image && (
+            <Typography variant="caption" sx={{ ml: 2 }}>
+              {formData.hall_image.name}
+            </Typography>
+          )}
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item md={6}>
+              {formData.hall_image || latestMovie?.hall_image_path ? (
+                <img
+                  src={
+                    formData.hall_image
+                      ? URL.createObjectURL(formData.hall_image)
+                      : `${
+                          config.API_ENDPOINT
+                        }/${latestMovie.hall_image_path.replace(
+                          "uploads",
+                          "images"
+                        )}`
+                  }
+                  alt="ticket"
+                  height={200}
+                  width={300}
+                />
+              ) : (
+                <img
+                  src="/movieTickets/theater.jpeg"
+                  alt="ticket"
+                  height={200}
+                  width={300}
+                />
+              )}
+            </Grid>
+            <Grid item md={6}>
+              {imageErrors &&
+                imageErrors.hall_image_issues &&
+                imageErrors.hall_image_issues.map((x, i) => (
+                  <Typography color={"var(--bs-danger)"}>
+                    {i + 1}. {x}
+                  </Typography>
+                ))}
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          md={12}
+          xs={12}
+          sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
+        >
+          <Button variant="outlined" component="label">
+            Upload Movie Posture Image
+            <input
+              type="file"
+              accept=".png,.jpg"
+              hidden
+              onChange={(e) => onFilesChange(e, "posture_image")}
+            />
+          </Button>
+          {latestMovie?.posture_image_path && (
+            <CheckCircleOutlineIcon sx={{ ml: 1 }} color="success" />
+          )}
+          {formData.posture_image && (
+            <Typography variant="caption" sx={{ ml: 2 }}>
+              {formData.posture_image.name}
+            </Typography>
+          )}
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item md={6}>
+              {formData.posture_image || latestMovie?.posture_image_path ? (
+                <img
+                  src={
+                    formData.posture_image
+                      ? URL.createObjectURL(formData.posture_image)
+                      : `${
+                          config.API_ENDPOINT
+                        }/${latestMovie.posture_image_path.replace(
+                          "uploads",
+                          "images"
+                        )}`
+                  }
+                  alt="ticket"
+                  height={200}
+                  width={300}
+                />
+              ) : (
+                <img
+                  src="/movieTickets/posture.jpeg"
+                  alt="ticket"
+                  height={200}
+                  width={300}
+                />
+              )}
+            </Grid>
+            <Grid item md={6}>
+              {imageErrors && imageErrors.posture_image_date && (
+                <Typography variant="subtitle2" color={"var(--bs-danger)"}>
+                  {imageErrors.posture_image_date}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  };
   if (complete)
     return (
       <div className={styles.main}>
@@ -150,6 +327,7 @@ const NextMovieForm = ({ meta, getMeta }) => {
         </Grid>
       </div>
     );
+
   return (
     <div className={styles.main}>
       <Grid container spacing={2}>
@@ -323,130 +501,17 @@ const NextMovieForm = ({ meta, getMeta }) => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
-                  >
-                    <Button variant="outlined" component="label">
-                      Upload Theater Image
-                      <input
-                        type="file"
-                        accept=".png,.jpg"
-                        hidden
-                        onChange={(e) => onFilesChange(e, "hall_image")}
-                      />
-                    </Button>
-                    {latestMovie?.hall_image_path && (
-                      <CheckCircleOutlineIcon sx={{ ml: 1 }} color="success" />
-                    )}
-                    {formData.hall_image && (
-                      <Typography variant="caption" sx={{ ml: 2 }}>
-                        {formData.hall_image.name}
-                      </Typography>
-                    )}
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                      <Grid item md={6}>
-                        {formData.hall_image || latestMovie?.hall_image_path ? (
-                          <img
-                            src={
-                              formData.hall_image
-                                ? URL.createObjectURL(formData.hall_image)
-                                : `${
-                                    config.API_ENDPOINT
-                                  }/${latestMovie.hall_image_path.replace(
-                                    "uploads",
-                                    "images"
-                                  )}`
-                            }
-                            alt="ticket"
-                            height={200}
-                            width={300}
-                          />
-                        ) : (
-                          <img
-                            src="/movieTickets/theater.jpeg"
-                            alt="ticket"
-                            height={200}
-                            width={300}
-                          />
-                        )}
-                      </Grid>
-                      <Grid item md={6}>
-                        {imageErrors &&
-                          imageErrors.hall_image_issues &&
-                          imageErrors.hall_image_issues.map((x, i) => (
-                            <Typography color={"var(--bs-danger)"}>
-                              {i + 1}. {x}
-                            </Typography>
-                          ))}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    sx={{ borderTop: "1px solid lightgrey", mt: 1 }}
-                  >
-                    <Button variant="outlined" component="label">
-                      Upload Movie Posture Image
-                      <input
-                        type="file"
-                        accept=".png,.jpg"
-                        hidden
-                        onChange={(e) => onFilesChange(e, "posture_image")}
-                      />
-                    </Button>
-                    {latestMovie?.posture_image_path && (
-                      <CheckCircleOutlineIcon sx={{ ml: 1 }} color="success" />
-                    )}
-                    {formData.posture_image && (
-                      <Typography variant="caption" sx={{ ml: 2 }}>
-                        {formData.posture_image.name}
-                      </Typography>
-                    )}
-                    <Grid container spacing={2} sx={{ mt: 1 }}>
-                      <Grid item md={6}>
-                        {formData.posture_image ||
-                        latestMovie?.posture_image_path ? (
-                          <img
-                            src={
-                              formData.posture_image
-                                ? URL.createObjectURL(formData.posture_image)
-                                : `${
-                                    config.API_ENDPOINT
-                                  }/${latestMovie.posture_image_path.replace(
-                                    "uploads",
-                                    "images"
-                                  )}`
-                            }
-                            alt="ticket"
-                            height={200}
-                            width={300}
-                          />
-                        ) : (
-                          <img
-                            src="/movieTickets/posture.jpeg"
-                            alt="ticket"
-                            height={200}
-                            width={300}
-                          />
-                        )}
-                      </Grid>
-                      <Grid item md={6}>
-                        {imageErrors && imageErrors.posture_image_date && (
-                          <Typography
-                            variant="subtitle2"
-                            color={"var(--bs-danger)"}
-                          >
-                            {imageErrors.posture_image_date}
-                          </Typography>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  {canUpload
+                    ? hallImages()
+                    : latestMovie?.c_hall_name && (
+                        <Button
+                          variant="outlined"
+                          sx={{ ml: 2 }}
+                          onClick={getLocation}
+                        >
+                          Check In
+                        </Button>
+                      )}
                 </>
               )}
 

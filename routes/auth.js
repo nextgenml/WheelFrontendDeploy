@@ -11,6 +11,9 @@ const validateWalletId = async (req, res, next) => {
 };
 
 const validateAdmin = async (req, res, next) => {
+  const telegramKey = req.headers.telegram_auth;
+  if (telegramKey === process.env.TELEGRAM_ADMIN_KEY) return next();
+
   if (req.query.walletId !== config.ADMIN_WALLET) {
     return res.status(401).json({
       statusCode: 400,
@@ -20,6 +23,14 @@ const validateAdmin = async (req, res, next) => {
 };
 
 const validateLoginSession = async (req, res, next) => {
+  const telegramKey = req.headers.telegram_auth;
+  if (
+    [process.env.TELEGRAM_ADMIN_KEY, process.env.TELEGRAM_USER_KEY].includes(
+      telegramKey
+    )
+  )
+    return next();
+
   const token = req.headers.authorization;
   if (!token)
     return res.status(401).json({
@@ -42,6 +53,9 @@ const validateLoginSession = async (req, res, next) => {
 };
 
 const extractWallet = async (req, res, next) => {
+  const telegramKey = req.headers.telegram_auth;
+  if (telegramKey === process.env.TELEGRAM_USER_KEY) return next();
+
   const token = req.headers.authorization;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -69,6 +83,9 @@ const extractWallet = async (req, res, next) => {
 };
 
 const extractWalletSoft = async (req, res, next) => {
+  const telegramKey = req.headers.telegram_auth;
+  if (telegramKey === process.env.TELEGRAM_USER_KEY) return next();
+
   const token = req.headers.authorization;
   req.query.walletId = "";
   if (token) {

@@ -9,6 +9,7 @@ const {
 } = require("../../manager/movie-tickets/movies");
 const { choresCleanup } = require("../../manager/movie-tickets/chores");
 const { extractTextFromImage } = require("../../utils/google_vision");
+const { getGeocode, calculateDistance } = require("../../utils/google_maps");
 
 const list = async (req, res) => {
   try {
@@ -141,9 +142,42 @@ const update = async (req, res) => {
   }
 };
 
+const canUploadTickets = async (req, res) => {
+  try {
+    const { lat, long, walletId } = req.query;
+    const { id } = req.params;
+
+    const movie = await userMoviesRepo.getMovieById(id, walletId);
+
+    const location = `${movie.c_hall_name} ${movie.c_city} ${movie.c_state} ${movie.c_country}`;
+    const geoCodes = await getGeocode(location);
+
+    const distance = calculateDistance(
+      lat,
+      long,
+      geoCodes.latitude,
+      geoCodes.longitude
+    );
+    console.log("distance", distance);
+    const canUpload = distance <= 2;
+    res.json({
+      canUpload,
+      message: canUpload
+        ? ""
+        : "You are not at the cinema theatre. Please upload images once you reach the cinema theatre",
+    });
+  } catch (error) {
+    logger.error(`error in user canUploadTickets - create: ${error}`);
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   get,
   create,
   update,
   list,
+  canUploadTickets,
 };

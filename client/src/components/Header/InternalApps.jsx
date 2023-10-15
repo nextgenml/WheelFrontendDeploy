@@ -27,74 +27,92 @@ export default function InternalApps() {
     setAnchorEl(null);
     navigate(path);
   };
+  const isChoresApp = process.env.REACT_APP_PROJECT_NAME === "TWITTER_CHORES";
 
   const { isConnected } = useAccount();
-  const connectedApps = [
-    {
-      name: "Own a Memory",
-      path: "/own-a-memory",
-      icon: <MemoryIcon />,
-    },
-    {
-      name: "Campaigns",
-      path: "/user-campaigns",
-      icon: <CampaignIcon />,
-    },
-    {
-      name: "Work Area",
-      path: "/social-sharing",
-      icon: <GroupWorkIcon />,
-    },
-    {
-      name: "Referrals",
-      path: "/referrals",
-      icon: <PersonAddIcon />,
-    },
-    {
-      name: "Earnings",
-      path: "/payments",
-      icon: <PaymentsIcon />,
-    },
-    {
-      name: "Posted Blogs",
-      path: "/posted-blogs",
-      icon: <BookIcon />,
-    },
-  ];
-  const publicApps = [
-    {
-      name: "Launch Wheel",
-      path: "/spin-wheel",
-      icon: <AttractionsIcon />,
-    },
-    {
-      name: "Allocation",
-      path: "/tokens",
-      icon: <TokenIcon />,
-    },
-  ];
-  const adminApps = [
-    {
-      name: "Holders Admin",
-      path: "/holders",
-      icon: <PersonIcon />,
-    },
-    {
-      name: "Spins Admin",
-      path: "/scheduled_spins",
-      icon: <AttractionsIcon />,
-    },
-    {
-      name: "Work Area Admin",
-      path: "/social-sharing-admin",
-      icon: <GroupWorkIcon />,
-    },
-    {
-      name: "Allocation Admin",
-      path: "/allocations-admin",
-      icon: <TokenIcon />,
-    },
-  ];
+  const connectedApps = isChoresApp
+    ? [
+        {
+          name: "Campaigns",
+          path: "/twitter-campaigns",
+          icon: <CampaignIcon />,
+        },
+        {
+          name: "Chores",
+          path: "/",
+          icon: <GroupWorkIcon />,
+        },
+      ]
+    : [
+        {
+          name: "Own a Memory",
+          path: "/own-a-memory",
+          icon: <MemoryIcon />,
+        },
+        {
+          name: "Campaigns",
+          path: "/user-campaigns",
+          icon: <CampaignIcon />,
+        },
+        {
+          name: "Work Area",
+          path: "/social-sharing",
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: "Referrals",
+          path: "/referrals",
+          icon: <PersonAddIcon />,
+        },
+        {
+          name: "Earnings",
+          path: "/payments",
+          icon: <PaymentsIcon />,
+        },
+        {
+          name: "Posted Blogs",
+          path: "/posted-blogs",
+          icon: <BookIcon />,
+        },
+      ];
+  const publicApps = isChoresApp
+    ? []
+    : [
+        {
+          name: "Launch Wheel",
+          path: "/spin-wheel",
+          icon: <AttractionsIcon />,
+        },
+        {
+          name: "Allocation",
+          path: "/tokens",
+          icon: <TokenIcon />,
+        },
+      ];
+  const adminApps = isChoresApp
+    ? []
+    : [
+        {
+          name: "Holders Admin",
+          path: "/holders",
+          icon: <PersonIcon />,
+        },
+        {
+          name: "Spins Admin",
+          path: "/scheduled_spins",
+          icon: <AttractionsIcon />,
+        },
+        {
+          name: "Work Area Admin",
+          path: "/social-sharing-admin",
+          icon: <GroupWorkIcon />,
+        },
+        {
+          name: "Allocation Admin",
+          path: "/allocations-admin",
+          icon: <TokenIcon />,
+        },
+      ];
   return (
     <div>
       <Button

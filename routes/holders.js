@@ -12,7 +12,7 @@ router.post(
   holdersController.saveSocialLinks
 );
 router.post("/login", holdersController.login);
-router.get("/details", validateLoginSession, holdersController.getDetails);
+router.get("/details", holdersController.getDetails);
 router.get("/nonce", validateWalletId, holdersController.getNonce);
 router.get(
   "/search",

@@ -1,14 +1,22 @@
 import { Box, Link, Typography } from "@mui/material";
 import { useAccount } from "wagmi";
 import { getAuthToken } from "../../API/index.js";
+import LoginHandler from "../LoginHandler/LoginHandler.jsx";
 
 const PrivateRoute = ({ component }) => {
   const { isConnected } = useAccount();
   const token = getAuthToken();
-  if (token && isConnected) return <>{component}</>;
+  if (token && isConnected)
+    return (
+      <>
+        <LoginHandler />
+        {component}
+      </>
+    );
   else
     return (
       <Box sx={{ p: 3 }}>
+        <LoginHandler />
         <Typography variant="h6" sx={{ mb: 2 }}>
           Please connect your wallet and sign the message to login. If logged
           in, please refresh the page to sign the message

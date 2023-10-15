@@ -8,7 +8,6 @@ let twitterClient = new TwitterApi(config.TWITTER_DEV_TOKEN);
 const readOnlyClient = twitterClient.readOnly;
 const getTweetById = async (id) => {
   const tweet = await readOnlyClient.v2.singleTweet(id);
-  console.log("tweet", tweet);
   return tweet;
 };
 const searchTweets = async (search, start_time, end_time) => {

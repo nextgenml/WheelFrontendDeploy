@@ -25,6 +25,7 @@ import { useNavigate } from "react-router";
 import LoginHandler from "../LoginHandler/LoginHandler";
 import config from "../../config";
 import { getAPICall } from "../../API/index.js";
+import useIsMobile from "../../Utils/Mobile";
 
 export default function Header() {
   const { isConnected, address } = useAccount();
@@ -35,12 +36,13 @@ export default function Header() {
   const navigate = useNavigate();
   const fetchHolder = async () => {
     const data = await getAPICall(
-      `${config.API_ENDPOINT}/api/v1/holders/details`,
+      `${config.API_ENDPOINT}/api/v1/holders/details?walletId=${address}`,
       true
     );
     setSocialLinks(data);
     setBlogDate(data.pointRewardsStartAt);
   };
+  const isMobile = useIsMobile();
   useEffect(() => {
     fetchHolder();
   }, [isConnected]);
@@ -52,7 +54,7 @@ export default function Header() {
   };
 
   const renderBlogTimer = () => {
-    if (blogDate && socialLinks.facebookLink)
+    if (!isChoresApp && blogDate && socialLinks.facebookLink)
       return (
         <Box display="flex" alignItems={"center"}>
           <Typography className={styles.mintingText}>Point Reward:</Typography>
@@ -63,18 +65,17 @@ export default function Header() {
         </Box>
       );
   };
-  // { link: "roadmap", title: "ROADMAP" },
-  //{ link: "tokenomics", title: "TOKENOMICS" },
-  // { link: "converse_with_ai", title: "CONVERSE WITH AI" },
-  // { link: "buy-nexgen", title: "BUY" },
 
-  const headerLinks = [
-    { link: "/", title: "HOME" },
-    { link: "goals", title: "GOALS" },
-    { link: "values", title: "VALUES" },
-    { link: "services", title: "SERVICES" },
-    { link: "utilities", title: "UTILITIES" },
-  ];
+  const isChoresApp = process.env.REACT_APP_PROJECT_NAME === "TWITTER_CHORES";
+  const headerLinks = isChoresApp
+    ? []
+    : [
+        { link: "/", title: "HOME" },
+        { link: "goals", title: "GOALS" },
+        { link: "values", title: "VALUES" },
+        { link: "services", title: "SERVICES" },
+        { link: "utilities", title: "UTILITIES" },
+      ];
 
   const toggleDrawer = (open: boolean) => (event: any) => {
     if (
@@ -87,26 +88,27 @@ export default function Header() {
     setState(open);
   };
   const socialLinksBtn = () => {
-    return (
-      <>
-        {isConnected && (
-          <Link
-            href="#"
-            rel="noopener noreferrer"
-            style={{
-              whiteSpace: "nowrap",
-              color: "black",
-              textAlign: "center",
-            }}
-            onClick={() => setShowSaveLinks(true)}
-          >
-            <Typography className="header-link" sx={linkStyle}>
-              SOCIAL LINKS
-            </Typography>
-          </Link>
-        )}
-      </>
-    );
+    if (!isChoresApp)
+      return (
+        <>
+          {isConnected && (
+            <Link
+              href="#"
+              rel="noopener noreferrer"
+              style={{
+                whiteSpace: "nowrap",
+                color: "black",
+                textAlign: "center",
+              }}
+              onClick={() => setShowSaveLinks(true)}
+            >
+              <Typography className="header-link" sx={linkStyle}>
+                SOCIAL LINKS
+              </Typography>
+            </Link>
+          )}
+        </>
+      );
   };
   const mobileNavLinks = () => (
     <Box
@@ -116,7 +118,7 @@ export default function Header() {
       sx={{ width: "240px", cursor: "pointer" }}
     >
       <Box mt={-20} display="flex" justifyContent="center">
-        <img width="150px" src="/logo.png" alt="" />
+        {/* <img width="150px" src="/logo.png" alt="" /> */}
       </Box>
       {renderBlogTimer()}
       <List>
@@ -155,7 +157,7 @@ export default function Header() {
               </a>
             );
           })}
-        <InternalApps />
+        {isConnected && <InternalApps />}
         {socialLinksBtn()}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
@@ -177,10 +179,9 @@ export default function Header() {
         sx={{ p: 1, cursor: "pointer" }}
         onClick={() => navigate("/")}
       >
-        <img src="/logo.png" width="100%" alt="logo" />
+        {/* <img src="/logo.png" width="100%" alt="logo" /> */}
       </Box>
-      {renderBlogTimer()}
-      <LoginHandler />
+      {!isMobile && renderBlogTimer()}
       {showSaveLinks && (
         <SaveSocialLinks
           onClose={(saved: boolean) => {
@@ -219,7 +220,7 @@ export default function Header() {
               );
             })}
           {socialLinksBtn()}
-          <InternalApps />
+          {isConnected && <InternalApps />}
           <Web3Button />
         </Stack>
       </Hidden>
