@@ -12,6 +12,7 @@ function handleDisconnect() {
     database: "nextgenml",
     connectionLimit: 100,
     multipleStatements: true,
+    charset: "utf8mb4",
   });
   dbConnection = mysql.createConnection({
     host: config.DB_HOST,
@@ -19,6 +20,7 @@ function handleDisconnect() {
     password: "password",
     database: "nextgenml",
     multipleStatements: true,
+    charset: "utf8mb4",
   });
 
   dbConnection.connect(function (err) {
