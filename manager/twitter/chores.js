@@ -72,11 +72,19 @@ const computeChores = async (walletId, campaignId) => {
           campaignId: campaign.id,
         });
       } else {
+        const messages = [
+          {
+            role: "system",
+            content: getRandomPrompt(campaign.content, hashtags),
+          },
+        ];
+
+        const { content } = await chatGptResponse(messages);
         await createChore({
           walletId,
           refId: -1,
           type: "post",
-          content: getRandomPrompt(campaign.content, hashtags),
+          content,
           level: 1,
           campaignId: campaign.id,
         });
