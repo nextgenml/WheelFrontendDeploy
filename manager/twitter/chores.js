@@ -105,7 +105,8 @@ const getRandomHashtags = (hashtags) => {
     tags.splice(index, 1);
 
     const index2 = generateRandomNumber(tags.length);
-    result += tags[index2];
+    const tag = tags[index2];
+    if (tag) result += tags[index2];
   }
   return result;
 };
