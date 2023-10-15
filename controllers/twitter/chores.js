@@ -64,7 +64,7 @@ const computeChores = async (req, res) => {
 
 const getChores = async (req, res) => {
   try {
-    const { walletId, pageNo, pageSize, campaigner } = req.query;
+    const { walletId, pageNo, pageSize, campaigner, filter } = req.query;
     const { id, levelId } = req.params;
     const data = await choresRepo.getMyChores(
       walletId,
@@ -72,7 +72,8 @@ const getChores = async (req, res) => {
       levelId,
       parseInt(pageSize) || 10,
       (parseInt(pageSize) || 10) * (parseInt(pageNo) || 0),
-      parseInt(campaigner) === 1
+      parseInt(campaigner) === 1,
+      filter
     );
     res.json({
       data: data.results,

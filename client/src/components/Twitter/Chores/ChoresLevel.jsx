@@ -8,6 +8,10 @@ import {
   TablePagination,
   Box,
   Typography,
+  FormControl,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Chore from "./Chore";
@@ -25,12 +29,12 @@ const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
   const [searchParams, _] = useSearchParams();
-
+  const [filter, setFilter] = useState("all");
   const fetchData = async () => {
     const data = await getAPICall(
       `${config.API_ENDPOINT}/api/v1/twitter/campaigns/${campaignId}/levels/${
         level.level
-      }?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&campaigner=${searchParams.get(
+      }?walletId=${address}&pageNo=${page}&pageSize=${rowsPerPage}&filter=${filter}&campaigner=${searchParams.get(
         "campaigner"
       )}`
     );
@@ -41,7 +45,7 @@ const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
 
   useEffect(() => {
     if (open && campaignId) fetchData();
-  }, [open, rowsPerPage, page]);
+  }, [open, rowsPerPage, page, filter]);
 
   useEffect(() => {
     setOpen(false);
@@ -80,6 +84,29 @@ const ChoresLevel = ({ level, campaignId, address, closeCollapse }) => {
         </ListItemButton>
       </ListItem>
       <Collapse in={open}>
+        <Box>
+          <FormControl>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <FormControlLabel value="all" control={<Radio />} label="All" />
+              <FormControlLabel
+                value="pending"
+                control={<Radio />}
+                label="Pending"
+              />
+              <FormControlLabel
+                value="completed"
+                control={<Radio />}
+                label="Completed"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Box>
         <Grid container spacing={2}>
           {chores.map((c) => (
             <Grid item md={6} xs={12}>
