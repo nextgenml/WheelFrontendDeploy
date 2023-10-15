@@ -157,7 +157,7 @@ export default function Header() {
               </a>
             );
           })}
-        <InternalApps />
+        {isConnected && <InternalApps />}
         {socialLinksBtn()}
       </List>
       <Box mb={1} display="flex" justifyContent="center">
@@ -220,7 +220,7 @@ export default function Header() {
               );
             })}
           {socialLinksBtn()}
-          <InternalApps />
+          {isConnected && <InternalApps />}
           <Web3Button />
         </Stack>
       </Hidden>

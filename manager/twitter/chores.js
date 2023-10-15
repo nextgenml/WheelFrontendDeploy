@@ -33,7 +33,7 @@ const computeChores = async (walletId, campaignId) => {
           const messages = [
             {
               role: "system",
-              content: `Rewrite the content with less than 220 characters: ${chore.content} and include hashtags: ${hashtags}. Do not include any special characters`,
+              content: getRandomPrompt(chore.content, hashtags),
             },
           ];
           const { content } = await chatGptResponse(messages);
@@ -57,7 +57,7 @@ const computeChores = async (walletId, campaignId) => {
         const messages = [
           {
             role: "system",
-            content: `Rewrite the content with less than 220 characters: ${campaign.content} and include hashtags: ${hashtags}. Do not include any special characters`,
+            content: getRandomPrompt(campaign.content, hashtags),
           },
         ];
         const { content } = await chatGptResponse(messages);
@@ -76,7 +76,7 @@ const computeChores = async (walletId, campaignId) => {
           walletId,
           refId: -1,
           type: "post",
-          content: campaign.content + "\n" + hashtags,
+          content: getRandomPrompt(campaign.content, hashtags),
           level: 1,
           campaignId: campaign.id,
         });
@@ -102,6 +102,17 @@ const getRandomHashtags = (hashtags) => {
   return result;
 };
 
+const getRandomPrompt = (content, hashtags) => {
+  const prefixes = [
+    "Rewrite",
+    "Rewrite the concept with positivity",
+    "Rewrite the concept with a viewpoint highlighting uniqueness",
+    "Rewrite the concept in support",
+  ];
+  const index = generateRandomNumber(prefixes.length);
+  const prefix = prefixes[index];
+  return `${prefix} with less than 220 characters of content: ${content} and include hashtags: ${hashtags}. Do not include any special characters`;
+};
 const isValidLink = async (link, choreId) => {
   if (link && (link.includes("twitter.com") || link.includes("x.com"))) {
   } else return [false, false, "Invalid link submitted"];

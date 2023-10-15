@@ -46,7 +46,7 @@ function Chore({ chore }) {
             <>
               Comment with exact text provided below in this tweet:{" "}
               <Link href={chore.source_tweet_link} target="_blank">
-                Open Tweet
+                <b>Open Tweet</b>
               </Link>
             </>
           ) : (

@@ -76,6 +76,15 @@ const Chores = () => {
       <Typography variant="h5" sx={{ mb: 4 }}>
         <b>Chores</b>
       </Typography>
+      <Typography variant="body1">
+        You can select campaign and get various assigned chores by clicking{" "}
+        <b>COMPUTE MY TASKS</b> button. The idea is to clear your inbox and
+        complete all chores assigned in various levels
+      </Typography>
+      <Typography variant="body1">Or</Typography>
+      <Typography variant="body1" sx={{ mb: 3 }}>
+        You can create a new campaign by clicking on Apps
+      </Typography>
       <Box
         display={"flex"}
         alignItems={"center"}

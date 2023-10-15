@@ -57,6 +57,8 @@ const CampaignStats = ({ handleClose, campaign, address }) => {
                       key={row.id}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
+                        backgroundColor:
+                          row.completed >= row.target ? "lightgreen" : "white",
                       }}
                     >
                       <TableCell>{row.level}</TableCell>
