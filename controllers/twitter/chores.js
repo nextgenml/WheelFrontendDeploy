@@ -1,6 +1,26 @@
 const choresRepo = require("../../repository/twitter_chores");
 const choresManager = require("../../manager/twitter/chores");
 
+const verifyChoreLink = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [deleted, message] = await choresManager.isTweetDeleted(
+      req.body.link
+    );
+
+    if (deleted) {
+      choresManager.handleDeletedLinkChores(id);
+    }
+    return res.json({
+      message,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      statusCode: 500,
+      message: error.message,
+    });
+  }
+};
 const updateChore = async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,4 +111,5 @@ module.exports = {
   getChores,
   updateChore,
   userCampaignStats,
+  verifyChoreLink,
 };

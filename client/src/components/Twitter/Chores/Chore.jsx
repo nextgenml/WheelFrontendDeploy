@@ -15,7 +15,7 @@ function Chore({ chore }) {
   const { address } = useAccount();
   const [postLink, setPostLink] = useState(chore.tweet_link || localCopy);
   const [disableSubmit, setDisableSubmit] = useState(false);
-
+  const [disableLink, setDisableLink] = useState(!!chore.completed_at);
   const onSubmit = async () => {
     if (
       postLink &&
@@ -34,12 +34,29 @@ function Chore({ chore }) {
       },
       "PUT"
     );
-    if (res.ok) {
+    if (res) {
+      setDisableLink(true);
+    }
+    setDisableSubmit(false);
+  };
+
+  const onCheck = async () => {
+    setDisableSubmit(true);
+    const res = await writeAPICall(
+      `${config.API_ENDPOINT}/api/v1/twitter/chores/${chore.id}/verify?walletId=${address}`,
+      {
+        link: chore.source_tweet_link,
+      },
+      "PUT",
+      true
+    );
+    if (res) {
+      alert(res.message);
     }
     setDisableSubmit(false);
   };
   return (
-    <Card sx={{ backgroundColor: chore.tweet_link ? "#ccebcc" : "white" }}>
+    <Card sx={{ backgroundColor: disableLink ? "#ccebcc" : "white" }}>
       <CardContent>
         <Typography variant="subtitle1" className={styles.tweetText}>
           {chore.type === "comment" ? (
@@ -48,6 +65,16 @@ function Chore({ chore }) {
               <Link href={chore.source_tweet_link} target="_blank">
                 <b>Open Tweet</b>
               </Link>
+              <br />
+              <Button
+                variant="outlined"
+                disabled={disableLink || disableSubmit}
+                component="label"
+                onClick={onCheck}
+                sx={{ ml: 2 }}
+              >
+                Verify Tweet Link
+              </Button>
             </>
           ) : (
             "You new tweet should contain exact text provided below"
@@ -66,6 +93,7 @@ function Chore({ chore }) {
           variant="outlined"
           fullWidth
           value={postLink}
+          disabled={disableLink}
           onChange={(e) => {
             setPostLink(e.target.value);
             localStorage.setItem(
@@ -77,7 +105,7 @@ function Chore({ chore }) {
         />
         <Button
           variant="contained"
-          disabled={disableSubmit}
+          disabled={disableLink || disableSubmit}
           component="label"
           onClick={onSubmit}
         >

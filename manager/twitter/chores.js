@@ -8,6 +8,8 @@ const {
   getChoreById,
   getChoreCampaignCompletedStats,
   getChoreCampaignAssignedStats,
+  deleteRefChores,
+  resetRefChore,
 } = require("../../repository/twitter_chores");
 const { generateRandomNumber } = require("../../utils");
 const { chatGptResponse } = require("../../utils/chatgpt");
@@ -122,6 +124,46 @@ const getRandomPrompt = (content, hashtags) => {
   const prefix = prefixes[index];
   return `${prefix} with less than 220 characters of content: ${content} and include hashtags: ${hashtags}. Do not include any special characters`;
 };
+const isTweetDeleted = async (link) => {
+  const split = link.split("/");
+  const id_temp = split[split.length - 1];
+  const id = id_temp.split("?")[0];
+  if (parseInt(id) > 0) {
+    try {
+      const tweet = await getTweetById(id);
+      if (tweet?.data?.text)
+        return [
+          false,
+          "Link seems to be valid. You should be able to access the link in web.",
+        ];
+      if (
+        tweet.errors &&
+        tweet.errors[0] &&
+        tweet.errors[0].title === "Not Found Error"
+      )
+        return [
+          true,
+          "Tweet is deleted by owner. We will update your chores in a minute. Please continue with your other chores",
+        ];
+      return true;
+    } catch (error) {
+      return [
+        false,
+        "Unable to check at this moment. Please try again after sometime",
+      ];
+    }
+  }
+  return false;
+};
+const handleDeletedLinkChores = async (id) => {
+  const chore = await getChoreById(id);
+
+  const ref_id = chore.ref_id;
+
+  await deleteRefChores(ref_id);
+
+  await resetRefChore(ref_id);
+};
 const isValidLink = async (link, choreId) => {
   if (link && (link.includes("twitter.com") || link.includes("x.com"))) {
   } else return [false, false, "Invalid link submitted"];
@@ -193,4 +235,6 @@ module.exports = {
   computeChores,
   isValidLink,
   getUserCampaignStats,
+  isTweetDeleted,
+  handleDeletedLinkChores,
 };

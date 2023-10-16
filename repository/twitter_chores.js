@@ -107,7 +107,17 @@ const getChoreCampaignAssignedStats = async (
   const query = `select level, count(1) as count from twitter_chores where campaign_id = ? and (1 = ? or wallet_id = ?) group by level;`;
   return await runQueryAsync(query, [campaignId, campaigner ? 1 : 0, walletId]);
 };
+
+const deleteRefChores = async (id) => {
+  const query = `delete from twitter_chores where ref_id = ?;`;
+  return await runQueryAsync(query, [id]);
+};
+const resetRefChore = async (id) => {
+  const query = `update twitter_chores set completed_at = null, validated = 0 where id = ?;`;
+  return await runQueryAsync(query, [id]);
+};
 module.exports = {
+  deleteRefChores,
   updateLink,
   getChoreById,
   isLinkExists,
@@ -119,4 +129,5 @@ module.exports = {
   getMyChores,
   getChoreCampaignCompletedStats,
   getChoreCampaignAssignedStats,
+  resetRefChore,
 };
